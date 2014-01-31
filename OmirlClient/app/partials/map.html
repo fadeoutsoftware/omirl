@@ -1,0 +1,84 @@
+<div class="row map-controls-left-panel-row">
+    <div class="col-md-2 col-xs-2" id ="mapNavigation">
+
+        <!-- Stazioni -->
+        <accordion close-others="false">
+            <accordion-group  is-open="isopen">
+                <accordion-heading>
+                    <div>
+                        <div class="icon icon-gauge pull-left"></div><span class="map-accordion-title">Stazioni</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                    </div>
+                </accordion-heading>
+                <div class="map-accordion-content">
+                    <div class="row">
+                        <div class="col-md-8 col-xs-8 map-text-legend">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 map-text-legend-selected">{{m_oController.m_sSensorLegendSelected}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div ng-repeat="oSensor in m_oController.getSensorLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}" tooltip-popup-delay="500" tooltip="{{oSensor.description}}">
+                            <img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>
+                        </div>
+                    </div>
+                </div>
+            </accordion-group>
+        </accordion>
+
+        <!-- Mappe -->
+        <accordion close-others="false">
+            <accordion-group  is-open="isopen" ng-class="{'map-accordion-open' : isopen}">
+                <accordion-heading>
+                    <div class="icon icon-earth2 pull-left"></div><span class="map-accordion-title">Mappe</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                </accordion-heading>
+                    <div class="map-accordion-content">
+                        <div class="row">
+                            <div class="col-md-1 col-xs-1 map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
+                                <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsFirstLevel" ng-click="m_oController.mapLinkClicked(null)"></i>
+                                <i class="fa fa-globe" ng-show="m_oController.m_bIsFirstLevel"></i>
+                            </div>
+                            <div class="col-md-5 col-xs-5 map-text-legend">
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12 map-text-legend-selected">{{m_oController.m_sMapLegendSelected}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12 map-text-legend-hover">{{m_oController.m_sMapLegendHover}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div ng-repeat="oMapLink in m_oController.getMapLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oMapLink.selected}" tooltip-popup-delay="500" tooltip="{{oMapLink.description}}"><img src="{{oMapLink.link}}" ng-click="m_oController.mapLinkClicked(oMapLink)"/></div>
+                        </div>
+
+                        <div class="row dropdown">
+                            <div class="col-md-8 col-xs-8"  ng-show="m_oController.m_bShowThirdLevel">
+                                    <button type="button" class="btn btn-info dropdown-toggle map-third-level-link" data-toggle="dropdown">{{m_oController.m_sMapThirdLevelSelected}}&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li ng-repeat="oThirdLevel in m_oController.getThirdLevels()"><a ng-click="m_oController.thirdLevelClicked(oThirdLevel)">{{oThirdLevel.description}}</a></li>
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+            </accordion-group>
+        </accordion>
+
+        <!-- Statici -->
+        <accordion close-others="false">
+            <accordion-group  is-open="isopen">
+                <accordion-heading>
+                    <div class="icon icon-map-roads pull-left"></div><span class="map-accordion-title">Statici</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                </accordion-heading>
+                    <div class="map-accordion-content">
+                        Qui ci mettiamo gli statici
+                    </div>
+            </accordion-group>
+        </accordion>
+
+    </div>
+    <div class="col-md-10 col-xs-10" id = "omirlMap" ol-map zoom="9" center="8.80,44.20" controls="zoom,navigation,layerSwitcher,attribution,mousePosition">
+    </div>
+</div>

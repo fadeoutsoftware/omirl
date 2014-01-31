@@ -1,0 +1,292 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the     -->
+<!-- browser's rendering engine into                -->
+<!-- "Standards Mode". Replacing this declaration   -->
+<!-- with a "Quirks Mode" doctype is not supported. -->
+
+<html ng-app="omirl">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title>Omirl On-Line</title>
+    
+	<!-- Google Maps Scripts -->    
+    <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
+    <!-- Open Layers Scripts -->
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>     
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <link href="css/omirl.css" rel="stylesheet">
+    <link href="css/customfonts.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">    
+  </head>
+
+  <!--                                           -->
+  <!-- The body can have arbitrary html, or      -->
+  <!-- you can leave the body empty if you want  -->
+  <!-- to create a completely dynamic UI.        -->
+  <!--                                           -->
+  <body>
+
+    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>
+
+    <!-- Side Menu -->
+    <a id="menu-toggle" href="#" class="btn btn-primary btn-lg toggle"><i class="fa fa-bars"></i></a>
+    <!--img id="menu-waiting" src="img/Waiting.GIF"  class = "toggle"/-->
+    <div id="sidebar-wrapper">
+      <ul class="sidebar-nav">
+        <a id="menu-close" href="#" class="btn btn-default btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
+        <li class="sidebar-brand"><a href="#top">OMIRL</a></li>
+        <li><a href="#top">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+		<li><a href="#contentcontainer">Mappa</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+      </ul>
+    </div>
+    <!-- /Side Menu -->
+  
+    <!-- Full Page Image Header Area -->
+    <div id="top" class="header">
+      <div class="vert-text">
+        <h1>OMIRL</h1>
+        <h3>Centro Funzionale della Protezione Civile della Regione Liguria</h3>
+        <a href="#about" class="btn btn-default btn-lg">Start</a>
+      </div>
+    </div>
+    <!-- /Full Page Image Header Area -->
+  
+    <!-- Intro -->
+    <div id="about" class="intro">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3 text-center">
+            <h2>Osservatorio Meteo Idrologico della Regione Liguria</h2>
+            <p class="lead">La rete di rilevamento in tempo reale della Regione Liguria e' costituita da circa 100 stazioni distribuite sul territorio, circa una stazione ogni 50 Km2.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Intro -->
+  
+    <!-- Services -->
+    <div id="services" class="services">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4 text-center">
+            <h2>Servizi</h2>
+            <hr>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2 col-md-offset-2 text-center">
+            <div class="service-item">
+              <i class="service-icon fa fa-globe"></i>
+              <h4><a href="#contentcontainer">Mappa</a></h4>
+			  <p>Rete di monitoraggio del Centro Funzionale di Protezione Civile della Regione Liguria. Visualizza stazioni e mappe interpolate.</p>
+            </div>
+          </div>
+          <div class="col-md-2 text-center">
+            <div class="service-item">
+              <i class="service-icon fa fa-table"></i>
+              <h4>Tabelle</h4>
+			  <p>Visualizzazione tabellare dei dati della rete di monitoraggio.</p>
+            </div>
+          </div>
+          <div class="col-md-2 text-center">
+            <div class="service-item">
+              <i class="service-icon fa fa-video-camera"></i>
+              <h4>Animazioni</h4>
+              <p>Visualizzazione delle evoluzioni delle mappe osservate e dei modelli meteo.</p>
+            </div>
+          </div>
+          <div class="col-md-2 text-center">
+            <div class="service-item">
+              <i class="service-icon fa fa-pencil"></i>
+              <h4>Pencil Sharpening</h4>
+              <p>We've been voted the best pencil sharpening service for 10 consecutive years. If you have a pencil that feels dull, we'll get it sharp!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Services -->
+
+    <!-- Callout -->
+    <div class="callout">
+      <div class="vert-text">
+        <h1 id="m_h1CalloutTitle">OMIRL Map</h1>
+      </div>
+    </div>
+    <!-- /Callout -->
+
+	<!-- Map -->
+    <div id = "contentcontainer">
+	    <div ng-view class="map"></div>
+    </div>
+    <!-- /Map -->
+
+
+    <!-- Call to Action -->
+    <div class="call-to-action">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3 text-center">
+            <h3>The buttons below are impossible to resist.</h3>
+            <a href="#" class="btn btn-lg btn-default">Click Me!</a>
+            <a href="#" class="btn btn-lg btn-primary">Look at Me!</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Call to Action -->
+	
+    <!-- Portfolio -->
+    <div id="portfolio" class="portfolio">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4 text-center">
+            <h2>Our Work</h2>
+            <hr>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-md-offset-2 text-center">
+            <div class="portfolio-item">
+              <a href="#"><img class="img-portfolio img-responsive" src="img/portfolio-1.jpg"></a>
+              <h4>Cityscape</h4>
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="portfolio-item">
+              <a href="#"><img class="img-portfolio img-responsive" src="img/portfolio-2.jpg"></a>
+              <h4>Is That On Fire?</h4>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-md-offset-2 text-center">
+            <div class="portfolio-item">
+              <a href="#"><img class="img-portfolio img-responsive" src="img/portfolio-3.jpg"></a>
+              <h4>Stop Sign</h4>
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="portfolio-item">
+              <a href="#"><img class="img-portfolio img-responsive" src="img/portfolio-4.jpg"></a>
+              <h4>Narrow Focus</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Portfolio -->	
+    
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3 text-center">
+            <ul class="list-inline">
+              <li><i class="fa fa-facebook fa-3x"></i></li>
+              <li><i class="fa fa-twitter fa-3x"></i></li>
+              <li><i class="fa fa-dribbble fa-3x"></i></li>
+            </ul>
+            <div class="top-scroll">
+              <a href="#top"><i class="fa fa-circle-arrow-up scroll fa-4x"></i></a>
+            </div>
+            <hr>
+            <p>Copyright &copy; Company 2013</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- /Footer -->
+
+    <!-- JavaScript -->
+	<!-- In production use:
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+	-->
+    <script src="lib/jquery/jquery-1.10.2.js"></script>
+    <script src="lib/bootstrap/bootstrap.js"></script>
+	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular/angular-route.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+    <script src="lib/azimuthjs/module.js"></script>
+    <script src="lib/azimuthjs/services/component/layersService.js"></script>
+    <script src="lib/azimuthjs/services/component/mapService.js"></script>
+    <script src="lib/azimuthjs/directives/Layer.js"></script>
+    <script src="lib/azimuthjs/directives/leafletMap.js"></script>
+    <script src="lib/azimuthjs/directives/olMap.js"></script>
+	<script src="js/services/mapNavigatorService.js"></script>
+    <script src="js/services/stationsService.js"></script>
+	<script src="js/controllers/MapController.js"></script>
+    <script src="js/controllers/TablesController.js"></script>
+	<script src="js/filters.js"></script>
+	<script src="js/directives.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Custom JavaScript for the Side Menu and Smooth Scrolling -->
+    <script>
+        $("#menu-close").click(function(e) {
+            e.preventDefault();
+            $("#sidebar-wrapper").toggleClass("active");
+        });
+    </script>
+    <script>
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#sidebar-wrapper").toggleClass("active");
+        });
+    </script>
+    <script>
+      $(function() {
+        $('a[href*=#]:not([href=#])').click(function() {
+          if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') 
+            || location.hostname == this.hostname) {
+
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+            if (target.length) {
+              $('html,body').animate({
+                scrollTop: target.offset().top
+              }, 1000);
+              return false;
+            }
+          }
+        });
+      });
+    </script>
+	<script>
+				$(resizeMap());
+				$(window).resize(resizeMap);
+
+				function resizeMap(){
+					var mapHeight = $("#top").height();// - $("#yr-map-header").outerHeight() - $("#yr-map-footer").outerHeight();
+					$("#contentcontainer").height(mapHeight);
+					
+					if ($("#omirlMap") != null) {
+						$("#omirlMap").height(mapHeight);
+					}
+				}
+	</script>	
+
+
+  </body>
+</html>

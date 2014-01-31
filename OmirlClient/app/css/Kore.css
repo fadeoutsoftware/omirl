@@ -1,0 +1,355 @@
+/***************************************************/
+/* KORE ********************************************/
+/***************************************************/
+/*
+.kore-container-panel{
+	position: relative !important;
+	width: 1000px;
+	height: 1000px;	
+}
+*/
+
+.kore-container-panel{
+	width: 100%;
+	height: 100%;	
+}
+
+
+.kore-map-container {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/***************************************************/
+/* TOOLBARS ****************************************/
+/***************************************************/
+/*
+- pannello che conterrà un gruppo di bottoni della toolbar: "kore-toolbar-<nome del gruppo>"
+- stile base di ogni bottone: "kore-tool-button"
+- bottone della toolbar: "kore-tool-button-<nome del tool>"
+*/
+.kore-tool-button {
+	float: left;
+	z-index: 9999;
+	position:relative;
+  	font-family: FontAwesome;
+	
+       top:5px;
+       left:5px;
+	
+	color:whitesmoke;
+}
+
+.kore-toolbar-Triggers {
+    position: absolute;
+    top: 0;
+    z-index: 9999;
+}
+
+/***************************************************/
+/* BASE LAYERS TOOLBAR *****************************/
+/***************************************************/
+/*
+- pannello che conterrà i bottoni per l'impostazione del base layer: kore-baselayer-toolbar
+- stile base di ogni bottone: "kore-tool-button"
+- bottone per l'impostazione del base layer: "kore-baselayer-button-<nome del layer>"
+*/
+.kore-baselayer-toolbar {
+	right: 10px;
+	position: absolute;
+	top: 60px;
+	z-index: 9998;
+}
+
+.kore-baselayer-button {
+	float: top;
+}
+
+/***************************************************/
+/* MEASURE TOOLBAR *****************************/
+/***************************************************/
+/*
+- pannello che conterrà i bottoni per la gestione del tool di misura: kore-measure-toolbar
+- stile base di ogni bottone: "kore-tool-button"
+- bottone per la misura (lineare, areale): "kore-measure-button-<nome del tipo di misura>"
+*/
+.kore-measure-toolbar {
+	right: 200px;
+	position: absolute;
+	top: 10px;
+	z-index: 9998;
+}
+
+.kore-measure-button {
+	float: left;
+}
+
+.kore-measure-dialog {
+	
+}
+
+.kore-measure-dialog-content {
+	
+}
+
+.kore-measure-dialog-close-button {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}
+
+/***************************************************/
+/* GEO SEARH ***************************************/
+/***************************************************/
+/*
+- suggest box per il geocoding: "kore-geosearch-box"
+*/
+.kore-geosearch-box {
+	top: 100px;
+	width: 200px;
+	position: absolute;
+	left: 10px;
+}
+
+/***************************************************/
+/* COMMAND BROWSER *********************************/
+/***************************************************/
+/*
+- div che conterrà i controlli per i comandi: "kore-commands-panel"
+- pulsante per l'apertura del browser dei comandi: "kore-commands-browse-button"
+- dialog box per l'albero dei comandi: "kore-commands-browser-dialog"
+	- pannello conentenete l'albero nella dialog: "kore-commands-browser-dialog-content"
+	- pulsante per la chiusura del popup contenente il browser: "kore-commands-browser-dialog-close-button"
+	- albero per la ricerca dei comandi: "kore-commands-browser"
+		- root: "kore-commands-browser-root"
+		- nodo: "kore-commands-browser-node"
+		- foglia: "kore-commands-browser-leaf"
+- suggest box per i comandi: "kore-commands-box"
+*/
+.kore-commands-panel {
+	top: 100px;
+	position: absolute;
+	left: 240px;
+	z-index: 9999;
+}
+
+.kore-commands-browser {
+	z-index: 9999;
+}
+
+.kore-commands-browse-button {
+	float: right;
+	z-index: 9999;
+}
+
+.kore-commands-browse-button:after {
+	content: "...";
+	z-index: 9999;
+}
+
+.kore-commands-box {
+	width: 200px;
+	z-index: 9999;
+}
+
+.kore-commands-browser-dialog {
+	z-index: 9999;
+}
+
+.kore-commands-browser-dialog-content {
+	z-index: 9999;
+}
+
+.kore-commands-browser-root:after {
+	content: "commands tree";
+	z-index: 9999;
+}
+
+.kore-commands-browser-node {
+	z-index: 9999;
+}
+
+.kore-commands-browser-leaf {
+	z-index: 9999;
+}
+
+.kore-commands-browser-dialog-close-button {
+	float: right;
+	z-index: 9999;
+}
+
+.kore-commands-browser-dialog-close-button:after {
+	content: "close";
+	z-index: 9999;
+}
+
+/***************************************************/
+/* LAYERS LIST *************************************/
+/***************************************************/
+/*
+- layerlist: "kore-layerlist"
+	- bottone visualizzazione lista: "kore-layerlist-button"
+	- lista: "kore-layerlist-list"
+	   	- layer list item: "kore-layerlist-item"
+	   		- pannello contenente i bottoni di un layer list item: "kore-layerlist-item-buttons"
+	   			- checkbox per la visibilita' di un layer: kore-layerlist-item-check
+	   			- bottone per la rimozione di un layer: "kore-layerlist-item-remove"
+	   			- bottone per lo spostamento su di un layer: "kore-layerlist-item-up"
+	   			- bottone per lo spostamento giù di un layer: "kore-layerlist-item-down"
+	   			- bottone per lo zoom to layr: "kore-layerlist-item-zoom"
+	   			- pannello descrittivo del layer: "kore-layerlist-item-descr"
+	 			- nome del layer: "kore-layerlist-item-descr-name"
+	   			- bottone per la visualizzazione della legenda: "kore-layerlist-item-button-legend"
+	   		- immagine contenente la legenda visibile al passaggio del maouse sul bottone: "kore-layerlist-item-legend"
+- dialog per la visualizzazione della legenda: "kore-layerlegend"
+	- immagine contenente la legenda: "kore-layerlegend-legend"
+	- slider per l'opacità del layer: "kore-layerlegend-opacity"
+	- bottone per la chiusura della dialog: "kore-layerlegend-button-close" 
+*/
+.kore-layerlist {
+	position: absolute;
+	top: 130px;
+	left: 10px;
+	width: auto;
+	height: auto;
+	padding: 5px;
+	z-index: 9999;
+}
+
+.kore-layerlist-button {
+	top: 0px;
+	left: 0px;
+}
+
+.kore-layerlist-button:after {
+	content: "Layers List"
+}
+
+.kore-layerlist-list {
+	top: 30px;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+}
+
+.kore-layerlist-item {
+	margin: 5px;
+}
+
+.kore-layerlist-item-descr {
+	left: 5px;
+	margin-right: 40px;
+	cursor: pointer;
+}
+
+.kore-layerlist-item-descr-name {
+	font-size: large;
+}
+
+.kore-layerlist-item-legend {
+	top: 0px;
+	right: 0px;
+}
+
+.kore-layerlist-item-legend-popup {
+	z-index: 10000;
+}
+
+.kore-layerlist-item-button-legend {
+	height: 70px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+.kore-layerlist-item-buttons {
+	width: 20px;
+	height: 100%;
+	float: left;
+	background: gray;
+}
+
+.kore-layerlist-item-check {
+	width: 15px;
+}
+
+.kore-layerlist-item-remove {
+	width: 15px;
+}
+
+.kore-layerlist-item-remove:after {
+	content: "X";
+}
+
+.kore-layerlist-item-down {
+	width: 15px;
+}
+
+.kore-layerlist-item-down:after {
+	content: "D";
+}
+
+.kore-layerlist-item-up {
+	width: 15px;
+}
+
+.kore-layerlist-item-up:after {
+	content: "U";
+}
+
+.kore-layerlist-item-zoom {
+	width: 15px;
+}
+
+.kore-layerlist-item-zoom:after {
+	content: "Z";
+}
+
+.kore-layerlegend {
+	width: auto;
+}
+
+.kore-layerlegend-legend {
+	
+}
+
+.kore-layerlegend-opacity {
+	width: 100%;
+}
+
+.kore-layerlegend-button-close {
+	right: 0px;
+	bottom: 0px;
+}
+
+.kore-layerlegend-button-close:after {
+	content: "close";
+}
+
+/***************************************************/
+/* CUSTOM BUTTONS  *********************************/
+/***************************************************/
+
+.kore-tool-button-Flood:before {
+	content: "\F043";
+}
+
+.kore-tool-button-Earthquake:before {
+	content: "\F09E";
+}
+
+.kore-tool-button-Temporary_Lake:before {
+	content: "\F03E";
+}
+
+.kore-tool-button-Flooding:before {
+	content: "\F0C2";
+}
+
+.kore-tool-button-Utilities:before {
+	content: "\F085";
+}
+
