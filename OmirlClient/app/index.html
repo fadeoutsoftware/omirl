@@ -36,7 +36,7 @@
   <!-- you can leave the body empty if you want  -->
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
-  <body>
+  <body ng-controller="TemplateController">
 
     <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
     <noscript>
@@ -97,7 +97,7 @@
         <div class="row">
           <div class="col-md-2 col-md-offset-2 text-center">
             <div class="service-item">
-              <i class="service-icon fa fa-globe"></i>
+              <i class="service-icon fa fa-globe" ng-click="m_oController.mapIconClicked()"></i>
               <h4><a href="#contentcontainer">Mappa</a></h4>
 			  <p>Rete di monitoraggio del Centro Funzionale di Protezione Civile della Regione Liguria. Visualizza stazioni e mappe interpolate.</p>
             </div>
@@ -229,13 +229,14 @@
 	<script src="lib/angular/angular-route.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
     <script src="lib/azimuthjs/module.js"></script>
-    <script src="lib/azimuthjs/services/component/layersService.js"></script>
     <script src="lib/azimuthjs/services/component/mapService.js"></script>
+    <script src="lib/azimuthjs/services/component/layersService.js"></script>
     <script src="lib/azimuthjs/directives/Layer.js"></script>
     <script src="lib/azimuthjs/directives/leafletMap.js"></script>
     <script src="lib/azimuthjs/directives/olMap.js"></script>
 	<script src="js/services/mapNavigatorService.js"></script>
     <script src="js/services/stationsService.js"></script>
+    <script src="js/controllers/TemplateController.js"></script>
 	<script src="js/controllers/MapController.js"></script>
     <script src="js/controllers/TablesController.js"></script>
 	<script src="js/filters.js"></script>
@@ -272,6 +273,22 @@
           }
         });
       });
+
+        function moveTo() {
+
+            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
+                    || location.hostname == this.hostname) {
+
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top
+                    }, 1000);
+                    return false;
+                }
+            }
+        }
     </script>
 	<script>
 				$(resizeMap());

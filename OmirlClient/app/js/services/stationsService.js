@@ -281,7 +281,7 @@ angular.module('omirl.stationsService', []).
             var sLayerType = oStationsLink.code;
 
             aoSensors.forEach(function(oEntry) {
-                oEntry.value = Math.random()*41;
+                oEntry.value = Math.round(Math.random()*41);
 
 
                 if (sLayerType=="Pluvio") {

@@ -328,6 +328,7 @@ i.scroll:hover {
 .map-controls-left-panel-row {
     background: #7fbbda;
     color: #ffffff;
+    position: relative;
 }
 
 .map-accordion-title {
@@ -348,7 +349,6 @@ i.scroll:hover {
 .map-accordion-content {
     color: #000000;
 }
-
 
 .map-controls-left-panel-row .panel-group {
     padding: 5px;
@@ -473,4 +473,25 @@ i.scroll:hover {
 
 .map-third-level-link {
     margin-top: 10px;
+}
+
+.map-controls-panel {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: #7fbbda;
+    color: #ffffff;
+    z-index: 1;
+    opacity: 0.9;
+    width: 20%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.map-panel {
+    width: 100%;
+}
+
+.map-controls-clip {
+    background: red;
 }

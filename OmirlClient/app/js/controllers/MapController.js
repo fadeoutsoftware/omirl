@@ -15,6 +15,8 @@ var MapController = (function () {
         this.m_oMapService = mapService;
         this.m_oMapNavigatorService = oMapNavigatorService;
         this.m_oStationsService  = oStationsService;
+
+        // Flag to know if first level is shown
         this.m_bIsFirstLevel = true;
 
 
@@ -76,18 +78,24 @@ var MapController = (function () {
         this.m_bShowThirdLevel = false;
         this.m_aoThirdLevels = [];
 
-        this.m_aoMapLinks.forEach(function(oEntry) {
-           oEntry.selected = false;
-        });
+        // var to know if this is the selected entry
+        var bIsSelected = false;
 
         // Is this a Back click?
         if (oMapLink != null) {
             // Set Selected Layer
             this.m_sMapLegendSelected = oMapLink.description;
+            bIsSelected = oMapLink.selected;
         }
         else {
             this.m_sMapLegendSelected = "Mappe";
         }
+
+        // Clear all selection flags
+        this.m_aoMapLinks.forEach(function(oEntry) {
+            oEntry.selected = false;
+        });
+
 
         // We are in the first level?
         if (this.m_bIsFirstLevel) {
@@ -122,10 +130,20 @@ var MapController = (function () {
                     }
                 }
 
-                oMapLink.selected = true;
-                // Layer Click
-                this.m_sMapLegendSelected = oMapLink.description;
-                this.selectedDynamicLayer(oMapLink, "");
+                if (!bIsSelected) {
+                    oMapLink.selected = true;
+                    // Layer Click
+                    this.m_sMapLegendSelected = oMapLink.description;
+                    this.selectedDynamicLayer(oMapLink, "");
+                }
+                else {
+                    // Remove from the map
+                    if (this.m_oLayerService.getDynamicLayer() != null) {
+                        this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+                        this.m_oLayerService.setDynamicLayer(null);
+                    }
+                    this.m_sMapLegendSelected = "";
+                }
             }
         }
     }
@@ -149,6 +167,7 @@ var MapController = (function () {
         // Add the new layer to the map
         this.m_oLayerService.setDynamicLayer(oLayer);
         this.m_oMapService.map.addLayer(oLayer);
+        this.m_oMapService.map.setLayerIndex(oLayer,this.m_oLayerService.getBaseLayers().length);
     }
 
     /**
@@ -166,112 +185,55 @@ var MapController = (function () {
      */
     MapController.prototype.sensorLinkClicked = function (oSensorLink) {
 
-        this.m_aoSensorsLinks.forEach(function(oEntry) {
-            oEntry.isActive = false;
-        });
+        // Check if the sensor link is active
+        if (!oSensorLink.isActive){
+            // Set the textual description
+            this.m_sSensorLegendSelected = oSensorLink.description;
 
-        this.m_sSensorLegendSelected = oSensorLink.description;
-        oSensorLink.isActive = true;
+            // Reset all actives flag
+            this.m_aoSensorsLinks.forEach(function(oEntry) {
+                oEntry.isActive = false;
+            });
 
-        this.sensorsLayerSelected(oSensorLink);
+            // Set this as the active one
+            oSensorLink.isActive = true;
+
+            // Set
+            this.showStationsLayer(oSensorLink);
+        }
+        else {
+            // Set the textual description
+            this.m_sSensorLegendSelected = "";
+
+            oSensorLink.isActive = false;
+            try{
+                // remove the Sensors Layer from the map
+                this.m_oMapService.map.removeLayer(this.m_oLayerService.getSensorsLayer());
+            }
+            catch (err) {
+
+            }
+        }
+
+
     }
 
-    MapController.prototype.getStationsLayerStyle = function() {
-        // Define three colors that will be used to style the cluster features
-        // depending on the number of features they contain.
-        var colors = {
-            low: "rgb(181, 226, 140)",
-            middle: "rgb(241, 211, 87)",
-            high: "rgb(253, 156, 115)"
-        };
 
-        // Define three rules to style the cluster features.
-        var lowRule = new OpenLayers.Rule({
-            filter: new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.LESS_THAN,
-                property: "value",
-                value: 15.0
-            }),
-            symbolizer: {
-                fillColor: colors.low,
-                fillOpacity: 0.9,
-                strokeColor: colors.low,
-                strokeOpacity: 0.5,
-                strokeWidth: 12,
-                pointRadius: 10,
-                label: "${value}",
-                labelOutlineWidth: 1,
-                fontColor: "#ffffff",
-                fontOpacity: 0.8,
-                fontSize: "12px"
-            }
-        });
-        var middleRule = new OpenLayers.Rule({
-            filter: new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.BETWEEN,
-                property: "value",
-                lowerBoundary: 15.0,
-                upperBoundary: 50.0
-            }),
-            symbolizer: {
-                fillColor: colors.middle,
-                fillOpacity: 0.9,
-                strokeColor: colors.middle,
-                strokeOpacity: 0.5,
-                strokeWidth: 12,
-                pointRadius: 15,
-                label: "${value}",
-                labelOutlineWidth: 1,
-                fontColor: "#ffffff",
-                fontOpacity: 0.8,
-                fontSize: "12px"
-            }
-        });
-        var highRule = new OpenLayers.Rule({
-            filter: new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.GREATER_THAN,
-                property: "value",
-                value: 50.0
-            }),
-            symbolizer: {
-                fillColor: colors.high,
-                fillOpacity: 0.9,
-                strokeColor: colors.high,
-                strokeOpacity: 0.5,
-                strokeWidth: 12,
-                pointRadius: 20,
-                label: "${value}",
-                labelOutlineWidth: 1,
-                fontColor: "#ffffff",
-                fontOpacity: 0.8,
-                fontSize: "12px"
-            }
-        });
-
-        // Create a Style that uses the three previous rules
-        var style = new OpenLayers.Style(null, {
-            rules: [lowRule, middleRule, highRule]
-        });
-        return style;
-    }
-
-    MapController.prototype.sensorsLayerSelected = function(oSensorLink) {
+    /**
+     * Function called to show the selected sensor layer
+     * @param oSensorLink
+     */
+    MapController.prototype.showStationsLayer = function(oSensorLink) {
 
         // Obtain Stations Values from the server
         var aoStations = this.m_oStationsService.getStations(oSensorLink);
 
-        // Is there a Stations Layer?
-        if (this.m_oLayerService.getSensorsLayer() == null) {
-
-
-            // No: create it
-            var oSensorLayer = new OpenLayers.Layer.Vector(oSensorLink.description);
-            //oSensorLayer.style = new OpenLayers.StyleMap(this.getStationsLayerStyle());
-            this.m_oLayerService.setSensorsLayer(oSensorLayer);
-        }
-        else {
-            // Yes: remove it from the map
+        try{
+            // remove the actual Sensors Layer from the map
             this.m_oMapService.map.removeLayer(this.m_oLayerService.getSensorsLayer());
+        }
+        catch (err) {
+
         }
 
         // Clear the layer
@@ -283,25 +245,35 @@ var MapController = (function () {
 
         // For each station
         var iStations;
+        var aoFeatures = [];
         for ( iStations =0; iStations<aoStations.length; iStations++) {
             var oStation = aoStations[iStations];
 
+            // Create the feature
             var oFeature = new OpenLayers.Feature.Vector(
                 new OpenLayers.Geometry.Point(oStation.lon, oStation.lat).transform(epsg4326, projectTo),
-                {description: oStation.description},
-                {externalGraphic: oStation.imgPath, graphicHeight: 32, graphicWidth: 32, graphicXOffset:0, graphicYOffset:0, title: oStation.name + " " + oStation.value }
+                {description: oStation.description}
+                //,{externalGraphic: oStation.imgPath, graphicHeight: 32, graphicWidth: 32, graphicXOffset:0, graphicYOffset:0, title: oStation.name + " " + oStation.value }
+                //,{title: oStation.name + " " + oStation.value }
             );
 
+            // Set attributes
             oFeature.attributes = {
                 stationId: oStation.stationId,
                 name: oStation.name,
                 value: oStation.value
             };
 
-            this.m_oLayerService.getSensorsLayer().addFeatures(oFeature);
+            // Add the feature to the array
+            aoFeatures.push(oFeature);
         }
 
+        // Add feature array to the layer
+        this.m_oLayerService.getSensorsLayer().addFeatures(aoFeatures);
+
+        // Add the layer to the map
         this.m_oMapService.map.addLayer(this.m_oLayerService.getSensorsLayer());
+        this.m_oMapService.map.setLayerIndex(this.m_oLayerService.getSensorsLayer(), this.m_oLayerService.getSensorsLayerIndex());
     }
 
     MapController.prototype.getMapLinks = function () {
