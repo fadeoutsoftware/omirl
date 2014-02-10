@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/app/partials/map.html" line="3" mnemonic="1" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="5b982513-e6ae-4e73-9b5d-918d668a49b3" name="Default" comment="" />
     <ignored path="Omirl2.iws" />
@@ -26,7 +29,7 @@
       <file leaf-file-name="mapNavigatorService.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/js/services/mapNavigatorService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="272" column="35" selection-start="10904" selection-end="10910" vertical-scroll-proportion="0.0" vertical-offset="4779" max-vertical-offset="6035">
+            <state line="411" column="50" selection-start="17030" selection-end="17030" vertical-scroll-proportion="0.0" vertical-offset="6594" max-vertical-offset="7259">
               <folding />
             </state>
           </provider>
@@ -35,16 +38,7 @@
       <file leaf-file-name="stationsService.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/js/services/stationsService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5219">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/js/app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="16" selection-start="182" selection-end="193" vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="595">
+            <state line="13" column="141" selection-start="496" selection-end="505" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5219">
               <folding />
             </state>
           </provider>
@@ -53,7 +47,7 @@
       <file leaf-file-name="TemplateController.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/js/controllers/TemplateController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="0" selection-start="423" selection-end="423" vertical-scroll-proportion="0.0" vertical-offset="4" max-vertical-offset="476">
+            <state line="14" column="0" selection-start="423" selection-end="423" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
               <folding />
             </state>
           </provider>
@@ -62,25 +56,7 @@
       <file leaf-file-name="layersService.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/services/component/layersService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="199" column="52" selection-start="6516" selection-end="6516" vertical-scroll-proportion="0.0" vertical-offset="3186" max-vertical-offset="3927">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="map.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/partials/map.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="71" selection-start="760" selection-end="760" vertical-scroll-proportion="0.36690646" vertical-offset="0" max-vertical-offset="1496">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="omirl.css" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/css/omirl.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="495" column="20" selection-start="7824" selection-end="7824" vertical-scroll-proportion="0.0" vertical-offset="7871" max-vertical-offset="8551">
+            <state line="58" column="25" selection-start="1514" selection-end="1531" vertical-scroll-proportion="0.0" vertical-offset="668" max-vertical-offset="4301">
               <folding />
             </state>
           </provider>
@@ -89,16 +65,46 @@
       <file leaf-file-name="olMap.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/directives/olMap.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="46" selection-start="2770" selection-end="2770" vertical-scroll-proportion="0.0" vertical-offset="871" max-vertical-offset="1445">
+            <state line="61" column="46" selection-start="2770" selection-end="2770" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="1445">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MapController.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="map.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/partials/map.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="115" column="71" selection-start="7406" selection-end="7442" vertical-scroll-proportion="-16.23077" vertical-offset="1533" max-vertical-offset="2193">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="omirl.css" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/css/omirl.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="607" column="32" selection-start="9905" selection-end="9905" vertical-scroll-proportion="0.0" vertical-offset="9841" max-vertical-offset="10795">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MapController.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/js/controllers/MapController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="232" column="78" selection-start="8163" selection-end="8163" vertical-scroll-proportion="0.0" vertical-offset="3696" max-vertical-offset="5185">
+            <state line="559" column="9" selection-start="20079" selection-end="20079" vertical-scroll-proportion="0.5359589" vertical-offset="9190" max-vertical-offset="10251">
+              <folding>
+                <marker date="1392065218139" expanded="true" signature="13553:13605" placeholder="..." />
+                <marker date="1392065218139" expanded="false" signature="13801:13853" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mapService.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/services/component/mapService.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="36" selection-start="189" selection-end="217" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
               <folding />
             </state>
           </provider>
@@ -117,25 +123,25 @@
         <option value="$PROJECT_DIR$/app/js/services.js" />
         <option value="$PROJECT_DIR$/app/js/controllers.js" />
         <option value="$PROJECT_DIR$/app/js/controllers/TablesController.js" />
-        <option value="www.openlayers.org/api/OpenLayers.js" />
         <option value="$PROJECT_DIR$/app/lib/azimuthjs/services/component/layers.js" />
-        <option value="$PROJECT_DIR$/app/lib/azimuthjs/services/component/mapService.js" />
         <option value="$PROJECT_DIR$/app/lib/azimuthjs/directives/leafletMap.js" />
         <option value="$PROJECT_DIR$/app/lib/azimuthjs/directives/Layer.js" />
         <option value="$PROJECT_DIR$/app/css/customfonts.css" />
         <option value="$PROJECT_DIR$/app/js/directives.js" />
         <option value="$PROJECT_DIR$/app/js/filters.js" />
         <option value="$PROJECT_DIR$/app/lib/azimuthjs/directives/olMap.js" />
-        <option value="$PROJECT_DIR$/app/js/services/mapNavigatorService.js" />
         <option value="$PROJECT_DIR$/app/lib/azimuthjs/services/component/stationsService.js" />
         <option value="$PROJECT_DIR$/app/js/app.js" />
-        <option value="$PROJECT_DIR$/app/js/services/stationsService.js" />
         <option value="$PROJECT_DIR$/app/js/controllers/TemplateController.js" />
-        <option value="$PROJECT_DIR$/app/js/controllers/MapController.js" />
         <option value="$PROJECT_DIR$/app/index.html" />
-        <option value="$PROJECT_DIR$/app/lib/azimuthjs/services/component/layersService.js" />
-        <option value="$PROJECT_DIR$/app/css/omirl.css" />
+        <option value="$PROJECT_DIR$/app/lib/azimuthjs/services/component/mapService.js" />
+        <option value="www.openlayers.org/api/OpenLayers.js" />
+        <option value="$PROJECT_DIR$/app/js/services/stationsService.js" />
+        <option value="$PROJECT_DIR$/app/js/services/mapNavigatorService.js" />
         <option value="$PROJECT_DIR$/app/partials/map.html" />
+        <option value="$PROJECT_DIR$/app/css/omirl.css" />
+        <option value="$PROJECT_DIR$/app/lib/azimuthjs/services/component/layersService.js" />
+        <option value="$PROJECT_DIR$/app/js/controllers/MapController.js" />
       </list>
     </option>
   </component>
@@ -313,15 +319,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="azimuthjs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="directives" />
+              <option name="myItemId" value="js" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -340,6 +338,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="services" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -393,8 +395,8 @@
     <property name="recentsLimit" value="5" />
     <property name="FullScreen" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Communicator/Mercurius" />
-    <property name="options.lastSelected" value="preferences.keymap" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Terex/GenUser/GenUserClient" />
+    <property name="options.lastSelected" value="editor.preferences.smartKeys" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -411,6 +413,14 @@
       <ConfigurationWrapper RunnerId="JavascriptDebugRunner" />
       <method />
     </configuration>
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="scope" value="ALL" />
+      <option name="testName" />
+      <method />
+    </configuration>
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <option name="VMOptions" />
       <option name="arguments" />
@@ -421,23 +431,15 @@
       <option name="showConsoleOnStdOut" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
-      <option name="VMOptions" />
-      <option name="arguments" />
-      <option name="filePath" />
-      <option name="scope" value="ALL" />
-      <option name="testName" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" singleton="true" config-file="">
-      <envs />
-      <method />
-    </configuration>
     <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
       <setting name="configLocationType" value="CONFIG_FILE" />
       <setting name="settingsFile" value="" />
       <setting name="serverType" value="INTERNAL" />
       <setting name="preferredDebugBrowser" value="CHROME" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" singleton="true" config-file="">
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
@@ -504,25 +506,25 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293011" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293011" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21274355" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32937366" sideWeight="0.4997367" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21221696" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32721382" sideWeight="0.4997367" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31989247" sideWeight="0.5002633" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32829374" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -562,15 +564,10 @@
           <option name="timeStamp" value="33" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="76" />
+      <option name="time" value="105" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/js/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="62" selection-start="420" selection-end="420" vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="374" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/partials/tables.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="0" selection-start="138" selection-end="138" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="187" />
@@ -588,7 +585,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930" />
+        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/js/app.js">
@@ -608,7 +607,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930" />
+        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/js/app.js">
@@ -628,7 +629,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930" />
+        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/js/app.js">
@@ -648,7 +651,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930" />
+        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/js/app.js">
@@ -668,7 +673,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930" />
+        <state line="6" column="21" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/js/app.js">
@@ -711,11 +718,6 @@
         <state line="16" column="14" selection-start="529" selection-end="529" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1037" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/css/customfonts.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1363" column="0" selection-start="22160" selection-end="22160" vertical-scroll-proportion="0.83112586" vertical-offset="22669" max-vertical-offset="23273" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/directives/Layer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="76" column="0" selection-start="3292" selection-end="3292" vertical-scroll-proportion="0.0" vertical-offset="1091" max-vertical-offset="3485">
@@ -753,25 +755,6 @@
         <state line="1266" column="7" selection-start="19322" selection-end="19322" vertical-scroll-proportion="0.3319239" vertical-offset="21365" max-vertical-offset="64821" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/js/services/mapNavigatorService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="272" column="35" selection-start="10904" selection-end="10910" vertical-scroll-proportion="0.0" vertical-offset="718" max-vertical-offset="2261">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/js/controllers/MapController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="232" column="78" selection-start="8163" selection-end="8163" vertical-scroll-proportion="0.0" vertical-offset="3696" max-vertical-offset="5185">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/services/component/mapService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="33" selection-start="135" selection-end="157" vertical-scroll-proportion="0.25211865" vertical-offset="0" max-vertical-offset="472" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/module.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="42" selection-start="449" selection-end="449" vertical-scroll-proportion="0.5042373" vertical-offset="0" max-vertical-offset="472" />
@@ -786,9 +769,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/lib/jquery/jquery-1.10.2.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="17078" selection-start="49206" selection-end="49206" vertical-scroll-proportion="0.074074075" vertical-offset="0" max-vertical-offset="459">
+        <state line="4" column="17078" selection-start="49206" selection-end="49206" vertical-scroll-proportion="0.074074075" vertical-offset="0" max-vertical-offset="459" />
+      </provider>
+    </entry>
+    <entry file="http://www.openlayers.org/api/OpenLayers.js">
+      <provider selected="true" editor-type-id="httpFileEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="0" selection-start="1580" selection-end="1580" vertical-scroll-proportion="0.7145359" vertical-offset="255" max-vertical-offset="5355">
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/img/marker.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/js/controllers/TemplateController.js">
@@ -798,48 +796,69 @@
         </state>
       </provider>
     </entry>
-    <entry file="http://www.openlayers.org/api/OpenLayers.js">
-      <provider selected="true" editor-type-id="httpFileEditor">
-        <state />
+    <entry file="file://$PROJECT_DIR$/app/js/services/stationsService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="141" selection-start="496" selection-end="505" vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="5219">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/css/customfonts.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="484" column="0" selection-start="7954" selection-end="7966" vertical-scroll-proportion="0.30164534" vertical-offset="8063" max-vertical-offset="23273">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/directives/olMap.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="46" selection-start="2770" selection-end="2770" vertical-scroll-proportion="0.0" vertical-offset="871" max-vertical-offset="1445">
+        <state line="61" column="46" selection-start="2770" selection-end="2770" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1445">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/services/component/layersService.js">
+    <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/services/component/mapService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="199" column="52" selection-start="6516" selection-end="6516" vertical-scroll-proportion="0.0" vertical-offset="3186" max-vertical-offset="3927">
+        <state line="9" column="36" selection-start="189" selection-end="217" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/index.html">
+    <entry file="file://$PROJECT_DIR$/app/js/services/mapNavigatorService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="221" column="23" selection-start="8249" selection-end="8249" vertical-scroll-proportion="0.8781609" vertical-offset="3375" max-vertical-offset="5355" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/js/services/stationsService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5219">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/css/omirl.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="495" column="20" selection-start="7824" selection-end="7824" vertical-scroll-proportion="0.0" vertical-offset="7871" max-vertical-offset="8551">
+        <state line="411" column="50" selection-start="17030" selection-end="17030" vertical-scroll-proportion="0.0" vertical-offset="6594" max-vertical-offset="7259">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/partials/map.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="71" selection-start="760" selection-end="760" vertical-scroll-proportion="0.36690646" vertical-offset="0" max-vertical-offset="1496">
+        <state line="115" column="71" selection-start="7406" selection-end="7442" vertical-scroll-proportion="-16.23077" vertical-offset="1533" max-vertical-offset="2193">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/css/omirl.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="607" column="32" selection-start="9905" selection-end="9905" vertical-scroll-proportion="0.0" vertical-offset="9841" max-vertical-offset="10795">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/lib/azimuthjs/services/component/layersService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="25" selection-start="1514" selection-end="1531" vertical-scroll-proportion="0.0" vertical-offset="668" max-vertical-offset="4301">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/js/controllers/MapController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="559" column="9" selection-start="20079" selection-end="20079" vertical-scroll-proportion="0.5359589" vertical-offset="9190" max-vertical-offset="10251">
+          <folding>
+            <marker date="1392065218139" expanded="true" signature="13553:13605" placeholder="..." />
+            <marker date="1392065218139" expanded="false" signature="13801:13853" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

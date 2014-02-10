@@ -25,7 +25,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "linkId":2,
                     "selected": false,
                     "hasThirdLevel": false,
-                    "description":"Bagnamento",
+                    "description":"Umidita' del suolo",
                     "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                     "layerID": ""
                 },
@@ -51,7 +51,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultimi 15'",
+                        "description":"Pioggia - Ultimi 15'",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall15m"
                     },
@@ -60,7 +60,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultimi 30'",
+                        "description":"Pioggia - Ultimi 30'",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall30m"
                     },
@@ -69,7 +69,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultima Ora",
+                        "description":"Pioggia - Ultima Ora",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall1h"
                     },
@@ -78,7 +78,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":2,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultime 3 Ore",
+                        "description":"Pioggia - Ultime 3 Ore",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall3h"
                     },
@@ -87,7 +87,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":3,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultime 6 Ore",
+                        "description":"Pioggia - Ultime 6 Ore",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall3h"
                     },
@@ -96,7 +96,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":4,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultime 12 Ore",
+                        "description":"Pioggia - Ultime 12 Ore",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall3h"
                     },
@@ -105,7 +105,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":5,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultime 24 Ore",
+                        "description":"Pioggia - Ultime 24 Ore",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall24h"
                     },
@@ -114,7 +114,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultimi 7 Giorni",
+                        "description":"Pioggia - Ultimi 7 Giorni",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall24h"
                     },
@@ -123,7 +123,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultimi 15 Giorni",
+                        "description":"Pioggia - Ultimi 15 Giorni",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall15d"
                     },
@@ -132,7 +132,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Ultimi 30 Giorni",
+                        "description":"Pioggia - Ultimi 30 Giorni",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:rainfall30d"
                     }
@@ -147,7 +147,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Stato alle 00:00",
+                        "description":"Umidità del suolo - Stato alle 00:00",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:humidity00"
                     },
@@ -156,7 +156,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Stato alle 06:00",
+                        "description":"Umidità del suolo - Stato alle 06:00",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:humidity06"
                     },
@@ -165,7 +165,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Stato alle 12:00",
+                        "description":"Umidità del suolo - Stato alle 12:00",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:humidity12"
                     },
@@ -174,7 +174,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":2,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Stato alle 18:00",
+                        "description":"Umidità del suolo - Stato alle 18:00",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:humidity12"
                     },
@@ -183,7 +183,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":3,
                         "selected": false,
                         "hasThirdLevel": true,
-                        "description":"Condizioni Iniziali",
+                        "description":"Umidità del suolo - Condizioni Iniziali",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "OMIRL:humidityStart"
                     }
@@ -198,7 +198,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": false,
-                        "description":"Minima",
+                        "description":"Temperatura - Minima",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "tempMin"
                     },
@@ -207,7 +207,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": false,
-                        "description":"Media",
+                        "description":"Temperatura - Media",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "tempMean"
                     },
@@ -216,7 +216,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":1,
                         "selected": false,
                         "hasThirdLevel": false,
-                        "description":"Massima",
+                        "description":"Temperatura - Massima",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "tempMax"
                     },
@@ -225,7 +225,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "linkId":2,
                         "selected": false,
                         "hasThirdLevel": false,
-                        "description":"Theta da Media",
+                        "description":"Temperatura - Theta da Media",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "layerID": "tempTheta"
                     }
@@ -274,76 +274,148 @@ angular.module('omirl.mapNavigatorService', []).
                     "description": "Precipitazione",
                     "imageLinkOn": "img/sensors/pluviometriOn.png",
                     "imageLinkOff": "img/sensors/pluviometriOff.png",
+                    "imageLinkInv": "img/sensors/pluviometriInv.png",
                     "count": 50,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "mm"
                 },
                 {
                     "code": "Termo",
                     "description": "Termometri",
                     "imageLinkOn": "img/sensors/temperaturaOn.png",
                     "imageLinkOff": "img/sensors/temperaturaOff.png",
+                    "imageLinkInv": "img/sensors/temperaturaInv.png",
                     "count": 43,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "°"
                 },
                 {
                     "code": "Idro",
                     "description": "Idrometri",
                     "imageLinkOn": "img/sensors/idrometriOn.png",
                     "imageLinkOff": "img/sensors/idrometriOff.png",
+                    "imageLinkInv": "img/sensors/idrometriInv.png",
                     "count": 43,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "m/s"
                 },
                 {
                     "code": "Vento",
                     "description": "Vento",
                     "imageLinkOn": "img/sensors/ventoOn.png",
                     "imageLinkOff": "img/sensors/ventoOff.png",
+                    "imageLinkInv": "img/sensors/ventoInv.png",
                     "count": 43,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "km/h"
                 },
                 {
                     "code": "Igro",
                     "description": "Umidita' del Suolo",
                     "imageLinkOn": "img/sensors/igrometriOn.png",
                     "imageLinkOff": "img/sensors/igrometriOff.png",
+                    "imageLinkInv": "img/sensors/igrometriInv.png",
                     "count": 43,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "%"
                 },
                 {
                     "code": "Radio",
                     "description": "Radiazione Solare",
                     "imageLinkOn": "img/sensors/radiazioneOn.png",
                     "imageLinkOff": "img/sensors/radiazioneOff.png",
+                    "imageLinkInv": "img/sensors/radiazioneInv.png",
                     "count": 43,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "W/m^2"
                 },
                 {
                     "code": "Foglie",
                     "description": "Bagnatura Foliare",
                     "imageLinkOn": "img/sensors/fogliareOn.png",
                     "imageLinkOff": "img/sensors/fogliareOff.png",
+                    "imageLinkInv": "img/sensors/fogliareInv.png",
                     "count": 43,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "%"
                 },
                 {
                     "code": "Press",
                     "description": "Pressione Atmosferica",
                     "imageLinkOn": "img/sensors/pressioneOn.png",
                     "imageLinkOff": "img/sensors/pressioneOff.png",
+                    "imageLinkInv": "img/sensors/pressioneInv.png",
                     "count": 43,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "bar"
                 },
                 {
                     "code": "Batt",
                     "description": "Tensione Batteria",
                     "imageLinkOn": "img/sensors/batteriaOn.png",
                     "imageLinkOff": "img/sensors/batteriaOff.png",
+                    "imageLinkInv": "img/sensors/batteriaInv.png",
                     "count": 43,
-                    "isActive": false
+                    "isActive": false,
+                    "mesUnit": "%"
+                },
+                {
+                    "code": "Boa",
+                    "description": "Boa Onda Metrica",
+                    "imageLinkOn": "img/sensors/boeOn.png",
+                    "imageLinkOff": "img/sensors/boeOff.png",
+                    "imageLinkInv": "img/sensors/boeInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "mesUnit": "%"
                 }
             ];
 
             return aoSensorFirstLevels;
         }
+
+        this.getStaticLayerLinks = function() {
+            var aoStaticLinks = [
+                {
+                    "selected": false,
+                    "description":"Comuni della Liguria",
+                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "layerID": ""
+                },
+                {
+                    "selected": false,
+                    "description":"Province della Liguria",
+                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "layerID": ""
+                },
+                {
+                    "selected": false,
+                    "description":"Aree Allertamento",
+                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "layerID": ""
+                },
+                {
+                    "selected": false,
+                    "description":"Spartiacque della Liguria",
+                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "layerID": ""
+                },
+                {
+                    "selected": false,
+                    "description":"Reticolo Idrografico",
+                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "layerID": ""
+                },
+                {
+                    "selected": false,
+                    "description":"Aree Inondabili",
+                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "layerID": ""
+                }
+            ];
+
+            return aoStaticLinks;
+        }
+
     }]);
 

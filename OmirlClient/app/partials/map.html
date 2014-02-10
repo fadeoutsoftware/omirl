@@ -1,5 +1,20 @@
 <div class="row map-controls-left-panel-row">
     <div class="col-md-2 col-xs-3 map-controls-panel" id ="mapNavigation">
+        <!--<div class="map-geo-search grid row ">
+            <div class="map-geo-search-text col-xs-8 col-md-8">
+                <input type="search" class="form-control" placeholder="Cerca Localita'">
+            </div>
+            <div class="map-geo-search-btn col-xs-2 col-md-2">
+                <button class="btn">Cerca</button>
+            </div>
+        </div> -->
+        <div class="map-geo-search grid row input-group">
+            <input type="search" class="map-geo-search-text form-control" ng-model="m_oController.m_sGeocodingQuery" placeholder="Cerca Localita'" ng-keypress="m_oController.geocodingEnterSearch($event)">
+            <span class="input-group-btn">
+                <a ng-click="m_oController.geocodingSearch()"><i class="map-geo-search-button glyphicon glyphicon-search"></i></a>
+            </span>
+        </div>
+
         <!-- Stazioni -->
         <accordion close-others="false">
             <accordion-group  is-open="isopen">
@@ -19,7 +34,8 @@
 
                     <div class="row">
                         <div ng-repeat="oSensor in m_oController.getSensorLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}" tooltip-popup-delay="500" tooltip="{{oSensor.description}}">
-                            <img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>
+                            <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
+                            <img ng-src="{{oSensor.imageLinkOff}}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>
                         </div>
                     </div>
                 </div>
@@ -48,24 +64,24 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div ng-repeat="oMapLink in m_oController.getMapLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oMapLink.selected}" tooltip-popup-delay="500" tooltip="{{oMapLink.description}}"><img src="{{oMapLink.link}}" ng-click="m_oController.mapLinkClicked(oMapLink)"/></div>
-                        </div>
-
                         <div class="row dropdown">
                             <div class="col-md-8 col-xs-8"  ng-show="m_oController.m_bShowThirdLevel">
-                                    <button type="button" class="btn btn-info dropdown-toggle map-third-level-link" data-toggle="dropdown">{{m_oController.m_sMapThirdLevelSelected}}&nbsp;<span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li ng-repeat="oThirdLevel in m_oController.getThirdLevels()"><a ng-click="m_oController.thirdLevelClicked(oThirdLevel)">{{oThirdLevel.description}}</a></li>
-                                    </ul>
+                                <button type="button" class="btn btn-info dropdown-toggle map-third-level-link" data-toggle="dropdown">{{m_oController.m_sMapThirdLevelSelected}}&nbsp;<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li ng-repeat="oThirdLevel in m_oController.getThirdLevels()"><a ng-click="m_oController.thirdLevelClicked(oThirdLevel)">{{oThirdLevel.description}}</a></li>
+                                </ul>
                             </div>
+                        </div>
+
+                        <div class="row">
+                            <div ng-repeat="oMapLink in m_oController.getMapLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oMapLink.selected}" tooltip-popup-delay="500" tooltip="{{oMapLink.description}}"><img src="{{oMapLink.link}}" ng-click="m_oController.mapLinkClicked(oMapLink)"/></div>
                         </div>
                     </div>
             </accordion-group>
         </accordion>
 
-        <!-- Statici -->
+        <!-- Statici
         <accordion close-others="false">
             <accordion-group  is-open="isopen">
                 <accordion-heading>
@@ -76,8 +92,33 @@
                     </div>
             </accordion-group>
         </accordion>
+        -->
+
+        <div class="map-base-layer dropup">
+            <a id="basemaps" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Sfondo"><i class="icon icon-earth2"></i></a>
+            <ul  class="dropdown-menu" role="menu" aria-labelledby="statics">
+                <li role="presentation">
+                    <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Hybrid')">Google Hybrid</a>
+                </li>
+                <li role="presentation">
+                    <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Streets')">Google Streets</a>
+                </li>
+                <li role="presentation">
+                    <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Physical')">Google Physical</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="map-statics dropup">
+            <a id="statics" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Confini"><i class="icon icon-map-roads pull-left"></i></a>
+            <ul class="icons-dropdown-menu dropdown-menu" role="menu" aria-labelledby="basemaps">
+                <li role="presentation" ng-repeat="oStatic in m_oController.getStaticLinks()">
+                    <a class="basemaps-dropdown-menu-item" ng-class="{'basemaps-dropdown-menu-item-selected': oStatic.selected}"  role="menuitem" ng-click="m_oController.staticLayerClicked(oStatic)">{{oStatic.description}}</a>
+                </li>
+            </ul>
+        </div>
 
     </div>
-    <div class="col-md-10 col-xs-9 map-panel" id = "omirlMap" ol-map zoom="9" center="8.80,44.20" controls="zoom,navigation,layerSwitcher,attribution,mousePosition">
+    <div class="col-md-10 col-xs-9 map-panel" id = "omirlMap" ol-map zoom="9" center="8.80,44.20" controls="zoom,navigation,attribution,mousePosition">
     </div>
 </div>

@@ -6,6 +6,7 @@
 (function() {
     angular.module('az.services').
     value('az.services.mapService', {
-        map: null
+        map: null,
+        stationsPopupControllerAdded: false
     })
 }) ()

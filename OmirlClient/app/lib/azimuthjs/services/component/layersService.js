@@ -13,6 +13,7 @@ angular.module('az.services').factory('az.services.layersService',function($root
         m_oDynamicLayer: null,
         m_oSensorsLayer: null,
         m_oWeatherLayer: null,
+        m_oMarkerLayer: null,
         m_aoStaticLayers: [],
 
         /**
@@ -54,6 +55,9 @@ angular.module('az.services').factory('az.services.layersService',function($root
          */
         addStaticLayer: function(oLayer) {
             this.m_aoStaticLayers.push(oLayer);
+        },
+        removeStaticLayer: function(oLayer) {
+            this.m_aoStaticLayers.remove(oLayer);
         },
         /**
          * Gets the actual Dynamic Layer
@@ -110,6 +114,24 @@ angular.module('az.services').factory('az.services.layersService',function($root
          */
         setWeatherLayer: function(oLayer) {
             this.m_oWeatherLayer = oLayer;
+        },
+        /**
+         * Gets the Marker Layer
+         * @returns {null}
+         */
+        getMarkerLayer: function() {
+            if (this.m_oMarkerLayer == null) {
+                // No: create it
+                this.m_oMarkerLayer = new OpenLayers.Layer.Markers("Search Results");
+            }
+            return this.m_oMarkerLayer;
+        },
+        /**
+         * Sets the Marker Layer
+         * @param oLayer
+         */
+        setMarkerLayer: function(oLayer) {
+            this.m_oMarkerLayer = oLayer;
         },
         getSensorsLayerIndex : function() {
             var iIndex = this.m_aoBaseLayers.length;
@@ -201,15 +223,15 @@ angular.module('az.services').factory('az.services.layersService',function($root
                 rules: [lowRule, middleRule, highRule],
                 context: {
                     valueFunction: function(feature) {
-                        if (feature.layer.map.zoom < 12) return "";
+                        if (feature.layer.map.zoom < 11) return "";
                         else return feature.attributes.value;
                     },
                     radiusFunction: function(feature) {
-                        if (feature.layer.map.zoom < 12)  return 5;
+                        if (feature.layer.map.zoom < 11)  return 5;
                         else return 15;
                     },
                     strokeFunction: function(feature) {
-                        if (feature.layer.map.zoom < 12)  return 3;
+                        if (feature.layer.map.zoom < 11)  return 3;
                         else return 12;
                     }
                 }
