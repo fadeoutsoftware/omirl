@@ -121,4 +121,12 @@
     </div>
     <div class="col-md-10 col-xs-9 map-panel" id = "omirlMap" ol-map zoom="9" center="8.80,44.20" controls="zoom,navigation,attribution,mousePosition">
     </div>
+
+    <div class="map-legend-map" ng-show="m_oController.m_bDynamicLayerActive"> <!--ng-style="{right: m_oController.getLegendRight()}"-->
+        <a tooltip-popup-delay="500" tooltip="Legenda Mappa" ng-click="m_oController.mapLegendClicked()"><i class="icon icon-tag pull-left"></i></a><img src="{{m_oController.m_sMapLegendPath}}" ng-show="m_oController.m_bShowMapLegendImage" class="map-legend-image">
+    </div>
+
+    <div class="map-legend-stations" ng-show="m_oController.m_bSensorLayerActive">
+        <a tooltip-popup-delay="500" tooltip="Legenda Stazioni" ng-click="m_oController.sensorsLegendClicked()"><i class="icon icon-tags pull-left"></i></a><img src="{{m_oController.m_sSensorsLegendPath}}"ng-show="m_oController.m_bShowSensorsLegendImage" class="map-legend-image">
+    </div>
 </div>

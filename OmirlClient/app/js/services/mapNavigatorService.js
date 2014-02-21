@@ -18,6 +18,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "hasThirdLevel": false,
                     "description":"Pioggia",
                     "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "legendLink": "img/mapLegend.jpg",
                     "layerID": ""
                 },
                 {
@@ -27,6 +28,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "hasThirdLevel": false,
                     "description":"Umidita' del suolo",
                     "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "legendLink": "img/mapLegend.jpg",
                     "layerID": ""
                 },
                 {
@@ -36,6 +38,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "hasThirdLevel": false,
                     "description":"Temperatura",
                     "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "legendLink": "img/mapLegend.jpg",
                     "layerID": ""
                 }
             ];
@@ -53,6 +56,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultimi 15'",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall15m"
                     },
                     {
@@ -62,6 +66,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultimi 30'",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall30m"
                     },
                     {
@@ -71,6 +76,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultima Ora",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall1h"
                     },
                     {
@@ -80,6 +86,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultime 3 Ore",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall3h"
                     },
                     {
@@ -89,6 +96,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultime 6 Ore",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall3h"
                     },
                     {
@@ -98,6 +106,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultime 12 Ore",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall3h"
                     },
                     {
@@ -107,6 +116,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultime 24 Ore",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall24h"
                     },
                     {
@@ -116,6 +126,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultimi 7 Giorni",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall24h"
                     },
                     {
@@ -125,6 +136,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultimi 15 Giorni",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall15d"
                     },
                     {
@@ -134,6 +146,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "hasThirdLevel": true,
                         "description":"Pioggia - Ultimi 30 Giorni",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                        "legendLink": "img/mapLegend.jpg",
                         "layerID": "OMIRL:rainfall30d"
                     }
                 ];
@@ -277,6 +290,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/pluviometriInv.png",
                     "count": 50,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "mm"
                 },
                 {
@@ -287,6 +301,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/temperaturaInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "°"
                 },
                 {
@@ -297,6 +312,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/idrometriInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "m/s"
                 },
                 {
@@ -307,6 +323,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/ventoInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "km/h"
                 },
                 {
@@ -317,6 +334,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/igrometriInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "%"
                 },
                 {
@@ -327,6 +345,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/radiazioneInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "W/m^2"
                 },
                 {
@@ -337,6 +356,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/fogliareInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "%"
                 },
                 {
@@ -347,6 +367,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/pressioneInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "bar"
                 },
                 {
@@ -357,6 +378,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/batteriaInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "%"
                 },
                 {
@@ -367,6 +389,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "imageLinkInv": "img/sensors/boeInv.png",
                     "count": 43,
                     "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
                     "mesUnit": "%"
                 }
             ];
@@ -379,32 +402,32 @@ angular.module('omirl.mapNavigatorService', []).
                 {
                     "selected": false,
                     "description":"Comuni della Liguria",
-                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
-                    "layerID": ""
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "Municipalities_ISTAT12010"
                 },
                 {
                     "selected": false,
                     "description":"Province della Liguria",
-                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
-                    "layerID": ""
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "Districts_ISTAT2010"
                 },
                 {
                     "selected": false,
                     "description":"Aree Allertamento",
-                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
-                    "layerID": ""
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "Zone_di_Allertamento"
                 },
                 {
                     "selected": false,
                     "description":"Spartiacque della Liguria",
-                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
-                    "layerID": ""
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "piccoli_bacini_genova_rev1"
                 },
                 {
                     "selected": false,
                     "description":"Reticolo Idrografico",
-                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
-                    "layerID": ""
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "Reticolo_ISPRA"
                 },
                 {
                     "selected": false,

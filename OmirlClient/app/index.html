@@ -296,10 +296,14 @@
 
 				function resizeMap(){
 					var mapHeight = $("#top").height();// - $("#yr-map-header").outerHeight() - $("#yr-map-footer").outerHeight();
-					$("#contentcontainer").height(mapHeight);
+                    var mapWidth = $("#top").width();
+
+                    $("#contentcontainer").height(mapHeight);
 					
 					if ($("#omirlMap") != null) {
 						$("#omirlMap").height(mapHeight);
+                        $("#omirlMap").width(mapWidth);
+
 					}
 				}
 	</script>	

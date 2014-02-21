@@ -329,6 +329,8 @@ i.scroll:hover {
     background: #7fbbda;
     color: #ffffff;
     position: relative;
+    width: 100%;
+    margin: 0px;
 }
 
 .map-accordion-title {
@@ -569,6 +571,34 @@ i.scroll:hover {
     border-top-right-radius: 4px !important;
     border-bottom-right-radius: 4px !important;
     border-color: #0a5175;
+}
+
+.map-legend-map {
+    position: absolute;
+    bottom: 5px;
+    right: 20px;
+    font-size: 40px;
+    color: #000000;
+}
+
+.map-legend-map a {
+    color: #000000;
+}
+
+.map-legend-stations {
+    position: absolute;
+    bottom: 45px;
+    right: 20px;
+    font-size: 40px;
+    color: #000000;
+}
+
+.map-legend-stations a {
+    color: #000000;
+}
+
+.map-legend-image {
+    opacity: 0.8;
 }
 
 .map-statics {

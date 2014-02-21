@@ -7,9 +7,10 @@
 
 var MapController = (function () {
 
-    function MapController($scope, layerService, mapService, oMapNavigatorService, oStationsService) {
+    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService) {
         // Initialize Members
         this.m_oScope = $scope;
+        this.m_oWindow = $window;
         this.m_oScope.m_oController = this;
         this.m_oLayerService = layerService;
         this.m_oMapService = mapService;
@@ -32,8 +33,21 @@ var MapController = (function () {
         this.m_bShowThirdLevel = false;
         // Text of the selected station layer
         this.m_sSensorLegendSelected = "Stazioni";
+        // Path of the map legend image
+        this.m_sMapLegendPath = "";
+        // Path of the sensors legend image
+        this.m_sSensorsLegendPath = "";
+
         // Test of the Geocoding Query
         this.m_sGeocodingQuery = "";
+        // Flag to know if a map is active
+        this.m_bDynamicLayerActive = false;
+        // Flag to Know if a Station Layer is active
+        this.m_bSensorLayerActive = false;
+        // Flag to Know if the map legend image is to be shown
+        this.m_bShowMapLegendImage = true;
+        // Flag to Know if the sensors legend image is to be shown
+        this.m_bShowSensorsLegendImage = true;
 
         // Remembers the actual selected third level modifier
         this.m_sMapThirdLevelSelectedModifier = "";
@@ -66,6 +80,8 @@ var MapController = (function () {
 
         if ($("#omirlMap") != null) {
             $("#omirlMap").height(mapHeight);
+            //var mapWidth = $("#top").width();
+            //$("#omirlMap").width(mapWidth);
         }
 
         // Initialize Map Link from Navigator Service
@@ -170,11 +186,11 @@ var MapController = (function () {
         // Is this a Back click?
         if (oMapLink != null) {
             // Set Selected Layer
-            this.m_sMapLegendSelected = oMapLink.description;
+            if (!this.m_bDynamicLayerActive && this.m_bIsFirstLevel) this.m_sMapLegendSelected = oMapLink.description;
             bIsSelected = oMapLink.selected;
         }
         else {
-            this.m_sMapLegendSelected = "Mappe";
+            if (!this.m_bDynamicLayerActive) this.m_sMapLegendSelected = "Mappe";
         }
 
         // Clear all selection flags
@@ -224,6 +240,8 @@ var MapController = (function () {
                     // Layer Click
                     this.m_sMapLegendSelected = oMapLink.description;
                     this.selectedDynamicLayer(oMapLink, this.m_sMapThirdLevelSelectedModifier);
+                    this.m_bDynamicLayerActive = true;
+                    this.m_sMapLegendPath = oMapLink.legendLink;
                 }
                 else {
                     // Remove from the map
@@ -233,6 +251,8 @@ var MapController = (function () {
                     }
                     this.m_sMapLegendSelected = "";
                     this.m_bShowThirdLevel = false;
+                    this.m_bDynamicLayerActive = false;
+                    this.m_sMapLegendPath = "";
                 }
             }
         }
@@ -254,6 +274,7 @@ var MapController = (function () {
             this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
         }
 
+        oLayer.setOpacity(0.6);
         // Add the new layer to the map
         this.m_oLayerService.setDynamicLayer(oLayer);
         this.m_oMapService.map.addLayer(oLayer);
@@ -294,15 +315,19 @@ var MapController = (function () {
 
             // Set
             this.showStationsLayer(oSensorLink);
+            this.m_bSensorLayerActive = true;
+            this.m_sSensorsLegendPath = oSensorLink.legendLink;
         }
         else {
             // Set the textual description
             this.m_sSensorLegendSelected = "";
 
             oSensorLink.isActive = false;
+            this.m_sSensorsLegendPath = "";
             try{
                 // remove the Sensors Layer from the map
                 this.m_oMapService.map.removeLayer(this.m_oLayerService.getSensorsLayer());
+                this.m_bSensorLayerActive = false;
             }
             catch (err) {
 
@@ -586,8 +611,32 @@ var MapController = (function () {
         return this.m_aoStaticLinks;
     }
 
+    /**
+     * Method that can be called to obtain the width center (TODO to finish...)
+     * @returns {number}
+     */
+    MapController.prototype.getLegendRight = function() {
+        var iWidth = this.m_oWindow.innerWidth;
+        return iWidth/2;
+    }
+
+    /**
+     * Method called when the user clicks on the map legend Icon: switches show flag of the legend image
+     */
+    MapController.prototype.mapLegendClicked = function() {
+        this.m_bShowMapLegendImage = !this.m_bShowMapLegendImage;
+    }
+
+    /**
+     *  Method called when the user clicks on the sensor legend Icon: switches show flag of the legend image
+     */
+    MapController.prototype.sensorsLegendClicked = function() {
+        this.m_bShowSensorsLegendImage = !this.m_bShowSensorsLegendImage;
+    }
+
     MapController.$inject = [
         '$scope',
+        '$window',
         'az.services.layersService',
         'az.services.mapService',
         'MapNavigatorService',
