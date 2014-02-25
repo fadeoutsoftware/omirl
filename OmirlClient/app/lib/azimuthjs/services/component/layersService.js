@@ -103,8 +103,49 @@ angular.module('az.services').factory('az.services.layersService',function($root
          */
         getWeatherLayer: function() {
             if (this.m_oWeatherLayer == null) {
+
+                var myClusterStyleMap = new OpenLayers.StyleMap({
+                    'default':  new OpenLayers.Style({
+                        externalGraphic: '${count}',
+                        graphicWith: 48,
+                        graphicHeight: 48,
+                        label: '',
+                        labelOutlineColor: "#aaaaaa",
+                        labelOutlineWidth: 2
+                    }, {
+                        context: {
+                            count: function(feature) {
+                                if (feature.cluster) { // is `.cluster` the array of clustered features
+                                    var iFeatures;
+                                    var iMean = 0;
+                                    for ( iFeatures =0; iFeatures<feature.cluster.length; iFeatures++) {
+                                        var oFeature = feature.cluster[iFeatures];
+                                        iMean += oFeature.attributes['value'];
+                                    }
+
+                                    if (feature.cluster.length>0) {
+                                        iMean = iMean/feature.cluster.length;
+                                    }
+
+                                    if (iMean<=0) iMean = 0;
+                                    if (iMean>32) iMean = 32;
+
+                                    iMean = Math.round(iMean);
+
+                                    return 'img/weather/w'+iMean+'.png';
+                                } else { // is not clustered
+                                    return 'img/weather/w8.png'; // no label
+                                }
+                            }
+                        }
+                    })
+                });
+
                 // No: create it
-                this.m_oWeatherLayer = new OpenLayers.Layer.Vector("Weather");
+                this.m_oWeatherLayer = new OpenLayers.Layer.Vector("Weather", {
+                    strategies: [new OpenLayers.Strategy.Cluster({distance: 25})],
+                    styleMap: myClusterStyleMap
+                });
             }
             return this.m_oWeatherLayer;
         },
@@ -139,6 +180,17 @@ angular.module('az.services').factory('az.services.layersService',function($root
             if (this.m_oDynamicLayer != null) iIndex ++;
 
             iIndex += this.m_aoStaticLayers.length;
+
+            return iIndex;
+        },
+        getWeatherLayerIndex : function() {
+            var iIndex = this.m_aoBaseLayers.length;
+
+            if (this.m_oDynamicLayer != null) iIndex ++;
+
+            iIndex += this.m_aoStaticLayers.length;
+
+            if (this.m_oSensorsLayer != null) iIndex ++;
 
             return iIndex;
         },

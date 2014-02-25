@@ -73,6 +73,10 @@
                 //Set scope variable for the map
                 //if(model){model.assign(scope, map);}
                 mapService.map = map;
+
+                if (mapService.readyCallback != null) {
+                    mapService.readyCallback(mapService.callbackArg);
+                }
             }
         };
     }]);

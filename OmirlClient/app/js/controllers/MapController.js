@@ -63,6 +63,9 @@ var MapController = (function () {
         // Statics Array
         this.m_aoStaticLinks = [];
 
+        // Weather Variables
+        this.m_bIsWeatherActive = true;
+
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
             var oBaseLayer1 = new OpenLayers.Layer.Google("Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
@@ -80,8 +83,6 @@ var MapController = (function () {
 
         if ($("#omirlMap") != null) {
             $("#omirlMap").height(mapHeight);
-            //var mapWidth = $("#top").width();
-            //$("#omirlMap").width(mapWidth);
         }
 
         // Initialize Map Link from Navigator Service
@@ -90,6 +91,9 @@ var MapController = (function () {
         this.m_aoSensorsLinks = this.m_oMapNavigatorService.getSensorFirstLevel();
 
         this.m_aoStaticLinks = this.m_oMapNavigatorService.getStaticLayerLinks();
+
+        this.m_oMapService.callbackArg = this;
+        this.m_oMapService.readyCallback = this.AddWeatherLayer;
     }
 
     MapController.prototype.setBaseLayer = function(sCode) {
@@ -632,6 +636,135 @@ var MapController = (function () {
      */
     MapController.prototype.sensorsLegendClicked = function() {
         this.m_bShowSensorsLegendImage = !this.m_bShowSensorsLegendImage;
+    }
+
+    MapController.prototype.ToggleWeatherLayer = function() {
+        if  (this.m_bIsWeatherActive)  {
+            this.m_bIsWeatherActive = false;
+            this.RemoveWeatherLayer();
+        }
+        else {
+            this.m_bIsWeatherActive = true;
+            this.AddWeatherLayer(this);
+        }
+    }
+
+    MapController.prototype.AddWeatherLayer = function(oMapController) {
+
+        // Obtain Stations Values from the server
+        var aoStations = oMapController.m_oStationsService.getWeather();
+
+        try{
+            // remove the actual Sensors Layer from the map
+            oMapController.m_oMapService.map.removeLayer(oMapController.m_oLayerService.getWeatherLayer());
+        }
+        catch (err) {
+
+        }
+
+        // Clear the layer
+        oMapController.m_oLayerService.getWeatherLayer().destroyFeatures();
+
+        // Add the layer to the map
+        oMapController.m_oMapService.map.addLayer(oMapController.m_oLayerService.getWeatherLayer());
+        oMapController.m_oMapService.map.setLayerIndex(oMapController.m_oLayerService.getWeatherLayer(), oMapController.m_oLayerService.getWeatherLayerIndex());
+
+
+        // Projection change for points
+        var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+        var projectTo = oMapController.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
+
+        // For each station
+        var iStations;
+        var aoFeatures = [];
+        for ( iStations =0; iStations<aoStations.length; iStations++) {
+            var oStation = aoStations[iStations];
+
+            // Create the feature
+            var oFeature = new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.Point(oStation.lon, oStation.lat).transform(epsg4326, projectTo),
+                {},
+                {externalGraphic: oStation.imgPath, graphicHeight: 48, graphicWidth: 48, graphicXOffset:0, graphicYOffset:0, title: oStation.name + " " + oStation.value }
+                //,{title: oStation.name + " " + oStation.value }
+            );
+
+
+            // Set attributes of the Feature
+            oFeature.attributes = {
+                // Station Id
+                stationId: oStation.stationId,
+                // Station Name
+                name: oStation.name,
+                // Sensor Value
+                value: oStation.value,
+                // Reference Date
+                referenceDate: oStation.refDate,
+                // Measure Unit
+                measureUnit: '',
+                // Other Html content for the pop up, received from the server
+                otherHtml: oStation.otherHtml,
+                // Altitude
+                altitude: oStation.alt,
+                // Coordinates
+                lat: oStation.lat,
+                lon: oStation.lon,
+                // Station Code
+                shortCode: oStation.shortCode,
+                // Image Link to use in the popup
+                imageLinkInv: ''
+            };
+
+            // Add the feature to the array
+            aoFeatures.push(oFeature);
+        }
+
+        // Add feature array to the layer
+        oMapController.m_oLayerService.getWeatherLayer().addFeatures(aoFeatures);
+
+        /*
+        // Feature Click and Hover Control: added?
+        if (this.m_oMapService.stationsPopupControllerAdded == false) {
+
+            // No: take a reference to the map controller
+            var oMapController = this;
+
+            // Create the Control
+            var oPopupCtrl = new OpenLayers.Control.SelectFeature(this.m_oLayerService.getSensorsLayer(), {
+                hover: true,
+                onSelect: function(feature) {
+                    // Hover Select: call internal function
+                    oMapController.showStationsPopup(feature);
+                },
+                onUnselect: function(feature) {
+                    // Hover Unselect: remove pop up
+                    feature.layer.map.removePopup(feature.popup);
+                },
+                callbacks: {
+                    // Click
+                    click: function(feature) {
+                        // Show chart
+                        oMapController.showStationsChart(feature);
+                    }
+                }
+            });
+
+            // Add and activate the control
+            this.m_oMapService.map.addControl(oPopupCtrl);
+            oPopupCtrl.activate();
+
+            // Remember it exists now
+            this.m_oMapService.stationsPopupControllerAdded = true;
+        }*/
+    }
+
+    MapController.prototype.RemoveWeatherLayer = function() {
+        try{
+            // remove the actual Sensors Layer from the map
+            this.m_oMapService.map.removeLayer(this.m_oLayerService.getWeatherLayer());
+        }
+        catch (err) {
+
+        }
     }
 
     MapController.$inject = [

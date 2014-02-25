@@ -15,6 +15,16 @@
             </span>
         </div>
 
+
+        <div class="grid row map-weather-panel">
+            <div class="col-md-1 col-xs-1 map-firstlevel-icon map-weather-panel-icon" ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsWeatherActive}" tooltip-popup-delay="500" tooltip="Situazione Attuale del Tempo">
+                <img ng-src="{{m_oController.m_bIsWeatherActive == true && 'img/chetempofa_on2.png' || 'img/chetempofa.png'}}" ng-click="m_oController.ToggleWeatherLayer()"/>
+            </div>
+            <div class="col-md-8 col-xs-8 map-accordion-title map-weather-panel-text">
+                Meteo Attuale
+            </div>
+        </div>
+
         <!-- Stazioni -->
         <accordion close-others="false">
             <accordion-group  is-open="isopen">
