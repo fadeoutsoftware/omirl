@@ -18,59 +18,94 @@
 
         <div class="grid row map-weather-panel">
             <div class="col-md-1 col-xs-1 map-firstlevel-icon map-weather-panel-icon" ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsWeatherActive}" tooltip-popup-delay="500" tooltip="Situazione Attuale del Tempo">
-                <img ng-src="{{m_oController.m_bIsWeatherActive == true && 'img/chetempofa_on2.png' || 'img/chetempofa.png'}}" ng-click="m_oController.ToggleWeatherLayer()"/>
+                <img class="img-map-firstlevel-icon" ng-src="{{m_oController.m_bIsWeatherActive == true && 'img/chetempofa_on2.png' || 'img/chetempofa.png'}}" ng-click="m_oController.ToggleWeatherLayer()"/>
             </div>
-            <div class="col-md-8 col-xs-8 map-accordion-title map-weather-panel-text">
-                Meteo Attuale
+            <div class="col-md-1 col-xs-1">
+                <div class="map-base-layer dropdown">
+                    <a id="basemaps" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Sfondo"><i class="icon icon-earth2"></i></a>
+                    <ul  class="dropdown-menu" role="menu" aria-labelledby="statics">
+                        <li role="presentation">
+                            <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Hybrid')">Google Hybrid</a>
+                        </li>
+                        <li role="presentation">
+                            <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Streets')">Google Streets</a>
+                        </li>
+                        <li role="presentation">
+                            <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Physical')">Google Physical</a>
+                        </li>
+                        <li role="presentation">
+                            <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Satellite')">Google Satellite</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="col-md-1 col-xs-1">
+                <div class="map-statics dropdown">
+                    <a id="statics" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Confini"><i class="icon icon-map-roads pull-left"></i></a>
+                    <ul class="icons-dropdown-menu dropdown-menu" role="menu" aria-labelledby="basemaps">
+                        <li role="presentation" ng-repeat="oStatic in m_oController.getStaticLinks()">
+                            <a class="basemaps-dropdown-menu-item" ng-class="{'basemaps-dropdown-menu-item-selected': oStatic.selected}"  role="menuitem" ng-click="m_oController.staticLayerClicked(oStatic)">{{oStatic.description}}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <!-- Stazioni -->
-        <accordion close-others="false">
-            <accordion-group  is-open="isopen">
-                <accordion-heading>
-                    <div>
-                        <div class="icon icon-gauge pull-left"></div><span class="map-accordion-title">Stazioni</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
-                    </div>
-                </accordion-heading>
-                <div class="map-accordion-content">
-                    <div class="row">
-                        <div class="col-md-8 col-xs-8 map-text-legend">
-                            <div class="row">
-                                <div class="col-md-12 col-xs-12 map-text-legend-selected">{{m_oController.m_sSensorLegendSelected}}</div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div ng-repeat="oSensor in m_oController.getSensorLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}" tooltip-popup-delay="500" tooltip="{{oSensor.description}}">
-                            <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
-                            <img ng-src="{{oSensor.imageLinkOff}}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>
-                        </div>
-                    </div>
-                </div>
-            </accordion-group>
-        </accordion>
+        <div id="omirl-collapsable-panels">
 
-        <!-- Mappe -->
-        <accordion close-others="false">
-            <accordion-group  is-open="isopen" ng-class="{'map-accordion-open' : isopen}">
-                <accordion-heading>
-                    <div class="icon icon-earth2 pull-left"></div><span class="map-accordion-title">Mappe</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
-                </accordion-heading>
+
+            <!-- Stazioni -->
+
+            <accordion close-others="true">
+                <accordion-group  >
+                    <accordion-heading>
+                        <div>
+                            <div class="icon icon-gauge pull-left"></div><span class="map-accordion-title">Stazioni</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                        </div>
+                    </accordion-heading>
                     <div class="map-accordion-content">
                         <div class="row">
-                            <div class="col-md-1 col-xs-1 map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
-                                <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsFirstLevel" ng-click="m_oController.mapLinkClicked(null)"></i>
-                                <i class="fa fa-globe" ng-show="m_oController.m_bIsFirstLevel"></i>
-                            </div>
-                            <div class="col-md-5 col-xs-5 map-text-legend">
+                            <div class="col-md-8 col-xs-8 map-text-legend">
                                 <div class="row">
-                                    <div class="col-md-12 col-xs-12 map-text-legend-selected">{{m_oController.m_sMapLegendSelected}}</div>
+                                    <div class="col-md-12 col-xs-12 map-text-legend-selected">{{m_oController.m_sSensorLegendSelected}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div ng-repeat="oSensor in m_oController.getSensorLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}" tooltip-popup-delay="500" tooltip="{{oSensor.description}}">
+                                <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
+                                <img  class="img-map-firstlevel-icon" ng-src="{{oSensor.imageLinkOff}}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>
+                            </div>
+                        </div>
+                    </div>
+                </accordion-group>
+
+
+
+
+                <!-- Mappe -->
+
+                <accordion-group  ng-class="{'map-accordion-open' : isopen}">
+                    <accordion-heading>
+                        <div class="icon icon-earth2 pull-left"></div><span class="map-accordion-title">Mappe</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                    </accordion-heading>
+                    <div class="map-accordion-content">
+                        <div class="row">
+                            <div class="col-md-4 map-text-legend">
+
+                                <div class="row">
+                                    <div class="map-text-legend-selected">{{m_oController.m_sMapLegendSelected}}</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 col-xs-12 map-text-legend-hover">{{m_oController.m_sMapLegendHover}}</div>
                                 </div>
+                            </div>
+                            <div class="col-md-1 map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
+                                <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsFirstLevel" ng-click="m_oController.mapLinkClicked(null)"></i>
+                                <!--i class="fa fa-globe" ng-show="m_oController.m_bIsFirstLevel"></i-->
                             </div>
                         </div>
 
@@ -85,58 +120,25 @@
                         </div>
 
                         <div class="row">
-                            <div ng-repeat="oMapLink in m_oController.getMapLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oMapLink.selected}" tooltip-popup-delay="500" tooltip="{{oMapLink.description}}"><img src="{{oMapLink.link}}" ng-click="m_oController.mapLinkClicked(oMapLink)"/></div>
+                            <div ng-repeat="oMapLink in m_oController.getMapLinks()" class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oMapLink.selected}" tooltip-popup-delay="500" tooltip="{{oMapLink.description}}"><img  class="img-map-firstlevel-icon" src="{{oMapLink.link}}" ng-click="m_oController.mapLinkClicked(oMapLink)"/></div>
                         </div>
                     </div>
-            </accordion-group>
-        </accordion>
+                </accordion-group>
+            </accordion>
 
-        <!-- Statici
-        <accordion close-others="false">
-            <accordion-group  is-open="isopen">
-                <accordion-heading>
-                    <div class="icon icon-map-roads pull-left"></div><span class="map-accordion-title">Statici</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
-                </accordion-heading>
-                    <div class="map-accordion-content">
-                        Qui ci mettiamo gli statici
-                    </div>
-            </accordion-group>
-        </accordion>
-        -->
-
-        <div class="map-base-layer dropup">
-            <a id="basemaps" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Sfondo"><i class="icon icon-earth2"></i></a>
-            <ul  class="dropdown-menu" role="menu" aria-labelledby="statics">
-                <li role="presentation">
-                    <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Hybrid')">Google Hybrid</a>
-                </li>
-                <li role="presentation">
-                    <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Streets')">Google Streets</a>
-                </li>
-                <li role="presentation">
-                    <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Physical')">Google Physical</a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="map-statics dropup">
-            <a id="statics" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Confini"><i class="icon icon-map-roads pull-left"></i></a>
-            <ul class="icons-dropdown-menu dropdown-menu" role="menu" aria-labelledby="basemaps">
-                <li role="presentation" ng-repeat="oStatic in m_oController.getStaticLinks()">
-                    <a class="basemaps-dropdown-menu-item" ng-class="{'basemaps-dropdown-menu-item-selected': oStatic.selected}"  role="menuitem" ng-click="m_oController.staticLayerClicked(oStatic)">{{oStatic.description}}</a>
-                </li>
-            </ul>
         </div>
 
     </div>
     <div class="col-md-10 col-xs-9 map-panel" id = "omirlMap" ol-map zoom="9" center="8.80,44.20" controls="zoom,navigation,attribution,mousePosition">
     </div>
 
-    <div class="map-legend-map" ng-show="m_oController.m_bDynamicLayerActive"> <!--ng-style="{right: m_oController.getLegendRight()}"-->
-        <a tooltip-popup-delay="500" tooltip="Legenda Mappa" ng-click="m_oController.mapLegendClicked()"><i class="icon icon-tag pull-left"></i></a><img src="{{m_oController.m_sMapLegendPath}}" ng-show="m_oController.m_bShowMapLegendImage" class="map-legend-image">
+    <div class="map-legend-map" ng-show="m_oController.m_bDynamicLayerActive">
+        <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sMapLegendTooltip}}" ng-click="m_oController.mapLegendClicked()"><img class="map-legend-icon pull-left" src="{{m_oController.m_sMapLegendIconPath}}"></a><img src="{{m_oController.m_sMapLegendPath}}" ng-show="m_oController.m_bShowMapLegendImage" class="map-legend-image">
+        <!--<a tooltip-popup-delay="500" tooltip="Legenda Mappa" ng-click="m_oController.mapLegendClicked()"><i class="icon icon-tag pull-left"></i></a><img src="{{m_oController.m_sMapLegendPath}}" ng-show="m_oController.m_bShowMapLegendImage" class="map-legend-image">-->
     </div>
 
     <div class="map-legend-stations" ng-show="m_oController.m_bSensorLayerActive">
-        <a tooltip-popup-delay="500" tooltip="Legenda Stazioni" ng-click="m_oController.sensorsLegendClicked()"><i class="icon icon-tags pull-left"></i></a><img src="{{m_oController.m_sSensorsLegendPath}}"ng-show="m_oController.m_bShowSensorsLegendImage" class="map-legend-image">
+        <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip}}" ng-click="m_oController.sensorsLegendClicked()"><img class="sensor-legend-icon pull-left" src="{{m_oController.m_sSensorsLegendIconPath}}"></a><img src="{{m_oController.m_sSensorsLegendPath}}"ng-show="m_oController.m_bShowSensorsLegendImage" class="map-legend-image">
+        <!--<a tooltip-popup-delay="500" tooltip="Legenda Stazioni" ng-click="m_oController.sensorsLegendClicked()"><i class="icon icon-tags pull-left"></i></a><img src="{{m_oController.m_sSensorsLegendPath}}"ng-show="m_oController.m_bShowSensorsLegendImage" class="map-legend-image">-->
     </div>
 </div>

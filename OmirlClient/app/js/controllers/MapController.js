@@ -68,13 +68,22 @@ var MapController = (function () {
 
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
-            var oBaseLayer1 = new OpenLayers.Layer.Google("Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
-            var oBaseLayer2 = new OpenLayers.Layer.Google("Streets", {numZoomLevels: 20});
-            var oBaseLayer3 = new OpenLayers.Layer.Google("Physical", {type: google.maps.MapTypeId.TERRAIN, numZoomLevels: 20});
+            var oBaseLayer1 = new OpenLayers.Layer.Google("Physical", {type: google.maps.MapTypeId.TERRAIN, numZoomLevels: 20});
+            var oBaseLayer2 = new OpenLayers.Layer.Google("Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
+            var oBaseLayer3 = new OpenLayers.Layer.Google("Streets", {numZoomLevels: 20});
+            var oBaseLayer4 = new OpenLayers.Layer.Google("Satellite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20});
+
+            /*
+            oBaseLayer1.animationEnabled = false;
+            oBaseLayer2.animationEnabled = false;
+            oBaseLayer3.animationEnabled = false;
+            oBaseLayer4.animationEnabled = false;
+            */
 
             this.m_oLayerService.addBaseLayer(oBaseLayer1);
             this.m_oLayerService.addBaseLayer(oBaseLayer2);
             this.m_oLayerService.addBaseLayer(oBaseLayer3);
+            this.m_oLayerService.addBaseLayer(oBaseLayer4);
         }
 
         // Set map height
@@ -85,12 +94,39 @@ var MapController = (function () {
             $("#omirlMap").height(mapHeight);
         }
 
+        var oServiceVar = this;
+
         // Initialize Map Link from Navigator Service
-        this.m_aoMapLinks = this.m_oMapNavigatorService.getMapFirstLevels();
+        this.m_oMapNavigatorService.getMapFirstLevels().success(function (data, status) {
 
-        this.m_aoSensorsLinks = this.m_oMapNavigatorService.getSensorFirstLevel();
+            for (var iElement = 0; iElement < data.length; iElement++) {
+                oServiceVar.m_aoMapLinks.push(data[iElement]);
+            }
+        }).error(function (data, status) {
+            alert('Error Dynamic Layer Items to add to the Menu');
+        });
 
-        this.m_aoStaticLinks = this.m_oMapNavigatorService.getStaticLayerLinks();
+
+
+        this.m_oMapNavigatorService.getSensorFirstLevel().success(function (data, status) {
+
+            for (var iElement = 0; iElement < data.length; iElement++) {
+                oServiceVar.m_aoSensorsLinks.push(data[iElement]);
+            }
+        }).error(function (data, status) {
+            alert('Error Loading Sensors Items to add to the Menu');
+        });
+
+
+        this.m_oMapNavigatorService.getStaticLayerLinks().success(function (data, status) {
+
+            for (var iElement = 0; iElement < data.length; iElement++) {
+                oServiceVar.m_aoStaticLinks.push(data[iElement]);
+            }
+        }).error(function (data, status) {
+            alert('Error Loading Static Layers to add to the Menu');
+        });
+
 
         this.m_oMapService.callbackArg = this;
         this.m_oMapService.readyCallback = this.AddWeatherLayer;
@@ -242,10 +278,13 @@ var MapController = (function () {
                 if (!bIsSelected) {
                     oMapLink.selected = true;
                     // Layer Click
+                    this.m_sMapLegendIconPath = oMapLink.link;
+                    this.m_sMapLegendTooltip = "Legenda " + oMapLink.description;
                     this.m_sMapLegendSelected = oMapLink.description;
                     this.selectedDynamicLayer(oMapLink, this.m_sMapThirdLevelSelectedModifier);
                     this.m_bDynamicLayerActive = true;
                     this.m_sMapLegendPath = oMapLink.legendLink;
+
                 }
                 else {
                     // Remove from the map
@@ -257,6 +296,8 @@ var MapController = (function () {
                     this.m_bShowThirdLevel = false;
                     this.m_bDynamicLayerActive = false;
                     this.m_sMapLegendPath = "";
+                    this.m_sMapLegendTooltip = "Legenda Mappa";
+                    this.m_sMapLegendIconPath = "";
                 }
             }
         }
@@ -321,6 +362,8 @@ var MapController = (function () {
             this.showStationsLayer(oSensorLink);
             this.m_bSensorLayerActive = true;
             this.m_sSensorsLegendPath = oSensorLink.legendLink;
+            this.m_sSensorsLegendIconPath = oSensorLink.imageLinkOff;
+            this.m_sSensorLegendTooltip = "Legenda " + oSensorLink.description;
         }
         else {
             // Set the textual description
@@ -332,6 +375,8 @@ var MapController = (function () {
                 // remove the Sensors Layer from the map
                 this.m_oMapService.map.removeLayer(this.m_oLayerService.getSensorsLayer());
                 this.m_bSensorLayerActive = false;
+                this.m_sSensorsLegendIconPath = "";
+                this.m_sSensorLegendTooltip = "";
             }
             catch (err) {
 
@@ -399,16 +444,18 @@ var MapController = (function () {
 
 
         // Stations Informations
-        sHtml += "<p><strong>" + oFeature.attributes.shortCode + " - " + oFeature.attributes.name + " [" + oFeature.attributes.altitude + "]" + "</strong></p>";
+        sHtml += "<p><strong>" + oFeature.attributes.name + " [" + oFeature.attributes.altitude + "  s.l.m.]" + "</strong></p>";
 
         // Sensor Value
-        sHtml +="<h2>"+"<img class='stationsPopupImage' src='"+oFeature.attributes.imageLinkInv+"' style=\"font-family: 'Glyphicons Halflings';font-size: 25px;\"/> " + oFeature.attributes.value + " " + oFeature.attributes.measureUnit + "</h2>";
+        sHtml +="<h4>"+"<img class='stationsPopupImage' src='"+oFeature.attributes.imageLinkInv+"' style=\"font-family: 'Glyphicons Halflings';font-size: 20px;\"/> " + oFeature.attributes.value + " " + oFeature.attributes.measureUnit + "</h4>";
 
         // Time reference
         sHtml += "<p><span class='popupglyphicon glyphicon glyphicon-time' style=\"font-family: 'Glyphicons Halflings';font-size: 15px;\"></span> " + sTimeDelta + " " + sReferenceData + "</p>";
 
+        // Station Code
+        sHtml += "<p>Codice: " + oFeature.attributes.shortCode + "</p>";
         // Lat Lon
-        sHtml += "<p><em> Lat: " + oFeature.attributes.lat + " Lon: " + oFeature.attributes.lon + "</em></p>";
+        sHtml += "<p>Lat: " + oFeature.attributes.lat + " Lon: " + oFeature.attributes.lon + "</p>";
 
         // Close Popup Div
         sHtml += "</div>";
@@ -427,7 +474,7 @@ var MapController = (function () {
         // Get Pop Up HTML
         var sHtml = this.getStationPopupContent(oFeature);
         // Dummy size
-        var oSize = new OpenLayers.Size(250,100);
+        var oSize = new OpenLayers.Size(180,190);
 
         // Create Popup
         var oPopUp = new OpenLayers.Popup(
@@ -443,7 +490,7 @@ var MapController = (function () {
         oPopUp.setOpacity(0.8);
         oPopUp.setBackgroundColor("#000000");
         // Auto size please
-        oPopUp.autoSize = true;
+        oPopUp.autoSize = false;
 
         // Set the popup to the feature
         oFeature.popup = oPopUp;
@@ -458,6 +505,14 @@ var MapController = (function () {
      */
     MapController.prototype.showStationsChart = function(oFeature) {
         alert('Ora compare un grafico bellissimo!');
+    }
+
+    MapController.prototype.compareStations = function(oFirst, oSecond) {
+        if (oFirst.value < oSecond.value)
+            return -1;
+        if (oFirst.value > oSecond.value)
+            return 1;
+        return 0;
     }
 
     /**
@@ -487,6 +542,9 @@ var MapController = (function () {
         // For each station
         var iStations;
         var aoFeatures = [];
+
+        aoStations.sort(this.compareStations);
+
         for ( iStations =0; iStations<aoStations.length; iStations++) {
             var oStation = aoStations[iStations];
 

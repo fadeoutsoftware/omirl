@@ -281,18 +281,7 @@ angular.module('omirl.stationsService', []).
             var sLayerType = oStationsLink.code;
 
             aoSensors.forEach(function(oEntry) {
-                oEntry.value = Math.round(Math.random()*41);
-
-
-                if (sLayerType=="Pluvio") {
-                    var iIndex = Math.round(Math.random()*31+1);
-                    oEntry.imgPath = "img/weather/w"+iIndex+".png";
-                }
-                else {
-                    var iIndex = Math.round(Math.random()*3+1);
-                    oEntry.imgPath = "img/warnings/s"+iIndex+".png";
-                }
-
+                oEntry.value = Math.round(Math.random()*410);
             });
             return aoSensors;
         }

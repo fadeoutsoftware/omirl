@@ -15,6 +15,41 @@ angular.module('az.services').factory('az.services.layersService',function($root
         m_oWeatherLayer: null,
         m_oMarkerLayer: null,
         m_aoStaticLayers: [],
+        m_aoSensorLayerColorRanges: [
+            {"lmt":0.2,"clr":"#FFFFFF"},
+            {"lmt":1,"clr":"#E6F5FF"},
+            {"lmt":2,"clr":"#E1F0FF"},
+            {"lmt":3,"clr":"#DCEBFF"},
+            {"lmt":5,"clr":"#D5E6FF"},
+            {"lmt":7,"clr":"#D0E0FF"},
+            {"lmt":10,"clr":"#D0E0FF"},
+            {"lmt":15,"clr":"#8FB0FF"},
+            {"lmt":20,"clr":"#8FB0FF"},
+            {"lmt":25,"clr":"#8FB0FF"},
+            {"lmt":30,"clr":"#009F1F"},
+            {"lmt":40,"clr":"#3FBF3F"},
+            {"lmt":50,"clr":"#B0D06F"},
+            {"lmt":60,"clr":"#BFF86F"},
+            {"lmt":70,"clr":"#FFFFA0"},
+            {"lmt":80,"clr":"#FFFF78"},
+            {"lmt":90,"clr":"#FFF810"},
+            {"lmt":100,"clr":"#FFA00F"},
+            {"lmt":110,"clr":"#FF0000"},
+            {"lmt":130,"clr":"#E00000"},
+            {"lmt":150,"clr":"#BF0000"},
+            {"lmt":170,"clr":"#AA0000"},
+            {"lmt":200,"clr":"#960000"},
+            {"lmt":220,"clr":"#870000"},
+            {"lmt":250,"clr":"#870000"},
+            {"lmt":300,"clr":"#6E0000"},
+            {"lmt":325,"clr":"#640069"},
+            {"lmt":350,"clr":"#6E0073"},
+            {"lmt":375,"clr":"#78007D"},
+            {"lmt":400,"clr":"#8C0091"},
+            {"lmt":425,"clr":"#96009B"},
+            {"lmt":450,"clr":"#B400B9"},
+            {"lmt":10000,"clr":"#C800CD"}
+        ],
 
         /**
          * Gets Map base layers array
@@ -146,6 +181,7 @@ angular.module('az.services').factory('az.services.layersService',function($root
                     strategies: [new OpenLayers.Strategy.Cluster({distance: 25})],
                     styleMap: myClusterStyleMap
                 });
+                this.m_oWeatherLayer.animationEnabled = false;
             }
             return this.m_oWeatherLayer;
         },
@@ -194,97 +230,90 @@ angular.module('az.services').factory('az.services.layersService',function($root
 
             return iIndex;
         },
+        onZoomStart: function () {
+            console.log("Zoom Start");
+        },
+        onZoomEnd: function () {
+            console.log("Zoom End");
+        },
+        getStationsLayerColorMap: function () {
+            return this.m_aoSensorLayerColorRanges;
+        },
         /**
          * Creates an Open Layer style for stations Data
          * @returns {OpenLayers.Style}
          */
         getStationsLayerStyle: function() {
-            // Define three colors that will be used to style the cluster features
-            // depending on the number of features they contain.
-            var colors = {
-                low: "rgb(181, 226, 140)",
-                middle: "rgb(241, 211, 87)",
-                high: "rgb(253, 156, 115)"
-            };
-
             // Define three rules to style the cluster features.
             var lowRule = new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.LESS_THAN,
-                    property: "value",
-                    value: 15.0
-                }),
                 symbolizer: {
-                    fillColor: colors.low,
+                    fillColor: "${colorFunction}",
                     fillOpacity: 0.9,
-                    strokeColor: colors.low,
-                    strokeOpacity: 0.5,
-                    strokeWidth: "${strokeFunction}",
+                    strokeColor: "${strokeColorFunction}",
+                    strokeOpacity: "${strokeOpacityFunction}",
+                    strokeWidth: "${strokeWidthFunction}",
                     pointRadius: "${radiusFunction}",
                     label: "${valueFunction}",
-                    labelOutlineWidth: 1,
+                    'labelOutlineColor' : "${colorFunction}",
+                    labelOutlineWidth: 2,
                     fontColor: "#ffffff",
                     fontOpacity: 0.8,
                     fontSize: "12px"
                 }
             });
-            var middleRule = new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.BETWEEN,
-                    property: "value",
-                    lowerBoundary: 15.0,
-                    upperBoundary: 50.0
-                }),
-                symbolizer: {
-                    fillColor: colors.middle,
-                    fillOpacity: 0.9,
-                    strokeColor: colors.middle,
-                    strokeOpacity: 0.5,
-                    strokeWidth: "${strokeFunction}",
-                    pointRadius: "${radiusFunction}",
-                    label: "${valueFunction}",
-                    labelOutlineWidth: 1,
-                    fontColor: "#ffffff",
-                    fontOpacity: 0.8,
-                    fontSize: "12px"
-                }
-            });
-            var highRule = new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.GREATER_THAN,
-                    property: "value",
-                    value: 50.0
-                }),
-                symbolizer: {
-                    fillColor: colors.high,
-                    fillOpacity: 0.9,
-                    strokeColor: colors.high,
-                    strokeOpacity: 0.5,
-                    strokeWidth: "${strokeFunction}",
-                    pointRadius: "${radiusFunction}",
-                    label: "${valueFunction}",
-                    labelOutlineWidth: 1,
-                    fontColor: "#ffffff",
-                    fontOpacity: 0.8,
-                    fontSize: "12px"
-                }
-            });
+
+            var oService = this;
 
             // Create a Style that uses the three previous rules
             var style = new OpenLayers.Style(null, {
-                rules: [lowRule, middleRule, highRule],
+                rules: [lowRule],
                 context: {
                     valueFunction: function(feature) {
-                        if (feature.layer.map.zoom < 11) return "";
+                        if (feature.layer.map.zoom < 12) return "";
                         else return feature.attributes.value;
                     },
                     radiusFunction: function(feature) {
-                        if (feature.layer.map.zoom < 11)  return 5;
+                        if (feature.layer.map.zoom < 12)  return 6;
                         else return 15;
                     },
-                    strokeFunction: function(feature) {
-                        if (feature.layer.map.zoom < 11)  return 3;
+                    strokeWidthFunction: function(feature) {
+                        if (feature.layer.map.zoom < 12)  return 2;
                         else return 12;
+                    },
+                    strokeOpacityFunction: function(feature) {
+                        if (feature.layer.map.zoom < 12)  return 1;
+                        else return 0.5;
+                    },
+                    colorFunction: function(feature) {
+                        var dValue = feature.attributes.value;
+
+                        var aoColorsMap = oService.getStationsLayerColorMap();
+
+                        var iColors = 0;
+                        for (iColors = 0; iColors<aoColorsMap.length; iColors++) {
+                            var oColorRange = aoColorsMap[iColors];
+                            if (dValue<oColorRange.lmt) return oColorRange.clr;
+                        }
+
+                        if (dValue<0.2) return ""
+                    },
+                    strokeColorFunction: function(feature) {
+                        if (feature.layer.map.zoom < 12) return "#000000";
+                        else  {
+                            // SAME AS COLOR FUNCTION
+                            // I was unable to recall colorFunction from here!!
+                            var dValue = feature.attributes.value;
+
+                            var aoColorsMap = oService.getStationsLayerColorMap();
+
+                            var iColors = 0;
+                            for (iColors = 0; iColors<aoColorsMap.length; iColors++) {
+                                var oColorRange = aoColorsMap[iColors];
+                                if (dValue<oColorRange.lmt) return oColorRange.clr;
+                            }
+
+                            if (dValue<0.2) return ""
+                        }
                     }
                 }
             });

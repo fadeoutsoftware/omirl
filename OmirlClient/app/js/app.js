@@ -9,6 +9,7 @@ var omirlApp = angular.module('omirl', [
     'az.services',
     'az',
     'ui.bootstrap',
+    'omirl.ConstantsService',
     'omirl.mapNavigatorService',
     'omirl.stationsService',
     'omirl.filters',

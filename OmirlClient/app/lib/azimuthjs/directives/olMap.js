@@ -32,7 +32,7 @@
                     aoMapControls.push(new OpenLayers.Control[sControl](opts));
                 });
 
-                var listeners = {};
+                var listeners = {'zoomstart': layerService.onZoomStart, 'zoomend': layerService.onZoomEnd};
 
                 $.each(attrs, function(key, val) {
                     var evtType = key.match(/map([A-Z]\w+)/);
@@ -65,7 +65,10 @@
                     'center': oCenter,
                     'zoom': iZoom,
                     'layers': aoLayers,
-                    'eventListeners': listeners
+                    'eventListeners': listeners,
+                    'transitionEffect': null,
+                    'zoomMethod': null,
+                    'zoomDuration': 10
                 });
 
                 //var model = $parse(attrs.$attr.olMap);

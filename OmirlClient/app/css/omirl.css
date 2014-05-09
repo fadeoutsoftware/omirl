@@ -370,19 +370,24 @@ i.scroll:hover {
  }
 
 .map-controls-left-panel-row h4 {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .map-firstlevel-icon {
     margin: 10px 0 0 15px;
     padding: 0px;
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 34px;
+    height: 34px;
     overflow: hidden;
     border: 1px solid #eaedf0;
     -webkit-border-radius: 3px;
     border-radius: 3px;
+}
+
+.img-map-firstlevel-icon {
+    width: 32px;
+    height: 32px;
 }
 
 .map-firstlevel-icon-selected {
@@ -400,8 +405,10 @@ i.scroll:hover {
 }
 
 .map-back-icon {
-    font-size: 48px;
+    font-size: 32px;
     -webkit-font-smoothing: antialiased;
+    width: 20%;
+    margin-left: 10px;
 }
 
 .map-back-icon-disabled {
@@ -452,8 +459,8 @@ i.scroll:hover {
 }
 
 .map-text-legend {
-    margin-left: 30px;
-    margin-top: 13px;
+    margin-left: 10px;
+    width: 90%;
 }
 
 .map-text-legend-selected {
@@ -486,9 +493,11 @@ i.scroll:hover {
     color: #ffffff;
     z-index: 1;
     opacity: 0.9;
-    width: 20%;
+    width: 15%;
     height: 100%;
     overflow-y: auto;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .map-panel {
@@ -601,12 +610,31 @@ i.scroll:hover {
     opacity: 0.8;
 }
 
+
+.map-base-layer {
+    font-size: 32px;
+    color: #000000;
+    padding-top: 10px;
+}
+
+.map-base-layer a {
+    color: #000000;
+}
+
+.map-base-layer:hover a {
+    color: #ffffff;
+
+    -webkit-transition: color 0.3s;
+    -moz-transition: color 0.3s;
+    transition: color 0.3s;
+}
+
+
 .map-statics {
-     position: absolute;
-     bottom: 5px;
-     left: 85px;
-     font-size: 40px;
-     color: #000000;
+    font-size: 32px;
+    color: #000000;
+    padding-top: 10px;
+    margin-left: 10px;
  }
 
 .map-statics a {
@@ -638,26 +666,6 @@ i.scroll:hover {
     font-weight: bold !important;
 }
 
-.map-base-layer {
-    position: absolute;
-    bottom: 5px;
-    left: 25px;
-    font-size: 40px;
-    color: #000000;
-}
-
-.map-base-layer a {
-    color: #000000;
-}
-
-.map-base-layer:hover a {
-    color: #ffffff;
-
-    -webkit-transition: color 0.3s;
-    -moz-transition: color 0.3s;
-    transition: color 0.3s;
-}
-
 
 .map-weather-panel {
     padding-left: 5px;
@@ -672,4 +680,22 @@ i.scroll:hover {
     font-size: 20px;
     padding-top: 8px;
     padding-left: 15px;
+}
+
+.stationsPopupImage {
+    width: 32px;
+    height: 32px;
+}
+
+.sensor-legend-icon {
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+.map-legend-icon {
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+    margin-right: 5px;
 }

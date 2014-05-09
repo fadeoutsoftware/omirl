@@ -5,11 +5,15 @@
 'use strict';
 angular.module('omirl.mapNavigatorService', []).
     service('MapNavigatorService', ['$http',  function ($http) {
-        this.APIURL = 'http://localhost:8080/it.fadeout.mercurius.webapi/rest';
+        this.APIURL = 'http://localhost:8080/Omirl/rest';
 
         this.m_oHttp = $http;
 
         this.getMapFirstLevels = function() {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/maps');
+        }
+
+        this.getMapFirstLevelsOLD = function() {
             var aoMapLinks = [
                 {
                     "link":"img/rain_drops.png",
@@ -127,7 +131,7 @@ angular.module('omirl.mapNavigatorService', []).
                         "description":"Pioggia - Ultimi 7 Giorni",
                         "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
                         "legendLink": "img/mapLegend.jpg",
-                        "layerID": "OMIRL:rainfall24h"
+                        "layerID": "OMIRL:rainfall7d"
                     },
                     {
                         "link":"img/15d.png",
@@ -281,6 +285,10 @@ angular.module('omirl.mapNavigatorService', []).
 
 
         this.getSensorFirstLevel = function() {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/sensors');
+        }
+
+        this.getSensorFirstLevelOLD = function() {
             var aoSensorFirstLevels = [
                 {
                     "code": "Pluvio",
@@ -302,7 +310,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "count": 43,
                     "isActive": false,
                     "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "°"
+                    "mesUnit": "°C"
                 },
                 {
                     "code": "Idro",
@@ -346,7 +354,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "count": 43,
                     "isActive": false,
                     "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "W/m^2"
+                    "mesUnit": "<sup>W</sup>&frasl;<sub>m<sup>2</sup></sub>"
                 },
                 {
                     "code": "Foglie",
@@ -368,7 +376,7 @@ angular.module('omirl.mapNavigatorService', []).
                     "count": 43,
                     "isActive": false,
                     "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "bar"
+                    "mesUnit": "hPa"
                 },
                 {
                     "code": "Batt",
@@ -379,14 +387,25 @@ angular.module('omirl.mapNavigatorService', []).
                     "count": 43,
                     "isActive": false,
                     "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "%"
+                    "mesUnit": "V"
                 },
                 {
                     "code": "Boa",
-                    "description": "Boa Onda Metrica",
+                    "description": "Boaondametrica",
                     "imageLinkOn": "img/sensors/boeOn.png",
                     "imageLinkOff": "img/sensors/boeOff.png",
                     "imageLinkInv": "img/sensors/boeInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "%"
+                },
+                {
+                    "code": "Neve",
+                    "description": "Neve",
+                    "imageLinkOn": "img/sensors/neveOn.png",
+                    "imageLinkOff": "img/sensors/neveOff.png",
+                    "imageLinkInv": "img/sensors/neveInv.png",
                     "count": 43,
                     "isActive": false,
                     "legendLink": "img/sensors/sensorsLegend.jpg",
@@ -398,6 +417,10 @@ angular.module('omirl.mapNavigatorService', []).
         }
 
         this.getStaticLayerLinks = function() {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/statics');
+        }
+
+        this.getStaticLayerLinksOLD = function() {
             var aoStaticLinks = [
                 {
                     "selected": false,
