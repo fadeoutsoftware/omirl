@@ -8,6 +8,11 @@
                 <button class="btn">Cerca</button>
             </div>
         </div> -->
+        <div class="grid row">
+            <div class="col-md-12 col-xs-12 side-bar-toggle">
+                <i class="pull-right" ng-class="{'fa fa-chevron-left': !m_oController.isSideBarCollapsed(), 'fa fa-chevron-right':m_oController.isSideBarCollapsed()}" ng-click="m_oController.toggleSideBarClicked()"></i>
+            </div>
+        </div>
         <div class="map-geo-search grid row input-group">
             <input type="search" class="map-geo-search-text form-control" ng-model="m_oController.m_sGeocodingQuery" placeholder="Cerca Localita'" ng-keypress="m_oController.geocodingEnterSearch($event)">
             <span class="input-group-btn">
@@ -24,6 +29,9 @@
                 <div class="map-base-layer dropdown">
                     <a id="basemaps" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Sfondo"><i class="icon icon-earth2"></i></a>
                     <ul  class="dropdown-menu" role="menu" aria-labelledby="statics">
+                        <li role="presentation">
+                            <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('OSM')">OSM</a>
+                        </li>
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem" ng-click="m_oController.setBaseLayer('Hybrid')">Google Hybrid</a>
                         </li>

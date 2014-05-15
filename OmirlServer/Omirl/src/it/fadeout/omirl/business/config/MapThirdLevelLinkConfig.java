@@ -1,5 +1,7 @@
 package it.fadeout.omirl.business.config;
 
+import it.fadeout.omirl.viewmodels.MapThirdLevelLink;
+
 public class MapThirdLevelLinkConfig {
 	boolean isDefault;
 	String description;
@@ -23,4 +25,13 @@ public class MapThirdLevelLinkConfig {
 	public void setLayerIDModifier(String layerIDModifier) {
 		this.layerIDModifier = layerIDModifier;
 	}
+	
+	public MapThirdLevelLink getMapThirdLevelLink() {
+		MapThirdLevelLink oThird = new MapThirdLevelLink();
+		oThird.setDefault(isDefault);
+		oThird.setDescription(description);
+		oThird.setLayerIDModifier(layerIDModifier);
+		
+		return oThird;
+	}	
 }

@@ -119,11 +119,11 @@ body {
   height: 100%;
   width: 100%;
   position: relative;
-  background: url(../img/bg.jpg) no-repeat center center fixed; 
+  /*background: url(../img/bg.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
+  background-size: cover;*/
 }
 
 /* Intro */
@@ -136,6 +136,7 @@ body {
 
 .services {
   background: #7fbbda;
+  /*background: #147442;*/
   padding: 50px 0;
   color: #ffffff;
 }
@@ -152,8 +153,9 @@ i.service-icon {
   width: 140px;
   height: 140px;
   line-height: 136px;
-  vertical-align: middle; 
+  vertical-align: middle;
   text-align: center;
+  cursor: pointer;
 }
 
 /* Callout */
@@ -327,6 +329,7 @@ i.scroll:hover {
 
 .map-controls-left-panel-row {
     background: #7fbbda;
+    /*background: #147442;*/
     color: #ffffff;
     position: relative;
     width: 100%;
@@ -358,6 +361,7 @@ i.scroll:hover {
 
 .map-controls-left-panel-row .panel-heading {
     background: #7fbbda;
+    /*background: #147442;*/
     border-color:  #0a5175;
     color: #ffffff;
 }
@@ -392,7 +396,8 @@ i.scroll:hover {
 
 .map-firstlevel-icon-selected {
     border: 2px solid #000000;
-    background-color: #7fbbda;
+    background: #7fbbda;
+    /*background: #147442;*/
     -webkit-transition: all .3s;
     transition: all .3s;
 }
@@ -447,7 +452,8 @@ i.scroll:hover {
 /* Effect 1a */
 .hi-icon-effect-1a .fa:hover {
     background: rgba(255,255,255,1);
-    color: #7fbbda;
+    background: #7fbbda;
+    /*background: #147442;*/
 }
 
 .hi-icon-effect-1a .fa:hover:after {
@@ -465,11 +471,13 @@ i.scroll:hover {
 
 .map-text-legend-selected {
     color: #7fbbda;
+    /*color: #147442;*/
     font-weight:bold;
 }
 
 .map-text-legend-hover {
     color: #7fbbda;
+    /*color: #147442;*/
     font-style: oblique;
 }
 
@@ -490,6 +498,7 @@ i.scroll:hover {
     top: 0px;
     left: 0px;
     background: #7fbbda;
+    /*background: #147442;*/
     color: #ffffff;
     z-index: 1;
     opacity: 0.9;
@@ -573,6 +582,7 @@ i.scroll:hover {
     left: -25px;
     font-size: 20px;
     color: #7fbbda;
+    /*color: #147442;*/
     opacity: 1;
 }
 
@@ -685,6 +695,12 @@ i.scroll:hover {
 .stationsPopupImage {
     width: 32px;
     height: 32px;
+}
+
+.stationsPopupPanel {
+    font-family: Roboto,Arial,sans-serif;
+    font-size: 11px;
+    font-weight: 400;
 }
 
 .sensor-legend-icon {

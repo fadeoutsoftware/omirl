@@ -9,9 +9,49 @@ angular.module('omirl.mapNavigatorService', []).
 
         this.m_oHttp = $http;
 
-        this.getMapFirstLevels = function() {
-            return this.m_oHttp.get(this.APIURL + '/mapnavigator/maps');
+        this.m_aoMapFirstLevels = [];
+
+        this.fetchMapFirstLevels = function() {
+            var oServiceVar = this;
+
+            oServiceVar.m_aoMapFirstLevels = [];
+
+            this.m_oHttp.get(this.APIURL + '/mapnavigator/maps').success(function(data,status) {
+                oServiceVar.m_aoMapFirstLevels = data;
+            }).error(function(data,status){
+                    alert('Error Contacting Omirl Server');
+            });
+
         }
+
+
+        this.getMapFirstLevels = function() {
+            return this.m_aoMapFirstLevels;
+        }
+
+        this.getMapSecondLevels = function(linkId) {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/maps/'+linkId);
+        }
+
+        this.getMapThirdLevel = function(oMapItem) {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/mapsthird/'+oMapItem.linkId);
+        }
+
+        this.getSensorFirstLevel = function() {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/sensors');
+        }
+
+
+        this.getStaticLayerLinks = function() {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/statics');
+        }
+
+
+
+
+        // TEST Code with hard-coded json
+/*
+
 
         this.getMapFirstLevelsOLD = function() {
             var aoMapLinks = [
@@ -50,7 +90,180 @@ angular.module('omirl.mapNavigatorService', []).
             return aoMapLinks;
         }
 
-        this.getMapSecondLevels = function(linkId) {
+        this.getSensorFirstLevelOLD = function() {
+            var aoSensorFirstLevels = [
+                {
+                    "code": "Pluvio",
+                    "description": "Precipitazione",
+                    "imageLinkOn": "img/sensors/pluviometriOn.png",
+                    "imageLinkOff": "img/sensors/pluviometriOff.png",
+                    "imageLinkInv": "img/sensors/pluviometriInv.png",
+                    "count": 50,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "mm"
+                },
+                {
+                    "code": "Termo",
+                    "description": "Termometri",
+                    "imageLinkOn": "img/sensors/temperaturaOn.png",
+                    "imageLinkOff": "img/sensors/temperaturaOff.png",
+                    "imageLinkInv": "img/sensors/temperaturaInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "°C"
+                },
+                {
+                    "code": "Idro",
+                    "description": "Idrometri",
+                    "imageLinkOn": "img/sensors/idrometriOn.png",
+                    "imageLinkOff": "img/sensors/idrometriOff.png",
+                    "imageLinkInv": "img/sensors/idrometriInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "m/s"
+                },
+                {
+                    "code": "Vento",
+                    "description": "Vento",
+                    "imageLinkOn": "img/sensors/ventoOn.png",
+                    "imageLinkOff": "img/sensors/ventoOff.png",
+                    "imageLinkInv": "img/sensors/ventoInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "km/h"
+                },
+                {
+                    "code": "Igro",
+                    "description": "Umidita' del Suolo",
+                    "imageLinkOn": "img/sensors/igrometriOn.png",
+                    "imageLinkOff": "img/sensors/igrometriOff.png",
+                    "imageLinkInv": "img/sensors/igrometriInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "%"
+                },
+                {
+                    "code": "Radio",
+                    "description": "Radiazione Solare",
+                    "imageLinkOn": "img/sensors/radiazioneOn.png",
+                    "imageLinkOff": "img/sensors/radiazioneOff.png",
+                    "imageLinkInv": "img/sensors/radiazioneInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "<sup>W</sup>&frasl;<sub>m<sup>2</sup></sub>"
+                },
+                {
+                    "code": "Foglie",
+                    "description": "Bagnatura Foliare",
+                    "imageLinkOn": "img/sensors/fogliareOn.png",
+                    "imageLinkOff": "img/sensors/fogliareOff.png",
+                    "imageLinkInv": "img/sensors/fogliareInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "%"
+                },
+                {
+                    "code": "Press",
+                    "description": "Pressione Atmosferica",
+                    "imageLinkOn": "img/sensors/pressioneOn.png",
+                    "imageLinkOff": "img/sensors/pressioneOff.png",
+                    "imageLinkInv": "img/sensors/pressioneInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "hPa"
+                },
+                {
+                    "code": "Batt",
+                    "description": "Tensione Batteria",
+                    "imageLinkOn": "img/sensors/batteriaOn.png",
+                    "imageLinkOff": "img/sensors/batteriaOff.png",
+                    "imageLinkInv": "img/sensors/batteriaInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "V"
+                },
+                {
+                    "code": "Boa",
+                    "description": "Boaondametrica",
+                    "imageLinkOn": "img/sensors/boeOn.png",
+                    "imageLinkOff": "img/sensors/boeOff.png",
+                    "imageLinkInv": "img/sensors/boeInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "%"
+                },
+                {
+                    "code": "Neve",
+                    "description": "Neve",
+                    "imageLinkOn": "img/sensors/neveOn.png",
+                    "imageLinkOff": "img/sensors/neveOff.png",
+                    "imageLinkInv": "img/sensors/neveInv.png",
+                    "count": 43,
+                    "isActive": false,
+                    "legendLink": "img/sensors/sensorsLegend.jpg",
+                    "mesUnit": "%"
+                }
+            ];
+
+            return aoSensorFirstLevels;
+        }
+
+
+        this.getStaticLayerLinksOLD = function() {
+            var aoStaticLinks = [
+                {
+                    "selected": false,
+                    "description":"Comuni della Liguria",
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "Municipalities_ISTAT12010"
+                },
+                {
+                    "selected": false,
+                    "description":"Province della Liguria",
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "Districts_ISTAT2010"
+                },
+                {
+                    "selected": false,
+                    "description":"Aree Allertamento",
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "Zone_di_Allertamento"
+                },
+                {
+                    "selected": false,
+                    "description":"Spartiacque della Liguria",
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "piccoli_bacini_genova_rev1"
+                },
+                {
+                    "selected": false,
+                    "description":"Reticolo Idrografico",
+                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
+                    "layerID": "Reticolo_ISPRA"
+                },
+                {
+                    "selected": false,
+                    "description":"Aree Inondabili",
+                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
+                    "layerID": ""
+                }
+            ];
+
+            return aoStaticLinks;
+        }
+
+
+        this.getMapSecondLevelsOLD = function(linkId) {
             if(linkId==1) {
                 var aoMapLinks = [
                     {
@@ -252,7 +465,8 @@ angular.module('omirl.mapNavigatorService', []).
             }
         }
 
-        this.getMapThirdLevel = function(oMapItem) {
+
+        this.getMapThirdLevelOLD = function(oMapItem) {
             var aoMapLinks = [
                 {
                     "isDefault": true,
@@ -282,186 +496,6 @@ angular.module('omirl.mapNavigatorService', []).
 
             return aoMapLinks;
         }
-
-
-        this.getSensorFirstLevel = function() {
-            return this.m_oHttp.get(this.APIURL + '/mapnavigator/sensors');
-        }
-
-        this.getSensorFirstLevelOLD = function() {
-            var aoSensorFirstLevels = [
-                {
-                    "code": "Pluvio",
-                    "description": "Precipitazione",
-                    "imageLinkOn": "img/sensors/pluviometriOn.png",
-                    "imageLinkOff": "img/sensors/pluviometriOff.png",
-                    "imageLinkInv": "img/sensors/pluviometriInv.png",
-                    "count": 50,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "mm"
-                },
-                {
-                    "code": "Termo",
-                    "description": "Termometri",
-                    "imageLinkOn": "img/sensors/temperaturaOn.png",
-                    "imageLinkOff": "img/sensors/temperaturaOff.png",
-                    "imageLinkInv": "img/sensors/temperaturaInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "°C"
-                },
-                {
-                    "code": "Idro",
-                    "description": "Idrometri",
-                    "imageLinkOn": "img/sensors/idrometriOn.png",
-                    "imageLinkOff": "img/sensors/idrometriOff.png",
-                    "imageLinkInv": "img/sensors/idrometriInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "m/s"
-                },
-                {
-                    "code": "Vento",
-                    "description": "Vento",
-                    "imageLinkOn": "img/sensors/ventoOn.png",
-                    "imageLinkOff": "img/sensors/ventoOff.png",
-                    "imageLinkInv": "img/sensors/ventoInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "km/h"
-                },
-                {
-                    "code": "Igro",
-                    "description": "Umidita' del Suolo",
-                    "imageLinkOn": "img/sensors/igrometriOn.png",
-                    "imageLinkOff": "img/sensors/igrometriOff.png",
-                    "imageLinkInv": "img/sensors/igrometriInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "%"
-                },
-                {
-                    "code": "Radio",
-                    "description": "Radiazione Solare",
-                    "imageLinkOn": "img/sensors/radiazioneOn.png",
-                    "imageLinkOff": "img/sensors/radiazioneOff.png",
-                    "imageLinkInv": "img/sensors/radiazioneInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "<sup>W</sup>&frasl;<sub>m<sup>2</sup></sub>"
-                },
-                {
-                    "code": "Foglie",
-                    "description": "Bagnatura Foliare",
-                    "imageLinkOn": "img/sensors/fogliareOn.png",
-                    "imageLinkOff": "img/sensors/fogliareOff.png",
-                    "imageLinkInv": "img/sensors/fogliareInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "%"
-                },
-                {
-                    "code": "Press",
-                    "description": "Pressione Atmosferica",
-                    "imageLinkOn": "img/sensors/pressioneOn.png",
-                    "imageLinkOff": "img/sensors/pressioneOff.png",
-                    "imageLinkInv": "img/sensors/pressioneInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "hPa"
-                },
-                {
-                    "code": "Batt",
-                    "description": "Tensione Batteria",
-                    "imageLinkOn": "img/sensors/batteriaOn.png",
-                    "imageLinkOff": "img/sensors/batteriaOff.png",
-                    "imageLinkInv": "img/sensors/batteriaInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "V"
-                },
-                {
-                    "code": "Boa",
-                    "description": "Boaondametrica",
-                    "imageLinkOn": "img/sensors/boeOn.png",
-                    "imageLinkOff": "img/sensors/boeOff.png",
-                    "imageLinkInv": "img/sensors/boeInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "%"
-                },
-                {
-                    "code": "Neve",
-                    "description": "Neve",
-                    "imageLinkOn": "img/sensors/neveOn.png",
-                    "imageLinkOff": "img/sensors/neveOff.png",
-                    "imageLinkInv": "img/sensors/neveInv.png",
-                    "count": 43,
-                    "isActive": false,
-                    "legendLink": "img/sensors/sensorsLegend.jpg",
-                    "mesUnit": "%"
-                }
-            ];
-
-            return aoSensorFirstLevels;
-        }
-
-        this.getStaticLayerLinks = function() {
-            return this.m_oHttp.get(this.APIURL + '/mapnavigator/statics');
-        }
-
-        this.getStaticLayerLinksOLD = function() {
-            var aoStaticLinks = [
-                {
-                    "selected": false,
-                    "description":"Comuni della Liguria",
-                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
-                    "layerID": "Municipalities_ISTAT12010"
-                },
-                {
-                    "selected": false,
-                    "description":"Province della Liguria",
-                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
-                    "layerID": "Districts_ISTAT2010"
-                },
-                {
-                    "selected": false,
-                    "description":"Aree Allertamento",
-                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
-                    "layerID": "Zone_di_Allertamento"
-                },
-                {
-                    "selected": false,
-                    "description":"Spartiacque della Liguria",
-                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
-                    "layerID": "piccoli_bacini_genova_rev1"
-                },
-                {
-                    "selected": false,
-                    "description":"Reticolo Idrografico",
-                    "layerWMS": "http://geoserver.cimafoundation.org/geoserver/dew/wms",
-                    "layerID": "Reticolo_ISPRA"
-                },
-                {
-                    "selected": false,
-                    "description":"Aree Inondabili",
-                    "layerWMS": "http://www.nfsproject.com/geoserver/OMIRL/wms",
-                    "layerID": ""
-                }
-            ];
-
-            return aoStaticLinks;
-        }
-
+*/
     }]);
 

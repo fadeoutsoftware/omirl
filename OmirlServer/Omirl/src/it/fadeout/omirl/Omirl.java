@@ -9,8 +9,12 @@ import it.fadeout.omirl.viewmodels.PrimitiveResult;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +37,8 @@ public class Omirl extends Application {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         // register resources and features
         classes.add(MapNavigatorService.class);
+        classes.add(StationsService.class);
+        classes.add(GensonProvider.class);
         return classes;
 	}
 	
@@ -47,7 +53,7 @@ public class Omirl extends Application {
 		
 		
 		// Uncomment to write a test configuration!
-		//WriteTestConfiguration(sConfigFilePath);
+		//WriteTestConfiguration("C:\\temp\\OmirlTEST.xml");
 	}
 	
 	/**
@@ -122,6 +128,8 @@ public class Omirl extends Application {
 		oSensorLinkConfig.setImageLinkOn("img/sensors/pluviometriOn.png");
 		oSensorLinkConfig.setLegendLink("img/sensors/sensorsLegend.jpg");
 		oSensorLinkConfig.setMesUnit("mm");
+		oSensorLinkConfig.setFilePath("c:\\temp\\omirl");
+		oSensorLinkConfig.setColumnName("rain05m");
 		
 		StaticLinkConfig oStatic = new StaticLinkConfig();
 		oStatic.setDescription("Comuni");
@@ -161,5 +169,47 @@ public class Omirl extends Application {
  
         return deSerializedObject;
     }
+    
+	/**
+	 * Gets a full path starting from the Base Path appending oDate
+	 * @param sBasePath
+	 * @param oDate
+	 * @return
+	 */
+	public static String getSubPath(String sBasePath, Date oDate) {
+		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		
+		String sFullDir = sBasePath + "/" + oDateFormat.format(oDate);
+		
+		File oFullPathDir = new File(sFullDir);
+		if (!oFullPathDir.exists()) {
+			return null;
+		}
+		
+		return sFullDir;
+	}
  	
+	
+	public static File lastFileModified(String dir) {
+		File oDir = new File(dir);
+		
+		
+		File[] aoFiles = oDir.listFiles(new FileFilter() {			
+			public boolean accept(File file) {
+				return file.isFile();
+			}
+		});
+		
+		long liLastMod = Long.MIN_VALUE;
+		
+		File oChoise = null;
+		for (File file : aoFiles) {
+			if (file.lastModified() > liLastMod) {
+				oChoise = file;
+				liLastMod = file.lastModified();
+			}
+		}
+		
+		return oChoise;
+	}
 }

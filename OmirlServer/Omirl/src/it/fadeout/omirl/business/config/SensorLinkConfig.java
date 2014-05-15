@@ -11,6 +11,8 @@ public class SensorLinkConfig {
 	int count;
 	String legendLink;
 	String mesUnit;
+	String filePath;
+	String columnName;
 	
 	public String getCode() {
 		return code;
@@ -61,6 +63,19 @@ public class SensorLinkConfig {
 		this.mesUnit = mesUnit;
 	}
 	
+	public String getFilePath() {
+		return filePath;
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	public String getColumnName() {
+		return columnName;
+	}
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+	}
+	
 	public SensorLink getSensorLink() {
 		SensorLink oSensorLink = new SensorLink();
 		oSensorLink.setActive(false);
@@ -75,4 +90,5 @@ public class SensorLinkConfig {
 		
 		return oSensorLink;
 	}
+
 }

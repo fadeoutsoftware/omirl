@@ -51,6 +51,15 @@ angular.module('az.services').factory('az.services.layersService',function($root
             {"lmt":10000,"clr":"#C800CD"}
         ],
 
+        clarAll: function() {
+            this.clearBaseLayers();
+            this.clearStaticLayers();
+            this.m_oDynamicLayer = null;
+            this.m_oMarkerLayer = null;
+            this.m_oSensorsLayer = null;
+            this.m_oWeatherLayer = null;
+        },
+
         /**
          * Gets Map base layers array
          * @returns {*}
@@ -273,7 +282,7 @@ angular.module('az.services').factory('az.services.layersService',function($root
                         else return feature.attributes.value;
                     },
                     radiusFunction: function(feature) {
-                        if (feature.layer.map.zoom < 12)  return 6;
+                        if (feature.layer.map.zoom < 12)  return 5;
                         else return 15;
                     },
                     strokeWidthFunction: function(feature) {

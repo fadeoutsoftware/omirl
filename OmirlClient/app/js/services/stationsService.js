@@ -5,11 +5,15 @@
 'use strict';
 angular.module('omirl.stationsService', []).
     service('StationsService', ['$http',  function ($http) {
-        this.APIURL = 'http://localhost:8080/it.fadeout.mercurius.webapi/rest';
+        this.APIURL = 'http://localhost:8080/Omirl/rest';
 
         this.m_oHttp = $http;
 
         this.getStations = function(oStationsLink) {
+            return this.m_oHttp.get(this.APIURL + '/stations/'+oStationsLink.code);
+        }
+
+        this.getStationsOLD = function(oStationsLink) {
             var aoSensors = [
                 {"stationId": 1, "name":"Molino Branca","lat":44.049168,"lon":8.212778,"value":1,"refDate":"/Date(1391542388310)/","shortCode":"STNID","alt":"120m","otherHtml":"","imgPath":"img/marker.png"},
                 {"stationId": 2, "name":"Sesta Godano","lat":44.298332,"lon":9.6775,"value":1,"refDate":"/Date(1391542388310)/","shortCode":"STNID","alt":"120m","otherHtml":"","imgPath":"img/marker.png"},

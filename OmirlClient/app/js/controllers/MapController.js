@@ -66,12 +66,30 @@ var MapController = (function () {
         // Weather Variables
         this.m_bIsWeatherActive = true;
 
+        // Flag to know if the side bar is collapsed or not
+        this.m_bSideBarCollapsed = false;
+
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
             var oBaseLayer1 = new OpenLayers.Layer.Google("Physical", {type: google.maps.MapTypeId.TERRAIN, numZoomLevels: 20});
             var oBaseLayer2 = new OpenLayers.Layer.Google("Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
             var oBaseLayer3 = new OpenLayers.Layer.Google("Streets", {numZoomLevels: 20});
             var oBaseLayer4 = new OpenLayers.Layer.Google("Satellite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20});
+
+            /* Base layers inclusion */
+            var oOSMLayer = new OpenLayers.Layer.XYZ(
+                'OSM',
+                'http://www.toolserver.org/tiles/bw-mapnik//${z}/${x}/${y}.png',
+                {
+                    attribution: 'basemap data &copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>',
+                    sphericalMercator: true,
+                    wrapDateLine: true,
+                    transitionEffect: "resize",
+                    buffer: 0,
+                    numZoomLevels: 20
+                }
+            );
+
 
             /*
             oBaseLayer1.animationEnabled = false;
@@ -80,6 +98,7 @@ var MapController = (function () {
             oBaseLayer4.animationEnabled = false;
             */
 
+            this.m_oLayerService.addBaseLayer(oOSMLayer);
             this.m_oLayerService.addBaseLayer(oBaseLayer1);
             this.m_oLayerService.addBaseLayer(oBaseLayer2);
             this.m_oLayerService.addBaseLayer(oBaseLayer3);
@@ -96,17 +115,7 @@ var MapController = (function () {
 
         var oServiceVar = this;
 
-        // Initialize Map Link from Navigator Service
-        this.m_oMapNavigatorService.getMapFirstLevels().success(function (data, status) {
-
-            for (var iElement = 0; iElement < data.length; iElement++) {
-                oServiceVar.m_aoMapLinks.push(data[iElement]);
-            }
-        }).error(function (data, status) {
-            alert('Error Dynamic Layer Items to add to the Menu');
-        });
-
-
+        this.m_oMapNavigatorService.fetchMapFirstLevels();
 
         this.m_oMapNavigatorService.getSensorFirstLevel().success(function (data, status) {
 
@@ -130,6 +139,16 @@ var MapController = (function () {
 
         this.m_oMapService.callbackArg = this;
         this.m_oMapService.readyCallback = this.AddWeatherLayer;
+
+
+        $scope.$on('$locationChangeStart', function (event, next, current) {
+
+            if (oServiceVar.m_oMapService.map != null) {
+                oServiceVar.m_oLayerService.clarAll();
+                oServiceVar.m_oMapService.map.destroy();
+                oServiceVar.m_oMapService.map = null;
+            }
+        });
     }
 
     MapController.prototype.setBaseLayer = function(sCode) {
@@ -241,10 +260,21 @@ var MapController = (function () {
 
         // We are in the first level?
         if (this.m_bIsFirstLevel) {
-            // Get second level
-            this.m_aoMapLinks = this.m_oMapNavigatorService.getMapSecondLevels(oMapLink.linkId);
+
             // Remember we are in second level
             this.m_bIsFirstLevel = false;
+
+            // Get second level
+            var oServiceVar = this;
+            oServiceVar.m_aoMapLinks = [];
+
+
+            this.m_oMapNavigatorService.getMapSecondLevels(oMapLink.linkId).success(function(data,status) {
+                    oServiceVar.m_aoMapLinks = data;
+            }).error(function(data,status){
+                alert('Error Contacting Omirl Server');
+            });
+
         }
         else {
             // We are in second level
@@ -257,19 +287,29 @@ var MapController = (function () {
                 // Switch to show or not third level
                 if (oMapLink.hasThirdLevel) {
                     this.m_bShowThirdLevel = true;
-                    // Get third levels from the service
-                    this.m_aoThirdLevels = this.m_oMapNavigatorService.getMapThirdLevel(oMapLink);
 
-                    // For each level
-                    var iLevels;
-                    for (iLevels=0; iLevels < this.m_aoThirdLevels.length; iLevels++) {
-                        // Is the default?
-                        if (this.m_aoThirdLevels[iLevels].layerIDModifier == this.m_sMapThirdLevelSelectedModifier) {
-                            // This is the first selected
-                            this.m_sMapThirdLevelSelected = this.m_aoThirdLevels[iLevels].description;
-                            break;
+                    var oMapLinkCopy = oMapLink;
+                    var oServiceVar = this;
+
+                    // Get third levels from the service
+                    this.m_oMapNavigatorService.getMapThirdLevel(oMapLink).success(function(data,status) {
+                         oServiceVar.m_aoThirdLevels = data;
+
+                        // For each level
+                        var iLevels;
+                        for (iLevels=0; iLevels < oServiceVar.m_aoThirdLevels.length; iLevels++) {
+                            oServiceVar.m_aoThirdLevels[iLevels].mapItem = oMapLinkCopy;
+                            // Is the default?
+                            if (oServiceVar.m_aoThirdLevels[iLevels].layerIDModifier == oServiceVar.m_sMapThirdLevelSelectedModifier) {
+                                // This is the first selected
+                                oServiceVar.m_sMapThirdLevelSelected = oServiceVar.m_aoThirdLevels[iLevels].description;
+                                //break;
+                            }
                         }
-                    }
+                    }).error(function(data,status){
+                        alert('Error Contacting Omirl Server');
+                    });
+
                 }
                 else {
                     this.m_sMapThirdLevelSelectedModifier = "";
@@ -429,9 +469,10 @@ var MapController = (function () {
      */
     MapController.prototype.getStationPopupContent = function(oFeature) {
         // Get the time value from the Json Date Rapresentation
-        var iNum = parseInt(oFeature.attributes.referenceDate.replace(/[^0-9]/g, ""));
+        //var iNum = parseInt(oFeature.attributes.referenceDate.replace(/[^0-9]/g, ""));
         // Create Reference Date
-        var oReferenceDate = new Date(iNum);
+        //var oReferenceDate = new Date(iNum);
+        var oReferenceDate = new Date(oFeature.attributes.referenceDate);
 
         // Compute time delta
         var sTimeDelta = this.getDelayString(oReferenceDate);
@@ -521,111 +562,119 @@ var MapController = (function () {
      */
     MapController.prototype.showStationsLayer = function(oSensorLink) {
 
+        var oServiceVar = this;
+
         // Obtain Stations Values from the server
-        var aoStations = this.m_oStationsService.getStations(oSensorLink);
+        this.m_oStationsService.getStations(oSensorLink).success(function(data,status) {
 
-        try{
-            // remove the actual Sensors Layer from the map
-            this.m_oMapService.map.removeLayer(this.m_oLayerService.getSensorsLayer());
-        }
-        catch (err) {
+            var aoStations = data;
 
-        }
+            try{
+                // remove the actual Sensors Layer from the map
+                oServiceVar.m_oMapService.map.removeLayer(oServiceVar.m_oLayerService.getSensorsLayer());
+            }
+            catch (err) {
 
-        // Clear the layer
-        this.m_oLayerService.getSensorsLayer().destroyFeatures();
+            }
 
-        // Projection change for points
-        var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
-        var projectTo = this.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
+            // Clear the layer
+            oServiceVar.m_oLayerService.getSensorsLayer().destroyFeatures();
 
-        // For each station
-        var iStations;
-        var aoFeatures = [];
+            // Projection change for points
+            var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+            var projectTo = oServiceVar.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
 
-        aoStations.sort(this.compareStations);
+            // For each station
+            var iStations;
+            var aoFeatures = [];
 
-        for ( iStations =0; iStations<aoStations.length; iStations++) {
-            var oStation = aoStations[iStations];
+            aoStations.sort(oServiceVar.compareStations);
 
-            // Create the feature
-            var oFeature = new OpenLayers.Feature.Vector(
-                new OpenLayers.Geometry.Point(oStation.lon, oStation.lat).transform(epsg4326, projectTo),
-                {description: oStation.description}
-                //,{externalGraphic: oStation.imgPath, graphicHeight: 32, graphicWidth: 32, graphicXOffset:0, graphicYOffset:0, title: oStation.name + " " + oStation.value }
-                //,{title: oStation.name + " " + oStation.value }
-            );
+            for ( iStations =0; iStations<aoStations.length; iStations++) {
+                var oStation = aoStations[iStations];
+
+                // Create the feature
+                var oFeature = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(oStation.lon, oStation.lat).transform(epsg4326, projectTo),
+                    {description: oStation.description}
+                    //,{externalGraphic: oStation.imgPath, graphicHeight: 32, graphicWidth: 32, graphicXOffset:0, graphicYOffset:0, title: oStation.name + " " + oStation.value }
+                    //,{title: oStation.name + " " + oStation.value }
+                );
 
 
-            // Set attributes of the Feature
-            oFeature.attributes = {
-                // Station Id
-                stationId: oStation.stationId,
-                // Station Name
-                name: oStation.name,
-                // Sensor Value
-                value: oStation.value,
-                // Reference Date
-                referenceDate: oStation.refDate,
-                // Measure Unit
-                measureUnit: oSensorLink.mesUnit,
-                // Other Html content for the pop up, received from the server
-                otherHtml: oStation.otherHtml,
-                // Altitude
-                altitude: oStation.alt,
-                // Coordinates
-                lat: oStation.lat,
-                lon: oStation.lon,
-                // Station Code
-                shortCode: oStation.shortCode,
-                // Image Link to use in the popup
-                imageLinkInv: oSensorLink.imageLinkInv
-            };
+                // Set attributes of the Feature
+                oFeature.attributes = {
+                    // Station Id
+                    stationId: oStation.stationId,
+                    // Station Name
+                    name: oStation.name,
+                    // Sensor Value
+                    value: oStation.value,
+                    // Reference Date
+                    referenceDate: oStation.refDate,
+                    // Measure Unit
+                    measureUnit: oSensorLink.mesUnit,
+                    // Other Html content for the pop up, received from the server
+                    otherHtml: oStation.otherHtml,
+                    // Altitude
+                    altitude: oStation.alt,
+                    // Coordinates
+                    lat: oStation.lat,
+                    lon: oStation.lon,
+                    // Station Code
+                    shortCode: oStation.shortCode,
+                    // Image Link to use in the popup
+                    imageLinkInv: oSensorLink.imageLinkInv
+                };
 
-            // Add the feature to the array
-            aoFeatures.push(oFeature);
-        }
+                // Add the feature to the array
+                aoFeatures.push(oFeature);
+            }
 
-        // Add feature array to the layer
-        this.m_oLayerService.getSensorsLayer().addFeatures(aoFeatures);
+            // Add feature array to the layer
+            oServiceVar.m_oLayerService.getSensorsLayer().addFeatures(aoFeatures);
 
-        // Add the layer to the map
-        this.m_oMapService.map.addLayer(this.m_oLayerService.getSensorsLayer());
-        this.m_oMapService.map.setLayerIndex(this.m_oLayerService.getSensorsLayer(), this.m_oLayerService.getSensorsLayerIndex());
+            // Add the layer to the map
+            oServiceVar.m_oMapService.map.addLayer(oServiceVar.m_oLayerService.getSensorsLayer());
+            oServiceVar.m_oMapService.map.setLayerIndex(oServiceVar.m_oLayerService.getSensorsLayer(), oServiceVar.m_oLayerService.getSensorsLayerIndex());
 
-        // Feature Click and Hover Control: added?
-        if (this.m_oMapService.stationsPopupControllerAdded == false) {
+            // Feature Click and Hover Control: added?
+            if (oServiceVar.m_oMapService.stationsPopupControllerAdded == false) {
 
-            // No: take a reference to the map controller
-            var oMapController = this;
+                // No: take a reference to the map controller
+                var oMapController = oServiceVar;
 
-            // Create the Control
-            var oPopupCtrl = new OpenLayers.Control.SelectFeature(this.m_oLayerService.getSensorsLayer(), {
-                hover: true,
-                onSelect: function(feature) {
-                    // Hover Select: call internal function
-                    oMapController.showStationsPopup(feature);
-                },
-                onUnselect: function(feature) {
-                    // Hover Unselect: remove pop up
-                    feature.layer.map.removePopup(feature.popup);
-                },
-                callbacks: {
-                    // Click
-                    click: function(feature) {
-                        // Show chart
-                        oMapController.showStationsChart(feature);
+                // Create the Control
+                var oPopupCtrl = new OpenLayers.Control.SelectFeature(oServiceVar.m_oLayerService.getSensorsLayer(), {
+                    hover: true,
+                    onSelect: function(feature) {
+                        // Hover Select: call internal function
+                        oMapController.showStationsPopup(feature);
+                    },
+                    onUnselect: function(feature) {
+                        // Hover Unselect: remove pop up
+                        feature.layer.map.removePopup(feature.popup);
+                    },
+                    callbacks: {
+                        // Click
+                        click: function(feature) {
+                            // Show chart
+                            oMapController.showStationsChart(feature);
+                        }
                     }
-                }
-            });
+                });
 
-            // Add and activate the control
-            this.m_oMapService.map.addControl(oPopupCtrl);
-            oPopupCtrl.activate();
+                // Add and activate the control
+                oServiceVar.m_oMapService.map.addControl(oPopupCtrl);
+                oPopupCtrl.activate();
 
-            // Remember it exists now
-            this.m_oMapService.stationsPopupControllerAdded = true;
-        }
+                // Remember it exists now
+                oServiceVar.m_oMapService.stationsPopupControllerAdded = true;
+            }
+        }).error(function(data,status){
+            alert('Error Contacting Omirl Server');
+        });
+
     }
 
     /**
@@ -658,6 +707,11 @@ var MapController = (function () {
     }
 
     MapController.prototype.getMapLinks = function () {
+
+        if (this.m_bIsFirstLevel) {
+            this.m_aoMapLinks = this.m_oMapNavigatorService.getMapFirstLevels();
+        }
+
         return this.m_aoMapLinks;
     }
 
@@ -823,6 +877,14 @@ var MapController = (function () {
         catch (err) {
 
         }
+    }
+
+    MapController.prototype.toggleSideBarClicked = function() {
+        this.m_bSideBarCollapsed = !this.m_bSideBarCollapsed;
+    }
+
+    MapController.prototype.isSideBarCollapsed = function () {
+        return this.m_bSideBarCollapsed;
     }
 
     MapController.$inject = [

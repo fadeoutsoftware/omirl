@@ -9,10 +9,12 @@ var TemplateController = (function() {
         this.m_oScope.m_oController = this;
     }
 
-    TemplateController.prototype.mapIconClicked = function () {
+    TemplateController.prototype.serviceIconClicked = function (sPath) {
         // TODO: così non va lo scroll...
-        //this.m_oLocation.path('#contentcontainer');
+        this.m_oLocation.path(sPath);
+        OmirlMoveTo('#contentcontainer');
     }
+
 
     TemplateController.$inject = [
         '$scope',

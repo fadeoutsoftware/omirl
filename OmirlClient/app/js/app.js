@@ -20,6 +20,8 @@ var omirlApp = angular.module('omirl', [
 omirlApp.config(function($routeProvider) {
         $routeProvider.when('/map', {templateUrl: 'partials/map.html', controller: 'MapController'});
         $routeProvider.when('/tables', {templateUrl: 'partials/tables.html', controller: 'TablesController'});
+        $routeProvider.when('/animations', {templateUrl: 'partials/animations.html', controller: 'AnimationsController'});
+        $routeProvider.when('/credits', {templateUrl: 'partials/credits.html', controller: 'CreditsController'});
         $routeProvider.otherwise({redirectTo: '/map'});
     }
 );

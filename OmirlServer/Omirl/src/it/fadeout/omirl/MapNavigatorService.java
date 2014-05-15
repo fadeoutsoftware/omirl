@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.fadeout.omirl.business.config.MapLinkConfig;
+import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.StaticLinkConfig;
 import it.fadeout.omirl.viewmodels.MapLink;
+import it.fadeout.omirl.viewmodels.MapThirdLevelLink;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
 import it.fadeout.omirl.viewmodels.SensorLink;
 import it.fadeout.omirl.viewmodels.StaticLink;
@@ -15,6 +17,7 @@ import it.fadeout.omirl.viewmodels.StaticLink;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
@@ -143,5 +146,61 @@ public class MapNavigatorService {
 		}
 		
 		return aoMapLinks;
-	}		
+	}
+	
+	@GET
+	@Path("/maps/{idlink}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<MapLink> getMapsSecondLevelLinks(@PathParam("idlink") int iIdLink) {
+		ArrayList<MapLink> aoMapLinks = new ArrayList<>();
+
+		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+		
+		if (oConfObj != null)  {
+			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+			
+			for (MapLinkConfig oLinkConfig : oConfig.getMapLinks()) {
+				
+				if (oLinkConfig.getLinkId() == iIdLink) {
+					for (MapLinkConfig oSecondLevelLink : oLinkConfig.getSecondLevels()) {
+						aoMapLinks.add(oSecondLevelLink.getMapLink());
+					}
+					
+				}
+				
+			}
+		}
+		
+		return aoMapLinks;
+	}
+	
+	@GET
+	@Path("/mapsthird/{idlink}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<MapThirdLevelLink> getMapsThirdLevelLinks(@PathParam("idlink") int iIdLink) {
+		ArrayList<MapThirdLevelLink> aoMapThirdLevelLinks = new ArrayList<>();
+
+		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+		
+		if (oConfObj != null)  {
+			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+			
+			for (MapLinkConfig oLinkConfig : oConfig.getMapLinks()) {
+				
+				
+				for (MapLinkConfig oSecondLevelLink : oLinkConfig.getSecondLevels()) {
+					
+					if (oSecondLevelLink.getLinkId() == iIdLink) {
+						if (oSecondLevelLink.isHasThirdLevel()) {
+							for (MapThirdLevelLinkConfig oThird : oSecondLevelLink.getThirdLevels()) {
+								aoMapThirdLevelLinks.add(oThird.getMapThirdLevelLink());
+							}
+						}
+					}	
+				}
+			}
+		}
+		
+		return aoMapThirdLevelLinks;
+	}
 }
