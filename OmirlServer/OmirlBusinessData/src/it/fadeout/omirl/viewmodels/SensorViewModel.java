@@ -8,6 +8,7 @@ public class SensorViewModel {
 	double lat;
 	double lon;
 	double value;
+	int increment=-10000000;
 	Date refDate;
 	String shortCode;
 	int alt;
@@ -43,9 +44,7 @@ public class SensorViewModel {
 	}
 	public void setValue(double value) {
 		this.value = value;
-	}
-	
-	
+	}	
 	public Date getRefDate() {
 		return refDate;
 	}
@@ -77,4 +76,10 @@ public class SensorViewModel {
 		this.imgPath = imgPath;
 	}
 	
+	public int getIncrement() {
+		return increment;
+	}
+	public void setIncrement(int increment) {
+		this.increment = increment;
+	}
 }

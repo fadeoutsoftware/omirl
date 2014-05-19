@@ -507,6 +507,12 @@ i.scroll:hover {
     overflow-y: auto;
     padding-left: 5px;
     padding-right: 5px;
+
+    -webkit-transition: left 0.4s ease 0s;
+    -moz-transition: left  0.4s ease 0s;
+    -ms-transition: left  0.4s ease 0s;
+    -o-transition: left  0.4s ease 0s;
+    transition: left  0.4s ease 0s;
 }
 
 .map-panel {
@@ -659,6 +665,23 @@ i.scroll:hover {
     transition: color 0.3s;
 }
 
+.map-reset-zoom {
+    font-size: 28px;
+    color: #000000;
+}
+
+.map-reset-zoom a {
+    color: #000000;
+}
+
+.map-reset-zoom:hover a {
+    color: #ffffff;
+
+    -webkit-transition: color 0.3s;
+    -moz-transition: color 0.3s;
+    transition: color 0.3s;
+}
+
 .basemaps-dropdown-menu-item {
     color: #333333 !important;
 }
@@ -714,4 +737,10 @@ i.scroll:hover {
     height: 32px;
     margin-top: 10px;
     margin-right: 5px;
+}
+
+div.olControlZoom {
+    right: 8px !important;
+    top: 60px !important;
+    left: initial !important;
 }

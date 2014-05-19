@@ -69,6 +69,20 @@ public class StationData {
 	Date update_date;
 	@Column(name="insert_date")
 	Date insert_date;
+	@Column(name="mean_snow_depth")
+	Double mean_snow_depth;
+	@Column(name="mean_wave_heigth")
+	Double mean_wave_heigth;
+	@Column(name="max_wave_heigth")
+	Double max_wave_heigth;
+	@Column(name="mean_wave_period")
+	Double mean_wave_period;
+	@Column(name="peak_wave_period")
+	Double peak_wave_period;
+	@Column(name="trend_creek_level")
+	Integer trend_creek_level;
+	
+	
 	
 	public StationDataPk getStation_data_Pk() {
 		return station_data_Pk;
@@ -256,5 +270,41 @@ public class StationData {
 	}
 	public void setInsert_date(Date insert_date) {
 		this.insert_date = insert_date;
+	}
+	public Double getMean_snow_depth() {
+		return mean_snow_depth;
+	}
+	public void setMean_snow_depth(Double mean_snow_depth) {
+		this.mean_snow_depth = mean_snow_depth;
+	}
+	public Double getMean_wave_heigth() {
+		return mean_wave_heigth;
+	}
+	public void setMean_wave_heigth(Double mean_wave_heigth) {
+		this.mean_wave_heigth = mean_wave_heigth;
+	}
+	public Double getMax_wave_heigth() {
+		return max_wave_heigth;
+	}
+	public void setMax_wave_heigth(Double max_wave_heigth) {
+		this.max_wave_heigth = max_wave_heigth;
+	}
+	public Double getMean_wave_period() {
+		return mean_wave_period;
+	}
+	public void setMean_wave_period(Double mean_wave_period) {
+		this.mean_wave_period = mean_wave_period;
+	}
+	public Double getPeak_wave_period() {
+		return peak_wave_period;
+	}
+	public void setPeak_wave_period(Double peak_wave_period) {
+		this.peak_wave_period = peak_wave_period;
+	}
+	public Integer getTrend_creek_level() {
+		return trend_creek_level;
+	}
+	public void setTrend_creek_level(Integer trend_creek_level) {
+		this.trend_creek_level = trend_creek_level;
 	}
 }

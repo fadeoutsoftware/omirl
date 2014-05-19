@@ -38,6 +38,9 @@ var MapController = (function () {
         // Path of the sensors legend image
         this.m_sSensorsLegendPath = "";
 
+        // Selected Map Link
+        this.m_oSelectedMapLink = null;
+
         // Test of the Geocoding Query
         this.m_sGeocodingQuery = "";
         // Flag to know if a map is active
@@ -206,7 +209,7 @@ var MapController = (function () {
                // Tranform the point
                var oPoint = new OpenLayers.Geometry.Point(oLocation.lon, oLocation.lat).transform(epsg4326, projectTo);
                // Set the center
-               oMapService.map.setCenter([oPoint.x, oPoint.y],16);
+               oMapService.map.setCenter([oPoint.x, oPoint.y],12);
 
                var oIconSize = new OpenLayers.Size(48,48);
                var oIconOffset = new OpenLayers.Pixel(-(oIconSize.w/2), -oIconSize.h);
@@ -234,21 +237,25 @@ var MapController = (function () {
      */
     MapController.prototype.mapLinkClicked = function (oMapLink) {
 
+        // Map Link = null stands for back: impossible to have back on first level
         if (this.m_bIsFirstLevel && oMapLink == null) return;
 
+        // Clear member variables
         this.m_bShowThirdLevel = false;
         this.m_aoThirdLevels = [];
 
         // var to know if this is the selected entry
         var bIsSelected = false;
 
-        // Is this a Back click?
+        // Is this a Map Link Click?
         if (oMapLink != null) {
-            // Set Selected Layer
+            // Write on screen the Selected Layer description
             if (!this.m_bDynamicLayerActive && this.m_bIsFirstLevel) this.m_sMapLegendSelected = oMapLink.description;
+            // Remember if it was selected or not
             bIsSelected = oMapLink.selected;
         }
         else {
+            // No is a Back Click
             if (!this.m_bDynamicLayerActive) this.m_sMapLegendSelected = "Mappe";
         }
 
@@ -264,13 +271,49 @@ var MapController = (function () {
             // Remember we are in second level
             this.m_bIsFirstLevel = false;
 
-            // Get second level
-            var oServiceVar = this;
-            oServiceVar.m_aoMapLinks = [];
+            // Clear variables and remember the Controller ref
+            var oControllerVar = this;
+            oControllerVar.m_aoMapLinks = [];
 
-
+            // Get second level from server
             this.m_oMapNavigatorService.getMapSecondLevels(oMapLink.linkId).success(function(data,status) {
-                    oServiceVar.m_aoMapLinks = data;
+
+                // Second Level Icons
+                oControllerVar.m_aoMapLinks = data;
+
+                // Is there any Map selected?
+                if (oControllerVar.m_oSelectedMapLink != null) {
+
+                    //Is One of these links the one selected?
+                    var iCount;
+                    for (iCount = 0; iCount< oControllerVar.m_aoMapLinks.length; iCount++) {
+
+                        // Check by Layer Id
+                        if (oControllerVar.m_aoMapLinks[iCount].layerID == oControllerVar.m_oSelectedMapLink.layerID) {
+
+                            // This is the selected one!!
+                            oControllerVar.setSelectedMapLinkOnScreen(oControllerVar, oControllerVar.m_aoMapLinks[iCount]);
+
+                            // Switch to show or not third level
+                            if (oControllerVar.m_aoMapLinks[iCount].hasThirdLevel) {
+
+                                // Get third levels from the service
+                                oControllerVar.m_oMapNavigatorService.getMapThirdLevel(oControllerVar.m_aoMapLinks[iCount]).success(function(data,status) {
+                                    oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oControllerVar.m_aoMapLinks[iCount]);
+                                }).error(function(data,status){
+                                    alert('Error Contacting Omirl Server');
+                                });
+
+                            }
+                            else {
+                                oControllerVar.m_sMapThirdLevelSelectedModifier = "";
+                            }
+
+                            break;
+                        }
+                    }
+
+                }
             }).error(function(data,status){
                 alert('Error Contacting Omirl Server');
             });
@@ -286,26 +329,14 @@ var MapController = (function () {
             else {
                 // Switch to show or not third level
                 if (oMapLink.hasThirdLevel) {
-                    this.m_bShowThirdLevel = true;
 
                     var oMapLinkCopy = oMapLink;
-                    var oServiceVar = this;
+                    var oControllerVar = this;
 
                     // Get third levels from the service
                     this.m_oMapNavigatorService.getMapThirdLevel(oMapLink).success(function(data,status) {
-                         oServiceVar.m_aoThirdLevels = data;
 
-                        // For each level
-                        var iLevels;
-                        for (iLevels=0; iLevels < oServiceVar.m_aoThirdLevels.length; iLevels++) {
-                            oServiceVar.m_aoThirdLevels[iLevels].mapItem = oMapLinkCopy;
-                            // Is the default?
-                            if (oServiceVar.m_aoThirdLevels[iLevels].layerIDModifier == oServiceVar.m_sMapThirdLevelSelectedModifier) {
-                                // This is the first selected
-                                oServiceVar.m_sMapThirdLevelSelected = oServiceVar.m_aoThirdLevels[iLevels].description;
-                                //break;
-                            }
-                        }
+                        oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oMapLinkCopy);
                     }).error(function(data,status){
                         alert('Error Contacting Omirl Server');
                     });
@@ -316,15 +347,9 @@ var MapController = (function () {
                 }
 
                 if (!bIsSelected) {
-                    oMapLink.selected = true;
-                    // Layer Click
-                    this.m_sMapLegendIconPath = oMapLink.link;
-                    this.m_sMapLegendTooltip = "Legenda " + oMapLink.description;
-                    this.m_sMapLegendSelected = oMapLink.description;
-                    this.selectedDynamicLayer(oMapLink, this.m_sMapThirdLevelSelectedModifier);
-                    this.m_bDynamicLayerActive = true;
-                    this.m_sMapLegendPath = oMapLink.legendLink;
 
+                    this.setSelectedMapLinkOnScreen(this,oMapLink);
+                    this.selectedDynamicLayer(oMapLink, this.m_sMapThirdLevelSelectedModifier);
                 }
                 else {
                     // Remove from the map
@@ -338,10 +363,54 @@ var MapController = (function () {
                     this.m_sMapLegendPath = "";
                     this.m_sMapLegendTooltip = "Legenda Mappa";
                     this.m_sMapLegendIconPath = "";
+
+                    this.m_oSelectedMapLink = null;
                 }
             }
         }
     }
+
+    /**
+     * Sets all needed variables to show selected Map Link on screen
+     * @param oControllerVar
+     * @param oMapLink
+     */
+    MapController.prototype.setSelectedMapLinkOnScreen = function (oControllerVar, oMapLink) {
+
+        oMapLink.selected = true;
+        // Layer Click
+        oControllerVar.m_sMapLegendIconPath = oMapLink.link;
+        oControllerVar.m_sMapLegendTooltip = "Legenda " + oMapLink.description;
+        oControllerVar.m_sMapLegendSelected = oMapLink.description;
+        oControllerVar.m_bDynamicLayerActive = true;
+        oControllerVar.m_sMapLegendPath = oMapLink.legendLink;
+        oControllerVar.m_oSelectedMapLink = oMapLink;
+    }
+
+
+    /**
+     * Callback called when the third level options are read from the server
+     * Fills the combo and find the selected layer
+     * @param data
+     * @param status
+     * @param oControllerVar
+     * @param oMapLinkCopy
+     */
+    MapController.prototype.gotMapThirdLevelFromServer = function(data,status, oControllerVar, oMapLinkCopy) {
+        oControllerVar.m_aoThirdLevels = data;
+        oControllerVar.m_bShowThirdLevel = true;
+        // For each level
+        var iLevels;
+        for (iLevels=0; iLevels < oControllerVar.m_aoThirdLevels.length; iLevels++) {
+            oControllerVar.m_aoThirdLevels[iLevels].mapItem = oMapLinkCopy;
+            // Is the default?
+            if (oControllerVar.m_aoThirdLevels[iLevels].layerIDModifier == oControllerVar.m_sMapThirdLevelSelectedModifier) {
+                // This is the first selected
+                oControllerVar.m_sMapThirdLevelSelected = oControllerVar.m_aoThirdLevels[iLevels].description;
+                //break;
+            }
+        }
+    };
 
     /**
      * Function called when a Dynamic Layer is set
@@ -477,8 +546,9 @@ var MapController = (function () {
         // Compute time delta
         var sTimeDelta = this.getDelayString(oReferenceDate);
 
+        var iMonth = oReferenceDate.getMonth() + 1;
         // Write reference date text
-        var sReferenceData = oReferenceDate.getDate() + "/" + oReferenceDate.getMonth() + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + oReferenceDate.getMinutes();
+        var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + oReferenceDate.getMinutes();
 
         // Start Pop up HTML
         var sHtml = "<div class='stationsPopupPanel'>";
@@ -601,6 +671,8 @@ var MapController = (function () {
                     //,{title: oStation.name + " " + oStation.value }
                 );
 
+                // Get Increment by server
+                var iIncrement = oStation.increment;
 
                 // Set attributes of the Feature
                 oFeature.attributes = {
@@ -624,7 +696,11 @@ var MapController = (function () {
                     // Station Code
                     shortCode: oStation.shortCode,
                     // Image Link to use in the popup
-                    imageLinkInv: oSensorLink.imageLinkInv
+                    imageLinkInv: oSensorLink.imageLinkInv,
+                    // Sensor Type
+                    sensorType: oSensorLink.code,
+                    // Increment
+                    increment: iIncrement
                 };
 
                 // Add the feature to the array
@@ -880,11 +956,37 @@ var MapController = (function () {
     }
 
     MapController.prototype.toggleSideBarClicked = function() {
+
+        var oElement = angular.element("#mapNavigation");
+
+        if (oElement != null) {
+            if (oElement.length>0) {
+                var iWidth = oElement[0].clientWidth;
+                iWidth -= 20;
+
+                if (!this.m_bSideBarCollapsed) {
+                    oElement[0].style.left = "-" + iWidth + "px";
+                }
+                else {
+                    oElement[0].style.left =  "0px";
+                }
+
+                //oElement.sty
+            }
+        }
+
         this.m_bSideBarCollapsed = !this.m_bSideBarCollapsed;
     }
 
     MapController.prototype.isSideBarCollapsed = function () {
         return this.m_bSideBarCollapsed;
+    }
+
+    MapController.prototype.resetZoomClick = function () {
+        var oProjection = 'EPSG:4326';
+        var oCenter = new OpenLayers.LonLat(oCenter).transform('EPSG:4326', oProjection);
+        this.m_oMapService.map.setCenter(oCenter, 9);
+
     }
 
     MapController.$inject = [

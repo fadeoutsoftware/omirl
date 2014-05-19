@@ -1,11 +1,13 @@
 package it.fadeout.omirl.daemon;
 
+import it.fadeout.omirl.business.SensorLastData;
 import it.fadeout.omirl.business.StationLastData;
 import it.fadeout.omirl.data.HibernateUtils;
 import it.fadeout.omirl.data.StationLastDataRepository;
 import it.fadeout.omirl.viewmodels.SensorViewModel;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,268 +54,28 @@ public class OmirlDaemon {
 				
 				try {
 					
+					SimpleDateFormat oDateFormat = new SimpleDateFormat("HHmm");
+					
 					// Get The stations
 					StationLastDataRepository oLastRepo = new StationLastDataRepository();
-					// Get all the last values
-					List<StationLastData> aoLastValues = oLastRepo.SelectAll(StationLastData.class);
 					
-					if (aoLastValues != null) {
-						
-						// One List for each sensor type
-						List<SensorViewModel> aoRain5m = new ArrayList<>();
-						List<SensorViewModel> aoRain10m = new ArrayList<>();
-						List<SensorViewModel> aoRain15m = new ArrayList<>();
-						List<SensorViewModel> aoRain30m = new ArrayList<>();
-						List<SensorViewModel> aoRain1h = new ArrayList<>();
-						List<SensorViewModel> aoRain3h = new ArrayList<>();
-						List<SensorViewModel> aoRain6h = new ArrayList<>();
-						List<SensorViewModel> aoRain12h = new ArrayList<>();
-						List<SensorViewModel> aoRain24h = new ArrayList<>();
-						List<SensorViewModel> aoRain7d = new ArrayList<>();
-						List<SensorViewModel> aoRain15d = new ArrayList<>();
-						List<SensorViewModel> aoRain30d = new ArrayList<>();
-						List<SensorViewModel> aoMeanTemp = new ArrayList<>();
-						List<SensorViewModel> aoMeanLevel = new ArrayList<>();
-						List<SensorViewModel> aoHumidity = new ArrayList<>();
-						List<SensorViewModel> aoRadiation = new ArrayList<>();
-						List<SensorViewModel> aoLeafs = new ArrayList<>();
-						List<SensorViewModel> aoPressure = new ArrayList<>();
-						List<SensorViewModel> aoBattery = new ArrayList<>();
-//						List<SensorViewModel> aoMinTemp = new ArrayList<>();
-//						List<SensorViewModel> aoMaxTemp = new ArrayList<>();
-						
-						// Generate Filtered Lists
-						for (StationLastData oLast : aoLastValues) {
+					SerializeSensorLast("rain1h", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("temp", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("idro", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("igro", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("radio", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("leafs", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("batt", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("press", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("snow", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("boa", oLastRepo,  oConfig, oDateFormat);
+					SerializeSensorLast("wind", oLastRepo,  oConfig, oDateFormat);
+					
 
-							// Check if the value exists
-							if (oLast.getRain_05m() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_05m());
-								// Add it to the list
-								if (oSensor!=null) aoRain5m.add(oSensor);
-							}
-							
-							
-							// Check if the value exists
-							if (oLast.getRain_10m() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_10m());
-								// Add it to the list
-								if (oSensor!=null) aoRain10m.add(oSensor);
-							}
-							
-							
-							// Check if the value exists
-							if (oLast.getRain_15m() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_15m());
-								// Add it to the list
-								if (oSensor!=null) aoRain15m.add(oSensor);
-							}
-							
-							// Check if the value exists
-							if (oLast.getRain_30m() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_30m());
-								// Add it to the list
-								if (oSensor!=null) aoRain30m.add(oSensor);
-							}	
-							
-							
-							// Check if the value exists
-							if (oLast.getRain_01h() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_01h());
-								// Add it to the list
-								if (oSensor!=null) aoRain1h.add(oSensor);
-							}	
-							
-							// Check if the value exists
-							if (oLast.getRain_03h() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_03h());
-								// Add it to the list
-								if (oSensor!=null) aoRain3h.add(oSensor);
-							}	
-							
-							// Check if the value exists
-							if (oLast.getRain_06h() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_06h());
-								// Add it to the list
-								if (oSensor!=null) aoRain6h.add(oSensor);
-							}	
-							
-							// Check if the value exists
-							if (oLast.getRain_12h() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_12h());
-								// Add it to the list
-								if (oSensor!=null) aoRain12h.add(oSensor);
-							}	
-							
-							// Check if the value exists
-							if (oLast.getRain_24h() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_24h());
-								// Add it to the list
-								if (oSensor!=null) aoRain24h.add(oSensor);
-							}
-							
-							// Check if the value exists
-							if (oLast.getRain_07d() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_07d());
-								// Add it to the list
-								if (oSensor!=null) aoRain7d.add(oSensor);
-							}	
-							
-							// Check if the value exists
-							if (oLast.getRain_15d() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_15d());
-								// Add it to the list
-								if (oSensor!=null) aoRain15d.add(oSensor);
-							}	
-							
-							// Check if the value exists
-							if (oLast.getRain_30d() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getRain_30d());
-								// Add it to the list
-								if (oSensor!=null) aoRain30d.add(oSensor);
-							}	
-
-							// Check if the value exists
-							if (oLast.getMean_air_temp() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getMean_air_temp());
-								// Add it to the list
-								if (oSensor!=null) aoMeanTemp.add(oSensor);
-							}	
-							
-							// Check if the value exists
-							if (oLast.getMean_creek_level() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getMean_creek_level());
-								// Add it to the list
-								if (oSensor!=null) aoMeanLevel.add(oSensor);
-							}		
-						
-							
-							
-							// Check if the value exists
-							if (oLast.getHumidity() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getHumidity());
-								// Add it to the list
-								if (oSensor!=null) aoHumidity.add(oSensor);
-							}		
-							
-							
-							// Check if the value exists
-							if (oLast.getSolar_radiation_pwr() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getSolar_radiation_pwr());
-								// Add it to the list
-								if (oSensor!=null) aoRadiation.add(oSensor);
-							}		
-							
-							// Check if the value exists
-							if (oLast.getLeaf_wetness()!= null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getLeaf_wetness());
-								// Add it to the list
-								if (oSensor!=null) aoLeafs.add(oSensor);
-							}		
-							
-							// Check if the value exists
-							if (oLast.getMean_sea_level_press() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getMean_sea_level_press());
-								// Add it to the list
-								if (oSensor!=null) aoPressure.add(oSensor);
-							}		
-							
-							// Check if the value exists
-							if (oLast.getBattery_voltage() != null) {
-								// Obtain the sensor view model
-								SensorViewModel oSensor = oLast.getSensorViewModel(oLast.getBattery_voltage());
-								// Add it to the list
-								if (oSensor!=null) aoBattery.add(oSensor);
-							}		
-							
-						}
-						
-						Date oDate = new Date();
-						SimpleDateFormat oDateFormat = new SimpleDateFormat("HHmm");
-						
-						String sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/rain1h",oDate);
-						
-						if (sFullPath != null)  {
-							String sFileName = "rain01h"+oDateFormat.format(oDate)+".xml"; 
-							SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoRain1h);
-						}
-						
-						sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/temp",oDate);
-						
-						if (sFullPath != null)  {
-							String sFileName = "temp"+oDateFormat.format(oDate)+".xml"; 
-							SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoMeanTemp);
-						}						
-						
-						sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/idro",oDate);
-						
-						if (sFullPath != null)  {
-							String sFileName = "idro"+oDateFormat.format(oDate)+".xml"; 
-							SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoMeanTemp);
-						}	
-						
-						sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/igro",oDate);
-						
-						if (sFullPath != null)  {
-							String sFileName = "idro"+oDateFormat.format(oDate)+".xml"; 
-							SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoHumidity);
-						}
-						
-						sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/radio",oDate);
-						
-						if (sFullPath != null)  {
-							String sFileName = "idro"+oDateFormat.format(oDate)+".xml"; 
-							SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoRadiation);
-						}	
-						
-						sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/leafs",oDate);
-						
-						if (sFullPath != null)  {
-							String sFileName = "idro"+oDateFormat.format(oDate)+".xml"; 
-							SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoLeafs);
-						}	
-						
-						sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/batt",oDate);
-						
-						if (sFullPath != null)  {
-							String sFileName = "idro"+oDateFormat.format(oDate)+".xml"; 
-							SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoBattery);
-						}	
-						
-						sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/press",oDate);
-						
-						if (sFullPath != null)  {
-							String sFileName = "idro"+oDateFormat.format(oDate)+".xml"; 
-							SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoPressure);
-						}	
-						
-					}
-					else {
-						System.out.println("OmirlDaemon ");
-						System.out.println("OmirlDaemon - There was an error reading last values");
-					}
 				}
 				catch(Exception oEx) {
 					oEx.printStackTrace();
-				}				
-				
+				}									
 				
 				System.out.println("OmirlDaemon - Cycle End " + new Date());
 				
@@ -331,6 +93,44 @@ public class OmirlDaemon {
 		}
 		finally {
 			HibernateUtils.shutdown();
+		}
+	}
+	
+	public static void SerializeSensorLast(String sName, StationLastDataRepository oLastRepo, OmirlDaemonConfiguration oConfig, DateFormat oDateFormat) {
+		
+		
+		try {
+			List<SensorLastData> aoSensorLast = oLastRepo.selectByStationType("lastdata"+ sName);
+			
+			if (aoSensorLast != null) {
+				
+				// One List for each sensor type
+				List<SensorViewModel> aoSensoViewModel = new ArrayList<>();
+				
+				for (SensorLastData oSensorLastData : aoSensorLast) {
+					SensorViewModel oSensorViewModel = oSensorLastData.getSensorViewModel();
+					if (oSensorViewModel != null) {
+						aoSensoViewModel.add(oSensorViewModel);
+					}
+					
+				}
+				
+				Date oDate = new Date();
+				
+				String sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/" + sName,oDate);
+				
+				if (sFullPath != null)  {
+					String sFileName = sName+oDateFormat.format(oDate)+".xml"; 
+					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoSensoViewModel);
+				}
+			}
+			else {
+				System.out.println("OmirlDaemon ");
+				System.out.println("OmirlDaemon - There was an error reading last values");
+			}							
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
 		}
 	}
 	
@@ -382,7 +182,7 @@ public class OmirlDaemon {
 //			
 			StationLastDataRepository oLastRepo = new StationLastDataRepository();
 			
-			List<StationLastData> aoLastValues = oLastRepo.selectByStationType("rain_05m");
+			List<StationLastData> aoLastValues = oLastRepo.SelectAll(StationLastData.class);
 			
 			//oLastRepo.SelectAll(oClass)
 

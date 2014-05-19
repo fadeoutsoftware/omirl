@@ -267,7 +267,9 @@ angular.module('az.services').factory('az.services.layersService',function($root
                     labelOutlineWidth: 2,
                     fontColor: "#ffffff",
                     fontOpacity: 0.8,
-                    fontSize: "12px"
+                    fontSize: "12px",
+                    graphicName: '${graphicNameFunction}',
+                    rotation: "${rotationFunction}"
                 }
             });
 
@@ -323,6 +325,32 @@ angular.module('az.services').factory('az.services.layersService',function($root
 
                             if (dValue<0.2) return ""
                         }
+                    },
+                    graphicNameFunction: function(feature) {
+
+                        if (feature.attributes.sensorType == 'Idro') {
+                            if (feature.attributes.increment == 0) {
+                                return 'circle';
+                            }
+
+                            return 'triangle';
+                        }
+                        else {
+                            return 'circle';
+                        }
+                    },
+                    rotationFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Idro') {
+                            if (feature.attributes.increment == -1) {
+                                return 180;
+                            }
+
+                            return 0;
+                        }
+                        else {
+                            return 'circle';
+                        }
+
                     }
                 }
             });
