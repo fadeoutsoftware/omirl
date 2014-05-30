@@ -269,7 +269,10 @@ angular.module('az.services').factory('az.services.layersService',function($root
                     fontOpacity: 0.8,
                     fontSize: "12px",
                     graphicName: '${graphicNameFunction}',
-                    rotation: "${rotationFunction}"
+                    rotation: "${rotationFunction}",
+                    externalGraphic: '${externalGraphicFunction}',
+                    graphicWidth: '${externalGraphicSize}',
+                    graphicHeight: '${externalGraphicSize}'
                 }
             });
 
@@ -280,22 +283,32 @@ angular.module('az.services').factory('az.services.layersService',function($root
                 rules: [lowRule],
                 context: {
                     valueFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') return '';
+
                         if (feature.layer.map.zoom < 12) return "";
                         else return feature.attributes.value;
                     },
                     radiusFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') return 0;
+
                         if (feature.layer.map.zoom < 12)  return 5;
                         else return 15;
                     },
                     strokeWidthFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') return 0;
+
                         if (feature.layer.map.zoom < 12)  return 2;
                         else return 12;
                     },
                     strokeOpacityFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') return 1;
+
                         if (feature.layer.map.zoom < 12)  return 1;
                         else return 0.5;
                     },
                     colorFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') return undefined;
+
                         var dValue = feature.attributes.value;
 
                         var aoColorsMap = oService.getStationsLayerColorMap();
@@ -309,6 +322,8 @@ angular.module('az.services').factory('az.services.layersService',function($root
                         if (dValue<0.2) return ""
                     },
                     strokeColorFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') return null;
+
                         if (feature.layer.map.zoom < 12) return "#000000";
                         else  {
                             // SAME AS COLOR FUNCTION
@@ -327,10 +342,12 @@ angular.module('az.services').factory('az.services.layersService',function($root
                         }
                     },
                     graphicNameFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') return null;
 
                         if (feature.attributes.sensorType == 'Idro') {
                             if (feature.attributes.increment == 0) {
                                 return 'circle';
+                                //return 'triangle';
                             }
 
                             return 'triangle';
@@ -347,10 +364,29 @@ angular.module('az.services').factory('az.services.layersService',function($root
 
                             return 0;
                         }
+                        else if (feature.attributes.sensorType == 'Vento') {
+                            return feature.attributes.increment;
+                        }
                         else {
-                            return 'circle';
+                            return 0;
                         }
 
+                    },
+                    externalGraphicFunction: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') {
+                            return feature.attributes.imgPath;
+                        }
+                        else {
+                            return '';
+                        }
+                    },
+                    externalGraphicSize: function(feature) {
+                        if (feature.attributes.sensorType == 'Vento') {
+                            return 32;
+                        }
+                        else {
+                            return 0;
+                        }
                     }
                 }
             });

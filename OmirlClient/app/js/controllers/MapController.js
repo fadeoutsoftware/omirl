@@ -150,6 +150,7 @@ var MapController = (function () {
                 oServiceVar.m_oLayerService.clarAll();
                 oServiceVar.m_oMapService.map.destroy();
                 oServiceVar.m_oMapService.map = null;
+                oServiceVar.m_oMapService.stationsPopupControllerAdded = false;
             }
         });
     }
@@ -515,7 +516,7 @@ var MapController = (function () {
 
         if (iDeltaMinutes<60) {
             // Less then 1h
-            sTimeDelta += iDeltaMinutes + " minuti fa";
+            sTimeDelta += iDeltaMinutes + " min. fa";
         }
         else if (iDeltaMinutes< 60*24) {
             // Less then 1d
@@ -547,26 +548,35 @@ var MapController = (function () {
         var sTimeDelta = this.getDelayString(oReferenceDate);
 
         var iMonth = oReferenceDate.getMonth() + 1;
+
+        var sMinutes = "" + oReferenceDate.getMinutes();
+
+        if (sMinutes.length<2) {
+            sMinutes = "0" + sMinutes;
+        }
+
         // Write reference date text
-        var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + oReferenceDate.getMinutes();
+        var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + sMinutes;
 
         // Start Pop up HTML
         var sHtml = "<div class='stationsPopupPanel'>";
 
+        // Stations Informations
+        sHtml += "<strong style=\"font-size: 14px;\">"+oFeature.attributes.municipality+"</strong><br>";
 
         // Stations Informations
         sHtml += "<p><strong>" + oFeature.attributes.name + " [" + oFeature.attributes.altitude + "  s.l.m.]" + "</strong></p>";
 
         // Sensor Value
-        sHtml +="<h4>"+"<img class='stationsPopupImage' src='"+oFeature.attributes.imageLinkInv+"' style=\"font-family: 'Glyphicons Halflings';font-size: 20px;\"/> " + oFeature.attributes.value + " " + oFeature.attributes.measureUnit + "</h4>";
+        sHtml +="<h4>"+"<img class='stationsPopupImage' src='"+oFeature.attributes.imageLinkInv+"' style=\"font-family: 'Glyphicons Halflings';font-size: 16px;border: 1px solid #ffffff;padding: 2px;border-radius: 3px;\"/> " + oFeature.attributes.value + " " + oFeature.attributes.measureUnit + "</h4>";
 
         // Time reference
         sHtml += "<p><span class='popupglyphicon glyphicon glyphicon-time' style=\"font-family: 'Glyphicons Halflings';font-size: 15px;\"></span> " + sTimeDelta + " " + sReferenceData + "</p>";
 
         // Station Code
-        sHtml += "<p>Codice: " + oFeature.attributes.shortCode + "</p>";
+        sHtml += "<br><div>Codice: " + oFeature.attributes.shortCode + "</div>";
         // Lat Lon
-        sHtml += "<p>Lat: " + oFeature.attributes.lat + " Lon: " + oFeature.attributes.lon + "</p>";
+        sHtml += "<div>Lat: " + oFeature.attributes.lat + " Lon: " + oFeature.attributes.lon + "</div>";
 
         // Close Popup Div
         sHtml += "</div>";
@@ -585,7 +595,7 @@ var MapController = (function () {
         // Get Pop Up HTML
         var sHtml = this.getStationPopupContent(oFeature);
         // Dummy size
-        var oSize = new OpenLayers.Size(180,190);
+        var oSize = new OpenLayers.Size(190,190);
 
         // Create Popup
         var oPopUp = new OpenLayers.Popup(
@@ -700,7 +710,11 @@ var MapController = (function () {
                     // Sensor Type
                     sensorType: oSensorLink.code,
                     // Increment
-                    increment: iIncrement
+                    increment: iIncrement,
+                    // Municipality
+                    municipality: oStation.municipality,
+                    // Image Path
+                    imgPath: oStation.imgPath
                 };
 
                 // Add the feature to the array
@@ -728,8 +742,9 @@ var MapController = (function () {
                         oMapController.showStationsPopup(feature);
                     },
                     onUnselect: function(feature) {
-                        // Hover Unselect: remove pop up
-                        feature.layer.map.removePopup(feature.popup);
+                        // Hover Unselect: remove pop u
+                        // TODO POPUP
+                        //feature.layer.map.removePopup(feature.popup);
                     },
                     callbacks: {
                         // Click
@@ -983,10 +998,17 @@ var MapController = (function () {
     }
 
     MapController.prototype.resetZoomClick = function () {
-        var oProjection = 'EPSG:4326';
-        var oCenter = new OpenLayers.LonLat(oCenter).transform('EPSG:4326', oProjection);
-        this.m_oMapService.map.setCenter(oCenter, 9);
 
+        // Transformations objects
+        var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+        var projectTo = this.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
+
+        // Tranform the point
+        //var oPoint = new OpenLayers.Geometry.Point(8.60,44.20).transform(epsg4326, projectTo);
+
+        //var oProjection = 'EPSG:4326';
+        var oCenter = new OpenLayers.LonLat(8.60,44.20).transform(epsg4326, projectTo);
+        this.m_oMapService.map.setCenter(oCenter, 9);
     }
 
     MapController.$inject = [

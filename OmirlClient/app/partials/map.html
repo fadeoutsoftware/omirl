@@ -1,5 +1,5 @@
 <div class="row map-controls-left-panel-row">
-    <div class="col-md-2 col-xs-3 map-controls-panel" id ="mapNavigation">
+    <div class="col-md-2 col-xs-6 map-controls-panel" id ="mapNavigation">
         <!--<div class="map-geo-search grid row ">
             <div class="map-geo-search-text col-xs-8 col-md-8">
                 <input type="search" class="form-control" placeholder="Cerca Localita'">
@@ -50,7 +50,7 @@
             </div>
             <div class="col-md-1 col-xs-1">
                 <div class="map-statics dropdown">
-                    <a id="statics" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Confini"><i class="icon icon-map-roads pull-left"></i></a>
+                    <a id="statics" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Strati informativi"><i class="icon icon-map-roads pull-left"></i></a>
                     <ul class="icons-dropdown-menu dropdown-menu" role="menu" aria-labelledby="basemaps">
                         <li role="presentation" ng-repeat="oStatic in m_oController.getStaticLinks()">
                             <a class="basemaps-dropdown-menu-item" ng-class="{'basemaps-dropdown-menu-item-selected': oStatic.selected}"  role="menuitem" ng-click="m_oController.staticLayerClicked(oStatic)">{{oStatic.description}}</a>
@@ -144,7 +144,7 @@
         </div>
 
     </div>
-    <div class="col-md-10 col-xs-9 map-panel" id = "omirlMap" ol-map zoom="9" center="8.80,44.20" controls="zoom,navigation,attribution,mousePosition">
+    <div class="col-md-10 col-xs-9 map-panel" id = "omirlMap" ol-map zoom="9" center="8.60,44.20" controls="zoom,navigation,attribution,mousePosition">
     </div>
 
     <div class="map-legend-map" ng-show="m_oController.m_bDynamicLayerActive">
