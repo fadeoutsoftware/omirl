@@ -5,6 +5,7 @@ import java.util.Date;
 public class SensorViewModel {
 	int stationId;
 	String name;
+	String municipality;
 	double lat;
 	double lon;
 	double value;
@@ -82,4 +83,11 @@ public class SensorViewModel {
 	public void setIncrement(int increment) {
 		this.increment = increment;
 	}
+	public String getMunicipality() {
+		return municipality;
+	}
+	public void setMunicipality(String municipality) {
+		this.municipality = municipality;
+	}
+	
 }

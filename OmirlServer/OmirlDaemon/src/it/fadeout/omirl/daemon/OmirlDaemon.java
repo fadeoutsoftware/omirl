@@ -112,8 +112,9 @@ public class OmirlDaemon {
 					if (oSensorViewModel != null) {
 						aoSensoViewModel.add(oSensorViewModel);
 					}
-					
 				}
+					
+				SensorDataSpecialWork(aoSensoViewModel, sName);
 				
 				Date oDate = new Date();
 				
@@ -131,6 +132,60 @@ public class OmirlDaemon {
 		}
 		catch(Exception oEx) {
 			oEx.printStackTrace();
+		}
+	}
+	
+	public static void SensorDataSpecialWork(List<SensorViewModel> aoSensorList, String sType) {
+		if (sType == "wind") {
+			
+			ArrayList<Double> aoWindLimits = new ArrayList<>();
+			aoWindLimits.add(0.514444);
+			aoWindLimits.add(1.543332);
+			aoWindLimits.add(4.115552);
+			aoWindLimits.add(6.687772);
+			aoWindLimits.add(9.259992);
+			aoWindLimits.add(11.832212);
+			aoWindLimits.add(14.404432);
+			aoWindLimits.add(16.976652);
+			aoWindLimits.add(19.548872);
+			aoWindLimits.add(22.121092);
+			aoWindLimits.add(24.693312);
+			aoWindLimits.add(27.265532);
+			//aoWindLimits.add(29.837752);
+			
+			ArrayList<String> aoWindImages = new ArrayList<>();
+			aoWindImages.add("img/sensors/wind_0.png");
+			aoWindImages.add("img/sensors/wind_1.png");
+			aoWindImages.add("img/sensors/wind_2.png");
+			aoWindImages.add("img/sensors/wind_3.png");
+			aoWindImages.add("img/sensors/wind_4.png");
+			aoWindImages.add("img/sensors/wind_5.png");
+			aoWindImages.add("img/sensors/wind_6.png");
+			aoWindImages.add("img/sensors/wind_7.png");
+			aoWindImages.add("img/sensors/wind_8.png");
+			aoWindImages.add("img/sensors/wind_9.png");
+			aoWindImages.add("img/sensors/wind_10.png");
+			aoWindImages.add("img/sensors/wind_11.png");
+			aoWindImages.add("img/sensors/wind_12.png");
+			//aoWindImages.add("img/sensors/wind_13.png");
+
+			
+			for (SensorViewModel oViewModel : aoSensorList) {
+				// Init with the max value
+				oViewModel.setImgPath(aoWindImages.get(aoWindImages.size()-1));
+				
+				// Find the right limit
+				for (int iLimits = 0; iLimits<aoWindLimits.size(); iLimits++){
+					if (oViewModel.getValue()<aoWindLimits.get(iLimits)) {
+						// Se the image path!
+						oViewModel.setImgPath(aoWindImages.get(iLimits));
+						
+						// Convert to Km/h
+						oViewModel.setValue(oViewModel.getValue()*3.6);
+						break;
+					}
+				}
+			}
 		}
 	}
 	

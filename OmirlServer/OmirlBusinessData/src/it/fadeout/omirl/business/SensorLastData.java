@@ -99,6 +99,13 @@ public class SensorLastData {
 		oSensor.setLon(this.lon.doubleValue() / 100000);
 		if (name != null) oSensor.setName(name);
 		else oSensor.setName(this.station_code);
+		if (this.getMunicipality()!= null) {
+			oSensor.setMunicipality(this.getMunicipality());
+		}
+		else {
+			oSensor.setMunicipality("-");
+		}
+		
 		oSensor.setOtherHtml("");
 		oSensor.setRefDate(this.reference_date);
 		oSensor.setShortCode(this.station_code);
