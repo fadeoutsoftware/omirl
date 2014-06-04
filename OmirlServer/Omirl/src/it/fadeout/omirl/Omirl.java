@@ -137,6 +137,7 @@ public class Omirl extends Application {
 		oStatic.setLayerWMS("http://geoserver.cimafoundation.org/geoserver/dew/wms");
 		
 		OmirlNavigationConfig oConfig = new OmirlNavigationConfig();
+		oConfig.setFilesBasePath("C:/temp/omirl/files");
 		oConfig.getMapLinks().add(oMapLink);
 		oConfig.getStaticLinks().add(oStatic);
 		oConfig.getSensorLinks().add(oSensorLinkConfig);

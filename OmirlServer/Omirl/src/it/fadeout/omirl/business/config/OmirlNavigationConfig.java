@@ -4,10 +4,17 @@ import java.util.ArrayList;
 
 public class OmirlNavigationConfig {
 	
+	String filesBasePath = "";
 	ArrayList<MapLinkConfig> mapLinks = new ArrayList<MapLinkConfig>();
 	ArrayList<SensorLinkConfig> sensorLinks = new ArrayList<SensorLinkConfig>();
 	ArrayList<StaticLinkConfig> staticLinks = new ArrayList<StaticLinkConfig>();
 	
+	public String getFilesBasePath() {
+		return filesBasePath;
+	}
+	public void setFilesBasePath(String filesBasePath) {
+		this.filesBasePath = filesBasePath;
+	}	
 	public ArrayList<MapLinkConfig> getMapLinks() {
 		return mapLinks;
 	}

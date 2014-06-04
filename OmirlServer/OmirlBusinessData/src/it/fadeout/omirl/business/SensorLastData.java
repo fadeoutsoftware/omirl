@@ -111,7 +111,14 @@ public class SensorLastData {
 		oSensor.setShortCode(this.station_code);
 		oSensor.setStationId(1);
 		oSensor.setValue(sensorvalue.doubleValue());
-		oSensor.setIncrement(sensorincrement.intValue());
+		
+		if (sensorincrement != null) {
+			oSensor.setIncrement(sensorincrement.intValue());
+		}
+		else {
+			oSensor.setIncrement(0);
+		}
+		
 		
 		return oSensor;
 	}

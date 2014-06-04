@@ -1,8 +1,14 @@
 package it.fadeout.omirl.daemon;
 
+import it.fadeout.omirl.business.DataChart;
+import it.fadeout.omirl.business.DataSerie;
+import it.fadeout.omirl.business.DataSeriePoint;
 import it.fadeout.omirl.business.SensorLastData;
+import it.fadeout.omirl.business.StationAnag;
 import it.fadeout.omirl.business.StationLastData;
 import it.fadeout.omirl.data.HibernateUtils;
+import it.fadeout.omirl.data.StationAnagRepository;
+import it.fadeout.omirl.data.StationDataRepository;
 import it.fadeout.omirl.data.StationLastDataRepository;
 import it.fadeout.omirl.viewmodels.SensorViewModel;
 
@@ -52,9 +58,90 @@ public class OmirlDaemon {
 				// Start 
 				System.out.println("OmirlDaemon - Cycle Start " + new Date());
 				
+				
 				try {
 					
+					// Date Format for File Serialization
 					SimpleDateFormat oDateFormat = new SimpleDateFormat("HHmm");
+					
+
+					// Charts
+					StationAnagRepository oStationAnagRepository = new StationAnagRepository();
+					StationDataRepository oStationDataRepository = new StationDataRepository();
+
+					// Get Start Date Time Filter
+					long lNowTime = new Date().getTime();
+					
+					// TODO: questo 15 è il numero di giorni metterlo in configurazione
+					long lInterval = 15 * 24 * 60 * 60 * 1000;
+					Date oChartsStartDate = new Date(lNowTime-lInterval);				
+
+					// Get all the stations
+					List<StationAnag> aoAllStations = oStationAnagRepository.SelectAll(StationAnag.class);
+					
+					// For Each
+					for (StationAnag oStationAnag : aoAllStations) {
+						
+						try {
+							
+							// TEMPERATURE CHART
+							if (oStationAnag.getMean_air_temp_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_air_temp", oChartsStartDate);
+								
+								if (aoPoints != null) {
+									oDataSerie.getData().addAll(aoPoints);
+								}
+								
+								oDataSerie.setName("Temperatura Media");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Temperatura");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "temp", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}
+						
+						try {
+							
+							// RAIN CHART
+							if (oStationAnag.getRain_01h_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();
+								oDataSerie.setType("column");
+								
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "rain_01h", oChartsStartDate);
+								
+								if (aoPoints != null) {
+									oDataSerie.getData().addAll(aoPoints);
+								}
+								
+								oDataSerie.setName("Pioggia 1h");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Pioggia");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "rain1h", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}						
+					}	
+					
+					
+					
 					
 					// Get The stations
 					StationLastDataRepository oLastRepo = new StationLastDataRepository();
@@ -70,6 +157,7 @@ public class OmirlDaemon {
 					SerializeSensorLast("snow", oLastRepo,  oConfig, oDateFormat);
 					SerializeSensorLast("boa", oLastRepo,  oConfig, oDateFormat);
 					SerializeSensorLast("wind", oLastRepo,  oConfig, oDateFormat);
+					
 					
 
 				}
@@ -96,6 +184,13 @@ public class OmirlDaemon {
 		}
 	}
 	
+	/**
+	 * Serializes an XML file with the last observations of all the stations with a specified sensor
+	 * @param sName
+	 * @param oLastRepo
+	 * @param oConfig
+	 * @param oDateFormat
+	 */
 	public static void SerializeSensorLast(String sName, StationLastDataRepository oLastRepo, OmirlDaemonConfiguration oConfig, DateFormat oDateFormat) {
 		
 		
@@ -108,9 +203,14 @@ public class OmirlDaemon {
 				List<SensorViewModel> aoSensoViewModel = new ArrayList<>();
 				
 				for (SensorLastData oSensorLastData : aoSensorLast) {
-					SensorViewModel oSensorViewModel = oSensorLastData.getSensorViewModel();
-					if (oSensorViewModel != null) {
-						aoSensoViewModel.add(oSensorViewModel);
+					try {
+						SensorViewModel oSensorViewModel = oSensorLastData.getSensorViewModel();
+						if (oSensorViewModel != null) {
+							aoSensoViewModel.add(oSensorViewModel);
+						}						
+					}
+					catch(Exception oInnerEx) {
+						oInnerEx.printStackTrace();
 					}
 				}
 					
@@ -135,6 +235,11 @@ public class OmirlDaemon {
 		}
 	}
 	
+	/**
+	 * Utility function that extends stations serialization for type-specific work
+	 * @param aoSensorList
+	 * @param sType
+	 */
 	public static void SensorDataSpecialWork(List<SensorViewModel> aoSensorList, String sType) {
 		if (sType == "wind") {
 			
@@ -187,6 +292,12 @@ public class OmirlDaemon {
 				}
 			}
 		}
+		else if (sType == "idro") {
+			for (SensorViewModel oViewModel : aoSensorList) {
+				oViewModel.setValue(oViewModel.getValue()/10.0);
+			}
+				
+		}
 	}
 	
 	/**
@@ -214,10 +325,48 @@ public class OmirlDaemon {
 		return sFullDir;
 	}
 	
+	
+	/**
+	 * Gets the Data Serie of a single station for a single sensor type starting from the specified date
+	 * @param sStationCode
+	 * @param sColumnName
+	 * @param oStartDate
+	 */
+	public static void getStationDataSerie(String sStationCode, String sColumnName, Date oStartDate) {
+		
+		StationDataRepository oStationDataRepository = new StationDataRepository();
+		
+		List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(sStationCode,sColumnName,oStartDate);
+		
+		if (aoPoints != null) {
+			for (DataSeriePoint oDataSeriePoint : aoPoints) {
+				System.out.println("Time " + oDataSeriePoint.getRefDate() + ": " + oDataSeriePoint.getVal());
+			}
+		}
+	}
+	
+	public static void serializeStationChart(DataChart oChart, OmirlDaemonConfiguration oConfig, String sStationCode, String sChartName, DateFormat oDateFormat) {
+		try {
+			Date oDate = new Date();
+			
+			String sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/charts/" + sStationCode + "/" + sChartName,oDate);
+			
+			if (sFullPath != null)  {
+				String sFileName = sChartName+oDateFormat.format(oDate)+".xml"; 
+				SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, oChart);
+			}			
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
+		}
+		
+	}
+	
 	public static void WriteSampleConfig() {
 		OmirlDaemonConfiguration oConfig = new OmirlDaemonConfiguration();
 		oConfig.setFileRepositoryPath("C:\\temp\\Omirl\\Files");
 		oConfig.setMinutesPolling(2);
+		oConfig.setChartTimeRangeDays(16);
 		
 		try {
 			SerializationUtils.serializeObjectToXML("C:\\temp\\Omirl\\OmirlDaemonConfigSAMPLE.xml", oConfig);

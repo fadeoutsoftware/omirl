@@ -16,5 +16,6 @@
 		<mapping class="it.fadeout.omirl.business.StationData" />
 		<mapping class="it.fadeout.omirl.business.StationLastData" />
 		<mapping class="it.fadeout.omirl.business.SensorLastData" />
+		<mapping class="it.fadeout.omirl.business.DataSeriePoint" />
 	</session-factory>
 </hibernate-configuration>

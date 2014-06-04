@@ -4,6 +4,9 @@ public class OmirlDaemonConfiguration {
 	String fileRepositoryPath;
 	
 	int minutesPolling = 1;
+	
+	int chartTimeRangeDays = 15;
+
 
 	public String getFileRepositoryPath() {
 		return fileRepositoryPath;
@@ -21,4 +24,12 @@ public class OmirlDaemonConfiguration {
 		this.minutesPolling = minutesPolling;
 	}
 
+
+	public int getChartTimeRangeDays() {
+		return chartTimeRangeDays;
+	}
+
+	public void setChartTimeRangeDays(int chartTimeRangeDays) {
+		this.chartTimeRangeDays = chartTimeRangeDays;
+	}	
 }
