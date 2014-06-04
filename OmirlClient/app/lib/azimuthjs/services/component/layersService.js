@@ -240,10 +240,10 @@ angular.module('az.services').factory('az.services.layersService',function($root
             return iIndex;
         },
         onZoomStart: function () {
-            console.log("Zoom Start");
+            //console.log("Zoom Start");
         },
         onZoomEnd: function () {
-            console.log("Zoom End");
+            //console.log("Zoom End");
         },
         getStationsLayerColorMap: function () {
             return this.m_aoSensorLayerColorRanges;

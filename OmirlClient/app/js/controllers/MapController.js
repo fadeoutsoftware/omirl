@@ -7,7 +7,7 @@
 
 var MapController = (function () {
 
-    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService) {
+    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService) {
         // Initialize Members
         this.m_oScope = $scope;
         this.m_oWindow = $window;
@@ -16,6 +16,8 @@ var MapController = (function () {
         this.m_oMapService = mapService;
         this.m_oMapNavigatorService = oMapNavigatorService;
         this.m_oStationsService  = oStationsService;
+        this.m_oDialogService = oDialogService;
+        this.m_oChartService = oChartService;
 
         // Flag to know if first level is shown
         this.m_bIsFirstLevel = true;
@@ -625,7 +627,33 @@ var MapController = (function () {
      * @param oFeature
      */
     MapController.prototype.showStationsChart = function(oFeature) {
-        alert('Ora compare un grafico bellissimo!');
+        //alert('Ora compare un grafico bellissimo!');
+
+        var oControllerVar = this;
+        var sStationCode = oFeature.attributes.shortCode;
+
+        if (this.m_oDialogService.isExistingDialog(sStationCode)) {
+            return;
+        }
+
+        // The data for the dialog
+        var model = {
+            "stationCode": sStationCode
+        };
+
+
+        // jQuery UI dialog options
+        var options = {
+            autoOpen: false,
+            modal: false,
+            width: 600,
+            close: function(event, ui) {
+                // Remove the chart from the Chart Service
+                oControllerVar.m_oChartService.removeChart(sStationCode);
+            }
+        };
+
+        this.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
     }
 
     MapController.prototype.compareStations = function(oFirst, oSecond) {
@@ -744,7 +772,7 @@ var MapController = (function () {
                     onUnselect: function(feature) {
                         // Hover Unselect: remove pop u
                         // TODO POPUP
-                        //feature.layer.map.removePopup(feature.popup);
+                        feature.layer.map.removePopup(feature.popup);
                     },
                     callbacks: {
                         // Click
@@ -1017,7 +1045,9 @@ var MapController = (function () {
         'az.services.layersService',
         'az.services.mapService',
         'MapNavigatorService',
-        'StationsService'
+        'StationsService',
+        'dialogService',
+        'ChartService'
     ];
 
     return MapController;

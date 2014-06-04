@@ -744,3 +744,31 @@ div.olControlZoom {
     top: 60px !important;
     left: initial !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* AGGIUNTE PAOLO 30/05/2014 */
+
+/* Stile della barra del titolo delle finestre di dialogo di jQuery: viene usata nella finestra di visualizzazione grafici dei sensori. Io preferisco nasconderla direttamente */
+.ui-dialog-titlebar {
+  /*  display: none;*/
+}
+

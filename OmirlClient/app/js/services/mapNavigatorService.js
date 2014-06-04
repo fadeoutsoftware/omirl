@@ -5,9 +5,9 @@
 'use strict';
 angular.module('omirl.mapNavigatorService', []).
     service('MapNavigatorService', ['$http',  function ($http) {
-        this.APIURL = 'http://localhost:8080/Omirl/rest';
+        //this.APIURL = 'http://localhost:8080/Omirl/rest';
         //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        //this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
+        this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
 
         this.m_oHttp = $http;
 
