@@ -1,14 +1,17 @@
 package it.fadeout.omirl.business;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@XmlRootElement
 public class DataSerie {
 	String type;
 	String name;
-	ArrayList<DataSeriePoint> data = new ArrayList<>();
+	List<Object []> data = new ArrayList<>();
 	
 	public String getType() {
 		return type;
@@ -22,10 +25,10 @@ public class DataSerie {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public ArrayList<DataSeriePoint> getData() {
+	public List<Object []> getData() {
 		return data;
 	}
-	public void setData(ArrayList<DataSeriePoint> data) {
+	public void setData(List<Object []> data) {
 		this.data = data;
 	}
 	

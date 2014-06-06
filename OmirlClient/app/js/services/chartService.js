@@ -17,6 +17,17 @@ angular.module('omirl.chartService', []).
         //    return this.m_oHttp.get(this.APIURL + '/stations/'+oStationsLink.code);
         //}
 
+        this.setChart  = function(sCode, oChart) {
+            var oChartReference = this.getChart(sCode);
+
+            if (oChartReference == null) {
+                this.addChart(sCode,oChart);
+            }
+            else {
+                oChartReference.oChart = oChart;
+            }
+        }
+
         this.addChart  = function(sCode, oChart) {
             var oChartReference = {};
 

@@ -13,43 +13,26 @@ angular.module('omirl.chartDirective', []).
 
         var m_oChartService = oChartService;
 
+
+
         return {
             restrict: 'EA',
             priority: -10,
             link: function (scope, elem, attrs) {
 
                 var oChartOptions = {
-
                     chart: {
                         renderTo: elem[0]
                     },
-
+                    credits: {
+                        enabled: false
+                    },
                     rangeSelector: {
                         inputEnabled: true,
                         selected: 4
                     },
-
-                    yAxis: {
-                        labels: {
-                            formatter: function() {
-                                return (this.value > 0 ? '+' : '') + this.value + 'mm';
-                            }
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 2,
-                            color: 'silver'
-                        }]
-                    },
-
-                    plotOptions: {
-                        series: {
-                            compare: 'percent'
-                        }
-                    },
-
                     tooltip: {
-                        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
+                        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b>',
                         valueDecimals: 2
                     }
                 };

@@ -3,12 +3,10 @@ package it.fadeout.omirl;
 import it.fadeout.omirl.business.DataChart;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
-import it.fadeout.omirl.viewmodels.SensorViewModel;
+import it.fadeout.omirl.viewmodels.PrimitiveResult;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
@@ -21,6 +19,16 @@ import javax.ws.rs.core.Context;
 public class ChartService {
 	@Context
 	ServletConfig m_oServletConfig;
+	
+	@GET
+	@Path("/test")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public PrimitiveResult TestOmirl() {
+		// Just a keep alive message
+		PrimitiveResult oTest = new PrimitiveResult();
+		oTest.StringValue = "Omirl ChartService is Working";
+		return oTest;
+	}
 	
 	/**
 	 * Gets sensors data
@@ -46,11 +54,23 @@ public class ChartService {
 			System.out.println("ChartService.GetChart: Config Found");
 			
 			// Cast Config
-			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
+			
+			// Find the right Sensor Link Configuration
+			for (SensorLinkConfig oLinkConfig : oConfig.getSensorLinks()) {
+				
+				if (oLinkConfig.getCode().equals(sChart)) {
+					sChart = oLinkConfig.getColumnName();
+					System.out.println("ChartService.GetChart: Column Name = " +sChart);
+					break;
+				}
+			}
 			
 			String sBasePath = oConfig.getFilesBasePath();
 			
-			sBasePath += "/charts/" + sCode + "/" + sChart; 
+			sBasePath += "/charts/" + sCode + "/" + sChart;
+			
+			System.out.println("ChartService.GetChart: sBasePath = " + sBasePath);
 			
 			// Get The path of the right date
 			String sPath = Omirl.getSubPath(sBasePath, oDate);
@@ -76,7 +96,6 @@ public class ChartService {
 				}
 			}
 		}
-		
 		
 		// Return the list of sensors
 		return oDataChart;

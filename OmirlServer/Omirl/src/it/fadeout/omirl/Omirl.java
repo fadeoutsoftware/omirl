@@ -39,6 +39,7 @@ public class Omirl extends Application {
         classes.add(MapNavigatorService.class);
         classes.add(StationsService.class);
         classes.add(GensonProvider.class);
+        classes.add(ChartService.class);
         return classes;
 	}
 	

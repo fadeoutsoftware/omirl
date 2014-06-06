@@ -549,16 +549,19 @@ var MapController = (function () {
         // Compute time delta
         var sTimeDelta = this.getDelayString(oReferenceDate);
 
-        var iMonth = oReferenceDate.getMonth() + 1;
+        //var iMonth = oReferenceDate.getMonth() + 1;
+        var iMonth = oReferenceDate.getUTCMonth() + 1;
 
-        var sMinutes = "" + oReferenceDate.getMinutes();
+        //var sMinutes = "" + oReferenceDate.getMinutes();
+        var sMinutes = "" + oReferenceDate.getUTCMinutes();
 
         if (sMinutes.length<2) {
             sMinutes = "0" + sMinutes;
         }
 
         // Write reference date text
-        var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + sMinutes;
+        //var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + sMinutes;
+        var sReferenceData = oReferenceDate.getUTCDate() + "/" + iMonth + "/" + oReferenceDate.getUTCFullYear() + " - " + oReferenceDate.getUTCHours() + ":" + sMinutes + " UTC";
 
         // Start Pop up HTML
         var sHtml = "<div class='stationsPopupPanel'>";
@@ -569,8 +572,10 @@ var MapController = (function () {
         // Stations Informations
         sHtml += "<p><strong>" + oFeature.attributes.name + " [" + oFeature.attributes.altitude + "  s.l.m.]" + "</strong></p>";
 
+        var sValue = parseFloat(oFeature.attributes.value ).toFixed(2);
+
         // Sensor Value
-        sHtml +="<h4>"+"<img class='stationsPopupImage' src='"+oFeature.attributes.imageLinkInv+"' style=\"font-family: 'Glyphicons Halflings';font-size: 16px;border: 1px solid #ffffff;padding: 2px;border-radius: 3px;\"/> " + oFeature.attributes.value + " " + oFeature.attributes.measureUnit + "</h4>";
+        sHtml +="<h4>"+"<img class='stationsPopupImage' src='"+oFeature.attributes.imageLinkInv+"' style=\"font-family: 'Glyphicons Halflings';font-size: 16px;border: 1px solid #ffffff;padding: 2px;border-radius: 3px;\"/> " + sValue + " " + oFeature.attributes.measureUnit + "</h4>";
 
         // Time reference
         sHtml += "<p><span class='popupglyphicon glyphicon glyphicon-time' style=\"font-family: 'Glyphicons Halflings';font-size: 15px;\"></span> " + sTimeDelta + " " + sReferenceData + "</p>";
@@ -636,10 +641,20 @@ var MapController = (function () {
             return;
         }
 
+        var sSensorType = "Pluvio";
+
+        // Reset all actives flag
+        this.m_aoSensorsLinks.forEach(function(oEntry) {
+            if (oEntry.isActive) {
+                sSensorType = oEntry.code;
+            }
+        });
+
         // The data for the dialog
         var model = {
-            "stationCode": sStationCode
-        };
+                "stationCode": sStationCode,
+                "chartType": sSensorType
+            };
 
 
         // jQuery UI dialog options

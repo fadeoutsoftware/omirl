@@ -93,15 +93,18 @@ public class OmirlDaemon {
 								oDataSerie.setType("line");
 								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_air_temp", oChartsStartDate);
 								
-								if (aoPoints != null) {
-									oDataSerie.getData().addAll(aoPoints);
-								}
+								DataSeriePointToDataSerie(aoPoints,oDataSerie);
 								
 								oDataSerie.setName("Temperatura Media");
 
 								oDataChart.getDataSeries().add(oDataSerie);
 								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
 								oDataChart.setSubTitle("Temperatura");
+								oDataChart.setAxisYMaxValue(36.0);
+								oDataChart.setAxisYMinValue(-4.0);
+								oDataChart.setAxisYTickInterval(2.0);
+								oDataChart.setAxisYTitle("Temperatura Media (°C)");
+								oDataChart.setTooltipValueSuffix(" °C");
 								
 								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "temp", oDateFormat);
 							}
@@ -122,23 +125,327 @@ public class OmirlDaemon {
 								
 								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "rain_01h", oChartsStartDate);
 								
-								if (aoPoints != null) {
-									oDataSerie.getData().addAll(aoPoints);
-								}
+								DataSeriePointToDataSerie(aoPoints,oDataSerie, 0.1);
 								
 								oDataSerie.setName("Pioggia 1h");
 
 								oDataChart.getDataSeries().add(oDataSerie);
 								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
 								oDataChart.setSubTitle("Pioggia");
+								oDataChart.setAxisYMaxValue(150.0);
+								oDataChart.setAxisYMinValue(0.0);
+								oDataChart.setAxisYTickInterval(10.0);
+								oDataChart.setAxisYTitle("Pioggia Oraria (mm)");
+								oDataChart.setTooltipValueSuffix(" mm");
 								
 								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "rain1h", oDateFormat);
 							}
 						}
 						catch(Exception oChartEx) {
 							oChartEx.printStackTrace();
+						}			
+						
+						
+						
+						
+						try {
+							
+							// HYDRO CHART
+							if (oStationAnag.getMean_creek_level_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_creek_level", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie, 0.1);
+								
+								oDataSerie.setName("Livello Medio");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Livello");
+								oDataChart.setAxisYMaxValue(10.0);
+								oDataChart.setAxisYMinValue(-1.0);
+								oDataChart.setAxisYTickInterval(1.0);
+								oDataChart.setAxisYTitle("Livello Medio (m)");
+								oDataChart.setTooltipValueSuffix(" m");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "idro", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
 						}						
-					}	
+						
+						
+						
+						try {
+							
+							// WIND CHART
+							if (oStationAnag.getMean_wind_speed_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_wind_speed", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie,3.6);
+								
+								oDataSerie.setName("Velocità del Vento");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Vento");
+								oDataChart.setAxisYMaxValue(150.0);
+								oDataChart.setAxisYMinValue(0.0);
+								oDataChart.setAxisYTickInterval(10.0);
+								oDataChart.setAxisYTitle("Velocità (km/h)");
+								oDataChart.setTooltipValueSuffix(" km/h");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "wind", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}							
+						
+
+						
+						try {
+							
+							// UMIDITY CHART
+							if (oStationAnag.getHumidity_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "humidity", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie);
+								
+								oDataSerie.setName("Umidità Relativa");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Umidità");
+								oDataChart.setAxisYMaxValue(100.0);
+								oDataChart.setAxisYMinValue(0.0);
+								oDataChart.setAxisYTickInterval(10.0);
+								oDataChart.setAxisYTitle("Umidità Relativa (%)");
+								oDataChart.setTooltipValueSuffix(" %");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "igro", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}							
+						
+						
+						
+						
+						try {
+							
+							// RADIATION CHART
+							if (oStationAnag.getSolar_radiation_pwr_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "solar_radiation_pwr", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie);
+								
+								oDataSerie.setName("Radiazione Solare Media");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Radiometri");
+								oDataChart.setAxisYMaxValue(1200.0);
+								oDataChart.setAxisYMinValue(0.0);
+								oDataChart.setAxisYTickInterval(50.0);
+								oDataChart.setAxisYTitle("Radiazione (W/m2)");
+								oDataChart.setTooltipValueSuffix(" W/m2");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "radio", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}			
+						
+						
+						
+						try {
+							
+							// BAGNATURA FOGLIARE CHART
+							if (oStationAnag.getLeaf_wetness_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "leaf_wetness", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie);
+								
+								oDataSerie.setName("Bagnatura Fogliare");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Percentuale");
+								oDataChart.setAxisYMaxValue(100.0);
+								oDataChart.setAxisYMinValue(0.0);
+								oDataChart.setAxisYTickInterval(10.0);
+								oDataChart.setAxisYTitle("Bagnatura Fogliare (%)");
+								oDataChart.setTooltipValueSuffix(" %");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "leafs", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}	
+						
+						try {
+							
+							// PRESSIONE CHART
+							if (oStationAnag.getMean_sea_level_press_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_sea_level_press", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie);
+								
+								oDataSerie.setName("Pressione Atmosferica");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Pressione al livello del mare");
+								oDataChart.setAxisYMaxValue(1040.0);
+								oDataChart.setAxisYMinValue(980.0);
+								oDataChart.setAxisYTickInterval(5.0);
+								oDataChart.setAxisYTitle("Pressione al livello del mare (hPa)");
+								oDataChart.setTooltipValueSuffix(" hPa");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "press", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}	
+						
+						
+						try {
+							
+							// BATTERY CHART
+							if (oStationAnag.getBattery_voltage_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "battery_voltage", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie);
+								
+								oDataSerie.setName("Tensione Batteria");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Tensione Batteria");
+								oDataChart.setAxisYMaxValue(15.0);
+								oDataChart.setAxisYMinValue(7.0);
+								oDataChart.setAxisYTickInterval(1.0);
+								oDataChart.setAxisYTitle("Tensione Batteria (V)");
+								oDataChart.setTooltipValueSuffix(" V");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "batt", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}	
+						
+						
+						try {
+							
+							// MARE CHART
+							if (oStationAnag.getBattery_voltage_every() != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_wave_heigth", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie);
+								
+								oDataSerie.setName("Lunghezza d'Onda");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Stato del Mare");
+								oDataChart.setAxisYMaxValue(15.0);
+								oDataChart.setAxisYMinValue(7.0);
+								oDataChart.setAxisYTickInterval(1.0);
+								oDataChart.setAxisYTitle("Lunghezza Media Onda(m)");
+								oDataChart.setTooltipValueSuffix(" m");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "boa", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}	
+						
+						
+						/*
+						try {
+							
+							// SNOW CHART
+							if (oStationAnag.get != null) {
+								
+								DataChart oDataChart = new DataChart();
+								
+								DataSerie oDataSerie = new DataSerie();	
+								oDataSerie.setType("line");
+								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_snow_depth", oChartsStartDate);
+								
+								DataSeriePointToDataSerie(aoPoints,oDataSerie);
+								
+								oDataSerie.setName("Lunghezza d'Onda");
+
+								oDataChart.getDataSeries().add(oDataSerie);
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+								oDataChart.setSubTitle("Stato del Mare");
+								oDataChart.setAxisYMaxValue(15.0);
+								oDataChart.setAxisYMinValue(7.0);
+								oDataChart.setAxisYTickInterval(1.0);
+								oDataChart.setAxisYTitle("Lunghezza Media Onda(m)");
+								oDataChart.setTooltipValueSuffix(" m");
+								
+								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "snow", oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}							
+						
+						*/
+						
+						
+					}
+					
+					
 					
 					
 					
@@ -182,6 +489,21 @@ public class OmirlDaemon {
 		finally {
 			HibernateUtils.shutdown();
 		}
+	}
+	
+	public static void DataSeriePointToDataSerie(List<DataSeriePoint> aoPoints, DataSerie oDataSerie) {
+		DataSeriePointToDataSerie(aoPoints, oDataSerie, 1.0);
+	}
+
+	public static void DataSeriePointToDataSerie(List<DataSeriePoint> aoPoints, DataSerie oDataSerie, double dConversionFactor) {
+		if (aoPoints != null) {
+			for (int iPoints = 0; iPoints<aoPoints.size(); iPoints++) {
+				Object [] adPoint = new Object[2];
+				adPoint[0] = new Long(aoPoints.get(iPoints).getRefDate().getTime());
+				adPoint[1] = new Double(aoPoints.get(iPoints).getVal())*dConversionFactor;
+				oDataSerie.getData().add(adPoint);
+			}
+		}		
 	}
 	
 	/**
@@ -292,7 +614,7 @@ public class OmirlDaemon {
 				}
 			}
 		}
-		else if (sType == "idro") {
+		else if (sType == "idro" || sType == "rain") {
 			for (SensorViewModel oViewModel : aoSensorList) {
 				oViewModel.setValue(oViewModel.getValue()/10.0);
 			}
