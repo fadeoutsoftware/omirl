@@ -69,7 +69,8 @@ var MapController = (function () {
         this.m_aoStaticLinks = [];
 
         // Weather Variables
-        this.m_bIsWeatherActive = true;
+        //this.m_bIsWeatherActive = true;
+        this.m_bIsWeatherActive = false;
 
         // Flag to know if the side bar is collapsed or not
         this.m_bSideBarCollapsed = false;
@@ -142,8 +143,9 @@ var MapController = (function () {
         });
 
 
-        this.m_oMapService.callbackArg = this;
-        this.m_oMapService.readyCallback = this.AddWeatherLayer;
+        // TODO: Disabilito per ora il layer di default
+        //this.m_oMapService.callbackArg = this;
+        //this.m_oMapService.readyCallback = this.AddWeatherLayer;
 
 
         $scope.$on('$locationChangeStart', function (event, next, current) {
