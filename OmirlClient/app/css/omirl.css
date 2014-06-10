@@ -933,6 +933,18 @@ padding: 0 0px 0 0px;
     font-family: Roboto,Arial,sans-serif;
     font-size: 11px;
     font-weight: 400;
+    color: #ffffff;
+}
+
+.stationsPopupPanel h4{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    line-height: 1.1;
+    font-size: 16px;
+}
+
+.stationsPopupPanel p {
+    font-family: Roboto,Arial,sans-serif;
 }
 
 /*
