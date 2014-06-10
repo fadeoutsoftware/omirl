@@ -1020,7 +1020,7 @@ var MapController = (function () {
         if (oElement != null) {
             if (oElement.length>0) {
                 var iWidth = oElement[0].clientWidth;
-                iWidth -= 20;
+                iWidth -= 0;
 
                 if (!this.m_bSideBarCollapsed) {
                     oElement[0].style.left = "-" + iWidth + "px";
