@@ -32,13 +32,6 @@ var ChartController = (function() {
 
         if (oChart != null) {
 
-/*
-            this.oChartVM.axisYMinValue = -10;
-            this.oChartVM.axisYMaxValue = 40;
-            this.oChartVM.axisYTickInterval = 5;
-            this.oChartVM.axisYTitle = 'Temperatura Media (°C)';
-            this.oChartVM.tooltipValueSuffix = ' mm';
-*/
             var oChartOptions = oChart.options;
             oChartOptions.tooltip.valueSuffix = this.oChartVM.tooltipValueSuffix;
 
@@ -60,11 +53,41 @@ var ChartController = (function() {
                     opposite: false
                 };
 
+
+                //oChart.xAxis[0].options.tickPixelInterval = 50;
+
                 oChart.yAxis[0].setOptions(oYAxisOptions);
 
             }
 
             this.oChartVM.dataSeries.forEach(function(oSerie) {
+
+                if (oSerie==null) return;
+                if (oSerie.data==null) return;
+
+                if (oSerie.data.length>1)
+                {
+                    var oSecondToLastElement = oSerie.data[oSerie.data.length-2];
+                    var oLastElement = oSerie.data[oSerie.data.length-1];
+
+                    var iTimeDelta = oLastElement[0]-oSecondToLastElement[0];
+
+                    var iHoursOffset = 21600000 * 2;
+
+                    var iMaxSteps = iHoursOffset/iTimeDelta;
+
+                    for (var iSteps = 1; iSteps<=iMaxSteps; iSteps ++)
+                    {
+                        var oNullValue = [];
+
+                        oNullValue[0] = oLastElement[0] + iSteps*iTimeDelta;
+                        oNullValue[1] = null;
+
+                        oSerie.data.push(oNullValue);
+                    }
+
+                }
+
                 oChart.addSeries(oSerie);
             });
 

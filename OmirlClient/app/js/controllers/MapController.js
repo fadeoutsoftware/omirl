@@ -113,6 +113,20 @@ var MapController = (function () {
 
         // Set map height
         var mapHeight = $("#top").height();// - $("#yr-map-header").outerHeight() - $("#yr-map-footer").outerHeight();
+
+        if( typeof( window.innerHeight ) == 'number' ) {
+            //Non-IE
+            mapHeight = window.innerHeight;
+        } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+            //IE 6+ in 'standards compliant mode'
+            mapHeight = document.documentElement.clientHeight;
+        } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+            //IE 4 compatible
+            mapHeight = document.body.clientHeight;
+        }
+
+
+
         $("#contentcontainer").height(mapHeight);
 
         if ($("#omirlMap") != null) {
@@ -508,6 +522,9 @@ var MapController = (function () {
         // Get Now
         var oDate = new Date();
 
+        //console.log("Now  = " + oDate);
+        //console.log("Ref  = " + oReferenceDate);
+
         // Compute time difference
         var iDifference = oDate.getTime()-oReferenceDate.getTime();
 
@@ -536,6 +553,35 @@ var MapController = (function () {
         return sTimeDelta;
     }
 
+    MapController.prototype.getFeatureOpacity = function(oReferenceDate)
+    {
+        // Get Now
+        var oDate = new Date();
+
+        //console.log("Now  = " + oDate);
+        //console.log("Ref  = " + oReferenceDate);
+
+        // Compute time difference
+        var iDifference = oDate.getTime()-oReferenceDate.getTime();
+
+        // How it is in minutes?
+        var iMinutes = 1000*60;
+
+        var iDeltaMinutes = Math.round(iDifference/iMinutes);
+
+        var iMaxDelayMinutes = 4320;
+
+        if (iDeltaMinutes>iMaxDelayMinutes) return -1.0;
+
+        var dDelayRatio = iDeltaMinutes/iMaxDelayMinutes;
+
+        dDelayRatio = 1.0-dDelayRatio;
+
+        dDelayRatio *= 0.9;
+
+        return dDelayRatio;
+    }
+
     /**
      * Gets the HTML content of the pop up
      * @param oFeature
@@ -546,44 +592,48 @@ var MapController = (function () {
         //var iNum = parseInt(oFeature.attributes.referenceDate.replace(/[^0-9]/g, ""));
         // Create Reference Date
         //var oReferenceDate = new Date(iNum);
-        var oReferenceDate = new Date(oFeature.attributes.referenceDate);
+        var oReferenceDate = new Date(oFeature.attributes.referenceDate+"Z");
 
         // Compute time delta
-        var sTimeDelta = this.getDelayString(oReferenceDate);
+        //var sTimeDelta = this.getDelayString(oReferenceDate);
+        var sTimeDelta = "";
 
-        //var iMonth = oReferenceDate.getMonth() + 1;
-        var iMonth = oReferenceDate.getUTCMonth() + 1;
+        var iMonth = oReferenceDate.getMonth() + 1;
+        //var iMonth = oReferenceDate.getUTCMonth() + 1;
 
-        //var sMinutes = "" + oReferenceDate.getMinutes();
-        var sMinutes = "" + oReferenceDate.getUTCMinutes();
+        var sMinutes = "" + oReferenceDate.getMinutes();
+        //var sMinutes = "" + oReferenceDate.getUTCMinutes();
 
         if (sMinutes.length<2) {
             sMinutes = "0" + sMinutes;
         }
 
         // Write reference date text
-        //var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + sMinutes;
-        var sReferenceData = oReferenceDate.getUTCDate() + "/" + iMonth + "/" + oReferenceDate.getUTCFullYear() + " - " + oReferenceDate.getUTCHours() + ":" + sMinutes + " UTC";
+        var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + sMinutes + " Locale";
+        var sReferenceDataUTC = oReferenceDate.getUTCHours() + ":" + sMinutes + " UTC";
 
         // Start Pop up HTML
         var sHtml = "<div class='stationsPopupPanel'>";
 
         // Stations Informations
-        sHtml += "<strong style=\"font-size: 14px;\">"+oFeature.attributes.municipality+"</strong><br>";
+        sHtml += "<strong style=\"font-size: 15px;\">"+oFeature.attributes.municipality+"</strong><br>";
 
         // Stations Informations
         sHtml += "<p><strong>" + oFeature.attributes.name + " [" + oFeature.attributes.altitude + "  s.l.m.]" + "</strong></p>";
 
-        var sValue = parseFloat(oFeature.attributes.value ).toFixed(2);
+        var iFixedCount  = 1;
+
+        if (oFeature.attributes.sensorType == "Idro") iFixedCount = 2;
+        var sValue = parseFloat(oFeature.attributes.value ).toFixed(iFixedCount);
 
         // Sensor Value
         sHtml +="<h4>"+"<img class='stationsPopupImage' src='"+oFeature.attributes.imageLinkInv+"' style=\"font-family: 'Glyphicons Halflings';font-size: 16px;border: 1px solid #ffffff;padding: 2px;border-radius: 3px;\"/> " + sValue + " " + oFeature.attributes.measureUnit + "</h4>";
 
         // Time reference
-        sHtml += "<p><span class='popupglyphicon glyphicon glyphicon-time' style=\"font-family: 'Glyphicons Halflings';font-size: 15px;\"></span> " + sTimeDelta + " " + sReferenceData + "</p>";
+        sHtml += "<p><span class='popupglyphicon glyphicon glyphicon-time' style=\"font-family: 'Glyphicons Halflings';font-size: 15px;\"></span> <span style=\"font-size: 14px;\">" + sTimeDelta + " " + sReferenceData + "</span></p>";
 
         // Station Code
-        sHtml += "<br><div>Codice: " + oFeature.attributes.shortCode + "</div>";
+        sHtml += "<br><div>Codice: " + oFeature.attributes.shortCode + " - ["+sReferenceDataUTC + "] </div>";
         // Lat Lon
         sHtml += "<div>Lat: " + oFeature.attributes.lat + " Lon: " + oFeature.attributes.lon + "</div>";
 
@@ -634,7 +684,6 @@ var MapController = (function () {
      * @param oFeature
      */
     MapController.prototype.showStationsChart = function(oFeature) {
-        //alert('Ora compare un grafico bellissimo!');
 
         var oControllerVar = this;
         var sStationCode = oFeature.attributes.shortCode;
@@ -729,6 +778,9 @@ var MapController = (function () {
                 // Get Increment by server
                 var iIncrement = oStation.increment;
 
+                var oReferenceDate = new Date(oStation.refDate+"Z");
+                var dOpacity = oServiceVar.getFeatureOpacity(oReferenceDate);
+
                 // Set attributes of the Feature
                 oFeature.attributes = {
                     // Station Id
@@ -759,7 +811,9 @@ var MapController = (function () {
                     // Municipality
                     municipality: oStation.municipality,
                     // Image Path
-                    imgPath: oStation.imgPath
+                    imgPath: oStation.imgPath,
+                    // Opacity
+                    opacity: dOpacity
                 };
 
                 // Add the feature to the array

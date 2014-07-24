@@ -257,7 +257,7 @@ angular.module('az.services').factory('az.services.layersService',function($root
             var lowRule = new OpenLayers.Rule({
                 symbolizer: {
                     fillColor: "${colorFunction}",
-                    fillOpacity: 0.9,
+                    fillOpacity: "${opacityFunction}",
                     strokeColor: "${strokeColorFunction}",
                     strokeOpacity: "${strokeOpacityFunction}",
                     strokeWidth: "${strokeWidthFunction}",
@@ -311,6 +311,11 @@ angular.module('az.services').factory('az.services.layersService',function($root
 
                         var dValue = feature.attributes.value;
 
+                        if (feature.attributes.opacity==-1.0)
+                        {
+                            return "#AAAAAA";
+                        }
+
                         var aoColorsMap = oService.getStationsLayerColorMap();
 
                         var iColors = 0;
@@ -320,6 +325,13 @@ angular.module('az.services').factory('az.services.layersService',function($root
                         }
 
                         if (dValue<0.2) return ""
+                    },
+                    opacityFunction: function(feature) {
+                        if (feature.attributes.opacity==-1.0)
+                        {
+                            return 0.9;
+                        }
+                        return feature.attributes.opacity;
                     },
                     strokeColorFunction: function(feature) {
                         if (feature.attributes.sensorType == 'Vento') return null;
