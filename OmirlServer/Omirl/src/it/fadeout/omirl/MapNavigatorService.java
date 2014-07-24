@@ -165,9 +165,9 @@ public class MapNavigatorService {
 					for (MapLinkConfig oSecondLevelLink : oLinkConfig.getSecondLevels()) {
 						aoMapLinks.add(oSecondLevelLink.getMapLink());
 					}
+					break;
 					
 				}
-				
 			}
 		}
 		

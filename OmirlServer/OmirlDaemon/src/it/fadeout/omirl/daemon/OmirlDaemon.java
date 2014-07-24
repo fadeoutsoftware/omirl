@@ -16,10 +16,42 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class OmirlDaemon {
+	
+	public static void testDate()
+	{
+		Date oDate = new Date();
+		
+		System.out.println("Now = " + oDate);
+		
+		long lTime = oDate.getTime();
+		
+		System.out.println("Time = " + lTime);
+		
+		Date oDate2 = new Date(1406023200000l);
+
+		System.out.println("Now 2 = " + oDate2);
+		
+		lTime = oDate2.getTime();
+		
+		System.out.println("Time 2 = " + lTime);
+		
+		Calendar oCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		
+		//oCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+		oCalendar.setTimeInMillis(1406023200000l);
+		
+		System.out.println("Now 3 = " + oCalendar.getTime());
+		System.out.println("Time 3 = " + oCalendar.getTime().getTime());
+		
+		
+	}
 
 	/**
 	 * Omirl Daemon
@@ -33,6 +65,8 @@ public class OmirlDaemon {
 			System.out.println("Usage OmirlDaemon \"FILEPATH\". Closing now");
 			return;
 		}
+		
+		testDate();
 		
 		//WriteSampleConfig();
 		
@@ -95,7 +129,7 @@ public class OmirlDaemon {
 								
 								DataSeriePointToDataSerie(aoPoints,oDataSerie);
 								
-								oDataSerie.setName("Temperatura Media");
+								oDataSerie.setName("Temperatura");
 
 								oDataChart.getDataSeries().add(oDataSerie);
 								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
@@ -103,7 +137,7 @@ public class OmirlDaemon {
 								oDataChart.setAxisYMaxValue(36.0);
 								oDataChart.setAxisYMinValue(-4.0);
 								oDataChart.setAxisYTickInterval(2.0);
-								oDataChart.setAxisYTitle("Temperatura Media (°C)");
+								oDataChart.setAxisYTitle("Temperatura (°C)");
 								oDataChart.setTooltipValueSuffix(" °C");
 								
 								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "temp", oDateFormat);
@@ -259,7 +293,7 @@ public class OmirlDaemon {
 								oDataSerie.setType("line");
 								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "solar_radiation_pwr", oChartsStartDate);
 								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie);
+								DataSeriePointToDataSerie(aoPoints,oDataSerie, 10.0);
 								
 								oDataSerie.setName("Radiazione Solare Media");
 
@@ -444,12 +478,7 @@ public class OmirlDaemon {
 						
 						
 					}
-					
-					
-					
-					
-					
-					
+
 					// Get The stations
 					StationLastDataRepository oLastRepo = new StationLastDataRepository();
 					
@@ -617,8 +646,12 @@ public class OmirlDaemon {
 		else if (sType == "idro" || sType == "rain") {
 			for (SensorViewModel oViewModel : aoSensorList) {
 				oViewModel.setValue(oViewModel.getValue()/10.0);
-			}
-				
+			}				
+		}
+		else if (sType == "radio") {
+			for (SensorViewModel oViewModel : aoSensorList) {
+				oViewModel.setValue(oViewModel.getValue()*10.0);
+			}			
 		}
 	}
 	
