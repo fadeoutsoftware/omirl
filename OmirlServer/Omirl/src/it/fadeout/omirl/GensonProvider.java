@@ -1,6 +1,5 @@
 package it.fadeout.omirl;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import javax.ws.rs.ext.ContextResolver;

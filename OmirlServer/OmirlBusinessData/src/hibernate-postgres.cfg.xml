@@ -4,7 +4,7 @@
 
 <hibernate-configuration>
 	<session-factory>
-		<property name="show_sql">true</property>
+		<property name="show_sql">false</property>
 		<property name="format_sql">true</property>
 		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="connection.driver_class">org.postgresql.Driver</property>
@@ -17,5 +17,6 @@
 		<mapping class="it.fadeout.omirl.business.StationLastData" />
 		<mapping class="it.fadeout.omirl.business.SensorLastData" />
 		<mapping class="it.fadeout.omirl.business.DataSeriePoint" />
+		<mapping class="it.fadeout.omirl.business.CreekThreshold" />
 	</session-factory>
 </hibernate-configuration>

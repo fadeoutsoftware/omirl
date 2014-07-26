@@ -5,7 +5,6 @@ import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.StaticLinkConfig;
-import it.fadeout.omirl.viewmodels.PrimitiveResult;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -20,9 +19,6 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletConfig;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 
@@ -195,6 +191,10 @@ public class Omirl extends Application {
 	public static File lastFileModified(String dir) {
 		File oDir = new File(dir);
 		
+		if (!oDir.exists()) {
+			System.out.println("OMIRL.lastFileModified: folder does not exists " + dir);
+			return null;
+		}
 		
 		File[] aoFiles = oDir.listFiles(new FileFilter() {			
 			public boolean accept(File file) {

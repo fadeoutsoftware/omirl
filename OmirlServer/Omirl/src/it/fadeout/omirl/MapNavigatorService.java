@@ -196,7 +196,11 @@ public class MapNavigatorService {
 								aoMapThirdLevelLinks.add(oThird.getMapThirdLevelLink());
 							}
 						}
-					}	
+						
+						break;
+					}
+					
+					
 				}
 			}
 		}

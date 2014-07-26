@@ -68,12 +68,14 @@ public class ChartService {
 			
 			String sBasePath = oConfig.getFilesBasePath();
 			
-			sBasePath += "/charts/" + sCode + "/" + sChart;
+			sBasePath += "/charts";
 			
 			System.out.println("ChartService.GetChart: sBasePath = " + sBasePath);
 			
 			// Get The path of the right date
 			String sPath = Omirl.getSubPath(sBasePath, oDate);
+			
+			sPath += "/" + sCode + "/" + sChart;
 			
 			if (sPath != null) {
 				

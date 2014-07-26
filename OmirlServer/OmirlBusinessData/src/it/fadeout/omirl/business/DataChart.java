@@ -17,6 +17,10 @@ public class DataChart {
     String tooltipValueSuffix;
 	
 	ArrayList<DataSerie> dataSeries = new ArrayList<>();
+	
+	ArrayList<ChartLine> horizontalLines = new ArrayList<>();
+	
+	ArrayList<String> otherChart = new ArrayList<>();
 
 	public String getTitle() {
 		return title;
@@ -80,6 +84,22 @@ public class DataChart {
 
 	public void setTooltipValueSuffix(String tooltipValueSuffix) {
 		this.tooltipValueSuffix = tooltipValueSuffix;
+	}
+
+	public ArrayList<ChartLine> getHorizontalLines() {
+		return horizontalLines;
+	}
+
+	public void setHorizontalLines(ArrayList<ChartLine> horizontalLines) {
+		this.horizontalLines = horizontalLines;
+	}
+
+	public ArrayList<String> getOtherChart() {
+		return otherChart;
+	}
+
+	public void setOtherChart(ArrayList<String> otherChart) {
+		this.otherChart = otherChart;
 	}
 
 }

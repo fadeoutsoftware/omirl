@@ -1,15 +1,13 @@
 package it.fadeout.omirl;
 
+import it.fadeout.omirl.business.config.OmirlNavigationConfig;
+import it.fadeout.omirl.business.config.SensorLinkConfig;
+import it.fadeout.omirl.viewmodels.SensorViewModel;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import it.fadeout.omirl.business.config.MapLinkConfig;
-import it.fadeout.omirl.business.config.OmirlNavigationConfig;
-import it.fadeout.omirl.business.config.SensorLinkConfig;
-import it.fadeout.omirl.viewmodels.PrimitiveResult;
-import it.fadeout.omirl.viewmodels.SensorViewModel;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
@@ -72,7 +70,7 @@ public class StationsService {
 						if (oLastFile != null) {
 							
 							System.out.println("StationsService.GetSensors: Opening File " + oLastFile.getAbsolutePath());
-							
+
 							try {
 								// Ok read sensors 
 								aoSensors = (List<SensorViewModel>) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());

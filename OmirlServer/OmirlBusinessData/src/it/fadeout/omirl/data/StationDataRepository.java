@@ -1,14 +1,13 @@
 package it.fadeout.omirl.data;
 
+import it.fadeout.omirl.business.DataSeriePoint;
+import it.fadeout.omirl.business.StationData;
+
 import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-
-import it.fadeout.omirl.business.DataSeriePoint;
-import it.fadeout.omirl.business.SensorLastData;
-import it.fadeout.omirl.business.StationData;
 
 public class StationDataRepository extends Repository<StationData>{
 	
