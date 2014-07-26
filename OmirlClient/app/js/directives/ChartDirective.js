@@ -27,6 +27,13 @@ angular.module('omirl.chartDirective', []).
                     credits: {
                         enabled: false
                     },
+                    plotOptions: {
+                      series: {
+                          dataGrouping: {
+                              enabled: true
+                          }
+                      }
+                    },
                     rangeSelector: {
                         inputEnabled: true,
                         selected: 4,

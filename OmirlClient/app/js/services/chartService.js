@@ -18,13 +18,15 @@ angular.module('omirl.chartService', []).
         //}
 
         this.setChart  = function(sCode, oChart) {
-            var oChartReference = this.getChart(sCode);
 
-            if (oChartReference == null) {
-                this.addChart(sCode,oChart);
-            }
-            else {
-                oChartReference.oChart = oChart;
+            for (var iCount = 0; iCount<this.m_aoCharts.length; iCount++) {
+                var oChartReference = this.m_aoCharts[iCount];
+                if (angular.isDefined(oChartReference)) {
+                    if (oChartReference.sCode == sCode) {
+                        oChartReference.oChart = oChart;
+                        break;
+                    }
+                }
             }
         }
 

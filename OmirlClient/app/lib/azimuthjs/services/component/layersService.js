@@ -50,7 +50,14 @@ angular.module('az.services').factory('az.services.layersService',function($root
             {"lmt":450,"clr":"#B400B9"},
             {"lmt":10000,"clr":"#C800CD"}
         ],
-
+        m_aoHydroSensorLayerColorRanges: [
+            {"lmt":1,"clr":"#FFFFFF"},
+            {"lmt":2,"clr":"#33CC33"},
+            {"lmt":3,"clr":"#FF6600"},
+            {"lmt":4,"clr":"#FF0000"},
+            {"lmt":5,"clr":"#0033CC"},
+            {"lmt":10000,"clr":"#000000"}
+        ],
         clarAll: function() {
             this.clearBaseLayers();
             this.clearStaticLayers();
@@ -245,8 +252,10 @@ angular.module('az.services').factory('az.services.layersService',function($root
         onZoomEnd: function () {
             //console.log("Zoom End");
         },
-        getStationsLayerColorMap: function () {
-            return this.m_aoSensorLayerColorRanges;
+        getStationsLayerColorMap: function (oSensorType) {
+
+            if (oSensorType!="Idro") return this.m_aoSensorLayerColorRanges;
+            else return this.m_aoHydroSensorLayerColorRanges;
         },
         /**
          * Creates an Open Layer style for stations Data
@@ -311,12 +320,16 @@ angular.module('az.services').factory('az.services.layersService',function($root
 
                         var dValue = feature.attributes.value;
 
+                        if (feature.attributes.sensorType == 'Idro') {
+                            dValue = feature.attributes.otherHtml;
+                        }
+
                         if (feature.attributes.opacity==-1.0)
                         {
                             return "#AAAAAA";
                         }
 
-                        var aoColorsMap = oService.getStationsLayerColorMap();
+                        var aoColorsMap = oService.getStationsLayerColorMap(feature.attributes.sensorType);
 
                         var iColors = 0;
                         for (iColors = 0; iColors<aoColorsMap.length; iColors++) {
@@ -342,7 +355,7 @@ angular.module('az.services').factory('az.services.layersService',function($root
                             // I was unable to recall colorFunction from here!!
                             var dValue = feature.attributes.value;
 
-                            var aoColorsMap = oService.getStationsLayerColorMap();
+                            var aoColorsMap = oService.getStationsLayerColorMap(feature.attributes.sensorType);
 
                             var iColors = 0;
                             for (iColors = 0; iColors<aoColorsMap.length; iColors++) {
