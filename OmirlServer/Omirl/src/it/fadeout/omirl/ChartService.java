@@ -10,6 +10,7 @@ import java.util.Date;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -37,7 +38,7 @@ public class ChartService {
 	@GET
 	@Path("/{sCode}/{sChart}")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public DataChart GetChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart) {
+	public DataChart GetChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart, @HeaderParam("x-session-token") String sSessionId) {
 		
 		System.out.println("ChartService.GetChart: Code = " + sCode + " Chart = " + sChart);
 		

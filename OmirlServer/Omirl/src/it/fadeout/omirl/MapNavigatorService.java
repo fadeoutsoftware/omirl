@@ -3,11 +3,13 @@ package it.fadeout.omirl;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.StaticLinkConfig;
+import it.fadeout.omirl.viewmodels.HydroLink;
 import it.fadeout.omirl.viewmodels.MapLink;
 import it.fadeout.omirl.viewmodels.MapThirdLevelLink;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
@@ -16,6 +18,7 @@ import it.fadeout.omirl.viewmodels.StaticLink;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -82,7 +85,7 @@ public class MapNavigatorService {
 	@GET
 	@Path("/sensors")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public List<SensorLink> getSensorLinks() {
+	public List<SensorLink> getSensorLinks(@HeaderParam("x-session-token") String sSessionId) {
 		
 		ArrayList<SensorLink> aoSensorLinks = new ArrayList<>();
 
@@ -107,7 +110,7 @@ public class MapNavigatorService {
 	@GET
 	@Path("/statics")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public List<StaticLink> getStaticLinks() {
+	public List<StaticLink> getStaticLinks(@HeaderParam("x-session-token") String sSessionId) {
 		
 		ArrayList<StaticLink> aoStaticLinks = new ArrayList<>();
 
@@ -131,7 +134,7 @@ public class MapNavigatorService {
 	@GET
 	@Path("/maps")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public List<MapLink> getMapsFirstLevelLinks() {
+	public List<MapLink> getMapsFirstLevelLinks(@HeaderParam("x-session-token") String sSessionId) {
 		
 		ArrayList<MapLink> aoMapLinks = new ArrayList<>();
 
@@ -151,7 +154,7 @@ public class MapNavigatorService {
 	@GET
 	@Path("/maps/{idlink}")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public List<MapLink> getMapsSecondLevelLinks(@PathParam("idlink") int iIdLink) {
+	public List<MapLink> getMapsSecondLevelLinks(@PathParam("idlink") int iIdLink, @HeaderParam("x-session-token") String sSessionId) {
 		ArrayList<MapLink> aoMapLinks = new ArrayList<>();
 
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
@@ -177,7 +180,7 @@ public class MapNavigatorService {
 	@GET
 	@Path("/mapsthird/{idlink}")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public List<MapThirdLevelLink> getMapsThirdLevelLinks(@PathParam("idlink") int iIdLink) {
+	public List<MapThirdLevelLink> getMapsThirdLevelLinks(@PathParam("idlink") int iIdLink, @HeaderParam("x-session-token") String sSessionId) {
 		ArrayList<MapThirdLevelLink> aoMapThirdLevelLinks = new ArrayList<>();
 
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
@@ -207,4 +210,105 @@ public class MapNavigatorService {
 		
 		return aoMapThirdLevelLinks;
 	}
+	
+	
+	
+	
+	/**
+	 * Gets the first level of dynamic layers
+	 * @return
+	 */
+	@GET
+	@Path("/hydro")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<HydroLink> getHydroFirstLevelLinks(@HeaderParam("x-session-token") String sSessionId) {
+		
+		ArrayList<HydroLink> aoHydroLinks = new ArrayList<>();
+
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
+					aoHydroLinks.add(oLinkConfig.getHydroLink());
+				}
+			}			
+		}
+		
+		return aoHydroLinks;
+	}
+	
+	@GET
+	@Path("/hydro/{linkcode}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<HydroLink> getHydroSecondLevelLinks(@PathParam("linkcode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
+		ArrayList<HydroLink> aoHydroLinks = new ArrayList<>();
+
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
+					
+					if (oLinkConfig.getLinkCode().equals(sLinkCode)) {
+						for (HydroLinkConfig oSecondLevelLink : oLinkConfig.getChildren()) {
+							HydroLink oHydroSecondLink = oSecondLevelLink.getHydroLink();
+							oHydroSecondLink.setParentLinkCode(sLinkCode);
+							oHydroSecondLink.setParentDescription(oLinkConfig.getDescription());
+							aoHydroLinks.add(oHydroSecondLink);
+						}
+						break;
+						
+					}
+				}
+			}
+		}
+		
+		return aoHydroLinks;
+	}
+	
+	@GET
+	@Path("/hydrothird/{linkCode}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<HydroLink> getHydroThirdLevelLinks(@PathParam("linkCode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
+		ArrayList<HydroLink> aoHydroThirdLevelLinks = new ArrayList<>();
+		
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
+					
+					
+					for (HydroLinkConfig oSecondLevelLink : oLinkConfig.getChildren()) {
+						
+						if (oSecondLevelLink.getLinkCode().equals(sLinkCode)) {
+							if (oSecondLevelLink.isHasThirdLevel()) {
+								for (HydroLinkConfig oThird : oSecondLevelLink.getChildren()) {
+									HydroLink oThirdLink = oThird.getHydroLink();
+									oThirdLink.setParentLinkCode(oLinkConfig.getLinkCode());
+									oThirdLink.setParentDescription(oSecondLevelLink.getDescription());
+									aoHydroThirdLevelLinks.add(oThirdLink);
+								}
+							}
+							
+							break;
+						}
+						
+						
+					}
+				}
+			}
+		}
+		
+		return aoHydroThirdLevelLinks;
+	}	
+	
+	
 }

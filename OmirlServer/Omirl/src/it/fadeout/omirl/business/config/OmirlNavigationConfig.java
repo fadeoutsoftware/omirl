@@ -8,6 +8,7 @@ public class OmirlNavigationConfig {
 	ArrayList<MapLinkConfig> mapLinks = new ArrayList<MapLinkConfig>();
 	ArrayList<SensorLinkConfig> sensorLinks = new ArrayList<SensorLinkConfig>();
 	ArrayList<StaticLinkConfig> staticLinks = new ArrayList<StaticLinkConfig>();
+	ArrayList<HydroLinkConfig> hydroLinks = new ArrayList<HydroLinkConfig>();
 	
 	public String getFilesBasePath() {
 		return filesBasePath;
@@ -32,5 +33,12 @@ public class OmirlNavigationConfig {
 	}
 	public void setStaticLinks(ArrayList<StaticLinkConfig> staticLinks) {
 		this.staticLinks = staticLinks;
-	}	
+	}
+	public ArrayList<HydroLinkConfig> getHydroLinks() {
+		return hydroLinks;
+	}
+	public void setHydroLinks(ArrayList<HydroLinkConfig> hydroLinks) {
+		this.hydroLinks = hydroLinks;
+	}
+	
 }

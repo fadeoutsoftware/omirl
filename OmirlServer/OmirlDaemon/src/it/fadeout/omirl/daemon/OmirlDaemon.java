@@ -10,6 +10,7 @@ import it.fadeout.omirl.business.StationAnag;
 import it.fadeout.omirl.business.StationLastData;
 import it.fadeout.omirl.data.CreekThresholdRepository;
 import it.fadeout.omirl.data.HibernateUtils;
+import it.fadeout.omirl.data.SavedPeriodRepository;
 import it.fadeout.omirl.data.StationAnagRepository;
 import it.fadeout.omirl.data.StationDataRepository;
 import it.fadeout.omirl.data.StationLastDataRepository;
@@ -606,10 +607,20 @@ public class OmirlDaemon {
 		
 		System.out.println("OmirlDaemon - DailyTask");
 		
+		try {
+			ClearThread oThread = new ClearThread(m_oConfig.getFileRepositoryPath());
+			oThread.run();			
+		}
+		catch(Exception oEx) {
+			System.out.println("OmirlDaemon - Clear Daemon Exception");
+			oEx.printStackTrace();
+		}
+		
 		RefreshConfiguration();
 		
 		RefreshThresholds();
 
+		//DeleteTask();
 	}
 	
 	public void RefreshConfiguration() {
@@ -661,7 +672,7 @@ public class OmirlDaemon {
 		if (oLastDate==null) return true;
 		
 		long lActualTime = oActualDate.getTime();
-		long lLastTime = oActualDate.getTime();
+		long lLastTime = oLastDate.getTime();
 		
 		long lDay = 24L*60L*60L*1000L;
 		
@@ -852,7 +863,7 @@ public class OmirlDaemon {
 	 * @param oDate
 	 * @return
 	 */
-	public String getSubPath(String sBasePath, Date oDate) {
+	public static String getSubPath(String sBasePath, Date oDate) {
 		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		
 		File oBasePathDir = new File(sBasePath);
@@ -986,6 +997,10 @@ public class OmirlDaemon {
 		System.out.println("Now 3 = " + oCalendar.getTime());
 		System.out.println("Time 3 = " + oCalendar.getTime().getTime());
 		
+		SavedPeriodRepository oSavedPeriodRepository = new SavedPeriodRepository();
+		boolean bRet = oSavedPeriodRepository.IsSavedPeriod(new Date(1407799800000l));
+		if (bRet) System.out.println("SALVALO ");
+		else System.out.println("ELIMINA ");
 		
 	}
 

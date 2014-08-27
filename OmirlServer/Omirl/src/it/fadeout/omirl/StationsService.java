@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -30,7 +32,8 @@ public class StationsService {
 	@GET
 	@Path("/{sCode}")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public List<SensorViewModel> GetSensors(@PathParam("sCode") String sCode) {
+	@Consumes({"application/xml", "application/json", "text/xml"})
+	public List<SensorViewModel> GetSensors(@PathParam("sCode") String sCode, @HeaderParam("x-session-token") String sSessionId) {
 		
 		System.out.println("StationsService.GetSensors: Code = " + sCode);
 		

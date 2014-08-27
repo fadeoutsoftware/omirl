@@ -1,10 +1,15 @@
 package it.fadeout.omirl;
 
+import it.fadeout.omirl.business.OmirlUser;
+import it.fadeout.omirl.business.OpenSession;
+import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.StaticLinkConfig;
+import it.fadeout.omirl.data.OmirlUserRepository;
+import it.fadeout.omirl.data.OpenSessionRepository;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -36,6 +41,7 @@ public class Omirl extends Application {
         classes.add(StationsService.class);
         classes.add(GensonProvider.class);
         classes.add(ChartService.class);
+        classes.add(AuthService.class);
         return classes;
 	}
 	
@@ -133,17 +139,47 @@ public class Omirl extends Application {
 		oStatic.setLayerID("Municipalities_ISTAT12010");
 		oStatic.setLayerWMS("http://geoserver.cimafoundation.org/geoserver/dew/wms");
 		
+		HydroLinkConfig oHydro = new HydroLinkConfig();
+		oHydro.setDescription("Modelli Idro Monitoraggio");
+		oHydro.setFilePath("c:\\temp\\omirl\\files");
+		oHydro.setHasThirdLevel(false);
+		oHydro.setLegendLink("img/sensors/sensorsLegend.jpg");
+		oHydro.setLink("img/sensors/hydroMonitoraggio.jpg");
+		oHydro.setLinkCode("idromonitoraggio");
+		
+		HydroLinkConfig oHydroChild = new HydroLinkConfig();  
+		oHydroChild.setDescription("Magra");
+		oHydroChild.setFilePath("c:\\temp\\omirl\\files");
+		oHydroChild.setHasThirdLevel(true);
+		oHydroChild.setLegendLink("img/sensors/sensorsLegend.jpg");
+		oHydroChild.setLink("img/sensors/magra.jpg");
+		oHydroChild.setLinkCode("magra");		
+		
+		HydroLinkConfig oHydro3 = new HydroLinkConfig();  
+		oHydro3.setDescription("Magra Q");
+		oHydro3.setFilePath("c:\\temp\\omirl\\files");
+		oHydro3.setHasThirdLevel(false);
+		oHydro3.setLegendLink("img/sensors/sensorsLegend.jpg");
+		oHydro3.setLink("img/sensors/magra.jpg");
+		oHydro3.setLinkCode("magraq");			
+		
+		oHydroChild.getChildren().add(oHydro3);
+		oHydro.getChildren().add(oHydroChild);
+		
 		OmirlNavigationConfig oConfig = new OmirlNavigationConfig();
 		oConfig.setFilesBasePath("C:/temp/omirl/files");
 		oConfig.getMapLinks().add(oMapLink);
 		oConfig.getStaticLinks().add(oStatic);
 		oConfig.getSensorLinks().add(oSensorLinkConfig);
+		oConfig.getHydroLinks().add(oHydro);
 		
 		try {
 			serializeObjectToXML(sFilePath, oConfig);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 	
     /**
@@ -213,5 +249,31 @@ public class Omirl extends Application {
 		}
 		
 		return oChoise;
+	}
+	
+	public static OmirlUser getUserFromSession(String sSessionId) {
+		if (sSessionId == null) {
+			return null;
+		}
+		if (sSessionId.isEmpty()) {
+			return null;
+		}		
+		
+		OpenSessionRepository oOpenSessionRepository = new OpenSessionRepository();
+		OpenSession oSession = oOpenSessionRepository.selectBySessionId(sSessionId);
+		
+		if(oSession != null) {
+			
+			// TODO: Check also session age ?!
+			
+			OmirlUserRepository oOmirlUserRepository = new OmirlUserRepository();
+			OmirlUser oUser = oOmirlUserRepository.Select(oSession.getIdUser(), OmirlUser.class);
+			
+			if (oUser != null) {
+				return oUser;
+			}
+		}
+		
+		return null;
 	}
 }
