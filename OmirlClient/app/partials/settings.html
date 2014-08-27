@@ -1,0 +1,160 @@
+<div style="text-align: center;" class="container">
+    <h1 class="medium">Impostazioni Utente</h1>
+
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Impostazioni Account</div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="userId" class="col-sm-2 col-md-2 control-label">Indirizzo E-Mail</label>
+                        <div class="col-sm-10 col-md-10">
+                            <input type="email" class="form-control" id="userId" ng-model="m_oController.email" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" class="col-sm-2 col-md-2 control-label">Nome Utente</label>
+                        <div class="col-sm-10 col-md-10">
+                            <input type="text" class="form-control" id="userName" ng-model="m_oController.userName" placeholder="Nome Utente" ng-change="m_oController.onSettingsChanged()" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="m_oController.changePassword"> Cambia Password
+                            </label>
+                        </div>
+                    </div>
+                    <div class="well">
+                        <div class="form-group">
+                            <label for="oldPw" class="col-sm-2 col-md-2 control-label">Vecchia Password</label>
+                            <div class="col-sm-10 col-md-10">
+                                <input type="password" class="form-control" id="oldPw" ng-model="m_oController.oldPw" placeholder="Vecchia Password" ng-disabled="!m_oController.changePassword" ng-change="m_oController.onSettingsChanged()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPw" class="col-sm-2 col-md-2 control-label">Nuova Password</label>
+                            <div class="col-sm-10 col-md-10">
+                                <input type="password" class="form-control" id="newPw" ng-model="m_oController.newPw" placeholder="Nuova Password" ng-disabled="!m_oController.changePassword" ng-change="m_oController.onSettingsChanged()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPw" class="col-sm-2 col-md-2 control-label">Conferma Password</label>
+                            <div class="col-sm-10 col-md-10">
+                                <input type="password" class="form-control" id="confirmPw" ng-model="m_oController.confirmPw" placeholder="Conferma Password" ng-disabled="!m_oController.changePassword" ng-change="m_oController.onSettingsChanged()">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+                <div class="row">
+                    <div class="bs-callout" ng-class="m_oController.m_sSettingsMessageStyle">
+                        {{m_oController.getSettingsMessage()}}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-footer">
+                <!--button type="submit" ng-click="m_oController.login()" class="btn btn-default">Accedi</button-->
+                <div class="form-group" >
+                    <a class="" ng-click="m_oController.saveSettings()" ng-disabled="m_oController.getSettingsChanged()">
+                        <span class="btn btn-primary">
+                            <i class="fa fa-save text-center">&nbsp;Salva</i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="panel panel-info">
+            <div class="panel-heading">Impostazioni Mappa</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6 col-md-6">
+                        <div class="well">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label for="defaultLat" class="col-sm-2  control-label">Lat</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="0.01" class="form-control" id="defaultLat" ng-model="m_oController.defaultLat">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="defaultLon" class="col-sm-2  control-label">Lon</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="0.01" class="form-control" id="defaultLon" ng-model="m_oController.defaultLon">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="defaultZoom" class="col-sm-2  control-label">Zoom</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="1" class="form-control" id="defaultZoom" ng-model="m_oController.defaultZoom">
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <div>
+                            <div id="settingsMap" ol-map zoom="9" center="8.60,44.20"
+                                 controls="zoom,navigation,attribution,mousePosition"></div>
+                        </div>
+                    </div>
+                 </div>
+
+
+                <div class="row">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="stationLayer" class="col-sm-2 col-md-2 control-label">Layer Stazioni</label>
+                            <div class="col-sm-10 col-md-10">
+                                <select class="form-control" id="stationLayer" ng-options="sensor.description for sensor in m_oController.m_aoSensorsLinks" ng-model = "m_oController.m_oSelectedSensorLink">
+                                </select>
+                            </div>
+                        </div>
+                        <!--div class="form-group">
+                            <label for="mapLayer" class="col-sm-2 col-md-2 control-label">Mappa</label>
+                            <div class="col-sm-10 col-md-10">
+                                <select class="form-control" id="mapLayer">
+                                </select>
+                            </div>
+                        </div-->
+                        <div class="form-group">
+                            <label for="staticLayers" class="col-sm-2 col-md-2 control-label">Layer Statici</label>
+                            <div class="col-sm-10 col-md-10">
+                                <select multiple class="form-control" id="staticLayers" ng-options="layer.description for layer in m_oController.m_aoStaticLinks" ng-model="m_oController.m_oSelectedStaticLayer">
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row">
+                    <div class="bs-callout" ng-class="m_oController.m_sMapSettingsMessageStyle">
+                        {{m_oController.getMapSettingsMessage()}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-footer">
+                <div class="form-group">
+                    <a class="" ng-click="m_oController.SaveMapSettings()">
+                        <span class="btn btn-primary">
+                            <i class="fa fa-save text-center">&nbsp;Salva</i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>

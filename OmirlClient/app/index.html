@@ -23,7 +23,8 @@
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <!--link href="css/bootstrap.css" rel="stylesheet"-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
     <!-- Add custom CSS here -->
     <link href="css/customfonts.css" rel="stylesheet">
@@ -61,7 +62,42 @@
         <li><a ng-click="m_oController.serviceIconClicked('/animations')">Modelli Meteo Marini</a></li>
         <li><a ng-click="m_oController.serviceIconClicked('/credits')">Crediti</a></li>
         <br>
-        <li><a ng-click="m_oController.serviceIconClicked('/credits')">Area Riservata</a></li>
+        <li>
+            <a ng-click="m_oController.reservedAreaClicked()">{{m_oController.ReservedAreaText}}</a>
+            <div ng-show="m_oController.getShowLogin()" class="login-panel">
+                <form role="form">
+                    <div class="form-group">
+                        <a ng-class="{'loginError': m_oController.m_bLoginError}">{{ m_oController.m_sLoginMessage }}</a>
+                    </div>
+                    <div class="form-group">
+                        <!--label for="userId">Indirizzo E-Mail</label-->
+                        <input type="email" class="form-control" id="userId" ng-model="m_oController.credentials.userId" ng-change="m_oController.resetLoginMessage()" placeholder="Inserisci E-Mail" ng-disabled="m_oController.m_bLoading">
+                    </div>
+                    <div class="form-group">
+                        <!--label for="userPassword">Password</label-->
+                        <input type="password" class="form-control" id="userPassword" ng-model="m_oController.credentials.userPassword" ng-change="m_oController.resetLoginMessage()" placeholder="Password"  ng-disabled="m_oController.m_bLoading">
+                    </div>
+                    <button type="submit" ng-click="m_oController.login()" class="btn btn-default" ng-show="!m_oController.m_bLoading">Accedi</button>
+                    <!--div class="form-group">
+                        <a ng-click="m_oController.login()" class="">
+                            <span class="btn btn-default">
+                                <i class="fa fa-user text-center">&nbsp;Accedi</i>
+                            </span>
+                        </a>
+                    </div-->
+                    <img class="loginWaiting" src="img/grayloader.gif" ng-show="m_oController.m_bLoading"/>
+                </form>
+            </div>
+
+            <div ng-show="m_oController.getShowLogout()">
+                <form role="form">
+                    <div class="form-group">
+                        <a ng-click="m_oController.serviceIconClicked('/settings')">Impostazioni Personali</a>
+                    </div>
+                    <button type="submit" ng-click="m_oController.logout()" class="btn btn-default btn-logout">Esci</button>
+                </form>
+            </div>
+        </li>
     </ul>
 </div>
 <!-- /Side Menu -->
@@ -80,7 +116,7 @@
 <!-- Intro
 <div id="about" class="intro">-->
 <div id="top" class="header">
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px">
         <div class="row loghi">
             <table>
                 <tr>
@@ -184,8 +220,8 @@
 <!-- /Callout -->
 
 <!-- Map -->
-<div id = "contentcontainer">
-    <div ng-view class="map"></div>
+<div id = "contentcontainer" ng-style="m_oController.m_sContainerStyle">
+    <div ng-view ></div>
 </div>
 <!-- /Map -->
 
@@ -195,17 +231,21 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     -->
     <!-- jQuery -->
-    <script src="lib/jquery/jquery-1.10.2.js"></script>
-    <link data-require="jqueryui@*" data-semver="1.10.0" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css" />
-    <script data-require="jqueryui@*" data-semver="1.10.0" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
-    <!--script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/start/jquery-ui.css">
+    <!--script src="lib/jquery/jquery-1.10.2.js"></script-->
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
     <!-- Bootstrap -->
-    <script src="lib/bootstrap/bootstrap.js"></script>
+    <!--script src="lib/bootstrap/bootstrap.js"></script-->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <!-- jQueryUI -->
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+
     <!-- Angular -->
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular/angular-route.js"></script>
-    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
     <!-- Highstock Scripts -->
     <script src="lib/Highstock/highstock.js"></script>
     <script src="lib/Highstock/modules/exporting.js"></script>
@@ -221,9 +261,11 @@
     <!-- Omirl Services -->
     <script src="js/services/dialog-service.js"></script>
     <script src="js/services/ConstantsService.js"></script>
+    <script src="js/services/authService.js"></script>
     <script src="js/services/mapNavigatorService.js"></script>
     <script src="js/services/stationsService.js"></script>
     <script src="js/services/chartService.js"></script>
+    <script src="js/services/SessionInjector.js"></script>
     <!-- Omirl Controllers -->
     <script src="js/controllers/TemplateController.js"></script>
     <script src="js/controllers/MapController.js"></script>
@@ -231,6 +273,7 @@
     <script src="js/controllers/AnimationsController.js"></script>
     <script src="js/controllers/CreditsController.js"></script>
     <script src="js/controllers/ChartController.js"></script>
+    <script src="js/controllers/SettingsController.js"></script>
     <script src="js/filters.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/app.js"></script>
@@ -285,17 +328,18 @@
         var mapHeight = $("#top").height();// - $("#yr-map-header").outerHeight() - $("#yr-map-footer").outerHeight();
         var mapWidth = $("#top").width();
 
-        $("#contentcontainer").height(mapHeight);
-
-        if ($("#omirlMap") != null) {
+        if ($("#omirlMap").length>0) {
+            $("#contentcontainer").height(mapHeight);
             $("#omirlMap").height(mapHeight);
             $("#omirlMap").width(mapWidth);
-
+            console.log( 'RESIZE MAP SET HEIGHT' );
+        }
+        else {
+            $("#contentcontainer").height("100%");
+            console.log( 'RESIZE MAP SET 100%' );
         }
     }
 </script>
-
-
 </body>
 </html>
 
@@ -305,20 +349,18 @@ dialogCtrl controller in app.js.
 -->
 <script type="text/ng-template" id="stationsChart.html">
     <div ng-controller="ChartController">
-        <div omirl-high-chart="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div>
+        <div id="loading" class="loading" ng-show="m_oController.isLoadingVisibile()" ></div>
+        <div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div>
 
-        <div ng-repeat="oOtherChart in m_oController.getOtherLinks()">
+        <!--div ng-repeat="oOtherChart in m_oController.getOtherLinks()">
             <a  ng-click="m_oController.otherLinkClicked(oOtherChart)">{{oOtherChart.sensorType}} </a>
-        </div>
-
-        <!--div ng-repeat="oSensor in m_oController.getSensorLinks()"
-             class="col-md-1 col-xs-1 map-firstlevel-icon"
-             ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}"
-             tooltip-popup-delay="500" tooltip="{{oSensor.description}}">
-            <img class="img-map-firstlevel-icon" ng-src="{{oSensor.imageLinkOff}}"
-                 ng-click="m_oController.sensorLinkClicked(oSensor)"/>
         </div-->
-
-
+        <div ng-repeat="oOtherChart in m_oController.getOtherLinks()"
+             class="col-md-1 col-xs-1 map-firstlevel-icon"
+             ng-class="{'map-firstlevel-icon-selected': oOtherChart.isActive}"
+             tooltip-popup-delay="500" tooltip="{{oOtherChart.description}}">
+            <img class="img-map-firstlevel-icon" ng-src="{{oOtherChart.imageLinkOff}}"
+                 ng-click="m_oController.otherLinkClicked(oOtherChart)"/>
+        </div>
     </div>
 </script>

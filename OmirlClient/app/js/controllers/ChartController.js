@@ -4,12 +4,15 @@
 
 
 var ChartController = (function() {
-    function ChartController($scope, dialogService, oChartService, $timeout) {
+    function ChartController($scope, dialogService, oChartService, $timeout, oConstantsService, $log) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oDialogService = dialogService;
         this.m_oChartService = oChartService;
+        this.m_oConstantsService = oConstantsService;
         this.m_aoOtherCharts = [];
+        this.m_bLoading = true;
+        this.m_oLog = $log;
 
         this.oChartVM = [];
 
@@ -17,6 +20,7 @@ var ChartController = (function() {
         this.m_sChartType = this.m_oScope.model.chartType;
 
         var oControllerVar = this;
+
 
         oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sStationCode,this.m_sChartType).success(function(data,status) {
             oControllerVar.oChartVM = data;
@@ -26,17 +30,40 @@ var ChartController = (function() {
                 oControllerVar.oChartVM.otherChart.forEach(function(sType){
                     var oOtherChartLink = {};
                     oOtherChartLink.sensorType = sType;
+
+                    if (oControllerVar.m_sChartType == sType)
+                    {
+                        oOtherChartLink.isActive = true;
+                    }
+                    else
+                    {
+                        oOtherChartLink.isActive = false;
+                    }
+
+                    var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(sType);
+
+                    if (oSensorLink != null)
+                    {
+                        oOtherChartLink.description = oSensorLink.description;
+                        oOtherChartLink.imageLinkOff = oSensorLink.imageLinkOff;
+                    }
+
                     oControllerVar.m_aoOtherCharts.push(oOtherChartLink);
                 });
-
 
             }
 
             oControllerVar.addSeriesToChart();
-        }).error(function(data,status){
-            alert('Error Contacting Omirl Server');
-        });
 
+            oControllerVar.m_bLoading = false;
+        }).error(function(data,status){
+            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+        });
+    }
+
+
+    ChartController.prototype.isLoadingVisibile = function () {
+        return this.m_bLoading;
     }
 
     ChartController.prototype.getOtherLinks = function() {
@@ -46,6 +73,8 @@ var ChartController = (function() {
     ChartController.prototype.otherLinkClicked = function(oOtherLink) {
 
         var oControllerVar = this;
+        this.m_bLoading = true;
+
         oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sStationCode,oOtherLink.sensorType).success(function(data,status) {
 
             oControllerVar.oChartVM = data;
@@ -58,15 +87,33 @@ var ChartController = (function() {
                 oControllerVar.oChartVM.otherChart.forEach(function(sType){
                     var oOtherChartLink = {};
                     oOtherChartLink.sensorType = sType;
+
+                    if (oControllerVar.m_sChartType == sType)
+                    {
+                        oOtherChartLink.isActive = true;
+                    }
+                    else
+                    {
+                        oOtherChartLink.isActive = false;
+                    }
+
+                    var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(sType);
+
+                    if (oSensorLink != null)
+                    {
+                        oOtherChartLink.description = oSensorLink.description;
+                        oOtherChartLink.imageLinkOff = oSensorLink.imageLinkOff;
+                    }
+
                     oControllerVar.m_aoOtherCharts.push(oOtherChartLink);
                 });
-
-
             }
 
             oControllerVar.addSeriesToChart();
+
+            oControllerVar.m_bLoading = false;
         }).error(function(data,status){
-            alert('Error Contacting Omirl Server');
+            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
         });
 
     }
@@ -94,7 +141,8 @@ var ChartController = (function() {
             oChartOptions.tooltip.valueSuffix = this.oChartVM.tooltipValueSuffix;
 
             if (bColumnChart) {
-                oChartOptions.plotOptions.series.dataGrouping.enabled = false;
+                oChartOptions.plotOptions.series.dataGrouping.enabled = true;
+                oChartOptions.plotOptions.series.dataGrouping.approximation = "high";
             }
 
             // Create chart again
@@ -188,7 +236,9 @@ var ChartController = (function() {
         '$scope',
         'dialogService',
         'ChartService',
-        '$timeout'
+        '$timeout',
+        'ConstantsService',
+        '$log'
     ];
     return ChartController;
 }) ();

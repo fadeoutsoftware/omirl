@@ -9,7 +9,7 @@
 
 'use strict';
 angular.module('omirl.chartDirective', []).
-    directive('omirlHighChart', ['ChartService',  function (oChartService) {
+    directive('omirlHighStock', ['ChartService',  function (oChartService) {
 
         var m_oChartService = oChartService;
 
@@ -93,7 +93,7 @@ angular.module('omirl.chartDirective', []).
 
                 var oChart =  new Highcharts.StockChart(oChartOptions);
 
-                m_oChartService.addChart(attrs.omirlHighChart, oChart);
+                m_oChartService.addChart(attrs.omirlHighStock, oChart);
             }
         };
     }]);

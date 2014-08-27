@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="map container-fluid" style="padding-left: 0px; padding-right: 0px">
 
     <div class="row">
         <div class="map-panel col-md-10 col-xs-9" id="omirlMap" ol-map zoom="9" center="8.60,44.20"
@@ -105,7 +105,7 @@
             <div id="omirl-collapsable-panels">
 
 
-                <!-- Stazioni -->
+                <!--------------------------------------------------------------------------- Stazioni --------------------------------------------------------------------------->
 
                 <accordion close-others="true">
                     <accordion-group>
@@ -147,7 +147,7 @@
                     </accordion-group>
 
 
-                    <!-- Mappe -->
+                    <!--------------------------------------------------------------------------- Mappe --------------------------------------------------------------------------->
 
                     <accordion-group ng-class="{'map-accordion-open' : isopen}">
                         <accordion-heading>
@@ -198,6 +198,47 @@
                             </div>
                         </div>
                     </accordion-group>
+
+
+
+
+
+
+                    <!--------------------------------------------------------------------------- Idro Models --------------------------------------------------------------------------->
+
+                    <accordion-group ng-class="{'map-accordion-open' : isopen}" ng-show="m_oController.m_bShowHydro">
+                        <accordion-heading>
+                            <div class="icon icon-chart-line pull-left"></div>
+                            <span class="map-accordion-title">Idro</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                        </accordion-heading>
+                        <div class="map-accordion-content">
+                            <div class="row">
+                                <div class="map-text-legend">
+                                    <div class="map-text-legend-selected">{{m_oController.m_sHydroLegendSelected}}</div>
+                                    <div class="map-text-legend-hover">{{m_oController.m_sHydroLegendHover}}</div>
+                                </div>
+                                <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
+                                    <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsHydroFirstLevel"
+                                       ng-click="m_oController.HydroLinkClicked(null)"></i>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div ng-repeat="oHydroLink in m_oController.getHydroLinks()"
+                                     class="col-md-1 col-xs-1 map-firstlevel-icon"
+                                     ng-class="{'map-firstlevel-icon-selected': oHydroLink.selected}"
+                                     tooltip-popup-delay="500" tooltip="{{oHydroLink.description}}"><img
+                                        class="img-map-firstlevel-icon" src="{{oHydroLink.link}}"
+                                        ng-click="m_oController.HydroLinkClicked(oHydroLink)"/></div>
+                            </div>
+                        </div>
+                    </accordion-group>
+
+
+
+
+
                 </accordion>
             </div>
         </nav>

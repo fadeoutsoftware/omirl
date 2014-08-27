@@ -7,7 +7,7 @@
 
 var MapController = (function () {
 
-    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService) {
+    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log) {
         // Initialize Members
         this.m_oScope = $scope;
         this.m_oWindow = $window;
@@ -18,20 +18,26 @@ var MapController = (function () {
         this.m_oStationsService  = oStationsService;
         this.m_oDialogService = oDialogService;
         this.m_oChartService = oChartService;
+        this.m_oConstantsService = oConstantsService;
+        this.m_oInterval = $interval;
+        this.m_oLog =$log;
 
-        // Flag to know if first level is shown
+        // Flag to know if maps first level is shown
         this.m_bIsFirstLevel = true;
+        // Flag to know if hydro first level is shown
+        this.m_bIsHydroFirstLevel = true;
+        this.m_iHydroLevel = 1;
 
 
         // Used in HTML
 
-        // Text to be used on the hover for legend
+        // Text to be used on the hover for Map legend
         this.m_sMapLegendHover = "";
-        // Text to set the selected layer
+        // Text to set the selected Map layer
         this.m_sMapLegendSelected = "Mappe";
-        // Text to set the selected third level
+        // Text to set the selected Map third level
         this.m_sMapThirdLevelSelected = "";
-        // Flag to show or not the third Level
+        // Flag to show or not the Map third Level
         this.m_bShowThirdLevel = false;
         // Text of the selected station layer
         this.m_sSensorLegendSelected = "Stazioni";
@@ -39,9 +45,27 @@ var MapController = (function () {
         this.m_sMapLegendPath = "";
         // Path of the sensors legend image
         this.m_sSensorsLegendPath = "";
+        // Text to be used on the hover for Hydro legend
+        this.m_sHydroLegendHover = "";
+        // Text to set the selected Hydro layer
+        this.m_sHydroLegendSelected = "Modelli";
+        // Last hydro selected legend text used when the user goes back
+        this.m_sHydroLastLegendSelected = "Modelli";
+        // Path of the Idro Legend image
+        this.m_sMapLegendPath = "";
+        // Tootltip of the hydro legent
+        this.m_sMapLegendTooltip = "Legenda Idro";
+        // Path of the hydro legend icon image
+        this.m_sMapLegendIconPath = "";
+
+
 
         // Selected Map Link
         this.m_oSelectedMapLink = null;
+        // Selected Sensor Link
+        this.m_oSelectedSensorLink = null;
+        // Selected Hydro Link
+        this.m_oSelectedHydroLink = null;
 
         // Test of the Geocoding Query
         this.m_sGeocodingQuery = "";
@@ -49,17 +73,21 @@ var MapController = (function () {
         this.m_bDynamicLayerActive = false;
         // Flag to Know if a Station Layer is active
         this.m_bSensorLayerActive = false;
+        // Flag to know if a map is active
+        this.m_bHydroLayerActive = false;
         // Flag to Know if the map legend image is to be shown
         this.m_bShowMapLegendImage = true;
         // Flag to Know if the sensors legend image is to be shown
         this.m_bShowSensorsLegendImage = true;
 
-        // Remembers the actual selected third level modifier
+        // Remembers the actual selected Map third level modifier
         this.m_sMapThirdLevelSelectedModifier = "";
+        // Remembers the actual selected Hydro third level modifier
+        this.m_sHydroThirdLevelSelectedModifier = "";
 
         // Map Links Array
         this.m_aoMapLinks = [];
-        // Third Levels Array
+        // Map Third Levels Array
         this.m_aoThirdLevels = [];
 
         // Sensors Array
@@ -72,8 +100,34 @@ var MapController = (function () {
         //this.m_bIsWeatherActive = true;
         this.m_bIsWeatherActive = false;
 
+
+        // Hydro Links Array
+        this.m_aoHydroLinks = [];
+        // Hydro Third Levels Array
+        this.m_aoHydroThirdLevels = [];
+
+
         // Flag to know if the side bar is collapsed or not
         this.m_bSideBarCollapsed = false;
+
+        // default center lat
+        this.m_dCenterLat = 8.60;
+        // default center lon
+        this.m_dCenterLon = 44.20;
+        // default zoom
+        this.m_iCenterZoom = 9;
+
+        // Flag to know if show hydro section
+        this.m_bShowHydro = false;
+
+        // Flag to know if static layer are received
+        this.m_bStaticLayersReceived = false;
+        // Flag to know if stations are received
+        this.m_bStationsReceived = false;
+        // Flag to know if the map is ready
+        this.m_bMapReady = false;
+
+        this.m_oStopTimerPromise = {};
 
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
@@ -109,6 +163,7 @@ var MapController = (function () {
             this.m_oLayerService.addBaseLayer(oBaseLayer2);
             this.m_oLayerService.addBaseLayer(oBaseLayer3);
             this.m_oLayerService.addBaseLayer(oBaseLayer4);
+
         }
 
         // Set map height
@@ -133,49 +188,158 @@ var MapController = (function () {
             $("#omirlMap").height(mapHeight);
         }
 
-        var oServiceVar = this;
+        var oControllerVar = this;
 
         this.m_oMapNavigatorService.fetchMapFirstLevels();
 
+        this.m_oMapNavigatorService.fetchHydroFirstLevels();
+
         this.m_oMapNavigatorService.getSensorFirstLevel().success(function (data, status) {
 
+            oControllerVar.m_oConstantsService.clearSensorLinks();
+
             for (var iElement = 0; iElement < data.length; iElement++) {
-                oServiceVar.m_aoSensorsLinks.push(data[iElement]);
+                oControllerVar.m_aoSensorsLinks.push(data[iElement]);
+                oControllerVar.m_oConstantsService.pushToSensorLinks(data[iElement]);
             }
+
+            oControllerVar.m_bStationsReceived = true;
+            oControllerVar.FireInitEvent(oControllerVar);
+
         }).error(function (data, status) {
-            alert('Error Loading Sensors Items to add to the Menu');
+            oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
         });
 
 
         this.m_oMapNavigatorService.getStaticLayerLinks().success(function (data, status) {
 
+            oControllerVar.m_oConstantsService.clearStaticLinks();
+
             for (var iElement = 0; iElement < data.length; iElement++) {
-                oServiceVar.m_aoStaticLinks.push(data[iElement]);
+                oControllerVar.m_aoStaticLinks.push(data[iElement]);
+                oControllerVar.m_oConstantsService.pushToStaticLinks(data[iElement]);
             }
+
+            oControllerVar.m_bStaticLayersReceived = true;
+            oControllerVar.FireInitEvent(oControllerVar);
         }).error(function (data, status) {
-            alert('Error Loading Static Layers to add to the Menu');
+            oControllerVar.m_oLog.error('Error Loading Static Layers to add to the Menu');
         });
 
 
-        // TODO: Disabilito per ora il layer di default
-        //this.m_oMapService.callbackArg = this;
-        //this.m_oMapService.readyCallback = this.AddWeatherLayer;
+        // Add Auto Refresh Interval Callback
+        this.m_oStopTimerPromise = this.m_oInterval(function() {
+                if (oControllerVar.m_oSelectedSensorLink != null) {
+                    oControllerVar.showStationsLayer(oControllerVar.m_oSelectedSensorLink);
+                }
+            },
+            this.m_oConstantsService.getRefreshRateMs());
+
+
+        // Add map ready callback
+        this.m_oMapService.callbackArg = this;
+        this.m_oMapService.readyCallback = this.MapReadyCallback;
 
 
         $scope.$on('$locationChangeStart', function (event, next, current) {
 
-            if (oServiceVar.m_oMapService.map != null) {
-                oServiceVar.m_oLayerService.clarAll();
-                oServiceVar.m_oMapService.map.destroy();
-                oServiceVar.m_oMapService.map = null;
-                oServiceVar.m_oMapService.stationsPopupControllerAdded = false;
+            if (oControllerVar.m_oMapService.map != null) {
+                oControllerVar.m_oLayerService.clarAll();
+                oControllerVar.m_oMapService.map.destroy();
+                oControllerVar.m_oMapService.map = null;
+                oControllerVar.m_oMapService.stationsPopupControllerAdded = false;
+            }
+
+            oControllerVar.m_oInterval.cancel(oControllerVar.m_oStopTimerPromise);
+        });
+
+        this.m_oScope.$on('mapInitComplete', function (event, next, current) {
+            // Check if there is a user logged
+            var oUser = oControllerVar.m_oConstantsService.getUser();
+            if (angular.isDefined(oUser))
+            {
+                if (oUser != null)
+                {
+                    // Check Map Center
+                    var dLat = oUser.defaultLat;
+                    var dLon = oUser.defaultLon;
+                    var iZoom = oUser.defaultZoom;
+
+                    // Is defined
+                    if (angular.isDefined(dLat) && angular.isDefined(dLon) && angular.isDefined(iZoom))
+                    {
+                        // And not null?
+                        if (dLat != null && dLon != null && iZoom != null)
+                        {
+                            // Ok Let set center informations
+                            var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+
+                            oControllerVar.m_dCenterLat = dLat;
+                            oControllerVar.m_dCenterLon = dLon;
+                            oControllerVar.m_iCenterZoom = iZoom;
+
+                            oControllerVar.resetZoom(oControllerVar.m_oMapService.map, dLat, dLon, epsg4326, iZoom);
+                        }
+                    }
+
+
+                    // Check Default Sensor View
+                    var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(oUser.defaultSensorType);
+
+                    if (oSensorLink != null)
+                    {
+                        oControllerVar.sensorLinkClicked(oSensorLink);
+                    }
+
+                    if (oControllerVar.m_oConstantsService.getUser().defaultStatics != null)
+                    {
+                        var sStatics = oControllerVar.m_oConstantsService.getUser().defaultStatics;
+                        var asStaticLayers = sStatics.split(";");
+
+                        for (var iLayers = 0; iLayers<asStaticLayers.length; iLayers++)
+                        {
+                            var oStaticLink = oControllerVar.m_oConstantsService.getStaticLinkById(asStaticLayers[iLayers]);
+
+                            if (oStaticLink!=null)
+                            {
+                                oControllerVar.staticLayerClicked(oStaticLink);
+                            }
+
+                        }
+                    }
+
+                    // Visibility "test"
+                    oControllerVar.m_bShowHydro = true;
+
+
+                }// End User != null
             }
         });
+    }
+
+    /**
+     * Method that fires initMap Event when all needed data are received
+     * @param oMapController
+     * @constructor
+     */
+    MapController.prototype.FireInitEvent = function(oMapController) {
+        if (oMapController.m_bStaticLayersReceived && oMapController.m_bStationsReceived && oMapController.m_bMapReady)
+        {
+            oMapController.m_oScope.$broadcast('mapInitComplete');
+        }
     }
 
     MapController.prototype.setBaseLayer = function(sCode) {
         var oBaseLayer = this.m_oMapService.map.getLayersByName(sCode)[0];
         this.m_oMapService.map.setBaseLayer(oBaseLayer);
+    }
+
+    MapController.prototype.MapReadyCallback = function(oMapController) {
+        //oMapController.AddWeatherLayer(oMapController);
+
+        oMapController.m_bMapReady = true;
+        oMapController.FireInitEvent(oMapController);
+
     }
 
     /**
@@ -320,7 +484,7 @@ var MapController = (function () {
                                 oControllerVar.m_oMapNavigatorService.getMapThirdLevel(oControllerVar.m_aoMapLinks[iCount]).success(function(data,status) {
                                     oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oControllerVar.m_aoMapLinks[iCount]);
                                 }).error(function(data,status){
-                                    alert('Error Contacting Omirl Server');
+                                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
                                 });
 
                             }
@@ -334,7 +498,7 @@ var MapController = (function () {
 
                 }
             }).error(function(data,status){
-                alert('Error Contacting Omirl Server');
+                oControllerVar.m_oLog.error('Error Contacting Omirl Server');
             });
 
         }
@@ -357,7 +521,7 @@ var MapController = (function () {
 
                         oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oMapLinkCopy);
                     }).error(function(data,status){
-                        alert('Error Contacting Omirl Server');
+                        oControllerVar.m_oLog.error('Error Contacting Omirl Server');
                     });
 
                 }
@@ -492,6 +656,7 @@ var MapController = (function () {
             this.m_sSensorsLegendPath = oSensorLink.legendLink;
             this.m_sSensorsLegendIconPath = oSensorLink.imageLinkOff;
             this.m_sSensorLegendTooltip = "Legenda " + oSensorLink.description;
+            this.m_oSelectedSensorLink = oSensorLink;
         }
         else {
             // Set the textual description
@@ -509,6 +674,8 @@ var MapController = (function () {
             catch (err) {
 
             }
+
+            this.m_oSelectedSensorLink = null;
         }
     }
 
@@ -713,6 +880,7 @@ var MapController = (function () {
             autoOpen: false,
             modal: false,
             width: 600,
+            resizable: false,
             close: function(event, ui) {
                 // Remove the chart from the Chart Service
                 oControllerVar.m_oChartService.removeChart(sStationCode);
@@ -744,6 +912,11 @@ var MapController = (function () {
             var aoStations = data;
 
             try{
+
+                while( oServiceVar.m_oMapService.map.popups.length ) {
+                    oServiceVar.m_oMapService.map.removePopup(oServiceVar.m_oMapService.map.popups[0]);
+                }
+
                 // remove the actual Sensors Layer from the map
                 oServiceVar.m_oMapService.map.removeLayer(oServiceVar.m_oLayerService.getSensorsLayer());
             }
@@ -862,8 +1035,10 @@ var MapController = (function () {
                 oServiceVar.m_oMapService.stationsPopupControllerAdded = true;
             }
         }).error(function(data,status){
-            alert('Error Contacting Omirl Server');
+            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
         });
+
+
 
     }
 
@@ -952,6 +1127,7 @@ var MapController = (function () {
     }
 
     MapController.prototype.AddWeatherLayer = function(oMapController) {
+
 
         // Obtain Stations Values from the server
         var aoStations = oMapController.m_oStationsService.getWeather();
@@ -1098,16 +1274,277 @@ var MapController = (function () {
 
     MapController.prototype.resetZoomClick = function () {
 
-        // Transformations objects
         var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
-        var projectTo = this.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
+        this.resetZoom(this.m_oMapService.map,this.m_dCenterLat, this.m_dCenterLon, epsg4326, this.m_iCenterZoom);
+    }
 
-        // Tranform the point
-        //var oPoint = new OpenLayers.Geometry.Point(8.60,44.20).transform(epsg4326, projectTo);
+    MapController.prototype.resetZoom = function (oMap, dLat, dLon, oFrom, iZoom) {
+
+        // Transformations objects
+        var projectTo = oMap.getProjectionObject(); //The map projection (Spherical Mercator)
 
         //var oProjection = 'EPSG:4326';
-        var oCenter = new OpenLayers.LonLat(8.60,44.20).transform(epsg4326, projectTo);
-        this.m_oMapService.map.setCenter(oCenter, 9);
+        var oCenter = new OpenLayers.LonLat(dLat,dLon).transform(oFrom, projectTo);
+        oMap.setCenter(oCenter, iZoom);
+    }
+
+
+    /**
+     * Method called when an Hydro link is clicked
+     * @param oHydroLink
+     * @constructor
+     */
+    MapController.prototype.HydroLinkClicked = function(oHydroLink)
+    {
+        // Hydro Link = null stands for back: impossible to have back on first level
+        if (this.m_bIsHydroFirstLevel && oHydroLink == null) return;
+
+        // var to know if this is the selected entry
+        var bIsSelected = false;
+
+        // Remember Controller ref
+        var oControllerVar = this;
+
+        // Is this a Map Link Click?
+        if (oHydroLink != null) {
+            // Write on screen the Selected Layer description
+            if (!this.m_bHydroLayerActive)
+            {
+                this.m_sHydroLastLegendSelected = this.m_sHydroLegendSelected;
+                this.m_sHydroLegendSelected = oHydroLink.description;
+            }
+            // Remember if it was selected or not
+            bIsSelected = oHydroLink.selected;
+        }
+        else {
+            if (!this.m_bHydroLayerActive) {
+                if (this.m_iHydroLevel == 2) {
+                    this.m_sHydroLegendSelected = "Modelli";
+                }
+                else {
+                    this.m_sHydroLegendSelected = this.m_sHydroLastLegendSelected;
+                }
+            }
+        }
+
+        // Clear all selection flags
+        this.m_aoHydroLinks.forEach(function(oEntry) {
+            oEntry.selected = false;
+        });
+
+
+        // We are in the first level?
+        if (this.m_bIsHydroFirstLevel) {
+
+            // Remember we are in second level
+            this.m_bIsHydroFirstLevel = false;
+
+            this.m_iHydroLevel = 2;
+
+            // Clear variables
+            oControllerVar.m_aoHydroLinks = [];
+
+            // Get second level from server
+            this.m_oMapNavigatorService.getHydroSecondLevels(oHydroLink.linkCode).success(function(data,status) {
+
+                // Second Level Icons
+                oControllerVar.m_aoHydroLinks = data;
+
+
+                // Is there any Map selected?
+                if (oControllerVar.m_oSelectedHydroLink != null) {
+
+                    //Is One of these links the one selected?
+                    var iCount;
+                    for (iCount = 0; iCount< oControllerVar.m_aoHydroLinks.length; iCount++) {
+
+                        // Check by Layer Id
+                        if (oControllerVar.m_aoHydroLinks[iCount].linkCode == oControllerVar.m_oSelectedHydroLink.linkCode) {
+
+                            // This is the selected one!!
+                            oControllerVar.setSelectedHydroLinkOnScreen(oControllerVar, oControllerVar.m_aoHydroLinks[iCount]);
+
+                            break;
+                        }
+                    }
+                }
+
+            }).error(function(data,status){
+                oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+            });
+
+        }
+        else if (this.m_iHydroLevel==2) {
+            // We are in second level
+            if (oHydroLink == null) {
+                // Back: get first levels
+                this.m_aoHydroLinks = this.m_oMapNavigatorService.getHydroFirstLevels();
+                this.m_bIsHydroFirstLevel = true;
+                this.m_iHydroLevel= 1;
+            }
+            else {
+                // Switch to show or not third level
+                if (oHydroLink.hasThirdLevel) {
+                    this.m_iHydroLevel= 3;
+
+                    var oHydroLinkCopy = oHydroLink;
+                    var oControllerVar = this;
+
+                    // Get third levels from the service
+                    this.m_oMapNavigatorService.getHydroThirdLevel(oHydroLink.linkCode).success(function(data,status) {
+
+                        // Third Level Icons
+                        oControllerVar.m_aoHydroLinks = data;
+
+
+                        // Is there any Map selected?
+                        if (oControllerVar.m_oSelectedHydroLink != null) {
+
+                            //Is One of these links the one selected?
+                            var iCount;
+                            for (iCount = 0; iCount< oControllerVar.m_aoHydroLinks.length; iCount++) {
+
+                                // Check by Layer Id
+                                if (oControllerVar.m_aoHydroLinks[iCount].linkCode == oControllerVar.m_oSelectedHydroLink.linkCode) {
+
+                                    // This is the selected one!!
+                                    oControllerVar.setSelectedHydroLinkOnScreen(oControllerVar, oControllerVar.m_aoHydroLinks[iCount]);
+
+                                    break;
+                                }
+                            }
+                        }
+
+                    }).error(function(data,status){
+                        oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    });
+
+                }
+                else {
+                    if (!bIsSelected) {
+
+                        this.setSelectedHydroLinkOnScreen(this,oHydroLink);
+                        //this.selectedDynamicLayer(oHydroLink, this.m_sHydroThirdLevelSelectedModifier);
+                        alert('attivo ' + oHydroLink.description);
+                    }
+                    else {
+                        // Remove from the map
+                        /*
+                        if (this.m_oLayerService.getDynamicLayer() != null) {
+                            this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+                            this.m_oLayerService.setDynamicLayer(null);
+                        }
+                        */
+                        alert('DISattivo ' + oHydroLink.description);
+
+                        this.m_sHydroLegendSelected = oHydroLink.parentDescription;
+                        this.m_bHydroLayerActive = false;
+                        this.m_sHydroLegendPath = "";
+                        this.m_sHydroLegendTooltip = "Legenda Idro";
+                        this.m_sHydroLegendIconPath = "";
+
+                        this.m_oSelectedHydroLink = null;
+                    }
+                }
+            }
+        }
+        else if (this.m_iHydroLevel==3)
+        {
+            // We are in third level
+            if (oHydroLink == null)
+            {
+                // Back: get second levels
+                this.m_oMapNavigatorService.getHydroSecondLevels(this.m_aoHydroLinks[0].parentLinkCode).success(function(data,status) {
+
+                    // Second Level Icons
+                    oControllerVar.m_aoHydroLinks = data;
+                    oControllerVar.m_bIsHydroFirstLevel = false;
+                    oControllerVar.m_iHydroLevel= 2;
+
+                    if (!oControllerVar.m_bHydroLayerActive)
+                    {
+                        oControllerVar.m_sHydroLegendSelected = data[0].parentDescription;
+                    }
+
+                    if (oControllerVar.m_oSelectedHydroLink!=null)
+                    {
+                        //Is One of these links the one selected?
+                        var iCount;
+                        for (iCount = 0; iCount< oControllerVar.m_aoHydroLinks.length; iCount++) {
+
+                            // Check by Layer Id
+                            if (oControllerVar.m_aoHydroLinks[iCount].linkCode == oControllerVar.m_oSelectedHydroLink.linkCode) {
+
+                                // This is the selected one!!
+                                oControllerVar.setSelectedHydroLinkOnScreen(oControllerVar, oControllerVar.m_aoHydroLinks[iCount]);
+
+                                break;
+                            }
+                        }
+                    }
+
+                }).error(function(data,status){
+                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                });
+            }
+            else
+            {
+
+                if (!bIsSelected)
+                {
+
+                    this.setSelectedHydroLinkOnScreen(this,oHydroLink);
+                    //this.selectedDynamicLayer(oHydroLink, this.m_sHydroThirdLevelSelectedModifier);
+                    alert('attivo ' + oHydroLink.description);
+                }
+                else
+                {
+
+                    // Remove from the map
+                    /*
+                    if (this.m_oLayerService.getDynamicLayer() != null) {
+                        this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+                        this.m_oLayerService.setDynamicLayer(null);
+                    }
+                    */
+                    alert('DISattivo ' + oHydroLink.description);
+
+                    this.m_sHydroLegendSelected = oHydroLink.parentDescription;
+                    this.m_bHydroLayerActive = false;
+                    this.m_sHydroLegendPath = "";
+                    this.m_sHydroLegendTooltip = "Legenda Idro";
+                    this.m_sHydroLegendIconPath = "";
+
+                    this.m_oSelectedHydroLink = null;
+                }
+            }
+        }
+    }
+
+    MapController.prototype.getHydroLinks = function()
+    {
+        if (this.m_bIsHydroFirstLevel) {
+            this.m_aoHydroLinks = this.m_oMapNavigatorService.getHydroFirstLevels();
+        }
+
+        return this.m_aoHydroLinks;
+    }
+
+    /**
+     * Sets all needed variables to show selected Map Link on screen
+     * @param oControllerVar
+     * @param oMapLink
+     */
+    MapController.prototype.setSelectedHydroLinkOnScreen = function (oControllerVar, oHydroLink) {
+
+        oHydroLink.selected = true;
+        // Layer Click
+        oControllerVar.m_sHydroLegendIconPath = oHydroLink.link;
+        oControllerVar.m_sHydroLegendTooltip = "Legenda " + oHydroLink.description;
+        oControllerVar.m_sHydroLegendSelected = oHydroLink.description;
+        oControllerVar.m_bHydroLayerActive = true;
+        oControllerVar.m_sHydroLegendPath = oHydroLink.legendLink;
+        oControllerVar.m_oSelectedHydroLink = oHydroLink;
     }
 
     MapController.$inject = [
@@ -1118,7 +1555,10 @@ var MapController = (function () {
         'MapNavigatorService',
         'StationsService',
         'dialogService',
-        'ChartService'
+        'ChartService',
+        'ConstantsService',
+        '$interval',
+        '$log'
     ];
 
     return MapController;

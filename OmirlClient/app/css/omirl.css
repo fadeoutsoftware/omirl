@@ -61,6 +61,7 @@ table { margin:auto; text-align: center;}
 .right {text-align: right; padding-right:10px;}
 .fixed {position: absolute; bottom: 0; margin:0;right:0;left:0; clear: both; background: white;}
 .big {color:#0a5175; font-size: 8em; letter-spacing: -0.05em; line-height: 1; margin: 0; padding:0 30px;}
+.medium {color:#0a5175; font-size: 4em; letter-spacing: -0.05em; line-height: 1; margin: 0; padding:0 30px;}
 .lead {font-size:1.1em; padding: 0; margin-top:-30px;}
 
 .map-accordion-content ul {list-style-type: none;}
@@ -98,7 +99,7 @@ table { margin:auto; text-align: center;}
 
 
 /* Global Styles */
-#contentcontainer {    overflow: hidden; height: 100%;}
+#contentcontainer {  height: 100%;}
 
 .vert-text {
     display: table-cell;
@@ -1041,3 +1042,50 @@ color: #2a6496;
   /*  display: none;*/
 }
 
+
+
+.loading {
+    position:absolute;
+    width: 550px;
+    height: 400px;
+    display: inline;
+    z-index: 1001;
+    background: url('../img/Spinner.gif') no-repeat center #fff;
+}
+
+.login-panel {
+    padding: 3px;
+    color: rgb(153, 153, 153);
+}
+
+.loginError {
+    color: red !important;
+}
+
+.btn-logout {
+    margin-left: 15px;
+}
+
+.bs-callout-error {
+    border-left-color: #d9534f !important;
+}
+
+.bs-callout-ok {
+    border-left-color: #3c763d !important;
+}
+
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+
+#settingsMap {
+    height: 200px;
+}
+
+.loginWaiting {
+    padding-left: 60px;
+}

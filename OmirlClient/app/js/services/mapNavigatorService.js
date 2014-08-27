@@ -3,15 +3,16 @@
  */
 
 'use strict';
-angular.module('omirl.mapNavigatorService', []).
-    service('MapNavigatorService', ['$http',  function ($http) {
-        //this.APIURL = 'http://localhost:8080/Omirl/rest';
-        //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
+angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
+    service('MapNavigatorService', ['$http',  'ConstantsService', function ($http, oConstantsService) {
+
+        this.APIURL = oConstantsService.getAPIURL();
 
         this.m_oHttp = $http;
 
         this.m_aoMapFirstLevels = [];
+
+        this.m_aoHydroFirstLevels = [];
 
         this.fetchMapFirstLevels = function() {
             var oServiceVar = this;
@@ -23,7 +24,6 @@ angular.module('omirl.mapNavigatorService', []).
             }).error(function(data,status){
                     alert('Error Contacting Omirl Server');
             });
-
         }
 
 
@@ -49,6 +49,42 @@ angular.module('omirl.mapNavigatorService', []).
         }
 
 
+        this.getStaticLayerOptionList = function() {
+            var aoStaticLinks = [
+                {
+
+                }
+            ];
+
+            return aoStaticLinks;
+        }
+
+
+
+        this.fetchHydroFirstLevels = function() {
+            var oServiceVar = this;
+
+            oServiceVar.m_aoHydroFirstLevels = [];
+
+            this.m_oHttp.get(this.APIURL + '/mapnavigator/hydro').success(function(data,status) {
+                oServiceVar.m_aoHydroFirstLevels = data;
+            }).error(function(data,status){
+                alert('Error Contacting Omirl Server');
+            });
+        }
+
+
+        this.getHydroFirstLevels = function() {
+            return this.m_aoHydroFirstLevels;
+        }
+
+        this.getHydroSecondLevels = function(linkCode) {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/hydro/'+linkCode);
+        }
+
+        this.getHydroThirdLevel = function(linkCode) {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/hydrothird/'+linkCode);
+        }
 
 
         // TEST Code with hard-coded json

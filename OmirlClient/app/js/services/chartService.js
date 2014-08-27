@@ -3,19 +3,14 @@
  */
 
 'use strict';
-angular.module('omirl.chartService', []).
-    service('ChartService', ['$http',  function ($http) {
-        //this.APIURL = 'http://localhost:8080/Omirl/rest';
-        //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
+
+angular.module('omirl.chartService', ['omirl.ConstantsService']).
+    service('ChartService', ['$http', 'ConstantsService',  function ($http, oConstantsService) {
 
         this.m_oHttp = $http;
+        this.m_oConstantsService = oConstantsService;
 
         this.m_aoCharts = [];
-
-        //this.getStations = function(oStationsLink) {
-        //    return this.m_oHttp.get(this.APIURL + '/stations/'+oStationsLink.code);
-        //}
 
         this.setChart  = function(sCode, oChart) {
 
@@ -65,7 +60,8 @@ angular.module('omirl.chartService', []).
         }
 
         this.getStationChart = function(sSensorCode, sChart) {
-            return this.m_oHttp.get(this.APIURL + '/charts/'+sSensorCode+'/'+sChart);
+            var sAPIURL = this.m_oConstantsService.getAPIURL();
+            return this.m_oHttp.get(sAPIURL + '/charts/'+sSensorCode+'/'+sChart);
         }
 
         this.getStationChartOLD = function(sSensorCode, sVariable) {
