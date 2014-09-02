@@ -1,7 +1,49 @@
 <div style="text-align: center;">
-    <h1 class="big">OMIRL</h1>
-    <h2>
-        Tabelle
-    </h2>
-    <img src="img/wip.png" alt="Work in Progress">
+    <h1 class="medium">Dati Tabellari</h1><br>
+
+    <br>
+
+
+    <div id="tableslist" class="services">
+        <div class="row">
+
+
+            <!--div class="row">
+                <div class="col-md-4 col-md-offset-4 text-center">
+                    <h2>Servizi</h2>
+                    <hr>
+                </div>
+            </div-->
+
+            <div class="col-md-2 col-md-offset-2 text-center">
+                <div class="service-item">
+                    <i class="service-icon fa fa-list-ul" ng-click="m_oController.linkClicked('/stationstable')"></i>
+                    <h4><a ng-click="m_oController.linkClicked('/stationstable')" style="cursor: pointer">Stazioni</a></h4>
+                    <p>Accesso da tabella ai grafici delle stazioni</p>
+                </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <div class="service-item">
+                    <i class="service-icon fa fa-umbrella" ng-click="m_oController.linkClicked('/idromodeltable')"></i>
+                    <h4><a  ng-click="m_oController.serviceIconClicked('/idromodeltable')"  style="cursor: pointer">Modelli Idro</a></h4>
+                    <p>Accesso tabellare ai modelli Idrologici</p>
+                </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <div class="service-item">
+                    <i class="service-icon fa fa-th" ng-click="m_oController.linkClicked('/sensorstable')"></i>
+                    <h4><a ng-click="m_oController.serviceIconClicked('/sensorstable')">Tabella Sensori</a></h4>
+                    <p>Visualizzazione dei dati delle stazioni in tabella</p>
+                </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <div class="service-item">
+                    <i class="service-icon fa fa-arrow-circle-o-up" ng-click="m_oController.linkClicked('/maxtable')"></i>
+                    <h4><a ng-click="m_oController.serviceIconClicked('/maxtable')">Massimi Puntuali</a></h4>
+                    <p>Visualizzazione della tabella riassuntiva dei massimi puntali registrati</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

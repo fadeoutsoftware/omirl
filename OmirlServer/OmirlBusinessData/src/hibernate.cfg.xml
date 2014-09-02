@@ -11,6 +11,7 @@
 		<property name="connection.url">jdbc:postgresql://192.168.25.10:5432/omirl</property>
 		<property name="connection.username">omirl</property>
 		<property name="connection.password">mirlo</property>
+		<property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>
 
 		<mapping class="it.fadeout.omirl.business.StationAnag" />
 		<mapping class="it.fadeout.omirl.business.StationData" />
@@ -18,5 +19,8 @@
 		<mapping class="it.fadeout.omirl.business.SensorLastData" />
 		<mapping class="it.fadeout.omirl.business.DataSeriePoint" />
 		<mapping class="it.fadeout.omirl.business.CreekThreshold" />
+		<mapping class="it.fadeout.omirl.business.SavedPeriod" />
+		<mapping class="it.fadeout.omirl.business.OmirlUser" />
+		<mapping class="it.fadeout.omirl.business.OpenSession" />
 	</session-factory>
 </hibernate-configuration>

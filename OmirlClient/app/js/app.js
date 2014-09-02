@@ -31,6 +31,7 @@ omirlApp.config(function($routeProvider) {
         $routeProvider.when('/animations', {templateUrl: 'partials/animations.html', controller: 'AnimationsController'});
         $routeProvider.when('/credits', {templateUrl: 'partials/credits.html', controller: 'CreditsController'});
         $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'SettingsController'});
+        $routeProvider.when('/stationstable', {templateUrl: 'partials/stationstable.html', controller: 'StationsTableController'});
         $routeProvider.otherwise({redirectTo: '/map'});
     }
 );

@@ -1,0 +1,31 @@
+<div class="row">
+    <h1 class="medium">Tabella Stazioni</h1>
+</div>
+
+<br/>
+
+<div class="row">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="stationType" class="col-sm-2 col-md-2 control-label">Tipo Stazione</label>
+            <div class="col-sm-6 col-md-6">
+                <select class="form-control" id="stationType" ng-change="m_oController.typeSelected()" ng-options="type.description for type in m_oController.m_aoTypes" ng-model = "m_oController.m_oSelectedType">
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-md-3">Nome <input ng-model="search.name"></div>
+    <div class="col-md-3">Provincia <input ng-model="search.district"></div>
+    <div class="col-md-3">Bacino <input ng-model="search.basin"></div>
+    <div class="col-md-3">Rete <input ng-model="search.network"></div>
+</div>
+
+<div class="row stationtablerow" ng-repeat="oStation in m_oController.getStationList() | filter:search" ng-click="m_oController.stationClicked(oStation.stationCode)">
+    <div class="col-md-3">{{oStation.name}}</div>
+    <div class="col-md-3">{{oStation.district}}</div>
+    <div class="col-md-3">{{oStation.basin}}</div>
+    <div class="col-md-3">{{oStation.network}}</div>
+</div>

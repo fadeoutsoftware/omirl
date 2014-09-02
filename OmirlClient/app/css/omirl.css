@@ -1089,3 +1089,30 @@ color: #2a6496;
 .loginWaiting {
     padding-left: 60px;
 }
+
+.stationtablerow {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    cursor: pointer;
+}
+
+.stationtablerow {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    cursor: pointer;
+    background-color: rgba(255,255,255,.65);
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    -ms-transition: 0.5s;
+    transition: 0.5s;
+}
+
+
+
+
+.stationtablerow:hover {
+    color: #ffffff;
+    background-color: #7fbbda;
+    box-shadow: 0 0 20px #ffffff;
+}
