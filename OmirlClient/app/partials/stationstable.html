@@ -1,31 +1,100 @@
-<div class="row">
-    <h1 class="medium">Tabella Stazioni</h1>
-</div>
+<div class="container Tabella_Stazioni">
 
-<br/>
+    <div class="row">
+        <h1 class="medium">Tabella Stazioni</h1>
+    </div>
 
-<div class="row">
-    <form class="form-horizontal" role="form">
-        <div class="form-group">
-            <label for="stationType" class="col-sm-2 col-md-2 control-label">Tipo Stazione</label>
-            <div class="col-sm-6 col-md-6">
-                <select class="form-control" id="stationType" ng-change="m_oController.typeSelected()" ng-options="type.description for type in m_oController.m_aoTypes" ng-model = "m_oController.m_oSelectedType">
-                </select>
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <!--Panel heading-->
+            <div class="row">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-2 col-sm-offset-3 col-md-2 col-md-offset-4 col-lg-2 col-lg-offset-4">
+                            <label for="stationType" class="control-label">Tipo Stazione</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                            <select class="form-control" id="stationType" ng-change="m_oController.typeSelected()" ng-options="type.description for type in m_oController.m_aoTypes" ng-model = "m_oController.m_oSelectedType">
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
-</div>
+        <div class="panel-body">
+            <!--Panel content-->
+                <table class="table stationtablerow" >
+                	<thead>
+                		<tr>
+                			<th>Nome</th>
+                            <th>Provincia</th>
+                            <th>Bacino</th>
+                            <th>Rete</th>
+                		</tr>
+                	</thead>
+                	<tbody>
+                		<tr ng-repeat="oStation in m_oController.getStationList() | filter:search" ng-click="m_oController.stationClicked(oStation.stationCode)">
+                			<td>{{oStation.name}}</td>
+                            <td>{{oStation.district}}</td>
+                            <td>{{oStation.basin}}</td>
+                            <td>{{oStation.network}}</td>
+                		</tr>
+                	</tbody>
+                </table>
 
-<div class="row">
-    <div class="col-md-3">Nome <input ng-model="search.name"></div>
-    <div class="col-md-3">Provincia <input ng-model="search.district"></div>
-    <div class="col-md-3">Bacino <input ng-model="search.basin"></div>
-    <div class="col-md-3">Rete <input ng-model="search.network"></div>
-</div>
+        </div>
+        <div class="panel-footer">
+            <!--Panel footer-->
 
-<div class="row stationtablerow" ng-repeat="oStation in m_oController.getStationList() | filter:search" ng-click="m_oController.stationClicked(oStation.stationCode)">
-    <div class="col-md-3">{{oStation.name}}</div>
-    <div class="col-md-3">{{oStation.district}}</div>
-    <div class="col-md-3">{{oStation.basin}}</div>
-    <div class="col-md-3">{{oStation.network}}</div>
+           	<h4>Filtri colonne</h4>
+
+            <div class="row">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="btn-group">
+                        <label >Nome</label>
+                        <input id="searchinput" type="search" class="form-control searchinput" placeholder="type something..."  ng-model="search.name">
+                        <span id="searchclear" class="searchclear glyphicon glyphicon-remove-circle"></span>
+                    </div>
+
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="btn-group">
+                        <label >Provincia</label>
+                        <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.district">
+                        <span class="searchclear glyphicon glyphicon-remove-circle"></span>
+                    </div>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="btn-group">
+                        <label >Bacino</label>
+                        <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.basin">
+                        <span class="searchclear glyphicon glyphicon-remove-circle"></span>
+                    </div>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="btn-group">
+                        <label >Rete</label>
+                        <input type="search" class="form-control searchinput" placeholder="type something..."ng-model="search.network">
+                        <span class="searchclear glyphicon glyphicon-remove-circle"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function(){
+            $(".searchinput").keyup(function(){
+                $(this).siblings(".searchclear").toggle(Boolean($(this).val()));
+            });
+            $(".searchclear").toggle(Boolean($(".searchinput").val()));
+            $(".searchclear").click(function(){
+                $(".searchinput").val('').focus();
+                $(this).hide();
+            });
+        });
+    </script>
 </div>
