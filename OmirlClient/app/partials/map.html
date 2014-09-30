@@ -127,20 +127,21 @@
                                 </div>
                             </div>
 
-                            <!--ul class="row">
-                                <li ng-repeat="oSensor in m_oController.getSensorLinks()" class="map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}" tooltip-popup-delay="500" tooltip="{{oSensor.description}}">
-                                    <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
-                            <!--img  class="img-map-firstlevel-icon" ng-src="{{oSensor.imageLinkOff}}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>
-                        </li>
-                    </ul-->
                             <div class="row">
                                 <div ng-repeat="oSensor in m_oController.getSensorLinks()"
                                      class="col-md-1 col-xs-1 map-firstlevel-icon"
                                      ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}"
-                                     tooltip-popup-delay="500" tooltip="{{oSensor.description}}">
+                                     tooltip-popup-delay="500" tooltip="{{oSensor.description}}" ng-show="oSensor.isVisible">
                                     <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
                                     <img class="img-map-firstlevel-icon" ng-src="{{oSensor.imageLinkOff}}"
                                          ng-click="m_oController.sensorLinkClicked(oSensor)"/>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="Filtro di ricerca stazioni">
+                                    <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
+                                    <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked()"/>
                                 </div>
                             </div>
                         </div>
@@ -231,6 +232,76 @@
                                      tooltip-popup-delay="500" tooltip="{{oHydroLink.description}}"><img
                                         class="img-map-firstlevel-icon" src="{{oHydroLink.link}}"
                                         ng-click="m_oController.HydroLinkClicked(oHydroLink)"/></div>
+                            </div>
+                        </div>
+                    </accordion-group>
+
+
+
+
+                    <!--------------------------------------------------------------------------- Radar --------------------------------------------------------------------------->
+
+                    <accordion-group ng-class="{'map-accordion-open' : isopen}" ng-show="m_oController.m_bShowRadar">
+                        <accordion-heading>
+                            <div class="icon icon-radar pull-left"></div>
+                            <span class="map-accordion-title">Radar</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                        </accordion-heading>
+                        <div class="map-accordion-content">
+                            <div class="row">
+                                <div class="map-text-legend">
+                                    <div class="map-text-legend-selected">{{m_oController.m_sRadarLegendSelected}}</div>
+                                    <div class="map-text-legend-hover">{{m_oController.m_sRadarLegendHover}}</div>
+                                </div>
+                                <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
+                                    <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsRadarFirstLevel"
+                                       ng-click="m_oController.RadarLinkClicked(null)"></i>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div ng-repeat="oRadarLink in m_oController.getRadarLinks()"
+                                     class="col-md-1 col-xs-1 map-firstlevel-icon"
+                                     ng-class="{'map-firstlevel-icon-selected': oRadarLink.selected}"
+                                     tooltip-popup-delay="500" tooltip="{{oRadarLink.description}}"><img
+                                        class="img-map-firstlevel-icon" src="{{oRadarLink.link}}"
+                                        ng-click="m_oController.RadarLinkClicked(oRadarLink)"/></div>
+                            </div>
+                        </div>
+                    </accordion-group>
+
+
+
+
+
+
+                    <!--------------------------------------------------------------------------- Satellite --------------------------------------------------------------------------->
+
+                    <accordion-group ng-class="{'map-accordion-open' : isopen}" ng-show="m_oController.m_bShowSatellite">
+                        <accordion-heading>
+                            <div class="icon icon-antenna pull-left"></div>
+                            <span class="map-accordion-title">Satellite</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                        </accordion-heading>
+                        <div class="map-accordion-content">
+                            <div class="row">
+                                <div class="map-text-legend">
+                                    <div class="map-text-legend-selected">{{m_oController.m_sSatelliteLegendSelected}}</div>
+                                    <div class="map-text-legend-hover">{{m_oController.m_sSatelliteLegendHover}}</div>
+                                </div>
+                                <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
+                                    <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsSatelliteFirstLevel"
+                                       ng-click="m_oController.SatelliteLinkClicked(null)"></i>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div ng-repeat="oSatelliteLink in m_oController.getSatelliteLinks()"
+                                     class="col-md-1 col-xs-1 map-firstlevel-icon"
+                                     ng-class="{'map-firstlevel-icon-selected': oSatelliteLink.selected}"
+                                     tooltip-popup-delay="500" tooltip="{{oSatelliteLink.description}}"><img
+                                        class="img-map-firstlevel-icon" src="{{oSatelliteLink.link}}"
+                                        ng-click="m_oController.SatelliteLinkClicked(oSatelliteLink)"/></div>
                             </div>
                         </div>
                     </accordion-group>

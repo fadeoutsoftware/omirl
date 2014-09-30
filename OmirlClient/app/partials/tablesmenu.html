@@ -1,0 +1,34 @@
+<nav class="map-controls-panel col-md-2 col-xs-3" id="mapNavigation" style="z-index: 9999;">
+    <div class="side-bar-toggle">
+        <i class="" ng-class="{'fa fa-align-justify fa-rotate-90': !m_oController.isSideBarCollapsed(), 'fa fa-align-justify':m_oController.isSideBarCollapsed()}" ng-click="m_oController.toggleSideBarClicked()"></i>
+    </div>
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-list-ul" ng-click="m_oController.linkClicked('/stationstable')"></i>
+        <a ng-click="m_oController.linkClicked('/stationstable')" style="cursor: pointer" class="tables-link">Lista Stazioni</a>
+    </div>
+
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-umbrella" ng-click="m_oController.linkClicked('/idromodeltable')"></i>
+        <a ng-click="m_oController.linkClicked('/idromodeltable')" style="cursor: pointer" class="tables-link">Modelli Idro</a>
+    </div>
+
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-th" ng-click="m_oController.linkClicked('/sensorstable')"></i>
+        <a ng-click="m_oController.linkClicked('/sensorstable')" style="cursor: pointer" class="tables-link">Valori Stazioni</a>
+    </div>
+
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-arrow-circle-o-up" ng-click="m_oController.linkClicked('/maxtable')"></i>
+        <a ng-click="m_oController.linkClicked('/maxtable')" style="cursor: pointer" class="tables-link">Massimi Puntali</a>
+    </div>
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-tasks" ng-click="m_oController.linkClicked('/summarytable')"></i>
+        <a ng-click="m_oController.linkClicked('/summarytable')" style="cursor: pointer" class="tables-link">Sintesi</a>
+    </div>
+
+</nav>
