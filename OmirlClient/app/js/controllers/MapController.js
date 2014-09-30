@@ -7,7 +7,7 @@
 
 var MapController = (function () {
 
-    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log) {
+    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location) {
         // Initialize Members
         this.m_oScope = $scope;
         this.m_oWindow = $window;
@@ -21,6 +21,7 @@ var MapController = (function () {
         this.m_oConstantsService = oConstantsService;
         this.m_oInterval = $interval;
         this.m_oLog =$log;
+        this.m_oLocation = $location;
 
         // Flag to know if maps first level is shown
         this.m_bIsFirstLevel = true;
@@ -66,6 +67,10 @@ var MapController = (function () {
         this.m_oSelectedSensorLink = null;
         // Selected Hydro Link
         this.m_oSelectedHydroLink = null;
+        // Selected Radar Link
+        this.m_oSelectedRadarLink = null;
+        // Selected Satellite Link
+        this.m_oSelectedSatelliteLink = null;
 
         // Test of the Geocoding Query
         this.m_sGeocodingQuery = "";
@@ -107,6 +112,10 @@ var MapController = (function () {
         this.m_aoHydroThirdLevels = [];
 
 
+        this.m_aoSatelliteLinks = [];
+        this.m_aoRadarLinks = [];
+
+
         // Flag to know if the side bar is collapsed or not
         this.m_bSideBarCollapsed = false;
 
@@ -128,6 +137,21 @@ var MapController = (function () {
         this.m_bMapReady = false;
 
         this.m_oStopTimerPromise = {};
+
+        this.m_bShowRadar = false;
+        this.m_sRadarLegendSelected = "";
+        this.m_sRadarLegendHover = "";
+        this.m_bIsRadarFirstLevel = true;
+        this.m_iRadarLevel = 1;
+        this.m_bRadarLayerActive = false;
+
+        this.m_bShowSatellite = false;
+        this.m_sSatelliteLegendSelected = "";
+        this.m_sSatelliteLegendHover = "";
+        this.m_bIsSatelliteFirstLevel = true;
+        this.m_iSatelliteLevel = 1;
+        this.m_bSatelliteLayerActive = false;
+
 
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
@@ -193,6 +217,10 @@ var MapController = (function () {
         this.m_oMapNavigatorService.fetchMapFirstLevels();
 
         this.m_oMapNavigatorService.fetchHydroFirstLevels();
+
+        this.m_oMapNavigatorService.fetchRadarFirstLevels();
+
+        this.m_oMapNavigatorService.fetchSatelliteFirstLevels();
 
         this.m_oMapNavigatorService.getSensorFirstLevel().success(function (data, status) {
 
@@ -310,7 +338,8 @@ var MapController = (function () {
 
                     // Visibility "test"
                     oControllerVar.m_bShowHydro = true;
-
+                    oControllerVar.m_bShowRadar = true;
+                    oControllerVar.m_bShowSatellite = true;
 
                 }// End User != null
             }
@@ -776,7 +805,7 @@ var MapController = (function () {
         }
 
         // Write reference date text
-        var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + sMinutes + " Locale";
+        var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + sMinutes + " Locali";
         var sReferenceDataUTC = oReferenceDate.getUTCHours() + ":" + sMinutes + " UTC";
 
         // Start Pop up HTML
@@ -852,8 +881,12 @@ var MapController = (function () {
      */
     MapController.prototype.showStationsChart = function(oFeature) {
 
+        if (this.m_oSelectedSensorLink.isClickable==false) return;
+
         var oControllerVar = this;
         var sStationCode = oFeature.attributes.shortCode;
+        var sMunicipality = oFeature.attributes.municipality;
+        var sName = oFeature.attributes.name;
 
         if (this.m_oDialogService.isExistingDialog(sStationCode)) {
             return;
@@ -868,10 +901,19 @@ var MapController = (function () {
             }
         });
 
+        var bIsStock = true;
+
+        var bIsStockChart = true;
+        bIsStockChart = this.m_oChartService.isStockChart(sSensorType);
+
+
         // The data for the dialog
         var model = {
                 "stationCode": sStationCode,
-                "chartType": sSensorType
+                "chartType": sSensorType,
+                "isStock": bIsStockChart,
+                "municipality": sMunicipality,
+                "name": sName
             };
 
 
@@ -884,7 +926,8 @@ var MapController = (function () {
             close: function(event, ui) {
                 // Remove the chart from the Chart Service
                 oControllerVar.m_oChartService.removeChart(sStationCode);
-            }
+            },
+            title:  oFeature.attributes.name + " (Comune di " + oFeature.attributes.municipality + ")"
         };
 
         this.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
@@ -1332,47 +1375,50 @@ var MapController = (function () {
             oEntry.selected = false;
         });
 
-
         // We are in the first level?
         if (this.m_bIsHydroFirstLevel) {
 
-            // Remember we are in second level
-            this.m_bIsHydroFirstLevel = false;
+            if (oHydroLink.hasChilds) {
+                // Remember we are in second level
+                this.m_bIsHydroFirstLevel = false;
 
-            this.m_iHydroLevel = 2;
+                this.m_iHydroLevel = 2;
 
-            // Clear variables
-            oControllerVar.m_aoHydroLinks = [];
+                // Clear variables
+                oControllerVar.m_aoHydroLinks = [];
 
-            // Get second level from server
-            this.m_oMapNavigatorService.getHydroSecondLevels(oHydroLink.linkCode).success(function(data,status) {
+                // Get second level from server
+                this.m_oMapNavigatorService.getHydroSecondLevels(oHydroLink.linkCode).success(function(data,status) {
 
-                // Second Level Icons
-                oControllerVar.m_aoHydroLinks = data;
+                    // Second Level Icons
+                    oControllerVar.m_aoHydroLinks = data;
 
 
-                // Is there any Map selected?
-                if (oControllerVar.m_oSelectedHydroLink != null) {
+                    // Is there any Map selected?
+                    if (oControllerVar.m_oSelectedHydroLink != null) {
 
-                    //Is One of these links the one selected?
-                    var iCount;
-                    for (iCount = 0; iCount< oControllerVar.m_aoHydroLinks.length; iCount++) {
+                        //Is One of these links the one selected?
+                        var iCount;
+                        for (iCount = 0; iCount< oControllerVar.m_aoHydroLinks.length; iCount++) {
 
-                        // Check by Layer Id
-                        if (oControllerVar.m_aoHydroLinks[iCount].linkCode == oControllerVar.m_oSelectedHydroLink.linkCode) {
+                            // Check by Layer Id
+                            if (oControllerVar.m_aoHydroLinks[iCount].linkCode == oControllerVar.m_oSelectedHydroLink.linkCode) {
 
-                            // This is the selected one!!
-                            oControllerVar.setSelectedHydroLinkOnScreen(oControllerVar, oControllerVar.m_aoHydroLinks[iCount]);
+                                // This is the selected one!!
+                                oControllerVar.setSelectedHydroLinkOnScreen(oControllerVar, oControllerVar.m_aoHydroLinks[iCount]);
 
-                            break;
+                                break;
+                            }
                         }
                     }
-                }
 
-            }).error(function(data,status){
-                oControllerVar.m_oLog.error('Error Contacting Omirl Server');
-            });
-
+                }).error(function(data,status){
+                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                });
+            }
+            else {
+                this.switchHydroLinkState(bIsSelected, oHydroLink);
+            }
         }
         else if (this.m_iHydroLevel==2) {
             // We are in second level
@@ -1421,30 +1467,7 @@ var MapController = (function () {
 
                 }
                 else {
-                    if (!bIsSelected) {
-
-                        this.setSelectedHydroLinkOnScreen(this,oHydroLink);
-                        //this.selectedDynamicLayer(oHydroLink, this.m_sHydroThirdLevelSelectedModifier);
-                        alert('attivo ' + oHydroLink.description);
-                    }
-                    else {
-                        // Remove from the map
-                        /*
-                        if (this.m_oLayerService.getDynamicLayer() != null) {
-                            this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
-                            this.m_oLayerService.setDynamicLayer(null);
-                        }
-                        */
-                        alert('DISattivo ' + oHydroLink.description);
-
-                        this.m_sHydroLegendSelected = oHydroLink.parentDescription;
-                        this.m_bHydroLayerActive = false;
-                        this.m_sHydroLegendPath = "";
-                        this.m_sHydroLegendTooltip = "Legenda Idro";
-                        this.m_sHydroLegendIconPath = "";
-
-                        this.m_oSelectedHydroLink = null;
-                    }
+                    this.switchHydroLinkState(bIsSelected, oHydroLink);
                 }
             }
         }
@@ -1489,37 +1512,41 @@ var MapController = (function () {
             }
             else
             {
-
-                if (!bIsSelected)
-                {
-
-                    this.setSelectedHydroLinkOnScreen(this,oHydroLink);
-                    //this.selectedDynamicLayer(oHydroLink, this.m_sHydroThirdLevelSelectedModifier);
-                    alert('attivo ' + oHydroLink.description);
-                }
-                else
-                {
-
-                    // Remove from the map
-                    /*
-                    if (this.m_oLayerService.getDynamicLayer() != null) {
-                        this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
-                        this.m_oLayerService.setDynamicLayer(null);
-                    }
-                    */
-                    alert('DISattivo ' + oHydroLink.description);
-
-                    this.m_sHydroLegendSelected = oHydroLink.parentDescription;
-                    this.m_bHydroLayerActive = false;
-                    this.m_sHydroLegendPath = "";
-                    this.m_sHydroLegendTooltip = "Legenda Idro";
-                    this.m_sHydroLegendIconPath = "";
-
-                    this.m_oSelectedHydroLink = null;
-                }
+                this.switchHydroLinkState(bIsSelected, oHydroLink);
             }
         }
     }
+
+    MapController.prototype.switchHydroLinkState = function(bIsSelected, oHydroLink) {
+        if (!bIsSelected)
+        {
+
+            this.setSelectedHydroLinkOnScreen(this,oHydroLink);
+            //this.selectedDynamicLayer(oHydroLink, this.m_sHydroThirdLevelSelectedModifier);
+            alert('attivo ' + oHydroLink.description);
+        }
+        else
+        {
+
+            // Remove from the map
+
+            //if (this.m_oLayerService.getDynamicLayer() != null) {
+            //    this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+            //    this.m_oLayerService.setDynamicLayer(null);
+            //}
+
+            alert('DISattivo ' + oHydroLink.description);
+
+            this.m_sHydroLegendSelected = oHydroLink.parentDescription;
+            this.m_bHydroLayerActive = false;
+            this.m_sHydroLegendPath = "";
+            this.m_sHydroLegendTooltip = "Legenda Idro";
+            this.m_sHydroLegendIconPath = "";
+
+            this.m_oSelectedHydroLink = null;
+        }
+    }
+
 
     MapController.prototype.getHydroLinks = function()
     {
@@ -1528,6 +1555,26 @@ var MapController = (function () {
         }
 
         return this.m_aoHydroLinks;
+    }
+
+
+    MapController.prototype.getRadarLinks = function()
+    {
+        if (this.m_bIsRadarFirstLevel) {
+            this.m_aoRadarLinks = this.m_oMapNavigatorService.getRadarFirstLevels();
+        }
+
+        return this.m_aoRadarLinks;
+    }
+
+
+    MapController.prototype.getSatelliteLinks = function()
+    {
+        if (this.m_bIsSatelliteFirstLevel) {
+            this.m_aoSatelliteLinks = this.m_oMapNavigatorService.getSatelliteFirstLevels();
+        }
+
+        return this.m_aoSatelliteLinks;
     }
 
     /**
@@ -1547,6 +1594,504 @@ var MapController = (function () {
         oControllerVar.m_oSelectedHydroLink = oHydroLink;
     }
 
+
+
+    /**
+     * Method called when an Radar link is clicked
+     * @param oRadarLink
+     * @constructor
+     */
+    MapController.prototype.RadarLinkClicked = function(oRadarLink)
+    {
+        // Hydro Link = null stands for back: impossible to have back on first level
+        if (this.m_bIsRadarFirstLevel && oRadarLink == null) return;
+
+        // var to know if this is the selected entry
+        var bIsSelected = false;
+
+        // Remember Controller ref
+        var oControllerVar = this;
+
+        // Is this a Map Link Click?
+        if (oRadarLink != null) {
+            // Write on screen the Selected Layer description
+            if (!this.m_bRadarLayerActive)
+            {
+                this.m_sRadarLastLegendSelected = this.m_sRadarLegendSelected;
+                this.m_sRadarLegendSelected = oRadarLink.description;
+            }
+            // Remember if it was selected or not
+            bIsSelected = oRadarLink.selected;
+        }
+        else {
+            if (!this.m_bRadarLayerActive) {
+                if (this.m_iRadarLevel == 2) {
+                    this.m_sRadarLegendSelected = "";
+                }
+                else {
+                    this.m_sRadarLegendSelected = this.m_sRadarLastLegendSelected;
+                }
+            }
+        }
+
+        // Clear all selection flags
+        this.m_aoRadarLinks.forEach(function(oEntry) {
+            oEntry.selected = false;
+        });
+
+        // We are in the first level?
+        if (this.m_bIsRadarFirstLevel) {
+
+            if (oRadarLink.hasChilds) {
+                // Remember we are in second level
+                this.m_bIsRadarFirstLevel = false;
+
+                this.m_iRadarLevel = 2;
+
+                // Clear variables
+                oControllerVar.m_aoRadarLinks = [];
+
+                // Get second level from server
+                this.m_oMapNavigatorService.getRadarSecondLevels(oRadarLink.linkCode).success(function(data,status) {
+
+                    // Second Level Icons
+                    oControllerVar.m_aoRadarLinks = data;
+
+
+                    // Is there any Map selected?
+                    if (oControllerVar.m_oSelectedRadarLink != null) {
+
+                        //Is One of these links the one selected?
+                        var iCount;
+                        for (iCount = 0; iCount< oControllerVar.m_aoRadarLinks.length; iCount++) {
+
+                            // Check by Layer Id
+                            if (oControllerVar.m_aoRadarLinks[iCount].linkCode == oControllerVar.m_oSelectedRadarLink.linkCode) {
+
+                                // This is the selected one!!
+                                oControllerVar.setSelectedRadarLinkOnScreen(oControllerVar, oControllerVar.m_aoRadarLinks[iCount]);
+
+                                break;
+                            }
+                        }
+                    }
+
+                }).error(function(data,status){
+                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                });
+            }
+            else {
+                this.switchRadarLinkState(bIsSelected, oRadarLink);
+            }
+        }
+        else if (this.m_iRadarLevel==2) {
+            // We are in second level
+            if (oRadarLink == null) {
+                // Back: get first levels
+                this.m_aoRadarLinks = this.m_oMapNavigatorService.getRadarFirstLevels();
+                this.m_bIsRadarFirstLevel = true;
+                this.m_iRadarLevel = 1;
+            }
+            else {
+                // Switch to show or not third level
+                if (oRadarLink.hasThirdLevel) {
+                    this.m_iRadarLevel= 3;
+
+                    var oRadarLinkCopy = oRadarLink;
+                    var oControllerVar = this;
+
+                    // Get third levels from the service
+                    this.m_oMapNavigatorService.getRadarThirdLevel(oRadarLink.linkCode).success(function(data,status) {
+
+                        // Third Level Icons
+                        oControllerVar.m_aoRadarLinks = data;
+
+
+                        // Is there any Map selected?
+                        if (oControllerVar.m_oSelectedRadarLink != null) {
+
+                            //Is One of these links the one selected?
+                            var iCount;
+                            for (iCount = 0; iCount< oControllerVar.m_aoRadarLinks.length; iCount++) {
+
+                                // Check by Layer Id
+                                if (oControllerVar.m_aoRadarLinks[iCount].linkCode == oControllerVar.m_oSelectedRadarLink.linkCode) {
+
+                                    // This is the selected one!!
+                                    oControllerVar.setSelectedRadarLinkOnScreen(oControllerVar, oControllerVar.m_aoRadarLinks[iCount]);
+
+                                    break;
+                                }
+                            }
+                        }
+
+                    }).error(function(data,status){
+                        oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    });
+
+                }
+                else {
+                    this.switchRadarLinkState(bIsSelected, oRadarLink);
+                }
+            }
+        }
+        else if (this.m_iRadarLevel==3)
+        {
+            // We are in third level
+            if (oRadarLink == null)
+            {
+                // Back: get second levels
+                this.m_oMapNavigatorService.getRadarSecondLevels(this.m_aoRadarLinks[0].parentLinkCode).success(function(data,status) {
+
+                    // Second Level Icons
+                    oControllerVar.m_aoRadarLinks = data;
+                    oControllerVar.m_bIsRadarFirstLevel = false;
+                    oControllerVar.m_iRadarLevel= 2;
+
+                    if (!oControllerVar.m_bRadarLayerActive)
+                    {
+                        oControllerVar.m_sRadarLegendSelected = data[0].parentDescription;
+                    }
+
+                    if (oControllerVar.m_oSelectedRadarLink!=null)
+                    {
+                        //Is One of these links the one selected?
+                        var iCount;
+                        for (iCount = 0; iCount< oControllerVar.m_aoRadarLinks.length; iCount++) {
+
+                            // Check by Layer Id
+                            if (oControllerVar.m_aoRadarLinks[iCount].linkCode == oControllerVar.m_oSelectedRadarLink.linkCode) {
+
+                                // This is the selected one!!
+                                oControllerVar.setSelectedRadarLinkOnScreen(oControllerVar, oControllerVar.m_aoRadarLinks[iCount]);
+
+                                break;
+                            }
+                        }
+                    }
+
+                }).error(function(data,status){
+                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                });
+            }
+            else
+            {
+                this.switchRadarLinkState(bIsSelected, oRadarLink);
+            }
+        }
+    }
+
+
+    MapController.prototype.switchRadarLinkState = function(bIsSelected, oRadarLink) {
+        if (!bIsSelected)
+        {
+
+            this.setSelectedRadarLinkOnScreen(this,oRadarLink);
+            //this.selectedDynamicLayer(oRadarLink, this.m_sHydroThirdLevelSelectedModifier);
+            alert('attivo ' + oRadarLink.description);
+        }
+        else
+        {
+
+            // Remove from the map
+
+            //if (this.m_oLayerService.getDynamicLayer() != null) {
+            //    this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+            //    this.m_oLayerService.setDynamicLayer(null);
+            //}
+
+            alert('DISattivo ' + oRadarLink.description);
+
+            this.m_sRadarLegendSelected = oRadarLink.parentDescription;
+            this.m_bRadarLayerActive = false;
+            this.m_sRadarLegendPath = "";
+            this.m_sRadarLegendTooltip = "";
+            this.m_sRadarLegendIconPath = "";
+
+            this.m_oSelectedRadarLink = null;
+        }
+    }
+
+    /**
+     * Sets all needed variables to show selected Radar Link on screen
+     * @param oControllerVar
+     * @param oMapLink
+     */
+    MapController.prototype.setSelectedRadarLinkOnScreen = function (oControllerVar, oRadarLink) {
+
+        oRadarLink.selected = true;
+        // Layer Click
+        oControllerVar.m_sRadarLegendIconPath = oRadarLink.link;
+        oControllerVar.m_sRadarLegendTooltip = "Legenda " + oRadarLink.description;
+        oControllerVar.m_sRadarLegendSelected = oRadarLink.description;
+        oControllerVar.m_bRadarLayerActive = true;
+        oControllerVar.m_sRadarLegendPath = oRadarLink.legendLink;
+        oControllerVar.m_oSelectedRadarLink = oRadarLink;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Method called when an Satellite link is clicked
+     * @param oSatelliteLink
+     * @constructor
+     */
+    MapController.prototype.SatelliteLinkClicked = function(oSatelliteLink)
+    {
+        // Hydro Link = null stands for back: impossible to have back on first level
+        if (this.m_bIsSatelliteFirstLevel && oSatelliteLink == null) return;
+
+        // var to know if this is the selected entry
+        var bIsSelected = false;
+
+        // Remember Controller ref
+        var oControllerVar = this;
+
+        // Is this a Map Link Click?
+        if (oSatelliteLink != null) {
+            // Write on screen the Selected Layer description
+            if (!this.m_bSatelliteLayerActive)
+            {
+                this.m_sSatelliteLastLegendSelected = this.m_sSatelliteLegendSelected;
+                this.m_sSatelliteLegendSelected = oSatelliteLink.description;
+            }
+            // Remember if it was selected or not
+            bIsSelected = oSatelliteLink.selected;
+        }
+        else {
+            if (!this.m_bSatelliteLayerActive) {
+                if (this.m_iSatelliteLevel == 2) {
+                    this.m_sSatelliteLegendSelected = "";
+                }
+                else {
+                    this.m_sSatelliteLegendSelected = this.m_sSatelliteLastLegendSelected;
+                }
+            }
+        }
+
+        // Clear all selection flags
+        this.m_aoSatelliteLinks.forEach(function(oEntry) {
+            oEntry.selected = false;
+        });
+
+        // We are in the first level?
+        if (this.m_bIsSatelliteFirstLevel) {
+
+            if (oSatelliteLink.hasChilds) {
+                // Remember we are in second level
+                this.m_bIsSatelliteFirstLevel = false;
+
+                this.m_iSatelliteLevel = 2;
+
+                // Clear variables
+                oControllerVar.m_aoSatelliteLinks = [];
+
+                // Get second level from server
+                this.m_oMapNavigatorService.getSatelliteSecondLevels(oSatelliteLink.linkCode).success(function(data,status) {
+
+                    // Second Level Icons
+                    oControllerVar.m_aoSatelliteLinks = data;
+
+
+                    // Is there any Map selected?
+                    if (oControllerVar.m_oSelectedSatelliteLink != null) {
+
+                        //Is One of these links the one selected?
+                        var iCount;
+                        for (iCount = 0; iCount< oControllerVar.m_aoSatelliteLinks.length; iCount++) {
+
+                            // Check by Layer Id
+                            if (oControllerVar.m_aoSatelliteLinks[iCount].linkCode == oControllerVar.m_oSelectedSatelliteLink.linkCode) {
+
+                                // This is the selected one!!
+                                oControllerVar.setSelectedSatelliteLinkOnScreen(oControllerVar, oControllerVar.m_aoSatelliteLinks[iCount]);
+
+                                break;
+                            }
+                        }
+                    }
+
+                }).error(function(data,status){
+                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                });
+            }
+            else {
+                this.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
+            }
+        }
+        else if (this.m_iSatelliteLevel==2) {
+            // We are in second level
+            if (oSatelliteLink == null) {
+                // Back: get first levels
+                this.m_aoSatelliteLinks = this.m_oMapNavigatorService.getSatelliteFirstLevels();
+                this.m_bIsSatelliteFirstLevel = true;
+                this.m_iSatelliteLevel = 1;
+            }
+            else {
+                // Switch to show or not third level
+                if (oSatelliteLink.hasThirdLevel) {
+                    this.m_iSatelliteLevel= 3;
+
+                    var oSatelliteLinkCopy = oSatelliteLink;
+                    var oControllerVar = this;
+
+                    // Get third levels from the service
+                    this.m_oMapNavigatorService.getSatelliteThirdLevel(oSatelliteLink.linkCode).success(function(data,status) {
+
+                        // Third Level Icons
+                        oControllerVar.m_aoSatelliteLinks = data;
+
+
+                        // Is there any Map selected?
+                        if (oControllerVar.m_oSelectedSatelliteLink != null) {
+
+                            //Is One of these links the one selected?
+                            var iCount;
+                            for (iCount = 0; iCount< oControllerVar.m_aoSatelliteLinks.length; iCount++) {
+
+                                // Check by Layer Id
+                                if (oControllerVar.m_aoSatelliteLinks[iCount].linkCode == oControllerVar.m_oSelectedSatelliteLink.linkCode) {
+
+                                    // This is the selected one!!
+                                    oControllerVar.setSelectedSatelliteLinkOnScreen(oControllerVar, oControllerVar.m_aoSatelliteLinks[iCount]);
+
+                                    break;
+                                }
+                            }
+                        }
+
+                    }).error(function(data,status){
+                        oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    });
+
+                }
+                else {
+                    this.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
+                }
+            }
+        }
+        else if (this.m_iSatelliteLevel==3)
+        {
+            // We are in third level
+            if (oSatelliteLink == null)
+            {
+                // Back: get second levels
+                this.m_oMapNavigatorService.getSatelliteSecondLevels(this.m_aoSatelliteLinks[0].parentLinkCode).success(function(data,status) {
+
+                    // Second Level Icons
+                    oControllerVar.m_aoSatelliteLinks = data;
+                    oControllerVar.m_bIsSatelliteFirstLevel = false;
+                    oControllerVar.m_iSatelliteLevel= 2;
+
+                    if (!oControllerVar.m_bSatelliteLayerActive)
+                    {
+                        oControllerVar.m_sSatelliteLegendSelected = data[0].parentDescription;
+                    }
+
+                    if (oControllerVar.m_oSelectedSatelliteLink!=null)
+                    {
+                        //Is One of these links the one selected?
+                        var iCount;
+                        for (iCount = 0; iCount< oControllerVar.m_aoSatelliteLinks.length; iCount++) {
+
+                            // Check by Layer Id
+                            if (oControllerVar.m_aoSatelliteLinks[iCount].linkCode == oControllerVar.m_oSelectedSatelliteLink.linkCode) {
+
+                                // This is the selected one!!
+                                oControllerVar.setSelectedSatelliteLinkOnScreen(oControllerVar, oControllerVar.m_aoSatelliteLinks[iCount]);
+
+                                break;
+                            }
+                        }
+                    }
+
+                }).error(function(data,status){
+                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                });
+            }
+            else
+            {
+                this.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
+            }
+        }
+    }
+
+
+    MapController.prototype.switchSatelliteLinkState = function(bIsSelected, oSatelliteLink) {
+        if (!bIsSelected)
+        {
+
+            this.setSelectedSatelliteLinkOnScreen(this,oSatelliteLink);
+            //this.selectedDynamicLayer(oRadarLink, this.m_sHydroThirdLevelSelectedModifier);
+            alert('attivo ' + oSatelliteLink.description);
+        }
+        else
+        {
+
+            // Remove from the map
+
+            //if (this.m_oLayerService.getDynamicLayer() != null) {
+            //    this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+            //    this.m_oLayerService.setDynamicLayer(null);
+            //}
+
+            alert('DISattivo ' + oSatelliteLink.description);
+
+            this.m_sSatelliteLegendSelected = oSatelliteLink.parentDescription;
+            this.m_bSatelliteLayerActive = false;
+            this.m_sSatelliteLegendPath = "";
+            this.m_sSatelliteLegendTooltip = "";
+            this.m_sSatelliteLegendIconPath = "";
+
+            this.m_oSelectedSatelliteLink = null;
+        }
+    }
+
+    /**
+     * Sets all needed variables to show selected Radar Link on screen
+     * @param oControllerVar
+     * @param oMapLink
+     */
+    MapController.prototype.setSelectedSatelliteLinkOnScreen = function (oControllerVar, oSatelliteLink) {
+
+        oSatelliteLink.selected = true;
+        // Layer Click
+        oControllerVar.m_sSatelliteLegendIconPath = oSatelliteLink.link;
+        oControllerVar.m_sSatelliteLegendTooltip = "Legenda " + oSatelliteLink.description;
+        oControllerVar.m_sSatelliteLegendSelected = oSatelliteLink.description;
+        oControllerVar.m_bSatelliteLayerActive = true;
+        oControllerVar.m_sSatelliteLegendPath = oSatelliteLink.legendLink;
+        oControllerVar.m_oSelectedSatelliteLink = oSatelliteLink;
+    }
+
+    MapController.prototype.tablesLinkClicked = function() {
+        this.m_oLocation.path("/stationstable");
+    }
+
     MapController.$inject = [
         '$scope',
         '$window',
@@ -1558,7 +2103,8 @@ var MapController = (function () {
         'ChartService',
         'ConstantsService',
         '$interval',
-        '$log'
+        '$log',
+        '$location'
     ];
 
     return MapController;

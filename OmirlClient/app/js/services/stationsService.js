@@ -47,35 +47,16 @@ angular.module('omirl.stationsService', ['omirl.ConstantsService']).
         }
 
         this.getStationsTable = function(sType) {
-            var aoStations = [
-                {"stationCode": "LERCA", "name":"Molino Branca","district":"Savona","basin":"Letimbro","network":"ETG"},
-                {"stationCode": "PIAMP", "name":"Pornassio","district":"Imperia","basin":"Imperia","network":"MTX"},
-                {"stationCode": "MTPOR", "name":"GE Pegli","district":"Genova","basin":"Bisagno","network":"ETG"},
-                {"stationCode": "ARNAL", "name":"Mele","district":"Genova","basin":"Bisagno","network":"ETG"},
-                {"stationCode": "CFUNZ", "name":"La Presa","district":"Genova","basin":"Bisagno","network":"ETG"},
-                {"stationCode": "RIGHI", "name":"Bolzaneto","district":"Genova","basin":"Polcevera","network":"ETG"},
-                {"stationCode": "CLARI", "name":"Gavette","district":"Genova","basin":"Bisagno","network":"ETG"},
-                {"stationCode": "INASV", "name":"Isoverde","district":"Genova","basin":"Bisagno","network":"ETG"},
-                {"stationCode": "PEROO", "name":"Fiorino","district":"Genova","basin":"Polcevera","network":"MTX"},
-                {"stationCode": "SANDA", "name":"Levanto","district":"La Spezia","basin":"Magra","network":"ETG"},
-                {"stationCode": "IMPER", "name":"Soliera","district":"La Spezia","basin":"Magra","network":"MTX"},
-                {"stationCode": "BESTA", "name":"Lagdei","district":"La Spezia","basin":"Magra","network":"CAE"}
-            ];
-
-            return aoStations;
+            return this.m_oHttp.get(this.APIURL + '/stations/stationlist/'+sType);
         }
 
         this.getStationsTypes = function() {
-            var aoTypes = [
-                {"description": "Pluviometri", "code":"Pluvio"},
-                {"description": "Termometri", "code":"Termo"},
-                {"description": "Idrometri", "code":"Idro"},
-                {"description": "Anemometri", "code":"Vento"},
-                {"description": "Igrometri", "code":"Igro"},
-                {"description": "Radiazione", "code":"Radio"}
-            ];
+            return this.m_oHttp.get(this.APIURL + '/stations/types');
+        }
 
-            return aoTypes;
+        this.exportCsvStationList = function(sSensorCode) {
+            var sAPIURL = this.APIURL;
+            return sAPIURL + '/stations/exportlist/'+sSensorCode;
         }
 
     }]);

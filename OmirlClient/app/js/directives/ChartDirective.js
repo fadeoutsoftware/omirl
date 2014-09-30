@@ -9,7 +9,7 @@
 
 'use strict';
 angular.module('omirl.chartDirective', []).
-    directive('omirlHighStock', ['ChartService',  function (oChartService) {
+    directive('omirlHighChart', ['ChartService',  function (oChartService) {
 
         var m_oChartService = oChartService;
 
@@ -20,55 +20,122 @@ angular.module('omirl.chartDirective', []).
             priority: -10,
             link: function (scope, elem, attrs) {
 
-                var oChartOptions = {
-                    chart: {
-                        renderTo: elem[0]
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    plotOptions: {
-                      series: {
-                          dataGrouping: {
-                              enabled: true
-                          }
-                      }
-                    },
-                    rangeSelector: {
-                        inputEnabled: true,
-                        selected: 4,
-                        buttons: [{
-                            type: 'day',
-                            count: 1,
-                            text: '1g'
-                        }, {
-                            type: 'day',
-                            count: 3,
-                            text: '3gg'
-                        }, {
-                            type: 'week',
-                            count: 1,
-                            text: '7gg'
-                        }, {
-                            type: 'day',
-                            count: 10,
-                            text: '10gg'
-                        }, {
-                            type: 'day',
-                            count: 14,
-                            text: '14gg'
-                        }, {
-                            type: 'all',
-                            text: 'Tutti'
-                        }],
-                        inputDateFormat:'%d/%m/%Y',
-                        inputEditDateFormat:'%d/%m/%Y'
-                    },
-                    tooltip: {
-                        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b>',
-                        valueDecimals: 2
-                    }
-                };
+                var oChartOptions;
+
+                if (scope.m_oController.m_oDialogModel.isStock) {
+                    var oStockOptions = {
+                        chart: {
+                            renderTo: elem[0]
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            series: {
+                                dataGrouping: {
+                                    enabled: true
+                                }
+                            },
+                            line: {
+                                marker: {
+                                    enabled: false
+                                }
+                            },
+                            spline: {
+                                marker: {
+                                    enabled: false
+                                }
+                            }
+                        },
+                        rangeSelector: {
+                            inputEnabled: true,
+                            selected: 4,
+                            buttons: [{
+                                type: 'day',
+                                count: 1,
+                                text: '1g'
+                            }, {
+                                type: 'day',
+                                count: 3,
+                                text: '3gg'
+                            }, {
+                                type: 'week',
+                                count: 1,
+                                text: '7gg'
+                            }, {
+                                type: 'day',
+                                count: 10,
+                                text: '10gg'
+                            }, {
+                                type: 'day',
+                                count: 15,
+                                text: '15gg'
+                            }/*, {
+                                type: 'all',
+                                text: 'Tutti'
+                            }*/],
+                            inputDateFormat:'%d/%m/%Y',
+                            inputEditDateFormat:'%d/%m/%Y'
+                        },
+                        tooltip: {
+                            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b>',
+                            valueDecimals: 2
+                        },
+                        exporting: {
+                            buttons: {
+                                contextButton: {
+                                    symbol: 'url(img/chartdownload.png)'
+                                }
+                            }
+                        }
+                    };
+
+                    oChartOptions = oStockOptions;
+                }
+                else {
+                    var oSimpleChartOptions = {
+                        chart: {
+                            renderTo: elem[0],
+                            zoomType: "xy"
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b>',
+                            valueDecimals: 2
+                        },
+                        plotOptions: {
+                            line: {
+                                marker: {
+                                    enabled: false
+                                }
+                            },
+                            spline: {
+                                marker: {
+                                    enabled: false
+                                }
+                            }
+                        },
+                        xAxis: {
+                            type: 'datetime'
+                        },
+                        title:{
+                            text:''
+                        },
+                        exporting: {
+                            buttons: {
+                                contextButton: {
+                                    symbol: 'url(img/chartdownload.png)'
+                                }
+                            }
+                        }
+                    };
+
+                    oChartOptions = oSimpleChartOptions;
+                }
+
+
 
                 Highcharts.setOptions({
                     global: {
@@ -83,17 +150,19 @@ angular.module('omirl.chartDirective', []).
                         noData: ['Non ci sono dati disponibili'],
                         printChart: ['Stampa'],
                         shortMonths: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu',  'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
-                        contextButtonTitle: ['Opzioni Grafico'],
-                        downloadJPEG: ['Scarica come JPEG'],
-                        downloadPDF: ['Scarica come PDF'],
-                        downloadPNG: ['Scarica come PNG'],
-                        downloadSVG: ['Scarica come SVG']
+                        contextButtonTitle: ['Esporta Grafico'],
+                        downloadJPEG: ['Scarica JPEG'],
+                        downloadPDF: ['Scarica PDF'],
+                        downloadPNG: ['Scarica PNG'],
+                        downloadSVG: ['Scarica SVG'],
+                        rangeSelectorFrom: ['Da'],
+                        rangeSelectorTo: ['A']
                     }
                 });
 
-                var oChart =  new Highcharts.StockChart(oChartOptions);
+                var oChart =  new Highcharts.Chart(oChartOptions);
 
-                m_oChartService.addChart(attrs.omirlHighStock, oChart);
+                m_oChartService.addChart(attrs.omirlHighChart, oChart);
             }
         };
     }]);

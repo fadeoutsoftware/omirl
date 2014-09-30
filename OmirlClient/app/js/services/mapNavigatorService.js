@@ -14,6 +14,10 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
 
         this.m_aoHydroFirstLevels = [];
 
+        this.m_aoRadarFirstLevels = [];
+
+        this.m_aoSatelliteFirstLevels = [];
+
         this.fetchMapFirstLevels = function() {
             var oServiceVar = this;
 
@@ -86,6 +90,57 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             return this.m_oHttp.get(this.APIURL + '/mapnavigator/hydrothird/'+linkCode);
         }
 
+
+
+        this.fetchRadarFirstLevels = function() {
+            var oServiceVar = this;
+
+            oServiceVar.m_aoRadarFirstLevels = [];
+
+            this.m_oHttp.get(this.APIURL + '/mapnavigator/radar').success(function(data,status) {
+                oServiceVar.m_aoRadarFirstLevels = data;
+            }).error(function(data,status){
+                alert('Error Contacting Omirl Server');
+            });
+        }
+
+        this.getRadarFirstLevels = function() {
+            return this.m_aoRadarFirstLevels;
+        }
+
+        this.getRadarSecondLevels = function(linkCode) {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/radar/'+linkCode);
+        }
+
+        this.getRadarThirdLevel = function(linkCode) {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/radarthird/'+linkCode);
+        }
+
+
+
+        this.fetchSatelliteFirstLevels = function() {
+            var oServiceVar = this;
+
+            oServiceVar.m_aoSatelliteFirstLevels = [];
+
+            this.m_oHttp.get(this.APIURL + '/mapnavigator/satellite').success(function(data,status) {
+                oServiceVar.m_aoSatelliteFirstLevels = data;
+            }).error(function(data,status){
+                alert('Error Contacting Omirl Server');
+            });
+        }
+
+        this.getSatelliteFirstLevels = function() {
+            return this.m_aoSatelliteFirstLevels;
+        }
+
+        this.getSatelliteSecondLevels = function(linkCode) {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/satellite/'+linkCode);
+        }
+
+        this.getSatelliteThirdLevel = function(linkCode) {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/satellitethird/'+linkCode);
+        }
 
         // TEST Code with hard-coded json
 /*
