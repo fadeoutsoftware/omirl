@@ -297,6 +297,24 @@ i.service-icon {
 .service-item a:hover {text-shadow: 0 0 5px #ffffff;}
 .service-icon:hover { color: #7fbbda; background-color: rgba(255,255,255,.65); box-shadow: 0 0 20px #ffffff;}
 
+
+i.tables-icon {
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    display: inline-block;
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+    line-height: 45px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.service-item a:hover {text-shadow: 0 0 5px #ffffff;}
+.tables-icon:hover { color: #7fbbda; background-color: rgba(255,255,255,.65); box-shadow: 0 0 20px #ffffff;}
+
 /* Callout */
 
 .callout {
@@ -807,6 +825,10 @@ top: 0;
 left: 150px;
 }
 
+#tablesSearchPanel ul.dropdown-menu {
+    position: absolute;
+}
+
 
 
 
@@ -867,6 +889,24 @@ color: #2a6496;
     border-radius: 3px;
 }
 
+
+.map-tablelink-icon {
+    margin: 10px 0 0 15px;
+    padding: 0px;
+    position: relative;
+    width: 132px;
+    height: 34px;
+    overflow: hidden;
+    border: 1px solid #eaedf0;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.img-map-tablelink-icon {
+    width: 96px;
+    height: 32px;
+}
+
 .img-map-firstlevel-icon {
     width: 32px;
     height: 32px;
@@ -881,6 +921,12 @@ color: #2a6496;
 
 
 .map-firstlevel-icon:hover {
+    border: 2px solid #000000;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+
+.map-tablelink-icon:hover {
     border: 2px solid #000000;
     -webkit-transition: all .3s;
     transition: all .3s;
@@ -1110,6 +1156,7 @@ color: #2a6496;
     padding-top: 3px;
     padding-bottom: 3px;
     cursor: pointer;
+    text-align: left;
 }
 
 .stationtablerow tr {
@@ -1125,7 +1172,12 @@ color: #2a6496;
 }
 
 
-.stationtablerow th {text-align: center;}
+.stationtablerow th
+{
+    text-align: left;
+    font-size: 18px;
+}
+
 .panel-footer label {width:100%; text-align: center; margin:auto;}
 .stationtablerow td {width: 25%;}
 .stationtablerow td:first-child {text-align: left; padding-left:20px;}
@@ -1140,3 +1192,25 @@ color: #2a6496;
     -webkit-box-shadow: 0 0 10px 0 ;
     box-shadow: 0 0 10px #555 ;
 }
+
+.tables-link  {
+    cursor: pointer;
+    font-size: 22px;
+    color: white;
+}
+
+.tables-link:hover  {
+    font-size: 24px;
+}
+
+.tables-link-row {
+    padding-top: 10px;
+    padding-left: 3px;
+}
+
+.table-export-button-panel {
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/*.table-export-button-panel:hover { font-size: 30px;}*/
