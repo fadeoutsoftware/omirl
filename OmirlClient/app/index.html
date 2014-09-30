@@ -57,7 +57,7 @@
         <li class="sidebar-brand"><a href="#top">OMIRL</a></li>
         <li><a href="#top">Home</a></li>
         <li><a ng-click="m_oController.serviceIconClicked('/maps')">Dati</a></li>
-        <li><a ng-click="m_oController.serviceIconClicked('/tables')">Tabelle</a></li>
+        <li><a ng-click="m_oController.serviceIconClicked('/stationstable')">Tabelle</a></li>
         <li><a ng-click="m_oController.serviceIconClicked('/animations')">Satellite e Radar</a></li>
         <li><a ng-click="m_oController.serviceIconClicked('/animations')">Modelli Meteo Marini</a></li>
         <li><a ng-click="m_oController.serviceIconClicked('/credits')">Crediti</a></li>
@@ -168,8 +168,8 @@
                 </div>
                 <div class="col-md-2 text-center">
                     <div class="service-item">
-                        <i class="service-icon fa fa-table" ng-click="m_oController.serviceIconClicked('/tables')"></i>
-                        <h4><a  ng-click="m_oController.serviceIconClicked('/tables')"  style="cursor: pointer">Tabelle</a></h4>
+                        <i class="service-icon fa fa-table" ng-click="m_oController.serviceIconClicked('/stationstable')"></i>
+                        <h4><a  ng-click="m_oController.serviceIconClicked('/stationstable')"  style="cursor: pointer">Tabelle</a></h4>
                         <p>Elaborazione dati osservati</p>
                     </div>
                 </div>
@@ -247,6 +247,8 @@
     <script src="lib/angular/angular-route.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
     <!-- Highstock Scripts -->
+    <!--script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script-->
     <script src="lib/Highstock/highstock.js"></script>
     <script src="lib/Highstock/modules/exporting.js"></script>
     <!-- Map Control -->
@@ -257,6 +259,7 @@
     <script src="lib/azimuthjs/directives/leafletMap.js"></script>
     <script src="lib/azimuthjs/directives/olMap.js"></script>
     <!-- Chart Directive -->
+    <!--script src="js/directives/StockDirective.js"></script-->
     <script src="js/directives/ChartDirective.js"></script>
     <!-- Omirl Services -->
     <script src="js/services/dialog-service.js"></script>
@@ -275,6 +278,10 @@
     <script src="js/controllers/ChartController.js"></script>
     <script src="js/controllers/SettingsController.js"></script>
     <script src="js/controllers/StationsTableController.js"></script>
+    <script src="js/controllers/IdroModelTableController.js"></script>
+    <script src="js/controllers/SensorTableController.js"></script>
+    <script src="js/controllers/MaxTableController.js"></script>
+    <script src="js/controllers/SummaryTableController.js"></script>
     <script src="js/filters.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/app.js"></script>
@@ -350,13 +357,11 @@ This is the template for the main dialog that is displayed. It uses the
 dialogCtrl controller in app.js.
 -->
 <script type="text/ng-template" id="stationsChart.html">
-    <div ng-controller="ChartController">
+    <div ng-controller="ChartController" >
         <div id="loading" class="loading" ng-show="m_oController.isLoadingVisibile()" ></div>
-        <div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div>
+        <!--div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <div omirl-high-chart="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div>
 
-        <!--div ng-repeat="oOtherChart in m_oController.getOtherLinks()">
-            <a  ng-click="m_oController.otherLinkClicked(oOtherChart)">{{oOtherChart.sensorType}} </a>
-        </div-->
         <div ng-repeat="oOtherChart in m_oController.getOtherLinks()"
              class="col-md-1 col-xs-1 map-firstlevel-icon"
              ng-class="{'map-firstlevel-icon-selected': oOtherChart.isActive}"
