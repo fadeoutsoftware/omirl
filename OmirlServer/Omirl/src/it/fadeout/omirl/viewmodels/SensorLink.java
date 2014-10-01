@@ -10,6 +10,8 @@ public class SensorLink {
 	boolean isActive;
 	String legendLink;
 	String mesUnit;
+	boolean isVisible = true;
+	boolean isClickable = true;
 	
 	public String getCode() {
 		return code;
@@ -64,5 +66,17 @@ public class SensorLink {
 	}
 	public void setMesUnit(String mesUnit) {
 		this.mesUnit = mesUnit;
+	}
+	public boolean isVisible() {
+		return isVisible;
+	}
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+	public boolean isClickable() {
+		return isClickable;
+	}
+	public void setClickable(boolean isClickable) {
+		this.isClickable = isClickable;
 	}
 }

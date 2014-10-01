@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DataSerie {
 	String type;
 	String name;
+	int axisId = 0;
 	List<Object []> data = new ArrayList<>();
 	
 	public String getType() {
@@ -30,6 +31,12 @@ public class DataSerie {
 	}
 	public void setData(List<Object []> data) {
 		this.data = data;
+	}
+	public int getAxisId() {
+		return axisId;
+	}
+	public void setAxisId(int axisId) {
+		this.axisId = axisId;
 	}
 	
 }

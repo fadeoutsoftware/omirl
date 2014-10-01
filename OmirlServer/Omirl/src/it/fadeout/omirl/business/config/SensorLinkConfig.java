@@ -13,6 +13,8 @@ public class SensorLinkConfig {
 	String mesUnit;
 	String filePath;
 	String columnName;
+	boolean isVisible = true;
+	boolean isClickable = true;
 	
 	public String getCode() {
 		return code;
@@ -87,8 +89,22 @@ public class SensorLinkConfig {
 		oSensorLink.setImageLinkOn(imageLinkOn);
 		oSensorLink.setLegendLink(legendLink);
 		oSensorLink.setMesUnit(mesUnit);
+		oSensorLink.setClickable(isClickable);
+		oSensorLink.setVisible(isVisible);
 		
 		return oSensorLink;
+	}
+	public boolean getIsVisible() {
+		return isVisible;
+	}
+	public void setIsVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+	public boolean getIsClickable() {
+		return isClickable;
+	}
+	public void setIsClickable(boolean isClickable) {
+		this.isClickable = isClickable;
 	}
 
 }

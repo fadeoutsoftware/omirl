@@ -1,12 +1,11 @@
 package it.fadeout.omirl.data;
 
+import it.fadeout.omirl.business.SavedPeriod;
+
 import java.util.Date;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-
-import it.fadeout.omirl.business.OmirlUser;
-import it.fadeout.omirl.business.SavedPeriod;
 
 public class SavedPeriodRepository extends Repository<SavedPeriod> {
 	

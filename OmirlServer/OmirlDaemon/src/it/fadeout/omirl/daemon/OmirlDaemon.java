@@ -1,5 +1,8 @@
 package it.fadeout.omirl.daemon;
 
+import it.fadeout.omirl.business.AnagTableInfo;
+import it.fadeout.omirl.business.ChartAxis;
+import it.fadeout.omirl.business.ChartInfo;
 import it.fadeout.omirl.business.ChartLine;
 import it.fadeout.omirl.business.CreekThreshold;
 import it.fadeout.omirl.business.DataChart;
@@ -14,6 +17,8 @@ import it.fadeout.omirl.data.SavedPeriodRepository;
 import it.fadeout.omirl.data.StationAnagRepository;
 import it.fadeout.omirl.data.StationDataRepository;
 import it.fadeout.omirl.data.StationLastDataRepository;
+import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;
+import it.fadeout.omirl.viewmodels.SensorListTableViewModel;
 import it.fadeout.omirl.viewmodels.SensorViewModel;
 
 import java.io.File;
@@ -26,11 +31,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.joda.time.Chronology;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
+
 public class OmirlDaemon {
 	
 	HashMap<String, CreekThreshold> m_aoThresholds = new HashMap<>();
 	private OmirlDaemonConfiguration m_oConfig;
 	private String m_sConfigurationFile = "";
+	
+	// Date Format for File Serialization
+	SimpleDateFormat m_oDateFormat = new SimpleDateFormat("HHmm");
+
 	
 	/**
 	 * Omirl Daemon
@@ -45,15 +59,81 @@ public class OmirlDaemon {
 			return;
 		}
 		
+		//Test();
 		//testDate();
 		
 		//WriteSampleConfig();
 		
 		OmirlDaemon oDaemon = new OmirlDaemon();
 		oDaemon.OmirlDaemonCycle(args[0]);
+	}	
+	
+	/**
+	 * Gets the name of value column from minutes resolution
+	 * @param iResolution
+	 * @return
+	 */
+	public String getRainColumnNameFromNative(int iResolution) {
+		String sReturn = "";
+		switch (iResolution) {
+		case 5:
+			sReturn = "rain_05m";
+			break;
+		case 10:
+			sReturn = "rain_10m";
+			break;
+		case 15:
+			sReturn = "rain_15m";
+			break;
+		case 30:
+			sReturn = "rain_30m";
+			break;			
+		}
+		
+		return sReturn;
+	}
+	
+	/**
+	 * Finds Chart Info Object in the array stored in the configuration starting by relative column name
+	 * @param sSensorColumn
+	 * @return
+	 */
+	public List<ChartInfo> getChartInfoFromSensorColumn(String sSensorColumn) {
+		ArrayList<ChartInfo> aoInfo = new ArrayList<>();
 
+		for (int iChartsInfo = 0; iChartsInfo<m_oConfig.getChartsInfo().size(); iChartsInfo++) {
+			ChartInfo oInfo = m_oConfig.getChartsInfo().get(iChartsInfo);
+			if (oInfo.getColumnName().equals(sSensorColumn)) {
+				aoInfo.add(oInfo);
+			}
+		}
+
+		return aoInfo;
 	}	
 		
+	/**
+	 * Finds Chart Info Object in the array stored in the configuration starting by relative Sensor Code
+	 * @param sSensorCode
+	 * @return
+	 */
+	public List<ChartInfo> getChartInfoFromSensorCode(String sSensorCode) {
+		ArrayList<ChartInfo> aoInfo = new ArrayList<>();
+
+		for (int iChartsInfo = 0; iChartsInfo<m_oConfig.getChartsInfo().size(); iChartsInfo++) {
+			ChartInfo oInfo = m_oConfig.getChartsInfo().get(iChartsInfo);
+			if (oInfo.getSensorType().equals(sSensorCode)) {
+				aoInfo.add(oInfo);
+			}
+		}
+		
+		return aoInfo;
+	}
+
+	
+	/**
+	 * Main Omirl Daemon Cycle
+	 * @param sConfigurationFile	Configuration File Path
+	 */
 	public void OmirlDaemonCycle(String sConfigurationFile)
 	{
 		System.out.println("OmirlDaemon - Starting " + new Date());
@@ -88,10 +168,6 @@ public class OmirlDaemon {
 				
 				try {
 					
-					// Date Format for File Serialization
-					SimpleDateFormat oDateFormat = new SimpleDateFormat("HHmm");
-					
-
 					// Charts
 					StationAnagRepository oStationAnagRepository = new StationAnagRepository();
 					StationDataRepository oStationDataRepository = new StationDataRepository();
@@ -99,8 +175,7 @@ public class OmirlDaemon {
 					// Get Start Date Time Filter
 					long lNowTime = new Date().getTime();
 					
-					// TODO: questo 15 è il numero di giorni metterlo in configurazione
-					long lInterval = 15 * 24 * 60 * 60 * 1000;
+					long lInterval = m_oConfig.chartTimeRangeDays * 24 * 60 * 60 * 1000;
 					Date oChartsStartDate = new Date(lNowTime-lInterval);				
 
 					// Get all the stations
@@ -111,9 +186,21 @@ public class OmirlDaemon {
 						
 						ArrayList<String> asOtherLinks = new ArrayList<>();
 						
-						// TEMPERATURE CHART
+						// Find other sensors links
 						if (oStationAnag.getMean_air_temp_every() != null) asOtherLinks.add("Termo");
-						if (oStationAnag.getRain_01h_every() != null) asOtherLinks.add("Pluvio");
+						if (oStationAnag.getRain_01h_every() != null) {
+							
+							// If there is rain
+							asOtherLinks.add("Pluvio");
+							// Check for Native Rain
+							String sNativeColumn = getRainColumnNameFromNative(oStationAnag.getRain_01h_every());
+							
+							if (sNativeColumn!=null) {
+								if (!sNativeColumn.isEmpty()) {
+									asOtherLinks.add("PluvioNative");
+								}
+							}
+						}
 						if (oStationAnag.getMean_creek_level_every() != null) asOtherLinks.add("Idro");
 						if (oStationAnag.getMean_wind_speed_every() != null) asOtherLinks.add("Vento");
 						if (oStationAnag.getHumidity_every() != null) asOtherLinks.add("Igro");
@@ -129,27 +216,8 @@ public class OmirlDaemon {
 							// TEMPERATURE CHART
 							if (oStationAnag.getMean_air_temp_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_air_temp", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie);
-								
-								oDataSerie.setName("Temperatura");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Temperatura");
-								oDataChart.setAxisYMaxValue(36.0);
-								oDataChart.setAxisYMinValue(-4.0);
-								oDataChart.setAxisYTickInterval(2.0);
-								oDataChart.setAxisYTitle("Temperatura (°C)");
-								oDataChart.setTooltipValueSuffix(" °C");
-								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "temp", oDateFormat);
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Termo");
+								SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oChartsStartDate);
 							}
 						}
 						catch(Exception oChartEx) {
@@ -161,31 +229,132 @@ public class OmirlDaemon {
 							// RAIN CHART
 							if (oStationAnag.getRain_01h_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
+								Date oStartDate = GetChartStartDate(7,true);
 								
-								DataSerie oDataSerie = new DataSerie();
-								oDataSerie.setType("column");
-								
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "rain_01h", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie, 0.1);
-								
-								oDataSerie.setName("Pioggia 1h");
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Pluvio");
+								DataChart oDataChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate, false, true);
+								DataSerie oDataSerie = oDataChart.getDataSeries().get(0); 
 
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Pioggia");
-								oDataChart.setAxisYMaxValue(150.0);
-								oDataChart.setAxisYMinValue(0.0);
-								oDataChart.setAxisYTickInterval(10.0);
-								oDataChart.setAxisYTitle("Pioggia Oraria (mm)");
-								oDataChart.setTooltipValueSuffix(" mm");
+								// Create Additional Axes
+								ChartAxis oAdditionalAxis = new ChartAxis();
+								oAdditionalAxis.setAxisYMaxValue(aoInfo.get(1).getAxisYMaxValue());
+								oAdditionalAxis.setAxisYMinValue(aoInfo.get(1).getAxisYMinValue());
+								oAdditionalAxis.setAxisYTickInterval(aoInfo.get(1).getAxisYTickInterval());
+								oAdditionalAxis.setAxisYTitle(aoInfo.get(1).getAxisYTitle());
+								oAdditionalAxis.setIsOpposite(true);
 								
+								oDataChart.getVerticalAxes().add(oAdditionalAxis);
 								
 								// Add Cumulated Serie
 								DataSerie oCumulatedSerie = new DataSerie();
-								oCumulatedSerie.setName("Cumulata");
-								oCumulatedSerie.setType("line");
+								oCumulatedSerie.setName(aoInfo.get(1).getName());
+								oCumulatedSerie.setType(aoInfo.get(1).getType());
+								// Refer to other axes
+								oCumulatedSerie.setAxisId(1);
+								
+								
+								for (int iPoints = 0; iPoints<oDataSerie.getData().size(); iPoints++) {
+									// Get The histogram point
+									Object [] oHistoPoint = oDataSerie.getData().get(iPoints);
+								
+									// Create the cumulated point
+									Object [] adPoint = new Object[2];
+									adPoint[0] = new Long((Long)oHistoPoint[0]);
+								
+									// Is the first?
+									if (iPoints==0)
+									{
+										// Initialize
+										adPoint[1] = new Double((Double)oHistoPoint[1]);
+									}
+									else 
+									{
+										// Sum to the previos value
+										Object [] adOldPoint = oCumulatedSerie.getData().get(iPoints-1);  
+										if (oHistoPoint[1]!=null){
+											adPoint[1] = new Double(((Double) adOldPoint[1] + (Double)oHistoPoint[1]));
+										}
+										else {
+											adPoint[1] = null;
+										}
+								
+									}
+
+									// Add the point to the serie
+									oCumulatedSerie.getData().add(adPoint);
+								}
+								
+								oDataChart.getDataSeries().add(oCumulatedSerie);
+								
+								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(1).getFolderName(), m_oDateFormat);
+							}
+						}
+						catch(Exception oChartEx) {
+							oChartEx.printStackTrace();
+						}
+						
+						
+						// RAIN NATIVE CHART
+						try {
+							
+							String sNativeColumn = "";
+							
+							if (oStationAnag.getRain_01h_every() != null) {
+								sNativeColumn = getRainColumnNameFromNative(oStationAnag.getRain_01h_every());
+							}
+							
+							if (sNativeColumn!=null) {
+								if (!sNativeColumn.isEmpty()) {
+									
+									List<ChartInfo> aoInfo = getChartInfoFromSensorColumn(sNativeColumn);
+								
+									// TODO: Controllo che ci siano almeno i 2 ChartInfo che mi aspetto o lascio gestire l'eccezione?!?
+									
+									// Create the Chart
+								DataChart oDataChart = new DataChart();
+								
+									// Create Main Data Serie
+								DataSerie oDataSerie = new DataSerie();
+									oDataSerie.setType(aoInfo.get(0).getType());
+								
+
+									// Get Data from the Db: for rain1h only hourly rate
+									List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), sNativeColumn, oChartsStartDate);
+									// Convert points to Data Serie
+									DataSeriePointToDataSerie(aoPoints,oDataSerie, aoInfo.get(0).getConversionFactor());
+									// Set Serie Name
+									oDataSerie.setName(aoInfo.get(0).getName());
+									// Main Axis Reference
+									oDataSerie.setAxisId(0);
+									// Add serie to the chart
+								oDataChart.getDataSeries().add(oDataSerie);
+									// Set title
+								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+									// Subtitle
+									oDataChart.setSubTitle(aoInfo.get(0).getSubtitle());
+									// Main Axes Values
+									oDataChart.setAxisYMaxValue(aoInfo.get(0).getAxisYMaxValue());
+									oDataChart.setAxisYMinValue(aoInfo.get(0).getAxisYMinValue());
+									oDataChart.setAxisYTickInterval(aoInfo.get(0).getAxisYTickInterval());
+									oDataChart.setAxisYTitle(aoInfo.get(0).getAxisYTitle());
+									oDataChart.setTooltipValueSuffix(aoInfo.get(0).getTooltipValueSuffix());
+									
+									// Create Additional Axes
+									ChartAxis oAdditionalAxis = new ChartAxis();
+									oAdditionalAxis.setAxisYMaxValue(aoInfo.get(1).getAxisYMaxValue());
+									oAdditionalAxis.setAxisYMinValue(aoInfo.get(1).getAxisYMinValue());
+									oAdditionalAxis.setAxisYTickInterval(aoInfo.get(1).getAxisYTickInterval());
+									oAdditionalAxis.setAxisYTitle(aoInfo.get(1).getAxisYTitle());
+									oAdditionalAxis.setIsOpposite(true);
+								
+									oDataChart.getVerticalAxes().add(oAdditionalAxis);
+								
+								// Add Cumulated Serie
+								DataSerie oCumulatedSerie = new DataSerie();
+									oCumulatedSerie.setName(aoInfo.get(1).getName());
+									oCumulatedSerie.setType(aoInfo.get(1).getType());
+									// Refer to other axes
+									oCumulatedSerie.setAxisId(1);
 								
 								
 								for (int iPoints = 0; iPoints<oDataSerie.getData().size(); iPoints++) {
@@ -206,7 +375,13 @@ public class OmirlDaemon {
 									{
 										// Sum to the previos value
 										Object [] adOldPoint = oCumulatedSerie.getData().get(iPoints-1);  
-										adPoint[1] = ((Double) adOldPoint[1] + (Double)oHistoPoint[1]);
+											if (oHistoPoint[1]!=null){
+												adPoint[1] = new Double(((Double) adOldPoint[1] + (Double)oHistoPoint[1]));
+											}
+											else {
+												adPoint[1] = null;
+											}
+											
 									}
 									
 									// Add the point to the serie
@@ -214,16 +389,16 @@ public class OmirlDaemon {
 								}
 								
 								oDataChart.getDataSeries().add(oCumulatedSerie);
+									oDataChart.getOtherChart().addAll(asOtherLinks);
+									serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
 								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "rain1h", oDateFormat);
 							}
+						}
+
 						}
 						catch(Exception oChartEx) {
 							oChartEx.printStackTrace();
 						}			
-						
-						
 						
 						
 						try {
@@ -231,24 +406,8 @@ public class OmirlDaemon {
 							// HYDRO CHART
 							if (oStationAnag.getMean_creek_level_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_creek_level", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie, 0.1);
-								
-								oDataSerie.setName("Livello Idrometrico");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Livello Idrometrico");
-								oDataChart.setAxisYMaxValue(10.0);
-								oDataChart.setAxisYMinValue(-1.0);
-								oDataChart.setAxisYTickInterval(1.0);
-								oDataChart.setAxisYTitle("Livello Idrometrico (m)");
-								oDataChart.setTooltipValueSuffix(" m");
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Idro");
+								DataChart oDataChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oChartsStartDate, false);
 								
 								CreekThreshold oThreshold = m_aoThresholds.get(oStationAnag.getStation_code());
 								
@@ -264,7 +423,7 @@ public class OmirlDaemon {
 									oDataChart.setAxisYTickInterval(dAxisTickInterval);
 									
 									ChartLine oOrange = new ChartLine();
-									oOrange.setColor("#FF6600");
+									oOrange.setColor("#FFC020");
 									oOrange.setName("Soglia Arancione");
 									oOrange.setValue(oThreshold.getOrange());
 									
@@ -277,8 +436,7 @@ public class OmirlDaemon {
 									oDataChart.getHorizontalLines().add(oRed);
 								}
 								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "idro", oDateFormat);
+								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
 							}
 						}
 						catch(Exception oChartEx) {
@@ -292,27 +450,29 @@ public class OmirlDaemon {
 							// WIND CHART
 							if (oStationAnag.getMean_wind_speed_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
+								lInterval = 7 * 24 * 60 * 60 * 1000;
+								Date oWindStartDate = new Date(lNowTime-lInterval);				
 								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_wind_speed", oChartsStartDate);
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Vento");
+								DataChart oWindChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oWindStartDate,false,false);
 								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie,3.6);
+								if (aoInfo.size()>1) {
+									ChartInfo oGustInfo = aoInfo.get(1);
 								
-								oDataSerie.setName("Velocità del Vento");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Vento");
-								oDataChart.setAxisYMaxValue(150.0);
-								oDataChart.setAxisYMinValue(0.0);
-								oDataChart.setAxisYTickInterval(10.0);
-								oDataChart.setAxisYTitle("Velocità (km/h)");
-								oDataChart.setTooltipValueSuffix(" km/h");
+									DataSerie oGustSerie = new DataSerie();
+									// Get Data from the Db: for rain1h only hourly rate
+									List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), oGustInfo.getColumnName(), oWindStartDate);
+									// Convert points to Data Serie
+									DataSeriePointToDataSerie(aoPoints,oGustSerie, oGustInfo.getConversionFactor());
+									// Set Serie Name
+									oGustSerie.setName(oGustInfo.getName());
+									// Main Axis Reference
+									oGustSerie.setAxisId(0);
+									// Add serie to the chart
+									oWindChart.getDataSeries().add(oGustSerie);
+								}
 								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "wind", oDateFormat);
+								serializeStationChart(oWindChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
 							}
 						}
 						catch(Exception oChartEx) {
@@ -320,33 +480,13 @@ public class OmirlDaemon {
 						}							
 						
 
-						
 						try {
 							
 							// UMIDITY CHART
 							if (oStationAnag.getHumidity_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "humidity", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie);
-								
-								oDataSerie.setName("Umidità Relativa");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Umidità");
-								oDataChart.setAxisYMaxValue(100.0);
-								oDataChart.setAxisYMinValue(0.0);
-								oDataChart.setAxisYTickInterval(10.0);
-								oDataChart.setAxisYTitle("Umidità Relativa (%)");
-								oDataChart.setTooltipValueSuffix(" %");
-								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "igro", oDateFormat);
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Igro");
+								SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oChartsStartDate);
 							}
 						}
 						catch(Exception oChartEx) {
@@ -361,27 +501,8 @@ public class OmirlDaemon {
 							// RADIATION CHART
 							if (oStationAnag.getSolar_radiation_pwr_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "solar_radiation_pwr", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie, 10.0);
-								
-								oDataSerie.setName("Radiazione Solare Media");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Radiometri");
-								oDataChart.setAxisYMaxValue(1200.0);
-								oDataChart.setAxisYMinValue(0.0);
-								oDataChart.setAxisYTickInterval(50.0);
-								oDataChart.setAxisYTitle("Radiazione (W/m2)");
-								oDataChart.setTooltipValueSuffix(" W/m2");
-								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "radio", oDateFormat);
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Radio");
+								SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oChartsStartDate);
 							}
 						}
 						catch(Exception oChartEx) {
@@ -395,27 +516,8 @@ public class OmirlDaemon {
 							// BAGNATURA FOGLIARE CHART
 							if (oStationAnag.getLeaf_wetness_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "leaf_wetness", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie);
-								
-								oDataSerie.setName("Bagnatura Fogliare");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Percentuale");
-								oDataChart.setAxisYMaxValue(100.0);
-								oDataChart.setAxisYMinValue(0.0);
-								oDataChart.setAxisYTickInterval(10.0);
-								oDataChart.setAxisYTitle("Bagnatura Fogliare (%)");
-								oDataChart.setTooltipValueSuffix(" %");
-								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "leafs", oDateFormat);
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Foglie");
+								SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oChartsStartDate);
 							}
 						}
 						catch(Exception oChartEx) {
@@ -427,27 +529,8 @@ public class OmirlDaemon {
 							// PRESSIONE CHART
 							if (oStationAnag.getMean_sea_level_press_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_sea_level_press", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie);
-								
-								oDataSerie.setName("Pressione Atmosferica");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Pressione al livello del mare");
-								oDataChart.setAxisYMaxValue(1040.0);
-								oDataChart.setAxisYMinValue(980.0);
-								oDataChart.setAxisYTickInterval(5.0);
-								oDataChart.setAxisYTitle("Pressione al livello del mare (hPa)");
-								oDataChart.setTooltipValueSuffix(" hPa");
-								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "press", oDateFormat);
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Press");
+								SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oChartsStartDate);
 							}
 						}
 						catch(Exception oChartEx) {
@@ -460,27 +543,8 @@ public class OmirlDaemon {
 							// BATTERY CHART
 							if (oStationAnag.getBattery_voltage_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "battery_voltage", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie);
-								
-								oDataSerie.setName("Tensione Batteria");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Tensione Batteria");
-								oDataChart.setAxisYMaxValue(15.0);
-								oDataChart.setAxisYMinValue(7.0);
-								oDataChart.setAxisYTickInterval(1.0);
-								oDataChart.setAxisYTitle("Tensione Batteria (V)");
-								oDataChart.setTooltipValueSuffix(" V");
-								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "batt", oDateFormat);
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Batt");
+								SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oChartsStartDate);
 							}
 						}
 						catch(Exception oChartEx) {
@@ -493,87 +557,29 @@ public class OmirlDaemon {
 							// MARE CHART
 							if (oStationAnag.getBattery_voltage_every() != null) {
 								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_wave_heigth", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie);
-								
-								oDataSerie.setName("Lunghezza d'Onda");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Stato del Mare");
-								oDataChart.setAxisYMaxValue(15.0);
-								oDataChart.setAxisYMinValue(7.0);
-								oDataChart.setAxisYTickInterval(1.0);
-								oDataChart.setAxisYTitle("Lunghezza Media Onda(m)");
-								oDataChart.setTooltipValueSuffix(" m");
-								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), "boa", oDateFormat);
+								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Boa");
+								SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oChartsStartDate);
 							}
 						}
 						catch(Exception oChartEx) {
 							oChartEx.printStackTrace();
 						}	
-						
-						
-						/*
-						try {
-							
-							// SNOW CHART
-							if (oStationAnag.get != null) {
-								
-								DataChart oDataChart = new DataChart();
-								
-								DataSerie oDataSerie = new DataSerie();	
-								oDataSerie.setType("line");
-								List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), "mean_snow_depth", oChartsStartDate);
-								
-								DataSeriePointToDataSerie(aoPoints,oDataSerie);
-								
-								oDataSerie.setName("Lunghezza d'Onda");
-
-								oDataChart.getDataSeries().add(oDataSerie);
-								oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-								oDataChart.setSubTitle("Stato del Mare");
-								oDataChart.setAxisYMaxValue(15.0);
-								oDataChart.setAxisYMinValue(7.0);
-								oDataChart.setAxisYTickInterval(1.0);
-								oDataChart.setAxisYTitle("Lunghezza Media Onda(m)");
-								oDataChart.setTooltipValueSuffix(" m");
-								
-								oDataChart.getOtherChart().addAll(asOtherLinks);
-								serializeStationChart(oDataChart,oConfig, oStationAnag.getStation_code(), "snow", oDateFormat);
-							}
-						}
-						catch(Exception oChartEx) {
-							oChartEx.printStackTrace();
-						}							
-						
-						*/
-						
-						
 					}
 
 					// Get The stations
 					StationLastDataRepository oLastRepo = new StationLastDataRepository();
 					
-					SerializeSensorLast("rain1h", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("temp", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("idro", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("igro", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("radio", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("leafs", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("batt", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("press", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("snow", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("boa", oLastRepo,  m_oConfig, oDateFormat);
-					SerializeSensorLast("wind", oLastRepo,  m_oConfig, oDateFormat);
-					
+					SerializeSensorLast("rain1h", oLastRepo);
+					SerializeSensorLast("temp", oLastRepo);
+					SerializeSensorLast("idro", oLastRepo);
+					SerializeSensorLast("igro", oLastRepo);
+					SerializeSensorLast("radio", oLastRepo);
+					SerializeSensorLast("leafs", oLastRepo);
+					SerializeSensorLast("batt", oLastRepo);
+					SerializeSensorLast("press", oLastRepo);
+					SerializeSensorLast("snow", oLastRepo);
+					SerializeSensorLast("boa", oLastRepo);
+					SerializeSensorLast("wind", oLastRepo);
 					
 
 				}
@@ -600,6 +606,109 @@ public class OmirlDaemon {
 		}		
 	}
 
+
+	/**
+	 * Gets the Date to use for the query to select data for charts
+	 * @param iDays Number of days of the chart
+	 * @param bFixedWindow Flag to know if the window is fixed or mobile
+	 * @return Date to use
+	 */
+	Date GetChartStartDate(int iDays, boolean bFixedWindow) {
+		
+		// Compute interval
+		long lInterval = iDays * 24 * 60 * 60 * 1000;
+		
+		// Create now and get ms
+		Date oNow = new Date();
+		long lNow = oNow.getTime();
+		
+		// Compute start date
+		long lStartDate = lNow - lInterval;
+		
+		DateTimeZone.setDefault(DateTimeZone.UTC);
+		
+		// Create date
+		DateTime oRetDate = new DateTime(lStartDate);
+		//LocalDateTime oLocalRetDate = new LocalDateTime(lStartDate);
+		//DateTime oRetDate = new LocalDateTime(lStartDate).toDateTime();  
+		
+		// If is fixed
+		if (bFixedWindow) {
+			// Starts at 00:00
+			oRetDate = oRetDate.withHourOfDay(0);
+			oRetDate = oRetDate.withMinuteOfHour(0);
+			oRetDate = oRetDate.withSecondOfMinute(0);
+			oRetDate = oRetDate.withMillisOfSecond(0);
+		}
+		
+		long lRetDate = oRetDate.getMillis();
+		Date oTest = new Date(lRetDate);
+		
+		// Return Date
+		return oRetDate.toDate();
+	}
+	
+	/**
+	 * Saves a Standard Chart
+	 * @param aoInfo
+	 * @param oStationAnag
+	 * @param asOtherLinks
+	 * @param oStationDataRepository
+	 * @param oChartsStartDate
+	 */
+	DataChart SaveStandardChart( List<ChartInfo> aoInfo, StationAnag oStationAnag, ArrayList<String> asOtherLinks, StationDataRepository oStationDataRepository, Date oChartsStartDate) {
+		return SaveStandardChart(aoInfo, oStationAnag, asOtherLinks, oStationDataRepository, oChartsStartDate, true);
+	}
+	
+	DataChart SaveStandardChart( List<ChartInfo> aoInfo, StationAnag oStationAnag, ArrayList<String> asOtherLinks, StationDataRepository oStationDataRepository, Date oChartsStartDate, boolean bSave) {
+		return SaveStandardChart(aoInfo, oStationAnag, asOtherLinks, oStationDataRepository, oChartsStartDate, true, false);
+	}
+	
+	/**
+	 * Saves a Standard Chart
+	 * @param aoInfo
+	 * @param oStationAnag
+	 * @param asOtherLinks
+	 * @param oStationDataRepository
+	 * @param oChartsStartDate
+	 * @param bSave
+	 * @return
+	 */
+	DataChart SaveStandardChart( List<ChartInfo> aoInfo, StationAnag oStationAnag, ArrayList<String> asOtherLinks, StationDataRepository oStationDataRepository, Date oChartsStartDate, boolean bSave, boolean bHourlyStep) {
+		DataChart oDataChart = new DataChart();		
+		DataSerie oDataSerie = new DataSerie();
+		
+		oDataSerie.setType(aoInfo.get(0).getType());
+		List<DataSeriePoint> aoPoints = null; 
+		
+		if (bHourlyStep) {
+			aoPoints = oStationDataRepository.getHourlyDataSerie(oStationAnag.getStation_code(), aoInfo.get(0).getColumnName(), oChartsStartDate);
+		}
+		else {
+			aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), aoInfo.get(0).getColumnName(), oChartsStartDate);
+		}
+		
+		
+		DataSeriePointToDataSerie(aoPoints,oDataSerie, aoInfo.get(0).getConversionFactor());
+		
+		oDataSerie.setName(aoInfo.get(0).getName());
+
+		oDataChart.getDataSeries().add(oDataSerie);
+		oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
+		oDataChart.setSubTitle(aoInfo.get(0).getSubtitle());
+		oDataChart.setAxisYMaxValue(aoInfo.get(0).getAxisYMaxValue());
+		oDataChart.setAxisYMinValue(aoInfo.get(0).getAxisYMinValue());
+		oDataChart.setAxisYTickInterval(aoInfo.get(0).getAxisYTickInterval());
+		oDataChart.setAxisYTitle(aoInfo.get(0).getAxisYTitle());
+		oDataChart.setTooltipValueSuffix(aoInfo.get(0).getTooltipValueSuffix());
+		
+		oDataChart.getOtherChart().addAll(asOtherLinks);
+		if (bSave) serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
+		
+		return oDataChart;
+		
+	}
+
 	/**
 	 * Peforms tasks that the Daemon has to do daily
 	 */
@@ -620,9 +729,73 @@ public class OmirlDaemon {
 		
 		RefreshThresholds();
 
+		RefreshStationTables();
+
 		//DeleteTask();
 	}
 	
+	/**
+	 * Refresh station anag tables
+	 */
+	public void RefreshStationTables() {
+		try {
+			
+			StationAnagRepository oStationAnagRepository = new StationAnagRepository();
+			
+			List<AnagTableInfo> aoTables = m_oConfig.getAnagTablesInfo();
+			
+			for (int iTables=0; iTables<aoTables.size(); iTables++) {
+				AnagTableInfo oTableInfo = aoTables.get(iTables);
+				
+				List<StationAnag> aoStations = oStationAnagRepository.getListByType(oTableInfo.getColumnName());
+				
+				SensorListTableViewModel oTable = new SensorListTableViewModel();
+				oTable.setSensorTye(oTableInfo.getSensorType());
+				
+				for (int iStations=0; iStations<aoStations.size(); iStations++) {
+					SensorListTableRowViewModel oVM = getSensorListTableRowViewModel(aoStations.get(iStations));
+					oTable.getTableRows().add(oVM);
+				}
+				
+				String sFullPath = m_oConfig.getFileRepositoryPath()+"/tables/list";
+				
+				if (sFullPath != null)  {
+					String sFileName = oTable.getSensorTye() + ".xml"; 
+					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, oTable);
+				}				
+			}
+			
+			
+		} catch (Exception e) {
+			
+			System.out.println("RefreshStationTables Exception");
+			e.printStackTrace();
+			return;
+		}
+	}
+	
+	/**
+	 * Converts a Station Anag in a SensorListTableRow View Model
+	 * @param oStationAnag
+	 * @return
+	 */
+	public SensorListTableRowViewModel getSensorListTableRowViewModel(StationAnag oStationAnag) {
+		SensorListTableRowViewModel oVM = new SensorListTableRowViewModel();
+		
+		oVM.setArea("");
+		oVM.setBasin(oStationAnag.getRiver());
+		oVM.setDistrict(oStationAnag.getDistrict());
+		oVM.setMunicipality(oStationAnag.getMunicipality());
+		oVM.setName(oStationAnag.getName());
+		oVM.setNetwork("");
+		oVM.setStationCode(oStationAnag.getStation_code());
+		
+		return oVM;
+	}
+
+	/**
+	 * Reloads configuration
+	 */
 	public void RefreshConfiguration() {
 		try {
 			// Refresh Configuration File
@@ -630,12 +803,15 @@ public class OmirlDaemon {
 			m_oConfig = (OmirlDaemonConfiguration) SerializationUtils.deserializeXMLToObject(m_sConfigurationFile);
 		} catch (Exception e) {
 			
-			System.out.println("OmirlDaemon - Error reading conf file. Closing daemon");
+			System.out.println("RefreshConfiguration Exception");
 			e.printStackTrace();
 			return;
 		}		
 	}
 	
+	/**
+	 * Reads thresholds from db
+	 */
 	public void RefreshThresholds() {
 		try {
 			
@@ -667,6 +843,12 @@ public class OmirlDaemon {
 		}		
 	}
 
+	/**
+	 * Checks if date is changed
+	 * @param oActualDate
+	 * @param oLastDate
+	 * @return
+	 */
 	public boolean DayChanged(Date oActualDate, Date oLastDate)
 	{
 		if (oLastDate==null) return true;
@@ -680,11 +862,24 @@ public class OmirlDaemon {
 		return false;
 	}
 	
+	/**
+	 * Converts Points from db to points for xml exchange format
+	 * @param aoPoints
+	 * @param oDataSerie
+	 */
 	public void DataSeriePointToDataSerie(List<DataSeriePoint> aoPoints, DataSerie oDataSerie) {
 		DataSeriePointToDataSerie(aoPoints, oDataSerie, 1.0);
 	}
 
+	/**
+	 * Converts Points from db to points for xml exchange format
+	 * @param aoPoints
+	 * @param oDataSerie
+	 * @param dConversionFactor
+	 */
 	public void DataSeriePointToDataSerie(List<DataSeriePoint> aoPoints, DataSerie oDataSerie, double dConversionFactor) {
+		
+		try {
 		if (aoPoints != null) {
 			for (int iPoints = 0; iPoints<aoPoints.size(); iPoints++) {
 				Object [] adPoint = new Object[2];
@@ -692,6 +887,29 @@ public class OmirlDaemon {
 				adPoint[1] = new Double(aoPoints.get(iPoints).getVal())*dConversionFactor;
 				oDataSerie.getData().add(adPoint);
 			}
+				
+				if (aoPoints.size()>1){
+					DateTime oNow = new DateTime();
+					long lFirstStep = aoPoints.get(0).getRefDate().getTime();
+					long lSecondStep = aoPoints.get(1).getRefDate().getTime();
+					long lStep = lSecondStep-lFirstStep;
+					
+					long lNow = oNow.getMillis();
+					
+					long lTime = aoPoints.get(aoPoints.size()-1).getRefDate().getTime();
+					lTime+=lStep;
+					
+					for (; lTime<lNow; lTime+=lStep) {
+						Object [] adPoint = new Object[2];
+						adPoint[0] = new Long(lTime);
+						adPoint[1] = null;
+						oDataSerie.getData().add(adPoint);
+					}
+				}
+			}					
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
 		}		
 	}
 	
@@ -702,7 +920,7 @@ public class OmirlDaemon {
 	 * @param oConfig
 	 * @param oDateFormat
 	 */
-	public void SerializeSensorLast(String sName, StationLastDataRepository oLastRepo, OmirlDaemonConfiguration oConfig, DateFormat oDateFormat) {
+	public void SerializeSensorLast(String sName, StationLastDataRepository oLastRepo) {
 		
 		
 		try {
@@ -729,10 +947,10 @@ public class OmirlDaemon {
 				
 				Date oDate = new Date();
 				
-				String sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/stations/" + sName,oDate);
+				String sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/stations/" + sName,oDate);
 				
 				if (sFullPath != null)  {
-					String sFileName = sName+oDateFormat.format(oDate)+".xml"; 
+					String sFileName = sName+m_oDateFormat.format(oDate)+".xml"; 
 					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoSensoViewModel);
 				}
 			}
@@ -845,11 +1063,11 @@ public class OmirlDaemon {
 				
 			}
 		}
-		else if (sType == "rain") {
-			for (SensorViewModel oViewModel : aoSensorList) {
-				oViewModel.setValue(oViewModel.getValue()/10.0);
-			}
-		}		
+//		else if (sType == "rain") {
+//			for (SensorViewModel oViewModel : aoSensorList) {
+//				oViewModel.setValue(oViewModel.getValue()/10.0);
+//			}
+//		}		
 		else if (sType == "radio") {
 			for (SensorViewModel oViewModel : aoSensorList) {
 				oViewModel.setValue(oViewModel.getValue()*10.0);
@@ -902,11 +1120,18 @@ public class OmirlDaemon {
 		}
 	}
 	
+	/**
+	 * Serializes a station Chart on disk
+	 * @param oChart
+	 * @param oConfig
+	 * @param sStationCode
+	 * @param sChartName
+	 * @param oDateFormat
+	 */
 	public void serializeStationChart(DataChart oChart, OmirlDaemonConfiguration oConfig, String sStationCode, String sChartName, DateFormat oDateFormat) {
 		try {
 			Date oDate = new Date();
 			
-			//String sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/charts/" + sStationCode + "/" + sChartName,oDate);
 			String sFullPath = getSubPath(oConfig.getFileRepositoryPath()+"/charts" ,oDate) + "/" + sStationCode + "/" + sChartName;
 			
 			File oPath = new File(sFullPath);
@@ -927,11 +1152,399 @@ public class OmirlDaemon {
 		
 	}
 	
+	/**
+	 * Writes a Sample Configuration
+	 */
 	public static void WriteSampleConfig() {
 		OmirlDaemonConfiguration oConfig = new OmirlDaemonConfiguration();
 		oConfig.setFileRepositoryPath("C:\\temp\\Omirl\\Files");
 		oConfig.setMinutesPolling(2);
 		oConfig.setChartTimeRangeDays(16);
+		
+		ChartInfo oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(150.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(5.0);
+		oInfo.setAxisYTitle("Pioggia 5m (mm)");
+		oInfo.setColumnName("rain_05m");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rainnative");
+		oInfo.setName("Pioggia 5m");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("column");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(600.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(20.0);
+		oInfo.setAxisYTitle("Precipitazione Cumulata (mm)");
+		oInfo.setColumnName("rain_05m");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rainnative");
+		oInfo.setName("Cumulata");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa Cumulata");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(150.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(5.0);
+		oInfo.setAxisYTitle("Pioggia 10m (mm)");
+		oInfo.setColumnName("rain_10m");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rainnative");
+		oInfo.setName("Pioggia 10m");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("column");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(600.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(20.0);
+		oInfo.setAxisYTitle("Precipitazione Cumulata (mm)");
+		oInfo.setColumnName("rain_10m");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rainnative");
+		oInfo.setName("Cumulata");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa Cumulata");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(150.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(5.0);
+		oInfo.setAxisYTitle("Pioggia 15m (mm)");
+		oInfo.setColumnName("rain_15m");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rainnative");
+		oInfo.setName("Pioggia 15m");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("column");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(600.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(20.0);
+		oInfo.setAxisYTitle("Precipitazione Cumulata (mm)");
+		oInfo.setColumnName("rain_15m");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rainnative");
+		oInfo.setName("Cumulata");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa Cumulata");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(150.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(5.0);
+		oInfo.setAxisYTitle("Pioggia 30m (mm)");
+		oInfo.setColumnName("rain_30m");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rainnative");
+		oInfo.setName("Pioggia 30m");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("column");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(600.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(20.0);
+		oInfo.setAxisYTitle("Precipitazione Cumulata (mm)");
+		oInfo.setColumnName("rain_30m");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rainnative");
+		oInfo.setName("Cumulata");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa Cumulata");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(150.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(5.0);
+		oInfo.setAxisYTitle("Pioggia Oraria (mm)");
+		oInfo.setColumnName("rain_01h");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rain1h");
+		oInfo.setName("Pioggia 1h");
+		oInfo.setSensorType("Pluvio");
+		oInfo.setSubtitle("Pioggia");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("column");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(600.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(20.0);
+		oInfo.setAxisYTitle("Precipitazione Cumulata (mm)");
+		oInfo.setColumnName("rain_01h");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("rain1h");
+		oInfo.setName("Cumulata");
+		oInfo.setSensorType("PluvioNative");
+		oInfo.setSubtitle("Pioggia Nativa Cumulata");
+		oInfo.setTooltipValueSuffix(" mm");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(36.0);
+		oInfo.setAxisYMinValue(-4.0);
+		oInfo.setAxisYTickInterval(2.0);
+		oInfo.setAxisYTitle("Temperatura (°C)");
+		oInfo.setColumnName("mean_air_temp");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("temp");
+		oInfo.setName("Temperatura");
+		oInfo.setSensorType("Termo");
+		oInfo.setSubtitle("Temperatura");
+		oInfo.setTooltipValueSuffix(" °C");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+
+
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(10.0);
+		oInfo.setAxisYMinValue(-1.0);
+		oInfo.setAxisYTickInterval(1.0);
+		oInfo.setAxisYTitle("Livello Idrometrico (m)");
+		oInfo.setColumnName("mean_creek_level");
+		oInfo.setConversionFactor(0.1);
+		oInfo.setFolderName("idro");
+		oInfo.setName("Livello Idrometrico");
+		oInfo.setSensorType("Idro");
+		oInfo.setSubtitle("Livello Idrometrico");
+		oInfo.setTooltipValueSuffix(" m");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(150.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(10.0);
+		oInfo.setAxisYTitle("Velocità (km/h)");
+		oInfo.setColumnName("mean_wind_speed");
+		oInfo.setConversionFactor(3.6);
+		oInfo.setFolderName("wind");
+		oInfo.setName("Velocità del Vento");
+		oInfo.setSensorType("Vento");
+		oInfo.setSubtitle("Vento");
+		oInfo.setTooltipValueSuffix(" km/h");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);		
+		
+		
+
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(100.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(10.0);
+		oInfo.setAxisYTitle("Umidità Relativa (%)");
+		oInfo.setColumnName("humidity");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("igro");
+		oInfo.setName("Umidità Relativa");
+		oInfo.setSensorType("Igro");
+		oInfo.setSubtitle("Umidità");
+		oInfo.setTooltipValueSuffix(" %");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);		
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(1200.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(50.0);
+		oInfo.setAxisYTitle("Radiazione (W/m2)");
+		oInfo.setColumnName("solar_radiation_pwr");
+		oInfo.setConversionFactor(10.0);
+		oInfo.setFolderName("radio");
+		oInfo.setName("Radiazione Solare Media");
+		oInfo.setSensorType("Radio");
+		oInfo.setSubtitle("Radiometri");
+		oInfo.setTooltipValueSuffix(" W/m2");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);				
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(100.0);
+		oInfo.setAxisYMinValue(0.0);
+		oInfo.setAxisYTickInterval(10.0);
+		oInfo.setAxisYTitle("Bagnatura Fogliare (%)");
+		oInfo.setColumnName("leaf_wetness");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("leafs");
+		oInfo.setName("Bagnatura Fogliare");
+		oInfo.setSensorType("Foglie");
+		oInfo.setSubtitle("Percentuale");
+		oInfo.setTooltipValueSuffix(" %");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);	
+		
+	
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(1040.0);
+		oInfo.setAxisYMinValue(980.0);
+		oInfo.setAxisYTickInterval(5.0);
+		oInfo.setAxisYTitle("Pressione al livello del mare (hPa)");
+		oInfo.setColumnName("mean_sea_level_press");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("press");
+		oInfo.setName("Pressione Atmosferica");
+		oInfo.setSensorType("Press");
+		oInfo.setSubtitle("Pressione al livello del mare");
+		oInfo.setTooltipValueSuffix(" hPa");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(15.0);
+		oInfo.setAxisYMinValue(7.0);
+		oInfo.setAxisYTickInterval(1.0);
+		oInfo.setAxisYTitle("Tensione Batteria (V)");
+		oInfo.setColumnName("battery_voltage");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("batt");
+		oInfo.setName("Tensione Batteria");
+		oInfo.setSensorType("Batt");
+		oInfo.setSubtitle("Tensione Batteria");
+		oInfo.setTooltipValueSuffix(" V");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		
+		oInfo = new ChartInfo();
+		oInfo.setAxisYMaxValue(15.0);
+		oInfo.setAxisYMinValue(7.0);
+		oInfo.setAxisYTickInterval(1.0);
+		oInfo.setAxisYTitle("Lunghezza Media Onda(m)");
+		oInfo.setColumnName("mean_wave_heigth");
+		oInfo.setConversionFactor(1.0);
+		oInfo.setFolderName("boa");
+		oInfo.setName("Lunghezza d'Onda");
+		oInfo.setSensorType("Boa");
+		oInfo.setSubtitle("Stato del Mare");
+		oInfo.setTooltipValueSuffix(" m");
+		oInfo.setType("line");
+		
+		oConfig.getChartsInfo().add(oInfo);
+		
+		AnagTableInfo oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Pluvio");
+		oTableInfo.setColumnName("rain_01h_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Termo");
+		oTableInfo.setColumnName("mean_air_temp_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Idro");
+		oTableInfo.setColumnName("mean_creek_level_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Vento");
+		oTableInfo.setColumnName("mean_wind_speed_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Igro");
+		oTableInfo.setColumnName("humidity_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Radio");
+		oTableInfo.setColumnName("solar_radiation_pwr_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Foglie");
+		oTableInfo.setColumnName("leaf_wetness_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Press");
+		oTableInfo.setColumnName("mean_sea_level_press_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setSensorType("Batt");
+		oTableInfo.setColumnName("battery_voltage_every");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		/*
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setColumnName("Boa");
+		oTableInfo.setSensorType("");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		
+		oTableInfo = new AnagTableInfo();
+		oTableInfo.setColumnName("Neve");
+		oTableInfo.setSensorType("");
+		
+		oConfig.getAnagTablesInfo().add(oTableInfo);
+		*/
+		
+		
 		
 		try {
 			SerializationUtils.serializeObjectToXML("C:\\temp\\Omirl\\OmirlDaemonConfigSAMPLE.xml", oConfig);
@@ -942,13 +1555,18 @@ public class OmirlDaemon {
 	
 	public static void Test() {
 		try {
-//			StationAnagRepository oRepo = new StationAnagRepository();
-//			StationAnag oStation = oRepo.selectByStationCode("AGORR");
-//			
-//			if (oStation != null) {
-//				System.out.println(oStation.getName());
-//			}
-//			
+			StationAnagRepository oRepo = new StationAnagRepository();
+			
+			List<StationAnag> aoRains = oRepo.getListByType("rain_01h_every");
+			
+			System.out.println(aoRains.size());
+			
+			StationAnag oStation = oRepo.selectByStationCode("AGORR");
+			
+			if (oStation != null) {
+				System.out.println(oStation.getName());
+			}
+			
 			StationLastDataRepository oLastRepo = new StationLastDataRepository();
 			
 			List<StationLastData> aoLastValues = oLastRepo.SelectAll(StationLastData.class);

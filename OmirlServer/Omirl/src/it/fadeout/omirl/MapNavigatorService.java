@@ -7,12 +7,16 @@ import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
+import it.fadeout.omirl.business.config.RadarLinkConfig;
+import it.fadeout.omirl.business.config.SatelliteLinkConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.StaticLinkConfig;
 import it.fadeout.omirl.viewmodels.HydroLink;
 import it.fadeout.omirl.viewmodels.MapLink;
 import it.fadeout.omirl.viewmodels.MapThirdLevelLink;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
+import it.fadeout.omirl.viewmodels.RadarLink;
+import it.fadeout.omirl.viewmodels.SatelliteLink;
 import it.fadeout.omirl.viewmodels.SensorLink;
 import it.fadeout.omirl.viewmodels.StaticLink;
 
@@ -311,4 +315,196 @@ public class MapNavigatorService {
 	}	
 	
 	
+	/**
+	 * Gets the first level of dynamic layers
+	 * @return
+	 */
+	@GET
+	@Path("/radar")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<RadarLink> getRadarFirstLevelLinks(@HeaderParam("x-session-token") String sSessionId) {
+		
+		ArrayList<RadarLink> aoRadarLinks = new ArrayList<>();
+
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (RadarLinkConfig oLinkConfig : oConfig.getRadarLinks()) {
+					aoRadarLinks.add(oLinkConfig.getRadarLink());
+				}
+			}			
+		}
+		
+		return aoRadarLinks;
+	}
+	
+	@GET
+	@Path("/radar/{linkcode}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<RadarLink> getRadarSecondLevelLinks(@PathParam("linkcode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
+		ArrayList<RadarLink> aoRadarLinks = new ArrayList<>();
+
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (RadarLinkConfig oLinkConfig : oConfig.getRadarLinks()) {
+					
+					if (oLinkConfig.getLinkCode().equals(sLinkCode)) {
+						for (RadarLinkConfig oSecondLevelLink : oLinkConfig.getChildren()) {
+							RadarLink oHydroSecondLink = oSecondLevelLink.getRadarLink();
+							oHydroSecondLink.setParentLinkCode(sLinkCode);
+							oHydroSecondLink.setParentDescription(oLinkConfig.getDescription());
+							aoRadarLinks.add(oHydroSecondLink);
+						}
+						break;
+						
+					}
+				}
+			}
+		}
+		
+		return aoRadarLinks;
+	}
+	
+	@GET
+	@Path("/radarthird/{linkCode}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<RadarLink> getRadarThirdLevelLinks(@PathParam("linkCode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
+		ArrayList<RadarLink> aoRadarThirdLevelLinks = new ArrayList<>();
+		
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (RadarLinkConfig oLinkConfig : oConfig.getRadarLinks()) {
+					
+					
+					for (RadarLinkConfig oSecondLevelLink : oLinkConfig.getChildren()) {
+						
+						if (oSecondLevelLink.getLinkCode().equals(sLinkCode)) {
+							if (oSecondLevelLink.isHasThirdLevel()) {
+								for (RadarLinkConfig oThird : oSecondLevelLink.getChildren()) {
+									RadarLink oThirdLink = oThird.getRadarLink();
+									oThirdLink.setParentLinkCode(oLinkConfig.getLinkCode());
+									oThirdLink.setParentDescription(oSecondLevelLink.getDescription());
+									aoRadarThirdLevelLinks.add(oThirdLink);
+								}
+							}
+							
+							break;
+						}
+						
+						
+					}
+				}
+			}
+		}
+		
+		return aoRadarThirdLevelLinks;
+	}	
+	
+	
+	/**
+	 * Gets the first level of dynamic layers
+	 * @return
+	 */
+	@GET
+	@Path("/satellite")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<SatelliteLink> getSatelliteFirstLevelLinks(@HeaderParam("x-session-token") String sSessionId) {
+		
+		ArrayList<SatelliteLink> aoSatelliteLinks = new ArrayList<>();
+
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (SatelliteLinkConfig oLinkConfig : oConfig.getSatelliteLinks()) {
+					aoSatelliteLinks.add(oLinkConfig.getSatelliteLink());
+				}
+			}			
+		}
+		
+		return aoSatelliteLinks;
+	}
+	
+	@GET
+	@Path("/satellite/{linkcode}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<SatelliteLink> getSatelliteSecondLevelLinks(@PathParam("linkcode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
+		ArrayList<SatelliteLink> aoSatelliteLinks = new ArrayList<>();
+
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (SatelliteLinkConfig oLinkConfig : oConfig.getSatelliteLinks()) {
+					
+					if (oLinkConfig.getLinkCode().equals(sLinkCode)) {
+						for (SatelliteLinkConfig oSecondLevelLink : oLinkConfig.getChildren()) {
+							SatelliteLink oSatelliteSecondLink = oSecondLevelLink.getSatelliteLink();
+							oSatelliteSecondLink.setParentLinkCode(sLinkCode);
+							oSatelliteSecondLink.setParentDescription(oLinkConfig.getDescription());
+							aoSatelliteLinks.add(oSatelliteSecondLink);
+						}
+						break;
+						
+					}
+				}
+			}
+		}
+		
+		return aoSatelliteLinks;
+	}
+	
+	@GET
+	@Path("/satellitethird/{linkCode}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<SatelliteLink> getSatelliteThirdLevelLinks(@PathParam("linkCode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
+		ArrayList<SatelliteLink> aoSatelliteThirdLevelLinks = new ArrayList<>();
+		
+		if (Omirl.getUserFromSession(sSessionId)!= null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				for (SatelliteLinkConfig oLinkConfig : oConfig.getSatelliteLinks()) {
+					
+					
+					for (SatelliteLinkConfig oSecondLevelLink : oLinkConfig.getChildren()) {
+						
+						if (oSecondLevelLink.getLinkCode().equals(sLinkCode)) {
+							if (oSecondLevelLink.isHasThirdLevel()) {
+								for (SatelliteLinkConfig oThird : oSecondLevelLink.getChildren()) {
+									SatelliteLink oThirdLink = oThird.getSatelliteLink();
+									oThirdLink.setParentLinkCode(oLinkConfig.getLinkCode());
+									oThirdLink.setParentDescription(oSecondLevelLink.getDescription());
+									aoSatelliteThirdLevelLinks.add(oThirdLink);
+								}
+							}
+							
+							break;
+						}
+						
+						
+					}
+				}
+			}
+		}
+		
+		return aoSatelliteThirdLevelLinks;
+	}	
 }

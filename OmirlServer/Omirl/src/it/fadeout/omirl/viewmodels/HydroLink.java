@@ -7,6 +7,8 @@ public class HydroLink {
 	String link;
 	// Flag to detect if exists a third level
 	boolean hasThirdLevel;
+	// Flag to know if has childs or not
+	boolean hasChilds;
 	// Tooltip
 	String description;
 	// Link to the legend
@@ -65,5 +67,11 @@ public class HydroLink {
 	}
 	public void setParentDescription(String parentDescription) {
 		this.parentDescription = parentDescription;
+	}
+	public boolean isHasChilds() {
+		return hasChilds;
+	}
+	public void setHasChilds(boolean hasChilds) {
+		this.hasChilds = hasChilds;
 	}
 }

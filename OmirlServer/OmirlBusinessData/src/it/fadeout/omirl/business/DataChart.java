@@ -6,45 +6,57 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class DataChart {
+	
+	/**
+	 * Chart Title
+	 */
 	String title;
+	/**
+	 * Chart SubTitle
+	 */
 	String subTitle;
-	
-
-    Double axisYMinValue;
-    Double axisYMaxValue;
-    Double axisYTickInterval;
-    String axisYTitle;
+	/**
+	 * Tooltip suffix
+	 */
     String tooltipValueSuffix;
-	
+    /**
+     * Additional vertical axes
+     */
+    ArrayList<ChartAxis> verticalAxes = new ArrayList<>();
+	/**
+	 * Dataseries
+	 */
 	ArrayList<DataSerie> dataSeries = new ArrayList<>();
-	
+	/**
+	 * Horizontal Lines
+	 */
 	ArrayList<ChartLine> horizontalLines = new ArrayList<>();
 	
+	/**
+	 * Other Chart links
+	 */
 	ArrayList<String> otherChart = new ArrayList<>();
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getSubTitle() {
-		return subTitle;
-	}
-
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
-	}
-
-	public ArrayList<DataSerie> getDataSeries() {
-		return dataSeries;
-	}
-
-	public void setDataSeries(ArrayList<DataSerie> dataSeries) {
-		this.dataSeries = dataSeries;
-	}
+	/**
+	 * Main Axes Min Value
+	 */
+    Double axisYMinValue;
+    /**
+     * Main Axes Max Value
+     */
+    Double axisYMaxValue;
+    /**
+     * Main Axes Tick interval 
+     */
+    Double axisYTickInterval;
+    /**
+     * Main Axes Title
+     */
+    String axisYTitle;
+    /**
+     * Flag to know if main Axis is opposite
+     */
+    boolean axisIsOpposite = false;
 
 	public Double getAxisYMinValue() {
 		return axisYMinValue;
@@ -78,6 +90,32 @@ public class DataChart {
 		this.axisYTitle = axisYTitle;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+
+	public ArrayList<DataSerie> getDataSeries() {
+		return dataSeries;
+	}
+
+	public void setDataSeries(ArrayList<DataSerie> dataSeries) {
+		this.dataSeries = dataSeries;
+	}
+
+
+
 	public String getTooltipValueSuffix() {
 		return tooltipValueSuffix;
 	}
@@ -100,6 +138,22 @@ public class DataChart {
 
 	public void setOtherChart(ArrayList<String> otherChart) {
 		this.otherChart = otherChart;
+	}
+
+	public ArrayList<ChartAxis> getVerticalAxes() {
+		return verticalAxes;
+	}
+
+	public void setVerticalAxes(ArrayList<ChartAxis> verticalAxes) {
+		this.verticalAxes = verticalAxes;
+	}
+
+	public boolean isAxisIsOpposite() {
+		return axisIsOpposite;
+	}
+
+	public void setAxisIsOpposite(boolean axisIsOpposite) {
+		this.axisIsOpposite = axisIsOpposite;
 	}
 
 }

@@ -1,11 +1,20 @@
 package it.fadeout.omirl.daemon;
 
+import it.fadeout.omirl.business.AnagTableInfo;
+import it.fadeout.omirl.business.ChartInfo;
+
+import java.util.ArrayList;
+
 public class OmirlDaemonConfiguration {
 	String fileRepositoryPath;
 	
 	int minutesPolling = 1;
 	
 	int chartTimeRangeDays = 15;
+
+	ArrayList<ChartInfo> chartsInfo = new ArrayList<>();
+	
+	ArrayList<AnagTableInfo> anagTablesInfo = new ArrayList<>();
 
 
 	public String getFileRepositoryPath() {
@@ -31,5 +40,21 @@ public class OmirlDaemonConfiguration {
 
 	public void setChartTimeRangeDays(int chartTimeRangeDays) {
 		this.chartTimeRangeDays = chartTimeRangeDays;
+	}
+
+	public ArrayList<ChartInfo> getChartsInfo() {
+		return chartsInfo;
+	}
+
+	public void setChartsInfo(ArrayList<ChartInfo> chartsInfo) {
+		this.chartsInfo = chartsInfo;
+	}
+
+	public ArrayList<AnagTableInfo> getAnagTablesInfo() {
+		return anagTablesInfo;
+	}
+
+	public void setAnagTablesInfo(ArrayList<AnagTableInfo> anagTablesInfo) {
+		this.anagTablesInfo = anagTablesInfo;
 	}	
 }

@@ -1,7 +1,6 @@
 package it.fadeout.omirl.business.config;
 
 import it.fadeout.omirl.viewmodels.HydroLink;
-import it.fadeout.omirl.viewmodels.MapLink;
 
 import java.util.ArrayList;
 
@@ -79,6 +78,13 @@ public class HydroLinkConfig {
 		oLink.setLink(link);
 		oLink.setLinkCode(linkCode);
 		oLink.setSelected(false);
+		if (this.children == null) {
+			oLink.setHasChilds(false);
+		}
+		else {
+			if (this.children.size()>0) oLink.setHasChilds(true);
+			else oLink.setHasChilds(false);
+		}
 		
 		return oLink;
 	}
