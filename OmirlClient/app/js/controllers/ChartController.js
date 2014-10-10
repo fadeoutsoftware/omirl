@@ -272,11 +272,13 @@ var ChartController = (function() {
                         },
                         plotOptions: {
                             column: {
-                                pointRange: 1000*60*60,
-                                pointWidth: 5,
+                                //pointRange: 1000*60*60,
+                                //pointWidth: 5,
+                                pointPlacement: -0.5,
                                 grouping: false,
                                 borderWidth: 0,
-                                pointPadding: 0
+                                pointPadding: 0,
+                                groupPadding: 0
                             },
                             spline: {
                                 marker: {
@@ -428,22 +430,14 @@ var ChartController = (function() {
                             }
                         }
                     }
-                    // Code to preset zoom: commented out for charts without navigators
-                    /*else {
-                        // I need at least two points
-                        if (oSerie.data.length>1) {
-                            // Get the two last elements
-                            var oSecondToLastElement = oSerie.data[oSerie.data.length - 2];
-                            var oLastElement = oSerie.data[oSerie.data.length - 1];
-                            // Obtain time step
-                            var iTimeStart = oLastElement[0] - 3*60*60*24*1000;
-                            oChart.xAxis[0].zoom(iTimeStart,oLastElement[0]);
-                            if( !oChart.resetZoomButton ) {
-                                oChart.showResetZoom();
-                            }
-                            //oChart.showResetZoom();
-                        }
-                    }*/
+
+                    /*
+                    if (oSerie.name=="Raffica del Vento") {
+                        //alert('ok');
+                        oSerie.dashStyle = "dot";
+                        oSerie.lineWidth = 1;
+                    }
+                    */
 
                     oChart.addSeries(oSerie);
                 });

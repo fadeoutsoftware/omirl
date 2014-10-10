@@ -26,6 +26,9 @@ var StationsTableController = (function() {
 
         this.m_bSideBarCollapsed = true;
 
+        this.m_bReverseOrder = false;
+        this.m_sOrderBy = "name";
+
         var oControllerVar = this;
 
         this.m_oStationsService.getStationsTypes().success(function (data, status) {

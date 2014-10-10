@@ -74,6 +74,8 @@ angular.module('omirl.chartService', ['omirl.ConstantsService']).
         this.isStockChart = function(sSensorType) {
             if (sSensorType == 'Pluvio') return false;
             if (sSensorType == 'PluvioNative') return false;
+            if (sSensorType == 'Pluvio30') return false;
+            if (sSensorType == 'Pluvio7') return false;
             if (sSensorType == 'Vento') return false;
 
             return true;

@@ -77,15 +77,15 @@
                     <table class="table stationtablerow" >
                         <thead>
                             <tr>
-                                <th style="table-list-header">Nome o Codice</th>
-                                <th style="table-list-header">Provincia</th>
-                                <th style="table-list-header">Area</th>
-                                <th style="table-list-header">Bacino</th>
-                                <th style="table-list-header">Comune</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" style="table-list-header">Nome o Codice</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" style="table-list-header">Provincia</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" style="table-list-header">Area</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" style="table-list-header">Bacino</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" style="table-list-header">Comune</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="oStation in m_oController.getStationList() | filter:search" ng-click="m_oController.stationClicked(oStation.stationCode, oStation.municipality, oStation.name)">
+                            <tr ng-repeat="oStation in m_oController.getStationList() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search" ng-click="m_oController.stationClicked(oStation.stationCode, oStation.municipality, oStation.name)">
                                 <td>{{oStation.name}}</td>
                                 <td>{{oStation.district}}</td>
                                 <td>{{oStation.area}}</td>
