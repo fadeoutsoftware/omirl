@@ -176,6 +176,7 @@ var ChartController = (function() {
                     oChartOptions = {
                         chart: {
                             renderTo: oElement
+                            //,alignTicks: false
                         },
                         credits: {
                             enabled: false
@@ -192,12 +193,20 @@ var ChartController = (function() {
                             },
                             line: {
                                 marker: {
-                                    enabled: false
+                                    enabled: true,
+                                    radius: 1
                                 }
                             },
                             line: {
                                 marker: {
-                                    enabled: false
+                                    enabled: true,
+                                    radius: 1
+                                }
+                            },
+                            area: {
+                                marker: {
+                                    enabled: true,
+                                    radius: 1
                                 }
                             }
                         },
@@ -252,6 +261,7 @@ var ChartController = (function() {
                         chart: {
                             renderTo: oElement,
                             zoomType: "xy"
+                            //,alignTicks: false
                         },
                         credits: {
                             enabled: false
@@ -276,18 +286,24 @@ var ChartController = (function() {
                                 //pointWidth: 5,
                                 pointPlacement: -0.5,
                                 grouping: false,
-                                borderWidth: 0,
-                                pointPadding: 0,
-                                groupPadding: 0
+                                borderWidth: 0
                             },
                             spline: {
                                 marker: {
-                                    enabled: false
+                                    enabled: true,
+                                    radius: 1
                                 }
                             },
                             line: {
                                 marker: {
-                                    enabled: false
+                                    enabled: true,
+                                    radius: 1
+                                }
+                            },
+                            area: {
+                                marker: {
+                                    enabled: true,
+                                    radius: 1
                                 }
                             }
                         },
@@ -358,15 +374,43 @@ var ChartController = (function() {
                             text: this.oChartVM.axisYTitle
                         },
                         opposite: this.oChartVM.axisIsOpposite,
-                        plotLines: oPlotLines
+                        plotLines: oPlotLines,
+                        minPadding: 0,
+                        startOnTick: true
                     };
 
                     oChart.yAxis[0].setOptions(oYAxisOptions);
+                    oChart.yAxis[0].setExtremes(this.oChartVM.axisYMinValue,this.oChartVM.axisYMaxValue);
                 }
 
                 // OTHER Y AXIS
                 if (!bIsStockChart)
                 {
+
+                    var iAxis = 0;
+
+                    // Add Additional Axes
+                    for (iAxis=0; iAxis<this.oChartVM.verticalAxes.length; iAxis++) {
+
+                        var oAdditionalAxes = this.oChartVM.verticalAxes[iAxis];
+
+                        oChart.addAxis({
+                            title: {
+                                text:oAdditionalAxes.axisYTitle,
+                                rotation: 270,
+                                margin: 30
+                            },
+                            opposite: oAdditionalAxes.isOpposite,
+                            min: oAdditionalAxes.axisYMinValue,
+                            max: oAdditionalAxes.axisYMaxValue,
+                            tickInterval: oAdditionalAxes.axisYTickInterval,
+                            minPadding: 0,
+                            startOnTick: true
+                        });
+
+                        oChart.yAxis[iAxis+1].setExtremes(oAdditionalAxes.axisYMinValue,oAdditionalAxes.axisYMaxValue);
+                    }
+/*
                     // Add Additional Axes
                     this.oChartVM.verticalAxes.forEach(function(oAdditionalAxes) {
                         oChart.addAxis({
@@ -378,9 +422,12 @@ var ChartController = (function() {
                             opposite: oAdditionalAxes.isOpposite,
                             min: oAdditionalAxes.axisYMinValue,
                             max: oAdditionalAxes.axisYMaxValue,
-                            tickInterval: oAdditionalAxes.axisYTickInterval
+                            tickInterval: oAdditionalAxes.axisYTickInterval,
+                            minPadding: 0,
+                            startOnTick: true
                         });
                     });
+*/
                 }
 
                 // X AXIS
