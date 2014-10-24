@@ -2,6 +2,7 @@ package it.fadeout.omirl.daemon;
 
 import it.fadeout.omirl.business.AnagTableInfo;
 import it.fadeout.omirl.business.ChartInfo;
+import it.fadeout.omirl.business.DynamicLayerInfo;
 
 import java.util.ArrayList;
 
@@ -15,6 +16,8 @@ public class OmirlDaemonConfiguration {
 	ArrayList<ChartInfo> chartsInfo = new ArrayList<>();
 	
 	ArrayList<AnagTableInfo> anagTablesInfo = new ArrayList<>();
+	
+	ArrayList<DynamicLayerInfo> dynamicLayersInfo = new ArrayList<>();
 
 
 	public String getFileRepositoryPath() {
@@ -56,5 +59,13 @@ public class OmirlDaemonConfiguration {
 
 	public void setAnagTablesInfo(ArrayList<AnagTableInfo> anagTablesInfo) {
 		this.anagTablesInfo = anagTablesInfo;
+	}
+
+	public ArrayList<DynamicLayerInfo> getDynamicLayersInfo() {
+		return dynamicLayersInfo;
+	}
+
+	public void setDynamicLayersInfo(ArrayList<DynamicLayerInfo> dynamicLayersInfo) {
+		this.dynamicLayersInfo = dynamicLayersInfo;
 	}	
 }

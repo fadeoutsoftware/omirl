@@ -16,6 +16,9 @@ public class ChartInfo {
 	String sensorType;
 	int daysLength;
 	boolean hasFixedWindow;
+	String dashStyle;
+	int lineWidth = 2;
+	String color;
 	
 	public String getName() {
 		return name;
@@ -100,5 +103,24 @@ public class ChartInfo {
 	}
 	public void setHasFixedWindow(boolean hasFixedWindow) {
 		this.hasFixedWindow = hasFixedWindow;
+	}
+	
+	public String getDashStyle() {
+		return dashStyle;
+	}
+	public void setDashStyle(String dashStyle) {
+		this.dashStyle = dashStyle;
+	}
+	public int getLineWidth() {
+		return lineWidth;
+	}
+	public void setLineWidth(int lineWidth) {
+		this.lineWidth = lineWidth;
+	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
 	}
 }

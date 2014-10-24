@@ -1,7 +1,5 @@
 package it.fadeout.omirl;
 
-import it.fadeout.omirl.business.DataChart;
-import it.fadeout.omirl.business.DataSerie;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;

@@ -13,7 +13,15 @@ public class DataSerie {
 	String name;
 	int axisId = 0;
 	List<Object []> data = new ArrayList<>();
+    /**
+     * Dash Style
+     */
+    String dashStyle;
+
+    int lineWidth = 2;
 	
+    String color;
+    
 	public String getType() {
 		return type;
 	}
@@ -37,6 +45,24 @@ public class DataSerie {
 	}
 	public void setAxisId(int axisId) {
 		this.axisId = axisId;
+	}
+	public String getDashStyle() {
+		return dashStyle;
+	}
+	public void setDashStyle(String dashStyle) {
+		this.dashStyle = dashStyle;
+	}
+	public int getLineWidth() {
+		return lineWidth;
+	}
+	public void setLineWidth(int lineWidth) {
+		this.lineWidth = lineWidth;
+	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
 	}
 	
 }

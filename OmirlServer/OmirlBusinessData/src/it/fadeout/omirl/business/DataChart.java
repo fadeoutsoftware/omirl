@@ -57,7 +57,7 @@ public class DataChart {
      * Flag to know if main Axis is opposite
      */
     boolean axisIsOpposite = false;
-
+    
 	public Double getAxisYMinValue() {
 		return axisYMinValue;
 	}
@@ -155,5 +155,4 @@ public class DataChart {
 	public void setAxisIsOpposite(boolean axisIsOpposite) {
 		this.axisIsOpposite = axisIsOpposite;
 	}
-
 }
