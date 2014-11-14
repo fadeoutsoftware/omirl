@@ -85,6 +85,18 @@ table { margin:auto; text-align: center;}
 }
 .searchclear:hover {color: #7fbbda; }
 
+.searchclearall {
+    top:3px;
+    bottom:0;
+    height:1em;
+    margin:auto;
+    font-size:20px;
+    cursor:pointer;
+    color: #e82945;
+}
+
+.searchclearall:hover {color: #7fbbda; }
+
 #omirl-collapsable-panels {
     padding: 20px;
 }
@@ -97,6 +109,13 @@ table { margin:auto; text-align: center;}
     border-bottom: none;
 }
 
+#omirl-collapsable-panels .panel-heading-models,
+.panel-default .panel-heading-models {
+    background: #ffffff;
+    border-color:  #0a5175;
+    color: #ffffff;
+    border-bottom: none;
+}
 
 
 #omirl-collapsable-panels a {
@@ -1213,4 +1232,11 @@ color: #2a6496;
     cursor: pointer;
 }
 
+.models-table-green-cell {
+    background-color: green;
+}
+
+.models-table-red-cell {
+    background-color: red;
+}
 /*.table-export-button-panel:hover { font-size: 30px;}*/

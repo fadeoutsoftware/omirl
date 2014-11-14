@@ -18,6 +18,8 @@ var omirlApp = angular.module('omirl', [
     'omirl.stationsService',
     'omirl.chartService',
     'omirl.sessionInjector',
+    'omirl.TableService',
+    'omirl.HydroService',
     'omirl.filters',
     'omirl.directives'
 ]);
@@ -33,10 +35,10 @@ omirlApp.config(function($routeProvider) {
         $routeProvider.when('/credits', {templateUrl: 'partials/credits.html', controller: 'CreditsController'});
         $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'SettingsController'});
         $routeProvider.when('/stationstable', {templateUrl: 'partials/stationstable.html', controller: 'StationsTableController'});
-        $routeProvider.when('/idromodeltable', {templateUrl: 'partials/idromodeltable.html', controller: 'IdroModelTableController'});
         $routeProvider.when('/sensorstable', {templateUrl: 'partials/sensorstable.html', controller: 'SensorTableController'});
         $routeProvider.when('/maxtable', {templateUrl: 'partials/maxtable.html', controller: 'MaxTableController'});
         $routeProvider.when('/summarytable', {templateUrl: 'partials/summarytable.html', controller: 'SummaryTableController'});
+        $routeProvider.when('/modelstable', {templateUrl: 'partials/modelstable.html', controller: 'ModelsTableController'});
 
         $routeProvider.otherwise({redirectTo: '/map'});
     }

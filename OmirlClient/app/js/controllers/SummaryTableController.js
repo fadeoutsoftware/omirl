@@ -3,98 +3,30 @@
  */
 
 var SummaryTableController = (function() {
-    function SummaryTableController($scope, $log, $location, oConstantService) {
+    function SummaryTableController($scope, $log, $location, oConstantService, oTableService) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oLog = $log;
         this.m_oLocation = $location;
         this.m_oConstantsService = oConstantService;
+        this.m_oTableService = oTableService;
 
-        this.m_aoAlertReturn = [
-            {
-                description: 'A',
-                min: 5,
-                stationmin: 'Stazione 1',
-                max: 30,
-                stationmax: 'Stazione 2'
-            },
-            {
-                description: 'B',
-                min: 3,
-                stationmin: 'Stazione 1',
-                max: 22,
-                stationmax: 'Stazione 2'
-            },
-            {
-                description: 'C',
-                min: 8,
-                stationmin: 'Stazione 1',
-                max: 32,
-                stationmax: 'Stazione 2'
-            },
-            {
-                description: 'D',
-                min: 10,
-                stationmin: 'Stazione 1',
-                max: 22,
-                stationmax: 'Stazione 2'
-            },
-            {
-                description: 'E',
-                min: 10,
-                stationmin: 'Stazione 1',
-                max: 22,
-                stationmax: 'Stazione 2'
-            }
-        ];
+        this.m_aoAlertReturn = [];
 
-        this.m_aoDistrictReturn = [
-            {
-                description: 'Genova',
-                min: 5,
-                stationmin: 'Stazione 1',
-                max: 30,
-                stationmax: 'Stazione 2'
-            },
-            {
-                description: 'Savona',
-                min: 3,
-                stationmin: 'Stazione 1',
-                max: 22,
-                stationmax: 'Stazione 2'
-            },
-            {
-                description: 'Imperia',
-                min: 8,
-                stationmin: 'Stazione 1',
-                max: 32,
-                stationmax: 'Stazione 2'
-            },
-            {
-                description: 'La Spezia',
-                min: 10,
-                stationmin: 'Stazione 1',
-                max: 22,
-                stationmax: 'Stazione 2'
-            }
-        ];
+        this.m_aoDistrictReturn = [];
 
-        this.m_aoWindReturn = [
-            {
-                description: 'Costa',
-                max: 5,
-                stationmax: 'Stazione 1',
-                gust: 30,
-                stationgust: 'Stazione 2'
-            },
-            {
-                description: 'Rilievi',
-                max: 3,
-                stationmax: 'Stazione 1',
-                gust: 22,
-                stationgust: 'Stazione 2'
-            }
-        ];
+        this.m_aoWindReturn = [];
+
+        var oControllerVar = this;
+
+        this.m_oTableService.getSummaryTable().success(function(data,status) {
+            oControllerVar.m_aoAlertReturn = data.alertInfo;
+            oControllerVar.m_aoDistrictReturn = data.districtInfo;
+            oControllerVar.m_aoWindReturn = data.windInfo;
+
+        }).error(function(data,status){
+            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+        });
     }
 
     SummaryTableController.prototype.linkClicked = function (sPath) {
@@ -140,7 +72,8 @@ var SummaryTableController = (function() {
         '$scope',
         '$log',
         '$location',
-        'ConstantsService'
+        'ConstantsService',
+        'TableService'
     ];
     return SummaryTableController;
 }) ();

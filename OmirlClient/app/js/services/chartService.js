@@ -77,6 +77,7 @@ angular.module('omirl.chartService', ['omirl.ConstantsService']).
             if (sSensorType == 'Pluvio30') return false;
             if (sSensorType == 'Pluvio7') return false;
             if (sSensorType == 'Vento') return false;
+            if (sSensorType == 'Vento2') return false;
 
             return true;
         }

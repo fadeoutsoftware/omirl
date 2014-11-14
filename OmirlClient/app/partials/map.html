@@ -141,7 +141,7 @@
                             <div class="row">
                                 <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="Filtro di ricerca stazioni">
                                     <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
-                                    <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked()"/>
+                                    <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/stationstable')"/>
                                 </div>
                             </div>
                         </div>
@@ -234,6 +234,14 @@
                                         ng-click="m_oController.HydroLinkClicked(oHydroLink)"/></div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="Filtro di ricerca stazioni">
+                                <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
+                                <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/modelstable')"/>
+                            </div>
+                        </div>
+
                     </accordion-group>
 
 

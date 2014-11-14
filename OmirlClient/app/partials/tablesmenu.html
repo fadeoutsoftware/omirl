@@ -3,6 +3,49 @@
         <i class="" ng-class="{'fa fa-align-justify fa-rotate-90': !m_oController.isSideBarCollapsed(), 'fa fa-align-justify':m_oController.isSideBarCollapsed()}" ng-click="m_oController.toggleSideBarClicked()"></i>
     </div>
 
+
+
+    <div id="omirl-collapsable-panels">
+
+
+        <!--------------------------------------------------------------------------- Stazioni --------------------------------------------------------------------------->
+
+        <accordion close-others="true">
+            <accordion-group  is-open="true">
+                <accordion-heading>
+                    <div>
+                        <div class="icon icon-gauge pull-left"></div>
+                        <span class="map-accordion-title">Tabelle</span>
+                        <i class="pull-right glyphicon"
+                           ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                    </div>
+                </accordion-heading>
+                <div class="map-accordion-content">
+                    <div class="row">
+                        <div class="map-text-legend">
+
+                            <div class="map-text-legend-selected">{{m_oController.m_oTableService.m_sTableLegendSelected}}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div ng-repeat="oTable in m_oController.m_oTableService.getTableLinks()"
+                             class="col-md-1 col-xs-1 map-firstlevel-icon"
+                             ng-class="{'map-firstlevel-icon-selected': oTable.isActive}"
+                             tooltip-popup-delay="500" tooltip="{{oTable.description}}">
+                            <img class="img-map-firstlevel-icon" ng-src="{{oTable.imageLinkOff}}"
+                                 ng-click="m_oController.m_oTableService.tableLinkClicked(oTable)"/>
+                        </div>
+                    </div>
+
+                </div>
+            </accordion-group>
+        </accordion>
+    </div>
+
+<!--
     <div class="row tables-link-row">
         <i class="tables-icon fa fa-list-ul" ng-click="m_oController.linkClicked('/stationstable')"></i>
         <a ng-click="m_oController.linkClicked('/stationstable')" style="cursor: pointer" class="tables-link">Lista Stazioni</a>
@@ -30,5 +73,5 @@
         <i class="tables-icon fa fa-tasks" ng-click="m_oController.linkClicked('/summarytable')"></i>
         <a ng-click="m_oController.linkClicked('/summarytable')" style="cursor: pointer" class="tables-link">Sintesi</a>
     </div>
-
+<!-->
 </nav>

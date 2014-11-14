@@ -7,7 +7,7 @@
 
 var MapController = (function () {
 
-    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location) {
+    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService) {
         // Initialize Members
         this.m_oScope = $scope;
         this.m_oWindow = $window;
@@ -22,6 +22,7 @@ var MapController = (function () {
         this.m_oInterval = $interval;
         this.m_oLog =$log;
         this.m_oLocation = $location;
+        this.m_oTableService = oTableService;
 
         // Flag to know if maps first level is shown
         this.m_bIsFirstLevel = true;
@@ -2088,8 +2089,9 @@ var MapController = (function () {
         oControllerVar.m_oSelectedSatelliteLink = oSatelliteLink;
     }
 
-    MapController.prototype.tablesLinkClicked = function() {
-        this.m_oLocation.path("/stationstable");
+    MapController.prototype.tablesLinkClicked = function(sPath) {
+        this.m_oTableService.dataTableLinkClickedByLink(sPath);
+        this.m_oLocation.path(sPath);
     }
 
     MapController.$inject = [
@@ -2104,7 +2106,8 @@ var MapController = (function () {
         'ConstantsService',
         '$interval',
         '$log',
-        '$location'
+        '$location',
+        'TableService'
     ];
 
     return MapController;

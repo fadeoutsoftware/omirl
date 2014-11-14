@@ -3,7 +3,7 @@
  */
 
 var TemplateController = (function() {
-    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache) {
+    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService) {
         this.m_oScope = $scope;
         this.m_oLocation  = $location;
         this.m_oConstantsService = oConstantsService;
@@ -24,6 +24,7 @@ var TemplateController = (function() {
         this.m_sLastPath = "map";
         this.m_oRoute = $route;
         this.m_oTemplateCache = $templateCache;
+        this.m_oTableService = oTableService;
 
         this.m_sContainerStyle = "overflow: hidden;";
 
@@ -42,6 +43,8 @@ var TemplateController = (function() {
         }
 
         this.m_sLastPath = sPath;
+
+        this.m_oTableService.tableLinkClickedByLink(sPath);
 
         this.m_oLocation.path(sPath);
         OmirlMoveTo('#contentcontainer');
@@ -103,6 +106,7 @@ var TemplateController = (function() {
                 oController.m_sLoginMessage = "Credenziali non corrette";
             }
 
+            oController.m_oTableService.refreshTableLinks();
             oController.m_bLoading = false;
         }).error(function(data, status) {
             //oController.credentials.userId = "";
@@ -160,7 +164,8 @@ var TemplateController = (function() {
         'AuthService',
         '$log',
         '$route',
-        '$templateCache'
+        '$templateCache',
+        'TableService'
     ];
 
     return TemplateController;

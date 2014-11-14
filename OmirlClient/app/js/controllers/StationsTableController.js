@@ -3,7 +3,7 @@
  */
 
 var StationsTableController = (function() {
-    function StationsTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location) {
+    function StationsTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -12,6 +12,7 @@ var StationsTableController = (function() {
         this.m_oDialogService = oDialogService;
         this.m_oChartService = oChartService;
         this.m_oLocation = $location;
+        this.m_oTableService = oTableService;
         this.m_bDowloadEnabled = false;
 
         this.m_bShowCancelNameFilter = false;
@@ -29,11 +30,24 @@ var StationsTableController = (function() {
         this.m_bReverseOrder = false;
         this.m_sOrderBy = "name";
 
+
         var oControllerVar = this;
 
         this.m_oStationsService.getStationsTypes().success(function (data, status) {
+
+            for (var iTypes = 0; iTypes<data.length; iTypes ++) {
+                if (data[iTypes].code == "Pluvio") {
+                    oControllerVar.m_oSelectedType = data[iTypes];
+                    break;
+                }
+            }
+
             oControllerVar.m_aoTypes = data;
 
+
+
+
+            // QUESTO CHIUDE LA BARRA DI NAVIGAZIONE VOLENDO
             var oElement = angular.element("#mapNavigation");
 
             if (oElement != null) {
@@ -42,6 +56,8 @@ var StationsTableController = (function() {
                     oElement[0].style.left = "-" + iWidth + "px";
                 }
             }
+
+            oControllerVar.typeSelected();
 
         }).error(function (data, status) {
             oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
@@ -127,6 +143,14 @@ var StationsTableController = (function() {
         };
 
         this.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
+    }
+
+    StationsTableController.prototype.CancelAllFilters = function() {
+        this.CancelNameFilter();
+        this.CancelDistrictFilter();
+        this.CancelAreaFilter();
+        this.CancelBasinFilter();
+        this.CancelMunicipalityFilter();
     }
 
     StationsTableController.prototype.NameChanged = function(sNameFilter)
@@ -224,6 +248,9 @@ var StationsTableController = (function() {
         this.m_oLocation.path(sPath);
     }
 
+    StationsTableController.prototype.getTableLinks = function () {
+        return this.m_aoTableLinks;
+    }
 
     StationsTableController.$inject = [
         '$scope',
@@ -232,7 +259,8 @@ var StationsTableController = (function() {
         'StationsService',
         'dialogService',
         'ChartService',
-        '$location'
+        '$location',
+        'TableService'
     ];
 
     return StationsTableController;

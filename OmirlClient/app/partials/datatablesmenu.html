@@ -1,0 +1,53 @@
+<nav class="map-controls-panel col-md-2 col-xs-3" id="mapNavigation" style="z-index: 9999;">
+    <div class="side-bar-toggle">
+        <i class="" ng-class="{'fa fa-align-justify fa-rotate-90': !m_oController.isSideBarCollapsed(), 'fa fa-align-justify':m_oController.isSideBarCollapsed()}" ng-click="m_oController.toggleSideBarClicked()"></i>
+    </div>
+
+
+
+    <div id="omirl-collapsable-panels">
+
+
+        <!--------------------------------------------------------------------------- Accesso Tabellare --------------------------------------------------------------------------->
+
+        <accordion close-others="true">
+            <accordion-group  is-open="true">
+                <accordion-heading>
+                    <div>
+                        <div class="icon icon-gauge pull-left"></div>
+                        <span class="map-accordion-title">Accesso Tabellare</span>
+                        <i class="pull-right glyphicon"
+                           ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                    </div>
+                </accordion-heading>
+                <div class="map-accordion-content">
+                    <div class="row">
+                        <div class="map-text-legend">
+
+                            <div class="map-text-legend-selected">{{m_oController.m_oTableService.m_sDataTableLegendSelected}}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div ng-repeat="oDataTable in m_oController.m_oTableService.getDataTableLinks()"
+                             class="col-md-1 col-xs-1 map-firstlevel-icon"
+                             ng-class="{'map-firstlevel-icon-selected': oDataTable.isActive}"
+                             tooltip-popup-delay="500" tooltip="{{oDataTable.description}}">
+                            <img class="img-map-firstlevel-icon" ng-src="{{oDataTable.imageLinkOff}}"
+                                 ng-click="m_oController.m_oTableService.dataTableLinkClicked(oDataTable)"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="Mappe">
+                            <img class="img-map-tablelink-icon" src="img/maplink.png" ng-click="m_oController.m_oTableService.mapLinkClicked()"/>
+                        </div>
+                    </div>
+
+                </div>
+            </accordion-group>
+        </accordion>
+    </div>
+</nav>

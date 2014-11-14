@@ -3,12 +3,13 @@
  */
 
 var SensorTableController = (function() {
-    function SensorTableController($scope, $log, $location, oConstantService) {
+    function SensorTableController($scope, $log, $location, oConstantService, oTableService) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oLog = $log;
         this.m_oLocation = $location;
         this.m_oConstantsService = oConstantService;
+        this.m_oTableService = oTableService;
     }
 
     SensorTableController.prototype.linkClicked = function (sPath) {
@@ -20,7 +21,8 @@ var SensorTableController = (function() {
         '$scope',
         '$log',
         '$location',
-        'ConstantsService'
+        'ConstantsService',
+        'TableService'
     ];
     return SensorTableController;
 }) ();

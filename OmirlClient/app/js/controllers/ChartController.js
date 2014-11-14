@@ -365,13 +365,22 @@ var ChartController = (function() {
                         }
                     }
 
+                    var iRotation=270;
+                    var iMargin = 40;
+
+                    if (bIsStockChart) {
+                        iRotation = 270;
+                        iMargin = 30;
+                    }
                     // Set Main Axis Options
                     var oYAxisOptions = {
                         min: this.oChartVM.axisYMinValue,
                         max: this.oChartVM.axisYMaxValue,
                         tickInterval: this.oChartVM.axisYTickInterval,
                         title: {
-                            text: this.oChartVM.axisYTitle
+                            text: this.oChartVM.axisYTitle,
+                            rotation: iRotation,
+                            margin: iMargin
                         },
                         opposite: this.oChartVM.axisIsOpposite,
                         plotLines: oPlotLines,
@@ -478,17 +487,30 @@ var ChartController = (function() {
                         }
                     }
 
-                    /*
+
                     if (oSerie.name=="Raffica del Vento") {
-                        //alert('ok');
-                        oSerie.dashStyle = "dot";
-                        oSerie.lineWidth = 1;
+                        // I need at least two points
+                        if (oSerie.data.length>1) {
+                            // Get the two last elements
+                            var oSecondToLastElement = oSerie.data[oSerie.data.length - 2];
+                            var oLastElement = oSerie.data[oSerie.data.length - 1];
+                            // Obtain time step
+                            var iTimeStart = oLastElement[0] - 3*60*60*24*1000;
+
+                            if (oSerie.data[0][0]<iTimeStart)  {
+                                oChart.xAxis[0].zoom(iTimeStart,oLastElement[0]);
+                                if( !oChart.resetZoomButton ) {
+                                    oChart.showResetZoom();
+                                }
+                            }
+                        }
+
                     }
-                    */
 
                     oChart.addSeries(oSerie);
                 });
             }
+
 
 
         }

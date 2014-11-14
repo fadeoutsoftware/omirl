@@ -7,6 +7,7 @@ var TablesController = (function() {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oLocation = $location;
+        this.m_sTableLegendSelected = "";
     }
 
     TablesController.$inject = [
