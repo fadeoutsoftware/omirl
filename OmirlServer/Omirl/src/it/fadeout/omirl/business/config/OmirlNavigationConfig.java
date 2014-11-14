@@ -11,6 +11,8 @@ public class OmirlNavigationConfig {
 	ArrayList<HydroLinkConfig> hydroLinks = new ArrayList<HydroLinkConfig>();
 	ArrayList<RadarLinkConfig> radarLinks = new ArrayList<RadarLinkConfig>();
 	ArrayList<SatelliteLinkConfig> satelliteLinks = new ArrayList<SatelliteLinkConfig>();
+	ArrayList<TableLinkConfig> dataTableLinks = new ArrayList<>();
+	ArrayList<TableLinkConfig> tableLinks = new ArrayList<>();
 	
 	public String getFilesBasePath() {
 		return filesBasePath;
@@ -53,6 +55,18 @@ public class OmirlNavigationConfig {
 	}
 	public void setSatelliteLinks(ArrayList<SatelliteLinkConfig> satelliteLinks) {
 		this.satelliteLinks = satelliteLinks;
+	}
+	public ArrayList<TableLinkConfig> getDataTableLinks() {
+		return dataTableLinks;
+	}
+	public void setDataTableLinks(ArrayList<TableLinkConfig> dataTableLinks) {
+		this.dataTableLinks = dataTableLinks;
+	}
+	public ArrayList<TableLinkConfig> getTableLinks() {
+		return tableLinks;
+	}
+	public void setTableLinks(ArrayList<TableLinkConfig> tableLinks) {
+		this.tableLinks = tableLinks;
 	}
 	
 }

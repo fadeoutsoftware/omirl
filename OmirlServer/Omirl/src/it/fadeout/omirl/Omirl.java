@@ -8,6 +8,7 @@ import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.StaticLinkConfig;
+import it.fadeout.omirl.business.config.TableLinkConfig;
 import it.fadeout.omirl.data.OmirlUserRepository;
 import it.fadeout.omirl.data.OpenSessionRepository;
 
@@ -42,6 +43,7 @@ public class Omirl extends Application {
         classes.add(GensonProvider.class);
         classes.add(ChartService.class);
         classes.add(AuthService.class);
+        classes.add(TablesService.class);
         return classes;
 	}
 	
@@ -166,12 +168,58 @@ public class Omirl extends Application {
 		oHydroChild.getChildren().add(oHydro3);
 		oHydro.getChildren().add(oHydroChild);
 		
+		TableLinkConfig oDataTable1 = new TableLinkConfig();
+		oDataTable1.setActive(true);
+		oDataTable1.setCode("Stations");
+		oDataTable1.setDescription("Tabella Stazioni");
+		oDataTable1.setImageLinkOff("img/tables/max.png");
+		oDataTable1.setLocation("/stationstable");
+		oDataTable1.setPrivate(false);
+		
+		TableLinkConfig oDataTable2 = new TableLinkConfig();
+		oDataTable2.setActive(false);
+		oDataTable2.setCode("Models");
+		oDataTable2.setDescription("Modelli Idrologici");
+		oDataTable2.setImageLinkOff("img/tables/sintesi.png");
+		oDataTable2.setLocation("/modelstable");
+		oDataTable2.setPrivate(true);
+		
+		TableLinkConfig oTable1 = new TableLinkConfig();
+		oTable1.setActive(true);
+		oTable1.setCode("StationValues");
+		oTable1.setDescription("Valori Stazioni");
+		oTable1.setImageLinkOff("img/tables/stationvalues.png");
+		oTable1.setLocation("/sensorstable");
+		oTable1.setPrivate(false);
+
+		TableLinkConfig oTable2 = new TableLinkConfig();
+		oTable2.setActive(false);
+		oTable2.setCode("Max");
+		oTable2.setDescription("Massimi Puntuali");
+		oTable2.setImageLinkOff("img/tables/max.png");
+		oTable2.setLocation("/maxtable");
+		oTable2.setPrivate(false);
+
+		TableLinkConfig oTable3 = new TableLinkConfig();
+		oTable3.setActive(false);
+		oTable3.setCode("Sintesi");
+		oTable3.setDescription("Sintesi");
+		oTable3.setImageLinkOff("img/tables/sintesi.png");
+		oTable3.setLocation("/summarytable");
+		oTable3.setPrivate(true);
+
+		
 		OmirlNavigationConfig oConfig = new OmirlNavigationConfig();
 		oConfig.setFilesBasePath("C:/temp/omirl/files");
 		oConfig.getMapLinks().add(oMapLink);
 		oConfig.getStaticLinks().add(oStatic);
 		oConfig.getSensorLinks().add(oSensorLinkConfig);
 		oConfig.getHydroLinks().add(oHydro);
+		oConfig.getDataTableLinks().add(oDataTable1);
+		oConfig.getDataTableLinks().add(oDataTable2);
+		oConfig.getTableLinks().add(oTable1);
+		oConfig.getTableLinks().add(oTable2);
+		oConfig.getTableLinks().add(oTable3);
 		
 		try {
 			serializeObjectToXML(sFilePath, oConfig);

@@ -22,5 +22,6 @@
 		<mapping class="it.fadeout.omirl.business.SavedPeriod" />
 		<mapping class="it.fadeout.omirl.business.OmirlUser" />
 		<mapping class="it.fadeout.omirl.business.OpenSession" />
+		<mapping class="it.fadeout.omirl.business.SummaryInfoEntity" />
 	</session-factory>
 </hibernate-configuration>

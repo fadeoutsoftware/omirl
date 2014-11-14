@@ -12,6 +12,8 @@ import it.fadeout.omirl.business.DynamicLayerInfo;
 import it.fadeout.omirl.business.SensorLastData;
 import it.fadeout.omirl.business.StationAnag;
 import it.fadeout.omirl.business.StationLastData;
+import it.fadeout.omirl.business.SummaryInfoEntity;
+import it.fadeout.omirl.business.WindSummaryConfiguration;
 import it.fadeout.omirl.daemon.geoserver.GeoServerDataManager2;
 import it.fadeout.omirl.data.CreekThresholdRepository;
 import it.fadeout.omirl.data.HibernateUtils;
@@ -19,9 +21,13 @@ import it.fadeout.omirl.data.SavedPeriodRepository;
 import it.fadeout.omirl.data.StationAnagRepository;
 import it.fadeout.omirl.data.StationDataRepository;
 import it.fadeout.omirl.data.StationLastDataRepository;
+import it.fadeout.omirl.viewmodels.AlertZoneSummaryInfo;
+import it.fadeout.omirl.viewmodels.DistrictSummaryInfo;
 import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableViewModel;
 import it.fadeout.omirl.viewmodels.SensorViewModel;
+import it.fadeout.omirl.viewmodels.SummaryInfo;
+import it.fadeout.omirl.viewmodels.WindSummaryInfo;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -65,7 +71,7 @@ public class OmirlDaemon {
 		//Test();
 		//testDate();
 		
-		WriteSampleConfig();
+		//WriteSampleConfig();
 		
 		OmirlDaemon oDaemon = new OmirlDaemon();
 		oDaemon.OmirlDaemonCycle(args[0]);
@@ -154,7 +160,9 @@ public class OmirlDaemon {
 		
 		//TEST
 		//publishMaps();
+		//if (true) return;
 		
+		//summaryTable();
 				
 		Date oLastDate = null;
 		
@@ -267,16 +275,23 @@ public class OmirlDaemon {
 								
 								oDataChart.getDataSeries().add(oCumulatedSerie);
 								
+								// Set dash style if in configuration
 								if (aoInfo.get(1).getDashStyle() != null) {
 									oCumulatedSerie.setDashStyle(aoInfo.get(1).getDashStyle());
 								}
-																
+								
+								// Set color if in configuration
 								if (aoInfo.get(1).getColor() != null) {
 									oCumulatedSerie.setColor(aoInfo.get(1).getColor());
 								}
 								
+								// Set line width if in configuration
 								if (aoInfo.get(1).getLineWidth()>0) oCumulatedSerie.setLineWidth(aoInfo.get(1).getLineWidth());
 								
+								// Check for autorange on max exceed
+								CheckCumulateAutorange(oCumulatedSerie,oAdditionalAxis);
+								
+								// Save
 								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(1).getFolderName(), m_oDateFormat);
 								
 								aoInfo = getChartInfoFromSensorCode("Pluvio7");
@@ -318,6 +333,8 @@ public class OmirlDaemon {
 								
 								if (aoInfo.get(1).getLineWidth()>0) oCumulatedSerie.setLineWidth(aoInfo.get(1).getLineWidth());
 								
+								// Check for autorange on max exceed
+								CheckCumulateAutorange(oCumulatedSerie,oAdditionalAxis);
 								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(1).getFolderName(), m_oDateFormat);
 							}
 						}
@@ -378,6 +395,8 @@ public class OmirlDaemon {
 									
 									if (aoInfo.get(1).getLineWidth()>0) oCumulatedSerie.setLineWidth(aoInfo.get(1).getLineWidth());
 									
+									// Check for autorange on max exceed
+									CheckCumulateAutorange(oCumulatedSerie,oAdditionalAxis);									
 									serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
 								}
 							}
@@ -448,7 +467,7 @@ public class OmirlDaemon {
 								oCumulatedSerie.setType(aoInfo.get(1).getType());
 								// Refer to other axes
 								oCumulatedSerie.setAxisId(1);
-							
+															
 								FillCumulatedSerie(oDataSerie,oCumulatedSerie);
 								
 								oDataChart.getDataSeries().add(oCumulatedSerie);
@@ -473,6 +492,8 @@ public class OmirlDaemon {
 								if (aoInfo.get(0).getLineWidth()>0) oDataSerie.setLineWidth(aoInfo.get(0).getLineWidth());
 								if (aoInfo.get(1).getLineWidth()>0) oCumulatedSerie.setLineWidth(aoInfo.get(1).getLineWidth());
 
+								// Check for autorange on max exceed
+								CheckCumulateAutorange(oCumulatedSerie,oAdditionalAxis);								
 								serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
 							}
 
@@ -585,9 +606,6 @@ public class OmirlDaemon {
 								}
 								
 								serializeStationChart(oWindChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
-								
-								
-								
 								
 								
 								aoInfo = getChartInfoFromSensorCode("Vento2");
@@ -757,8 +775,9 @@ public class OmirlDaemon {
 					SerializeSensorLast("boa", oLastRepo);
 					SerializeSensorLast("wind", oLastRepo);
 
-					
 					publishMaps();
+					
+					summaryTable();
 
 				}
 				catch(Exception oEx) {
@@ -790,6 +809,8 @@ public class OmirlDaemon {
 	 */
 	private void publishMaps() {
 		try {
+			System.out.println("ENTRO IN PUBLISH MAPS");
+			
 			Date oActualDate = new Date();
 			// Get Start Date Time Filter
 			long lNowTime = oActualDate.getTime();
@@ -808,28 +829,30 @@ public class OmirlDaemon {
 			String sFullDir = sLayerPath + "/" + oDateFormat.format(oActualDate);
 			
 			File oFullPathDir = new File(sFullDir);
-			if (!oFullPathDir.exists()) {
+
+			/*if (!oFullPathDir.exists()) {
 				return ;
-			}
+			}*/
 			
 			File oFile = OmirlDaemon.lastFileModified(sFullDir);
+			if (oFile == null) return;
 			
 			String sFileShp = oFile.getAbsolutePath();
 			sFileShp = sFileShp.substring(0, sFileShp.length()-4);
 			sFileShp += ".shp";
 			oFile = new File(sFileShp);
 			
-			if (oFile == null) {
+			if (!oFile.exists()) {
 				return;
 			}
 			
 			String sLayerId = oFile.getName().substring(0, oFile.getName().length()-4);
 			//String sShpStore = sLayerId;
-			String sShpStore = "rainfalltest";
+			String sShpStore = "omirl_shp";
 			
-			String sGeoServerDataDir = "/var/lib/tomcat6/webapps/geoserver/data/data";
-			sGeoServerDataDir = "C:\\Program Files (x86)\\GeoServer 2.3.2\\data_dir\\data";
-			String sDestinationFileFolder = sGeoServerDataDir + "/" + sLayerId;
+			String sGeoServerDataDir = "/var/lib/tomcat6/webapps/geoserver/data";
+			//sGeoServerDataDir = "C:\\Program Files (x86)\\GeoServer 2.3.2\\data_dir\\data";
+			String sDestinationFileFolder = sGeoServerDataDir + "/" + "omirl"; //sLayerId
 			
 			File oGeoServerDataDir = new File(sDestinationFileFolder);
 			
@@ -837,14 +860,186 @@ public class OmirlDaemon {
 			
 			String sFile = sDestinationFileFolder + "/" + sLayerId + ".shp";
 			
-			GeoServerDataManager2 oGeoManager = new GeoServerDataManager2("http://93.62.155.217:8080/geoserver/", "", "admin", "geo4Omirl");
+			System.out.println("FILE: " + sFile);
+			
+			GeoServerDataManager2 oGeoManager = new GeoServerDataManager2("http://127.0.0.1:8080/geoserver/", "", "admin", "geo4Omirl");
+			
+			System.out.println("GeoServerDataManager2 creato ");
+			
 			oGeoManager.addShapeLayer(sLayerId, "OMIRL",sFile, "polygon", sShpStore);
+			
+			System.out.println("Finita PUBLISH MAPS");
 			
 		}
 		catch(Exception oEx) {
 			System.out.println("publishMaps Exception " + oEx.toString());
+		}		
+	}
+	
+	private void summaryTable() {
+		try {
+			
+			Date oActualDate = new Date();
+			
+			SummaryInfo oSummaryInfo = new SummaryInfo();
+			
+			StationDataRepository oStationDataRepository = new StationDataRepository();
+			
+			// trova il max e min temperatura di oggi x provincia
+			SummaryInfoEntity oGeMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("GE", oActualDate);
+			DistrictSummaryInfo oDistrictSummaryGe = new DistrictSummaryInfo();
+			oDistrictSummaryGe.setDescription("Genova");
+			oDistrictSummaryGe.setMax(oGeMax.getValue());
+			oDistrictSummaryGe.setStationMax(oGeMax.getStationName());
+			
+			SummaryInfoEntity oGeMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("GE", oActualDate);
+			oDistrictSummaryGe.setMin(oGeMin.getValue());
+			oDistrictSummaryGe.setStationMin(oGeMin.getStationName());
+			oSummaryInfo.getDistrictInfo().add(oDistrictSummaryGe);
+			
+			
+			
+			SummaryInfoEntity oSvMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SV", oActualDate);
+			DistrictSummaryInfo oDistrictSummarySv = new DistrictSummaryInfo();
+			oDistrictSummarySv.setDescription("Savona");
+			oDistrictSummarySv.setMax(oSvMax.getValue());
+			oDistrictSummarySv.setStationMax(oSvMax.getStationName());
+			
+			SummaryInfoEntity oSvMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SV", oActualDate);
+			oDistrictSummarySv.setMin(oSvMin.getValue());
+			oDistrictSummarySv.setStationMin(oSvMin.getStationName());
+			oSummaryInfo.getDistrictInfo().add(oDistrictSummarySv);
+			
+			
+			
+			SummaryInfoEntity oImMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("IM", oActualDate);
+			DistrictSummaryInfo oDistrictSummaryIm = new DistrictSummaryInfo();
+			oDistrictSummaryIm.setDescription("Imperia");
+			oDistrictSummaryIm.setMax(oImMax.getValue());
+			oDistrictSummaryIm.setStationMax(oImMax.getStationName());
+			
+			SummaryInfoEntity oImMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("IM", oActualDate);
+			oDistrictSummaryIm.setMin(oImMin.getValue());
+			oDistrictSummaryIm.setStationMin(oImMin.getStationName());
+			oSummaryInfo.getDistrictInfo().add(oDistrictSummaryIm);
+			
+			
+			
+			SummaryInfoEntity oSpMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SP", oActualDate);
+			DistrictSummaryInfo oDistrictSummarySp = new DistrictSummaryInfo();
+			oDistrictSummarySp.setDescription("Spezia");
+			oDistrictSummarySp.setMax(oSpMax.getValue());
+			oDistrictSummarySp.setStationMax(oSpMax.getStationName());
+			
+			SummaryInfoEntity oSpMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SP", oActualDate);
+			oDistrictSummarySp.setMin(oSpMin.getValue());
+			oDistrictSummarySp.setStationMin(oSpMin.getStationName());
+			oSummaryInfo.getDistrictInfo().add(oDistrictSummarySp);
+
+			// trova il max e min temperatura di oggi x zona allertamento
+			AlertZoneSummaryInfo oZoneASummary = new AlertZoneSummaryInfo();
+			oZoneASummary.setDescription("A");
+			oZoneASummary.setMax(0);
+			oZoneASummary.setMin(0);
+			oZoneASummary.setStationMax("ND");
+			oZoneASummary.setStationMin("ND");
+			
+			oSummaryInfo.getAlertInfo().add(oZoneASummary);
+			
+			AlertZoneSummaryInfo oZoneBSummary = new AlertZoneSummaryInfo();
+			oZoneBSummary.setDescription("B");
+			oZoneBSummary.setMax(0);
+			oZoneBSummary.setMin(0);
+			oZoneBSummary.setStationMax("ND");
+			oZoneBSummary.setStationMin("ND");
+			
+			oSummaryInfo.getAlertInfo().add(oZoneBSummary);
+			
+			AlertZoneSummaryInfo oZoneCSummary = new AlertZoneSummaryInfo();
+			oZoneCSummary.setDescription("C");
+			oZoneCSummary.setMax(0);
+			oZoneCSummary.setMin(0);
+			oZoneCSummary.setStationMax("ND");
+			oZoneCSummary.setStationMin("ND");
+			
+			oSummaryInfo.getAlertInfo().add(oZoneCSummary);
+			
+			AlertZoneSummaryInfo oZoneDSummary = new AlertZoneSummaryInfo();
+			oZoneDSummary.setDescription("D");
+			oZoneDSummary.setMax(0);
+			oZoneDSummary.setMin(0);
+			oZoneDSummary.setStationMax("ND");
+			oZoneDSummary.setStationMin("ND");
+			
+			oSummaryInfo.getAlertInfo().add(oZoneDSummary);
+			
+			AlertZoneSummaryInfo oZoneESummary = new AlertZoneSummaryInfo();
+			oZoneESummary.setDescription("E");
+			oZoneESummary.setMax(0);
+			oZoneESummary.setMin(0);
+			oZoneESummary.setStationMax("ND");
+			oZoneESummary.setStationMin("ND");
+			
+			oSummaryInfo.getAlertInfo().add(oZoneESummary);
+			
+			
+			// Trova il max del vento e raffica di oggi per le stazioni che sono in configurazione.
+			String sCostalCodes = "";
+			for (int iCodes=0; iCodes<m_oConfig.getWindSummaryInfo().getCostalCodes().size(); iCodes++) {
+				sCostalCodes += "'" + m_oConfig.getWindSummaryInfo().getCostalCodes().get(iCodes) + "'";
+				if (iCodes != m_oConfig.getWindSummaryInfo().getCostalCodes().size()-1) sCostalCodes += ", ";
+			}
+			
+			SummaryInfoEntity oCostalWind = oStationDataRepository.getWindMaxSummaryInfo(sCostalCodes, oActualDate);
+			SummaryInfoEntity oCostalGust = oStationDataRepository.getWindGustSummaryInfo(sCostalCodes, oActualDate);
+			
+			WindSummaryInfo oCostalSummaryInfo = new WindSummaryInfo();
+			oCostalSummaryInfo.setDescription("Costa");
+			oCostalSummaryInfo.setMax(oCostalWind.getValue());
+			oCostalSummaryInfo.setStationMax(oCostalWind.getStationName());
+			oCostalSummaryInfo.setGust(oCostalGust.getValue());
+			oCostalSummaryInfo.setStationGust(oCostalGust.getStationName());
+			
+			oSummaryInfo.getWindInfo().add(oCostalSummaryInfo);
+			
+			
+			String sInternalCodes = "";
+			for (int iCodes=0; iCodes<m_oConfig.getWindSummaryInfo().getInternalCodes().size(); iCodes++) {
+				sInternalCodes += "'" + m_oConfig.getWindSummaryInfo().getInternalCodes().get(iCodes) + "'";
+				if (iCodes != m_oConfig.getWindSummaryInfo().getInternalCodes().size()-1) sInternalCodes += ", ";
+			}
+			
+			SummaryInfoEntity oInternalWind = oStationDataRepository.getWindMaxSummaryInfo(sInternalCodes, oActualDate);
+			SummaryInfoEntity oInternalGust = oStationDataRepository.getWindGustSummaryInfo(sInternalCodes, oActualDate);
+			
+			WindSummaryInfo oInternalSummaryInfo = new WindSummaryInfo();
+			oInternalSummaryInfo.setDescription("Rilievi");
+			oInternalSummaryInfo.setMax(oInternalWind.getValue());
+			oInternalSummaryInfo.setStationMax(oInternalWind.getStationName());
+			oInternalSummaryInfo.setGust(oInternalGust.getValue());
+			oInternalSummaryInfo.setStationGust(oInternalGust.getStationName());
+			
+			oSummaryInfo.getWindInfo().add(oInternalSummaryInfo);
+			
+			String sBasePath = m_oConfig.getFileRepositoryPath();
+			
+			String sOutputPath = sBasePath + "/tables/summary";
+			
+			SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			
+			String sFullDir = sOutputPath + "/" + oDateFormat.format(oActualDate);
+			
+			File oOutPath = new File(sFullDir);
+			if (oOutPath.exists() == false) oOutPath.mkdirs();
+			
+			String sOutputFile = sFullDir + "/summary.xml"; 
+			
+			SerializationUtils.serializeObjectToXML(sOutputFile, oSummaryInfo);
 		}
-		
+		catch(Exception oEx) {
+			System.out.println("summaryTable Exception " + oEx.toString());
+		}
+
 	}
 
 	/**
@@ -993,11 +1188,40 @@ public class OmirlDaemon {
 		
 		if (aoInfo.get(0).getLineWidth()>0) oDataSerie.setLineWidth(aoInfo.get(0).getLineWidth());
 		
+		// Autorange if the serie exceeds default limits
+		double dYMax = aoInfo.get(0).getAxisYMaxValue();
+		double dYMin = aoInfo.get(0).getAxisYMinValue();
+		
+		// Check all the points
+		for (int iPoints = 0; iPoints<aoPoints.size(); iPoints++) {
+			if (aoPoints.get(0)!=null) {
+				// Is over the top?
+				if (aoPoints.get(0).getVal()>dYMax)
+				{
+					// Take the new Max
+					dYMax = aoPoints.get(0).getVal();
+				}
+			}
+		}
+		
+		// Check if max was changed
+		if (dYMax>aoInfo.get(0).getAxisYMaxValue()) {
+			
+			// Ok, round it
+			dYMax *= 1.1;
+			try{
+				System.out.println("Chart Max value autorange for " + aoInfo.get(0).getSensorType() + " in " + oStationAnag.getName());
+			}
+			catch(Exception oEx) {
+				oEx.printStackTrace();
+			}
+		}
+		
 		oDataChart.getDataSeries().add(oDataSerie);
 		oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
 		oDataChart.setSubTitle(aoInfo.get(0).getSubtitle());
-		oDataChart.setAxisYMaxValue(aoInfo.get(0).getAxisYMaxValue());
-		oDataChart.setAxisYMinValue(aoInfo.get(0).getAxisYMinValue());
+		oDataChart.setAxisYMaxValue(dYMax);
+		oDataChart.setAxisYMinValue(dYMin);
 		oDataChart.setAxisYTickInterval(aoInfo.get(0).getAxisYTickInterval());
 		oDataChart.setAxisYTitle(aoInfo.get(0).getAxisYTitle());
 		oDataChart.setTooltipValueSuffix(aoInfo.get(0).getTooltipValueSuffix());
@@ -1007,6 +1231,37 @@ public class OmirlDaemon {
 		
 		return oDataChart;
 		
+	}
+	
+	/**
+	 * Checks and calulate autorange for cumulated data serie
+	 * @param oCumulatedSerie
+	 * @param oAdditionalAxis
+	 */
+	private void CheckCumulateAutorange(DataSerie oCumulatedSerie, ChartAxis oAdditionalAxis)
+	{
+		// Check for autorange on max exceed
+		if (oCumulatedSerie.getData()!=null)
+		{
+			double dYMax = oAdditionalAxis.getAxisYMaxValue();
+			
+			for (int iPoints=oCumulatedSerie.getData().size()-1; iPoints>0; iPoints--){
+				Object [] aoPoint = oCumulatedSerie.getData().get(iPoints);
+				
+				if (aoPoint.length>1)
+				{
+					if (aoPoint[1]!=null) {
+						Double dValue = (Double) aoPoint[1];
+						if (dValue>dYMax) {
+							dYMax = dValue*1.1;
+							oAdditionalAxis.setAxisYMaxValue(dYMax);
+						}
+						
+						break;
+					}
+				}
+			}			
+		}
 	}
 
 	/**
@@ -1941,6 +2196,32 @@ public class OmirlDaemon {
 		
 		//DynamicLayerInfo oMapInfo = new DynamicLayerInfo();
 		
+		WindSummaryConfiguration oWindInfo = new WindSummaryConfiguration();
+		oWindInfo.getInternalCodes().add("PFEAR");
+		oWindInfo.getInternalCodes().add("MSETT");
+		oWindInfo.getInternalCodes().add("CCADB");
+		oWindInfo.getInternalCodes().add("PTURC");
+		oWindInfo.getInternalCodes().add("MOCAP");
+		oWindInfo.getInternalCodes().add("SALBE");
+		oWindInfo.getInternalCodes().add("GIACO");
+		oWindInfo.getInternalCodes().add("CASON");
+		oWindInfo.getInternalCodes().add("TAGLT");
+		
+		oWindInfo.getCostalCodes().add("SREMO");
+		oWindInfo.getCostalCodes().add("IMPER");
+		oWindInfo.getCostalCodes().add("MMAUR");
+		oWindInfo.getCostalCodes().add("INASV");
+		oWindInfo.getCostalCodes().add("GEPVA");
+		oWindInfo.getCostalCodes().add("FFRES");
+		oWindInfo.getCostalCodes().add("MTPOR");
+		oWindInfo.getCostalCodes().add("CRNLO");
+		oWindInfo.getCostalCodes().add("SPZIA");
+		oWindInfo.getCostalCodes().add("MROCC");
+		oWindInfo.getCostalCodes().add("LUNIS");
+		oWindInfo.getCostalCodes().add("FRAMU");
+		oWindInfo.getCostalCodes().add("LEVAN");
+		
+		oConfig.setWindSummaryInfo(oWindInfo);
 		
 		
 		try {
@@ -1952,6 +2233,12 @@ public class OmirlDaemon {
 	
 	public static void Test() {
 		try {
+			
+			
+			StationDataRepository oStationDataRepositorySum = new StationDataRepository();
+			SummaryInfoEntity oSummaryTest = oStationDataRepositorySum.getDistrictMaxTemperatureSummaryInfo("GE", new Date());
+			SummaryInfoEntity oSummaryMin =  oStationDataRepositorySum.getDistrictMinTemperatureSummaryInfo("GE", new Date());
+			
 			
 			Date oNow = new Date();
 			long lTime = oNow.getTime() - 1000*60*60*24*30;
