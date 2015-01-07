@@ -1239,4 +1239,16 @@ color: #2a6496;
 .models-table-red-cell {
     background-color: red;
 }
+
+
+.max-table-green-cell {
+    background-color: green;
+}
+
+.max-table-yellow-cell {
+    background-color: #ffff00;
+}
+.max-table-red-cell {
+    background-color: red;
+}
 /*.table-export-button-panel:hover { font-size: 30px;}*/

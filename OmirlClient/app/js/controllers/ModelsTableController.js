@@ -31,6 +31,8 @@ var ModelsTableController = (function() {
 
         var oControllerVar = this;
 
+        this.m_sModelName = "Modello";
+
         this.m_aoModelLinks = this.m_oHydroService.getModelLinks();
 
     }
@@ -62,7 +64,18 @@ var ModelsTableController = (function() {
         });
         */
 
+        angular.forEach(oControllerVar.m_aoModelLinks, function(value, key) {
+            value.isActive = false;
+        });
+
+        oModel.isActive = true;
+        oControllerVar.m_sModelName = oModel.description;
+
         this.m_aoModelRows = this.m_oHydroService.getModelTable(oModel.code);
+    }
+
+    ModelsTableController.prototype.getModelName = function() {
+        return this.m_sModelName;
     }
 
     ModelsTableController.prototype.getModelRows = function() {

@@ -21,6 +21,9 @@ var ChartController = (function() {
         this.m_sStationCode = this.m_oScope.model.stationCode;
         this.m_sChartType = this.m_oScope.model.chartType;
 
+        this.m_iHeight = 400;
+        this.m_iWidth = 550;
+
         var oControllerVar = this;
 
 
@@ -514,6 +517,33 @@ var ChartController = (function() {
 
 
         }
+    }
+
+    ChartController.prototype.zoomIn = function() {
+        //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sStationCode);
+        this.m_iHeight *= 2;
+        this.m_iWidth *= 2;
+        this.addSeriesToChart();
+    }
+
+    ChartController.prototype.zoomOut = function() {
+        //alert('out');
+
+        this.m_iHeight /= 2;
+        this.m_iWidth /= 2;
+        this.addSeriesToChart();
+    }
+
+    ChartController.prototype.getHeight = function() {
+        return this.m_iHeight + "px";
+    }
+
+    ChartController.prototype.getMinWidth = function() {
+        return "310px";
+    }
+
+    ChartController.prototype.getWidth = function() {
+        return this.m_iWidth + "px";
     }
 
     ChartController.$inject = [
