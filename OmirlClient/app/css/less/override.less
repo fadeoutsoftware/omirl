@@ -1,0 +1,49 @@
+@base: #0d7034;
+@base_1: desaturate(@base, 25%) - 10%;
+@base_light: @base + #8f0;
+@font_1: 1em;
+@font_2: (@font_1 + 1em);
+
+
+
+.services,
+.btn-primary,
+.map-controls-panel,
+#omirl-collapsable-panels .panel-heading,
+.panel > .panel-heading,
+.side-bar-toggle,
+.map-firstlevel-icon-selected { background-color: @base; background: @base; color:white;}
+
+
+#omirl-collapsable-panels .panel-heading:hover,
+#omirl-collapsable-panels a:hover,
+.stationtablerow tr:hover :not(th),
+.service-icon:hover { text-shadow: none; background-color:@base_1; }
+.service-icon:hover { box-shadow: @base_light; color:@base_light; }
+
+a:hover, a:focus {color: @base_light; }
+
+.btn-primary, [class*="panel"] {border-color: @base_1;}
+.btn-primary:hover { background-color: @base_1;}
+
+.big, .medium,
+.map-text-legend, .map-text-legend-selected {color: @base;}
+
+.services a,
+.stationtablerow th {    color: @base_1; font-size: @font_2; }
+.stationtablerow th {font-size: (@font_2 - 0.5em);}
+
+.stationtablerow th {background-color: @base;}
+
+.map-firstlevel-icon,
+.map-firstlevel-icon-selected,
+#contentcontainer [class*="icon"]:hover,
+#omirl-collapsable-panels .panel-default {border:inherit!important;}
+
+
+@media only screen and (max-width: 980px) {
+
+  .services a {font-size:  (@font_1 + 0.2em);}
+}
+
+

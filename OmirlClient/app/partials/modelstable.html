@@ -1,81 +1,82 @@
-<div class="row">
+
     <div ng-include="'partials/datatablesmenu.html'"></div>
-    <div class="container Tabella_Stazioni">
+    <div class=" Tabella_Stazioni">
 
         <div class="row">
             <h1 class="medium">Tabella Modelli Idrologici</h1>
         </div>
 
-        <br/>
-        <div class="panel panel-default">
-            <div class="panel-heading-models">
-                <!--Panel heading-->
-                <div class="row">
-                    <div class="col-md-1 col-xs-1">
-                        <h4 style="color: rgb(51, 51, 51)">{{m_oController.getModelName()}}</h4>
-                    </div>
-
-                    <div ng-repeat="oModel in m_oController.getModelLinks()"
-                         class="col-md-1 col-xs-1 map-firstlevel-icon"
-                         ng-class="{'map-firstlevel-icon-selected': oModel.isActive}"
-                         tooltip-popup-delay="500" tooltip="{{oModel.description}}">
-                        <img class="img-map-firstlevel-icon" ng-src="{{oModel.imageLinkOff}}"
-                             ng-click="m_oController.modelLinkClicked(oModel)"/>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 table-export-button-panel">
-                        <i class="fa fa-download" ng-show="m_oController.m_bDowloadEnabled" ng-click="m_oController.exportCsv()"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-footer">
-                <!--Panel footer-->
-
-                <h4>Filtri colonne</h4>
-
-                <div class="row" id="tablesSearchPanel">
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
-                        <div class="btn-group">
-                            <label >Bacino</label>
-                            <input id="searchinput" type="search" class="form-control searchinput" placeholder="type something..."  ng-model="search.Basin" ng-change="m_oController.BasinChanged(search.Basin)" >
-                            <span id="searchclear" class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelBasinFilter()" ng-show="m_oController.m_bShowCancelBasinFilter"></span>
+        <hr/>
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading-models">
+                    <!--Panel heading-->
+                    <div class="row">
+                        <div class="col-md-1 col-xs-1">
+                            <h4 style="color: rgb(51, 51, 51)">{{m_oController.getModelName()}}</h4>
                         </div>
 
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                        <div class="btn-group">
-                            <label>Sezione</label>
-                            <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.Section1" ng-change="m_oController.DistrictChanged(search.Section1)">
-                            <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelSectionFilter()" ng-show="m_oController.m_bShowCancelSectionFilter"></span>
+                        <div ng-repeat="oModel in m_oController.getModelLinks()"
+                             class="col-md-1 col-xs-1 map-firstlevel-icon"
+                             ng-class="{'map-firstlevel-icon-selected': oModel.isActive}"
+                             tooltip-popup-delay="500" tooltip="{{oModel.description}}">
+                            <img class="img-map-firstlevel-icon" ng-src="{{oModel.imageLinkOff}}"
+                                 ng-click="m_oController.modelLinkClicked(oModel)"/>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 table-export-button-panel">
+                            <i class="fa fa-download" ng-show="m_oController.m_bDowloadEnabled" ng-click="m_oController.exportCsv()"></i>
                         </div>
                     </div>
                 </div>
+                <div class="panel-footer">
+                    <!--Panel footer-->
+
+                    <h4>Filtri colonne</h4>
+
+                    <div class="row" id="tablesSearchPanel">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+                            <div class="btn-group">
+                                <label >Bacino</label>
+                                <input id="searchinput" type="search" class="form-control searchinput" placeholder="type something..."  ng-model="search.Basin" ng-change="m_oController.BasinChanged(search.Basin)" >
+                                <span id="searchclear" class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelBasinFilter()" ng-show="m_oController.m_bShowCancelBasinFilter"></span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <div class="btn-group">
+                                <label>Sezione</label>
+                                <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.Section1" ng-change="m_oController.DistrictChanged(search.Section1)">
+                                <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelSectionFilter()" ng-show="m_oController.m_bShowCancelSectionFilter"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-body">
+                    <!--Panel content-->
+                    <table class="table stationtablerow" >
+                        <thead>
+                        <tr>
+                            <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Bacino</th>
+                            <th colspan="6" ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Sezioni</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="oModel in m_oController.getModelRows() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
+                            <td>{{oModel.Basin}}</td>
+                            <td class="{{oModel.Section1BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section1Code, oModel.Basin)">{{oModel.Section1}}</td>
+                            <td class="{{oModel.Section2BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section2Code, oModel.Basin)">{{oModel.Section2}}</td>
+                            <td class="{{oModel.Section3BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section3Code, oModel.Basin)">{{oModel.Section3}}</td>
+                            <td class="{{oModel.Section4BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section4Code, oModel.Basin)">{{oModel.Section4}}</td>
+                            <td class="{{oModel.Section5BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section5Code, oModel.Basin)">{{oModel.Section5}}</td>
+                            <td class="{{oModel.Section6BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section6Code, oModel.Basin)">{{oModel.Section6}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
 
             </div>
-            <div class="panel-body">
-                <!--Panel content-->
-                <table class="table stationtablerow" >
-                    <thead>
-                    <tr>
-                        <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Bacino</th>
-                        <th colspan="6" ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Sezioni</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="oModel in m_oController.getModelRows() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
-                        <td>{{oModel.Basin}}</td>
-                        <td class="{{oModel.Section1BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section1Code, oModel.Basin)">{{oModel.Section1}}</td>
-                        <td class="{{oModel.Section2BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section2Code, oModel.Basin)">{{oModel.Section2}}</td>
-                        <td class="{{oModel.Section3BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section3Code, oModel.Basin)">{{oModel.Section3}}</td>
-                        <td class="{{oModel.Section4BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section4Code, oModel.Basin)">{{oModel.Section4}}</td>
-                        <td class="{{oModel.Section5BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section5Code, oModel.Basin)">{{oModel.Section5}}</td>
-                        <td class="{{oModel.Section6BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section6Code, oModel.Basin)">{{oModel.Section6}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-            </div>
-
         </div>
     </div>
-</div>

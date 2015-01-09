@@ -1,0 +1,61 @@
+.services,
+.btn-primary,
+.map-controls-panel,
+#omirl-collapsable-panels .panel-heading,
+.panel > .panel-heading,
+.side-bar-toggle,
+.map-firstlevel-icon-selected {
+  background-color: #0d7034;
+  background: #0d7034;
+  color: white;
+}
+#omirl-collapsable-panels .panel-heading:hover,
+#omirl-collapsable-panels a:hover,
+.stationtablerow tr:hover :not(th),
+.service-icon:hover {
+  text-shadow: none;
+  background-color: #13562d;
+}
+.service-icon:hover {
+  box-shadow: #95ff34;
+  color: #95ff34;
+}
+a:hover,
+a:focus {
+  color: #95ff34;
+}
+.btn-primary,
+[class*="panel"] {
+  border-color: #13562d;
+}
+.btn-primary:hover {
+  background-color: #13562d;
+}
+.big,
+.medium,
+.map-text-legend,
+.map-text-legend-selected {
+  color: #0d7034;
+}
+.services a,
+.stationtablerow th {
+  color: #13562d;
+  font-size: 2em;
+}
+.stationtablerow th {
+  font-size: 1.5em;
+}
+.stationtablerow th {
+  background-color: #0d7034;
+}
+.map-firstlevel-icon,
+.map-firstlevel-icon-selected,
+#contentcontainer [class*="icon"]:hover,
+#omirl-collapsable-panels .panel-default {
+  border: inherit!important;
+}
+@media only screen and (max-width: 980px) {
+  .services a {
+    font-size: 1.2em;
+  }
+}
