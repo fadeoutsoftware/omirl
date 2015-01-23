@@ -156,6 +156,13 @@ var ChartController = (function() {
         // Get From the model if it is a Stock or a Normal Chart
         var bIsStockChart = this.m_oScope.model.isStock;
 
+        //Date now to show vertical line
+        var time = new Date();
+        var year = time.getFullYear();
+        var month = time.getMonth();
+        var day = time.getDate();
+        var timenow = new Date(year, month , day, 0,0,0,0).getTime();
+
         if (oChart != null)
         {
             // Find if we have a Column Chart
@@ -171,14 +178,15 @@ var ChartController = (function() {
                 // Get Back the Chart Options
                 var oChartOptions;
 
-
                 var oElement = oChart.options.chart.renderTo;
                 // Add Columns settings
                 if (bIsStockChart) {
 
                     oChartOptions = {
                         chart: {
-                            renderTo: oElement
+                            renderTo: oElement,
+                            width: this.m_iWidth,
+                            height: this.m_iHeight
                             //,alignTicks: false
                         },
                         credits: {
@@ -263,7 +271,9 @@ var ChartController = (function() {
                     oChartOptions = {
                         chart: {
                             renderTo: oElement,
-                            zoomType: "xy"
+                            zoomType: "xy",
+                            width: this.m_iWidth,
+                            height: this.m_iHeight
                             //,alignTicks: false
                         },
                         credits: {
@@ -444,9 +454,33 @@ var ChartController = (function() {
 
                 // X AXIS
                 if (angular.isDefined(oChart.xAxis[0])) {
-                    var oXAxisOptions = {
-                        type: 'datetime'
-                    };
+                    if (this.oChartVM.dataSeries.length > 0)
+                    {
+                        var oLastvalue = this.oChartVM.dataSeries[0].data[this.oChartVM.dataSeries[0].data.length-1][0];
+                        // X AXIS
+                        if (angular.isDefined(oChart.xAxis[0])) {
+                            var oXAxisOptions = {
+                                type: 'datetime',
+                                plotBands: [{
+                                    color: 'rgba(255, 208, 0, 0.3)', // Color value
+                                    from: timenow, // Start of the plot band
+                                    to: oLastvalue // End of the plot band
+                                }],
+                                plotLines: [{
+                                    color: 'rgba(69, 163, 202, 1)', // Color value
+                                    dashStyle: 'Solid', // Style of the plot line. Default to solid
+                                    value: timenow, // Value of where the line will appear
+                                    width: '2' // Width of the line
+                                }]
+                            };
+                        }
+                    }
+                    else
+                    {
+                        var oXAxisOptions = {
+                            type: 'datetime'
+                        };
+                    }
 
                     oChart.xAxis[0].setOptions(oXAxisOptions);
                 }
@@ -492,6 +526,10 @@ var ChartController = (function() {
 
 
                     if (oSerie.name=="Raffica del Vento") {
+
+                        //wind direction
+                        oControllerVar.drawWindArrows(oChart);
+
                         // I need at least two points
                         if (oSerie.data.length>1) {
                             // Get the two last elements
@@ -521,21 +559,21 @@ var ChartController = (function() {
 
     ChartController.prototype.zoomIn = function() {
         //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sStationCode);
-        this.m_iHeight *= 2;
-        this.m_iWidth *= 2;
+        this.m_iHeight *= 1.1;
+        this.m_iWidth *= 1.1;
         this.addSeriesToChart();
     }
 
     ChartController.prototype.zoomOut = function() {
         //alert('out');
 
-        this.m_iHeight /= 2;
-        this.m_iWidth /= 2;
+        this.m_iHeight /= 1.1;
+        this.m_iWidth /= 1.1;
         this.addSeriesToChart();
     }
 
     ChartController.prototype.getHeight = function() {
-        return this.m_iHeight + "px";
+        return this.m_iHeight.toString() + "px";
     }
 
     ChartController.prototype.getMinWidth = function() {
@@ -543,8 +581,89 @@ var ChartController = (function() {
     }
 
     ChartController.prototype.getWidth = function() {
-        return this.m_iWidth + "px";
+        return this.m_iWidth.toString() + "px";
     }
+
+    ChartController.prototype.windArrow = function (name) {
+        var level,
+            path;
+
+        // The stem and the arrow head
+        path = [
+            'M', 0, 7, // base of arrow
+            'L', -1.5, 7,
+            0, 10,
+            1.5, 7,
+            0, 7,
+            0, -10 // top
+        ];
+
+        level = $.inArray(name, ['Calm', 'Light air', 'Light breeze', 'Gentle breeze', 'Moderate breeze',
+            'Fresh breeze', 'Strong breeze', 'Near gale', 'Gale', 'Strong gale', 'Storm',
+            'Violent storm', 'Hurricane']);
+
+        if (level === 0) {
+            path = [];
+        }
+
+        if (level === 2) {
+            path.push('M', 0, -8, 'L', 4, -8); // short line
+        } else if (level >= 3) {
+            path.push(0, -10, 7, -10); // long line
+        }
+
+        if (level === 4) {
+            path.push('M', 0, -7, 'L', 4, -7);
+        } else if (level >= 5) {
+            path.push('M', 0, -7, 'L', 7, -7);
+        }
+
+        if (level === 5) {
+            path.push('M', 0, -4, 'L', 4, -4);
+        } else if (level >= 6) {
+            path.push('M', 0, -4, 'L', 7, -4);
+        }
+
+        if (level === 7) {
+            path.push('M', 0, -1, 'L', 4, -1);
+        } else if (level >= 8) {
+            path.push('M', 0, -1, 'L', 7, -1);
+        }
+
+        return path;
+    };
+
+    ChartController.prototype.drawWindArrows = function (chart) {
+        var meteogram = this;
+
+        $.each(chart.series[0].data, function (i, point) {
+            var sprite, arrow, x, y;
+            var deg = '20';
+
+            if (i % 100 === 0) {
+
+                // Draw the wind arrows
+                x = point.plotX + chart.plotLeft + 7;
+                y = 255;
+
+                arrow = chart.renderer.path(
+                    meteogram.windArrow("Light air")
+                ).attr({
+                        rotation: parseInt(deg, 10),
+                        translateX: x, // rotation center
+                        translateY: y // rotation center
+                    });
+
+                arrow.attr({
+                    stroke: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                    'stroke-width': 1.5,
+                    zIndex: 5
+                })
+                    .add();
+
+            }
+        });
+    };
 
     ChartController.$inject = [
         '$scope',

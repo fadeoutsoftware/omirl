@@ -922,7 +922,7 @@ var MapController = (function () {
         var options = {
             autoOpen: false,
             modal: false,
-            width: 600,
+            width: 'auto',
             resizable: false,
             close: function(event, ui) {
                 // Remove the chart from the Chart Service
