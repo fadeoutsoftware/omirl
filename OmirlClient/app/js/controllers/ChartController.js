@@ -157,11 +157,7 @@ var ChartController = (function() {
         var bIsStockChart = this.m_oScope.model.isStock;
 
         //Date now to show vertical line
-        var time = new Date();
-        var year = time.getFullYear();
-        var month = time.getMonth();
-        var day = time.getDate();
-        var timenow = new Date(year, month , day, 0,0,0,0).getTime();
+        var timenow = new Date().getTime();
 
         if (oChart != null)
         {
