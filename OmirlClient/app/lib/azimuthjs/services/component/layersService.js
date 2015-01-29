@@ -58,6 +58,41 @@ angular.module('az.services').factory('az.services.layersService',function($root
             {"lmt":5,"clr":"#0033CC"},
             {"lmt":10000,"clr":"#000000"}
         ],
+        m_aoSflocLayerColorRanges: [
+            {"lmt":10,"clr":"#FFFFFF"},
+            {"lmt":20,"clr":"#E6F5FF"},
+            {"lmt":30,"clr":"#E1F0FF"},
+            {"lmt":40,"clr":"#DCEBFF"},
+            {"lmt":50,"clr":"#D5E6FF"},
+            {"lmt":60,"clr":"#D0E0FF"},
+            {"lmt":70,"clr":"#D0E0FF"},
+            {"lmt":80,"clr":"#8FB0FF"},
+            {"lmt":90,"clr":"#8FB0FF"},
+            {"lmt":100,"clr":"#8FB0FF"},
+            {"lmt":110,"clr":"#009F1F"},
+            {"lmt":120,"clr":"#3FBF3F"},
+            {"lmt":130,"clr":"#B0D06F"},
+            {"lmt":140,"clr":"#BFF86F"},
+            {"lmt":150,"clr":"#FFFFA0"},
+            {"lmt":160,"clr":"#FFFF78"},
+            {"lmt":170,"clr":"#FFF810"},
+            {"lmt":180,"clr":"#FFA00F"},
+            {"lmt":190,"clr":"#FF0000"},
+            {"lmt":200,"clr":"#E00000"},
+            {"lmt":210,"clr":"#BF0000"},
+            {"lmt":220,"clr":"#AA0000"},
+            {"lmt":230,"clr":"#960000"},
+            {"lmt":240,"clr":"#870000"},
+            {"lmt":250,"clr":"#870000"},
+            {"lmt":260,"clr":"#6E0000"},
+            {"lmt":270,"clr":"#640069"},
+            {"lmt":280,"clr":"#6E0073"},
+            {"lmt":290,"clr":"#78007D"},
+            {"lmt":300,"clr":"#8C0091"},
+            {"lmt":310,"clr":"#96009B"},
+            {"lmt":320,"clr":"#B400B9"},
+            {"lmt":1000,"clr":"#C800CD"}
+        ],
         clarAll: function() {
             this.clearBaseLayers();
             this.clearStaticLayers();
@@ -255,7 +290,8 @@ angular.module('az.services').factory('az.services.layersService',function($root
         getStationsLayerColorMap: function (oSensorType) {
 
             if (oSensorType!="Idro") return this.m_aoSensorLayerColorRanges;
-            else return this.m_aoHydroSensorLayerColorRanges;
+            if (oSensorType!="Sfloc") return this.m_aoSflocLayerColorRanges;
+            return this.m_aoHydroSensorLayerColorRanges;
         },
         /**
          * Creates an Open Layer style for stations Data
@@ -324,6 +360,13 @@ angular.module('az.services').factory('az.services.layersService',function($root
                             dValue = feature.attributes.otherHtml;
                         }
 
+                        if (feature.attributes.sensorType == 'Sfloc'){
+                            var now = new Date().getTime(); //now
+                            var refDate = new Date(feature.attributes.referenceDate).getTime();
+                            var millisec = now - refDate;
+                            dValue = Math.floor(millisec / 60000)  //minutes
+                        }
+
                         if (feature.attributes.opacity==-1.0)
                         {
                             return "#AAAAAA";
@@ -354,6 +397,13 @@ angular.module('az.services').factory('az.services.layersService',function($root
                             // SAME AS COLOR FUNCTION
                             // I was unable to recall colorFunction from here!!
                             var dValue = feature.attributes.value;
+
+                            if (feature.attributes.sensorType == 'Sfloc'){
+                                var now = new Date().getTime(); //now
+                                var refDate = new Date(feature.attributes.referenceDate).getTime();
+                                var millisec = now - refDate;
+                                dValue = Math.floor(millisec / 60000)  //minutes
+                            }
 
                             var aoColorsMap = oService.getStationsLayerColorMap(feature.attributes.sensorType);
 

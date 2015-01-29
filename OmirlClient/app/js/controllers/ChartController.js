@@ -26,7 +26,9 @@ var ChartController = (function() {
 
         var oControllerVar = this;
 
+        oControllerVar.LoadData();
 
+/*
         oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sStationCode,this.m_sChartType).success(function(data,status) {
 
             if (!angular.isDefined(data)){
@@ -44,6 +46,64 @@ var ChartController = (function() {
 
             var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sStationCode);
 
+            if(angular.isDefined(oControllerVar.oChartVM.otherChart)) {
+
+                oControllerVar.oChartVM.otherChart.forEach(function(sType){
+                    var oOtherChartLink = {};
+                    oOtherChartLink.sensorType = sType;
+
+                    if (oControllerVar.m_sChartType == sType)
+                    {
+                        oOtherChartLink.isActive = true;
+                    }
+                    else
+                    {
+                        oOtherChartLink.isActive = false;
+                    }
+
+                    var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(sType);
+
+                    if (oSensorLink != null)
+                    {
+                        oOtherChartLink.description = oSensorLink.description;
+                        oOtherChartLink.imageLinkOff = oSensorLink.imageLinkOff;
+                    }
+
+                    oControllerVar.m_aoOtherCharts.push(oOtherChartLink);
+                });
+
+            }
+
+            oControllerVar.addSeriesToChart();
+
+            oControllerVar.m_bLoading = false;
+        }).error(function(data,status){
+            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+        });
+        */
+
+    }
+
+    ChartController.prototype.LoadData = function () {
+        var oControllerVar = this;
+
+        oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sStationCode,this.m_sChartType).success(function(data,status) {
+
+            if (!angular.isDefined(data)){
+                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sStationCode);
+                oControllerVar.m_bLoading = false;
+                return;
+            }
+            if (data=="") {
+                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sStationCode);
+                oControllerVar.m_bLoading = false;
+                return;
+            }
+
+            oControllerVar.oChartVM = data;
+            oControllerVar.m_aoOtherCharts = []
+
+            var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sStationCode);
 
             if(angular.isDefined(oControllerVar.oChartVM.otherChart)) {
 
@@ -181,6 +241,7 @@ var ChartController = (function() {
                     oChartOptions = {
                         chart: {
                             renderTo: oElement,
+                            zoomType: "xy",
                             width: this.m_iWidth,
                             height: this.m_iHeight
                             //,alignTicks: false
@@ -481,6 +542,7 @@ var ChartController = (function() {
                     oChart.xAxis[0].setOptions(oXAxisOptions);
                 }
 
+
                 // For each time Serie
                 this.oChartVM.dataSeries.forEach(function(oSerie) {
 
@@ -523,7 +585,7 @@ var ChartController = (function() {
 
                     if (oSerie.name=="Raffica del Vento") {
 
-                        //wind direction
+                        //wind direction arrow
                         oControllerVar.drawWindArrows(oChart);
 
                         // I need at least two points
@@ -557,6 +619,7 @@ var ChartController = (function() {
         //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sStationCode);
         this.m_iHeight *= 1.1;
         this.m_iWidth *= 1.1;
+        this.LoadData();
         this.addSeriesToChart();
     }
 
@@ -565,6 +628,7 @@ var ChartController = (function() {
 
         this.m_iHeight /= 1.1;
         this.m_iWidth /= 1.1;
+        this.LoadData();
         this.addSeriesToChart();
     }
 
