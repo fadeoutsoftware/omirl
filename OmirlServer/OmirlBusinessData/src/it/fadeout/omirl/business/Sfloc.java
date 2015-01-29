@@ -51,8 +51,8 @@ public class Sfloc {
 		oViewModel.setAlt(-1);
 		oViewModel.setMunicipality("Fulmine");
 		oViewModel.setName(this.getCommt());
-		oViewModel.setLat(this.getLat().doubleValue() / 100000);
-		oViewModel.setLon(this.getLon().doubleValue() / 100000);
+		oViewModel.setLat(this.getLat().doubleValue() / 10000);
+		oViewModel.setLon(this.getLon().doubleValue() / 10000);
 		oViewModel.setValue(this.getIntensity());
 		oViewModel.setRefDate(this.dtrfsec);
 		
