@@ -178,7 +178,6 @@ public class OmirlDaemon {
 				// Start 
 				System.out.println("OmirlDaemon - Cycle Start " + oActualDate);	
 
-
 				System.out.println("OmirlDaemon - DATE TEST FIXED " + GetChartStartDate(2, true));
 				System.out.println("OmirlDaemon - DATE TEST MOBILE " + GetChartStartDate(2, false));
 
