@@ -5,15 +5,16 @@
 'use strict';
 angular.module('omirl.ConstantsService', []).
     service('ConstantsService', [function () {
-        this.APIURL = 'http://localhost:8080/Omirl/rest';
+        //this.APIURL = 'http://localhost:8080/Omirl/rest';
         //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        //this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
+        this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
 
         this.m_aoSensorLinks = [];
         this.m_aoStaticLinks = [];
         this.m_iRefreshRateMs = 1000*60;
         this.m_bUserLogged = false;
         this.m_oUser = null;
+        this.m_sReferenceDate = ""; // Diventerà tipo AAAAMMDDhhmm
 
         this.getAPIURL = function() {
             return this.APIURL;
@@ -102,6 +103,15 @@ angular.module('omirl.ConstantsService', []).
             }
 
             return "";
+        }
+
+        this.setReferenceDate = function(sDate) {
+            this.m_sReferenceDate = sDate;
+        }
+
+        this.getReferenceDate = function() {
+            if (this.m_sReferenceDate !=null) return this.m_sReferenceDate;
+            else return "";
         }
 
     }]);

@@ -50,7 +50,7 @@ public class ChartService {
 	@GET
 	@Path("/{sCode}/{sChart}")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public DataChart GetChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart, @HeaderParam("x-session-token") String sSessionId) {
+	public DataChart GetChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
 		
 		System.out.println("ChartService.GetChart: Code = " + sCode + " Chart = " + sChart);
 		
@@ -58,6 +58,15 @@ public class ChartService {
 		DataChart oDataChart = null;
 		// Date: will be received from client...
 		Date oDate = new Date();
+		
+		if (sRefDate!=null)
+		{
+			if (sRefDate.equals("") == false) 
+			{
+				// TODO: Try e catch per fare il parsing 
+				// se è valido sostituire oDate.
+			}
+		}
 		
 		// Get Config
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");

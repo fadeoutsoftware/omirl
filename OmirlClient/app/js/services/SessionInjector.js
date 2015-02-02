@@ -7,6 +7,7 @@ angular.module('omirl.sessionInjector', ['omirl.ConstantsService']).
     var sessionInjector = {
         request: function(config) {
             config.headers['x-session-token'] = oConstantsService.getSessionId();
+            config.headers['x-refdate'] = oConstantsService.getReferenceDate();
             return config;
         }
     };

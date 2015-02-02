@@ -13,6 +13,9 @@ public class OmirlNavigationConfig {
 	ArrayList<SatelliteLinkConfig> satelliteLinks = new ArrayList<SatelliteLinkConfig>();
 	ArrayList<TableLinkConfig> dataTableLinks = new ArrayList<>();
 	ArrayList<TableLinkConfig> tableLinks = new ArrayList<>();
+	ArrayList<LegendConfig> sensorLegends = new ArrayList<>();
+	ArrayList<LegendConfig> mapLegends = new ArrayList<>();
+	
 	
 	public String getFilesBasePath() {
 		return filesBasePath;

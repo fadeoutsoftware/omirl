@@ -775,10 +775,15 @@ public class OmirlDaemon {
 					SerializeSensorLast("snow", oLastRepo);
 					SerializeSensorLast("boa", oLastRepo);
 					SerializeSensorLast("wind", oLastRepo);
-					SerializeSfloc();
 					
+					
+					// Serialize ALL SFLOC
+					serializeSfloc();
+					
+					// Publish new Maps
 					publishMaps();
 
+					// Update Summary Table
 					summaryTable();
 					
 				}
@@ -805,14 +810,15 @@ public class OmirlDaemon {
 		}		
 	}
 
-	private void SerializeSfloc()
+	private void serializeSfloc()
 	{
 		try
 		{
+			
 			//New repository
 			SflocRepository oRepository = new SflocRepository();
 			//select last hour
-			List<Sfloc> oList = oRepository.selectLastHour(6);
+			List<Sfloc> oList = oRepository.selectLastHour(m_oConfig.getSflocTimeRangeDays());
 			if (oList != null)
 			{
 				//base path
@@ -1974,6 +1980,7 @@ public class OmirlDaemon {
 		oConfig.setFileRepositoryPath("C:\\temp\\Omirl\\Files");
 		oConfig.setMinutesPolling(2);
 		oConfig.setChartTimeRangeDays(16);
+		oConfig.setSflocTimeRangeDays(5);
 
 		ChartInfo oInfo = new ChartInfo();
 		oInfo.setAxisYMaxValue(150.0);

@@ -13,6 +13,8 @@ public class OmirlDaemonConfiguration {
 	int minutesPolling = 1;
 	
 	int chartTimeRangeDays = 15;
+	
+	int sflocTimeRangeDays = 6;
 
 	ArrayList<ChartInfo> chartsInfo = new ArrayList<>();
 	
@@ -78,5 +80,13 @@ public class OmirlDaemonConfiguration {
 
 	public void setWindSummaryInfo(WindSummaryConfiguration windSummaryInfo) {
 		this.windSummaryInfo = windSummaryInfo;
+	}
+
+	public int getSflocTimeRangeDays() {
+		return sflocTimeRangeDays;
+	}
+
+	public void setSflocTimeRangeDays(int sflocTimeRangeDays) {
+		this.sflocTimeRangeDays = sflocTimeRangeDays;
 	}	
 }
