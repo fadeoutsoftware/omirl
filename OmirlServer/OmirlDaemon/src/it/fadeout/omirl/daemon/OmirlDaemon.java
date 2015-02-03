@@ -174,7 +174,7 @@ public class OmirlDaemon {
 			while (true) {
 
 				Date oActualDate = new Date();
-				
+
 				// Start 
 				System.out.println("OmirlDaemon - Cycle Start " + oActualDate);	
 
@@ -185,7 +185,7 @@ public class OmirlDaemon {
 					oLastDate=oActualDate;
 					DailyTask();
 				}
-			 	
+
 				try {
 
 					// CHARTS ***********************************************************************
@@ -203,6 +203,12 @@ public class OmirlDaemon {
 
 					// For Each
 					for (StationAnag oStationAnag : aoAllStations) {
+						
+						if (oStationAnag.getStation_code().equals("PCERR"))
+						{
+							int b=0;
+							b++;
+						}
 
 						ArrayList<String> asOtherLinks = new ArrayList<>();
 
@@ -775,17 +781,17 @@ public class OmirlDaemon {
 					SerializeSensorLast("snow", oLastRepo);
 					SerializeSensorLast("boa", oLastRepo);
 					SerializeSensorLast("wind", oLastRepo);
-					
-					
+
+
 					// Serialize ALL SFLOC
 					serializeSfloc();
-					
+
 					// Publish new Maps
 					publishMaps();
 
 					// Update Summary Table
 					summaryTable();
-					
+
 				}
 				catch(Exception oEx) {
 					oEx.printStackTrace();
@@ -814,7 +820,7 @@ public class OmirlDaemon {
 	{
 		try
 		{
-			
+
 			//New repository
 			SflocRepository oRepository = new SflocRepository();
 			//select last hour
@@ -1362,31 +1368,54 @@ public class OmirlDaemon {
 		double dYMax = aoInfo.get(0).getAxisYMaxValue();
 		double dYMin = aoInfo.get(0).getAxisYMinValue();
 
-		// Check all the points
-		for (int iPoints = 0; iPoints<aoPoints.size(); iPoints++) {
-			if (aoPoints.get(0)!=null) {
-				// Is over the top?
-				if (aoPoints.get(0).getVal()>dYMax)
-				{
-					// Take the new Max
-					dYMax = aoPoints.get(0).getVal();
+
+		if (aoPoints != null)
+		{
+			// Check all the points
+			for (int iPoints = 0; iPoints<aoPoints.size(); iPoints++) {
+				if (aoPoints.get(0)!=null) {
+					// Is over the top?
+					if (aoPoints.get(0).getVal()>dYMax)
+					{
+						// Take the new Max
+						dYMax = aoPoints.get(0).getVal();
+					}
 				}
 			}
-		}
 
-		// Check if max was changed
-		if (dYMax>aoInfo.get(0).getAxisYMaxValue()) {
+			// Check if max was changed
+			if (dYMax>aoInfo.get(0).getAxisYMaxValue()) {
 
-			// Ok, round it
-			dYMax *= 1.1;
-			try{
-				System.out.println("Chart Max value autorange for " + aoInfo.get(0).getSensorType() + " in " + oStationAnag.getName());
+				// Ok, round it
+				if (dYMax > 0)
+					dYMax *= 1.1;
+				else
+					dYMax *= 0.9;
+				try{
+					System.out.println("Chart Max value autorange for " + aoInfo.get(0).getSensorType() + " in " + oStationAnag.getName());
+				}
+				catch(Exception oEx) {
+					oEx.printStackTrace();
+				}
 			}
-			catch(Exception oEx) {
-				oEx.printStackTrace();
-			}
-		}
 
+			// Check if max was changed
+			if (dYMin<aoInfo.get(0).getAxisYMinValue()) {
+
+				// Ok, round it
+				if (dYMin > 0)
+					dYMin *= 0.9;
+				else
+					dYMin *= 1.1;
+				try{
+					System.out.println("Chart Min value autorange for " + aoInfo.get(0).getSensorType() + " in " + oStationAnag.getName());
+				}
+				catch(Exception oEx) {
+					oEx.printStackTrace();
+				}
+			}
+
+		}
 		oDataChart.getDataSeries().add(oDataSerie);
 		oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
 		oDataChart.setSubTitle(aoInfo.get(0).getSubtitle());
