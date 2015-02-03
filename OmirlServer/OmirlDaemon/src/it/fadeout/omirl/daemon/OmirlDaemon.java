@@ -204,12 +204,6 @@ public class OmirlDaemon {
 					// For Each
 					for (StationAnag oStationAnag : aoAllStations) {
 						
-						if (oStationAnag.getStation_code().equals("PCERR"))
-						{
-							int b=0;
-							b++;
-						}
-
 						ArrayList<String> asOtherLinks = new ArrayList<>();
 
 						// Find other sensors links
