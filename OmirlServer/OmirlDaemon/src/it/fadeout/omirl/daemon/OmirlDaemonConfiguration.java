@@ -15,6 +15,8 @@ public class OmirlDaemonConfiguration {
 	int chartTimeRangeDays = 15;
 	
 	int sflocTimeRangeDays = 6;
+	
+	int sessioneTimeout = 20;
 
 	ArrayList<ChartInfo> chartsInfo = new ArrayList<>();
 	
@@ -88,5 +90,13 @@ public class OmirlDaemonConfiguration {
 
 	public void setSflocTimeRangeDays(int sflocTimeRangeDays) {
 		this.sflocTimeRangeDays = sflocTimeRangeDays;
+	}
+
+	public int getSessioneTimeout() {
+		return sessioneTimeout;
+	}
+
+	public void setSessioneTimeout(int sessioneTimeout) {
+		this.sessioneTimeout = sessioneTimeout;
 	}	
 }

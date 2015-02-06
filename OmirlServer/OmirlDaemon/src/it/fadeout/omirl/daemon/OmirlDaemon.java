@@ -18,6 +18,7 @@ import it.fadeout.omirl.business.WindSummaryConfiguration;
 import it.fadeout.omirl.daemon.geoserver.GeoServerDataManager2;
 import it.fadeout.omirl.data.CreekThresholdRepository;
 import it.fadeout.omirl.data.HibernateUtils;
+import it.fadeout.omirl.data.OpenSessionRepository;
 import it.fadeout.omirl.data.SavedPeriodRepository;
 import it.fadeout.omirl.data.SflocRepository;
 import it.fadeout.omirl.data.StationAnagRepository;
@@ -187,7 +188,7 @@ public class OmirlDaemon {
 				}
 
 				try {
-
+					
 					// CHARTS ***********************************************************************
 					StationAnagRepository oStationAnagRepository = new StationAnagRepository();
 					StationDataRepository oStationDataRepository = new StationDataRepository();
@@ -785,6 +786,9 @@ public class OmirlDaemon {
 
 					// Update Summary Table
 					summaryTable();
+					
+					//Delete old session
+					deleteOldSession();
 
 				}
 				catch(Exception oEx) {
@@ -808,6 +812,18 @@ public class OmirlDaemon {
 		finally {
 			HibernateUtils.shutdown();
 		}		
+	}
+	
+	private void deleteOldSession()
+	{
+		OpenSessionRepository oRepository = new OpenSessionRepository();
+		try{
+			int iRowDeleted = oRepository.deleteOldSessionId(m_oConfig.getSessioneTimeout());
+			System.out.println("OmirlDaemon - Deleted " + iRowDeleted + " rows");
+		}
+		catch(Exception oEx){
+			oEx.printStackTrace();
+		}
 	}
 
 	private void serializeSfloc()
@@ -950,11 +966,13 @@ public class OmirlDaemon {
 			{
 				oDistrictSummaryGe.setMax(oGeMax.getValue());
 				oDistrictSummaryGe.setStationMax(oGeMax.getStationName());
+				oDistrictSummaryGe.setRefDateMax(oGeMax.getReferenceDate());
 			}
 			else 
 			{
 				oDistrictSummaryGe.setMax(-9999.0);
 				oDistrictSummaryGe.setStationMax("N.D.");
+				oDistrictSummaryGe.setRefDateMax(null);
 			}
 
 			SummaryInfoEntity oGeMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("GE", oActualDate);
@@ -963,15 +981,17 @@ public class OmirlDaemon {
 			{
 				oDistrictSummaryGe.setMin(oGeMin.getValue());
 				oDistrictSummaryGe.setStationMin(oGeMin.getStationName());
+				oDistrictSummaryGe.setRefDateMin(oGeMin.getReferenceDate());
 			}
 			else 
 			{
 				oDistrictSummaryGe.setMin(-9999.0);
-				oDistrictSummaryGe.setStationMin("N.D.");				
+				oDistrictSummaryGe.setStationMin("N.D.");
+				oDistrictSummaryGe.setRefDateMin(null);
 			}
 
 			oSummaryInfo.getDistrictInfo().add(oDistrictSummaryGe);
-
+			
 
 
 			SummaryInfoEntity oSvMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SV", oActualDate);
@@ -981,12 +1001,14 @@ public class OmirlDaemon {
 			if (oSvMax != null)
 			{
 				oDistrictSummarySv.setMax(oSvMax.getValue());
-				oDistrictSummarySv.setStationMax(oSvMax.getStationName());				
+				oDistrictSummarySv.setStationMax(oSvMax.getStationName());	
+				oDistrictSummarySv.setRefDateMax(oSvMax.getReferenceDate());	
 			}
 			else 
 			{
 				oDistrictSummarySv.setMax(-9999.0);
-				oDistrictSummarySv.setStationMax("N.D.");				
+				oDistrictSummarySv.setStationMax("N.D.");
+				oDistrictSummarySv.setRefDateMax(null);
 			}
 
 			SummaryInfoEntity oSvMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SV", oActualDate);
@@ -994,12 +1016,14 @@ public class OmirlDaemon {
 			if (oSvMin != null)
 			{
 				oDistrictSummarySv.setMin(oSvMin.getValue());
-				oDistrictSummarySv.setStationMin(oSvMin.getStationName());				
+				oDistrictSummarySv.setStationMin(oSvMin.getStationName());
+				oDistrictSummarySv.setRefDateMin(oSvMin.getReferenceDate());
 			}
 			else 
 			{
 				oDistrictSummarySv.setMin(-9999.0);
-				oDistrictSummarySv.setStationMin("N.D.");				
+				oDistrictSummarySv.setStationMin("N.D.");	
+				oDistrictSummarySv.setRefDateMin(null);
 			}
 
 			oSummaryInfo.getDistrictInfo().add(oDistrictSummarySv);
@@ -1014,11 +1038,13 @@ public class OmirlDaemon {
 			{
 				oDistrictSummaryIm.setMax(oImMax.getValue());
 				oDistrictSummaryIm.setStationMax(oImMax.getStationName());
+				oDistrictSummaryIm.setRefDateMax(oImMax.getReferenceDate());
 			}
 			else 
 			{
 				oDistrictSummaryIm.setMax(-9999.0);
-				oDistrictSummaryIm.setStationMax("N.D.");				
+				oDistrictSummaryIm.setStationMax("N.D.");
+				oDistrictSummaryIm.setRefDateMax(null);
 			}
 
 			SummaryInfoEntity oImMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("IM", oActualDate);
@@ -1026,12 +1052,14 @@ public class OmirlDaemon {
 			if (oImMin != null)
 			{
 				oDistrictSummaryIm.setMin(oImMin.getValue());
-				oDistrictSummaryIm.setStationMin(oImMin.getStationName());				
+				oDistrictSummaryIm.setStationMin(oImMin.getStationName());
+				oDistrictSummaryIm.setRefDateMin(oImMin.getReferenceDate());
 			}
 			else 
 			{
 				oDistrictSummaryIm.setMin(-9999.0);
 				oDistrictSummaryIm.setStationMin("N.D.");
+				oDistrictSummaryIm.setRefDateMin(null);
 			}
 
 			oSummaryInfo.getDistrictInfo().add(oDistrictSummaryIm);
@@ -1046,11 +1074,13 @@ public class OmirlDaemon {
 			{
 				oDistrictSummarySp.setMax(oSpMax.getValue());
 				oDistrictSummarySp.setStationMax(oSpMax.getStationName());
+				oDistrictSummarySp.setRefDateMax(oSpMax.getReferenceDate());
 			}
 			else 
 			{				
 				oDistrictSummarySp.setMax(-9999.0);
 				oDistrictSummarySp.setStationMax("N.D.");
+				oDistrictSummarySp.setRefDateMax(null);
 			}
 
 			SummaryInfoEntity oSpMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SP", oActualDate);
@@ -1058,12 +1088,14 @@ public class OmirlDaemon {
 			if (oSpMin!=null)
 			{
 				oDistrictSummarySp.setMin(oSpMin.getValue());
-				oDistrictSummarySp.setStationMin(oSpMin.getStationName());				
+				oDistrictSummarySp.setStationMin(oSpMin.getStationName());	
+				oDistrictSummarySp.setRefDateMin(oSpMin.getReferenceDate());
 			}
 			else
 			{
 				oDistrictSummarySp.setMin(-9999.0);
 				oDistrictSummarySp.setStationMin("N.D.");
+				oDistrictSummarySp.setRefDateMin(null);
 			}
 
 			oSummaryInfo.getDistrictInfo().add(oDistrictSummarySp);
@@ -1132,22 +1164,26 @@ public class OmirlDaemon {
 			{
 				oCostalSummaryInfo.setMax(oCostalWind.getValue());
 				oCostalSummaryInfo.setStationMax(oCostalWind.getStationName());
+				oCostalSummaryInfo.setRefDateWind(oCostalWind.getReferenceDate());
 			}
 			else
 			{
 				oCostalSummaryInfo.setMax(-9999.0);
-				oCostalSummaryInfo.setStationMax("N.D.");				
+				oCostalSummaryInfo.setStationMax("N.D.");
+				oCostalSummaryInfo.setRefDateWind(null);
 			}
 
 			if (oCostalGust != null)
 			{
 				oCostalSummaryInfo.setGust(oCostalGust.getValue());
 				oCostalSummaryInfo.setStationGust(oCostalGust.getStationName());
+				oCostalSummaryInfo.setRefDateGust(oCostalGust.getReferenceDate());
 			}
 			else 
 			{
 				oCostalSummaryInfo.setGust(-9999.0);
 				oCostalSummaryInfo.setStationGust("N.D.");
+				oCostalSummaryInfo.setRefDateGust(null);
 			}
 
 			oSummaryInfo.getWindInfo().add(oCostalSummaryInfo);
@@ -1168,22 +1204,26 @@ public class OmirlDaemon {
 			{
 				oInternalSummaryInfo.setMax(oInternalWind.getValue());
 				oInternalSummaryInfo.setStationMax(oInternalWind.getStationName());
+				oInternalSummaryInfo.setRefDateWind(oInternalWind.getReferenceDate());
 			}
 			else
 			{
 				oInternalSummaryInfo.setMax(-9999.0);
 				oInternalSummaryInfo.setStationMax("N.D.");				
+				oInternalSummaryInfo.setRefDateWind(null);
 			}
 
 			if (oInternalGust!=null)
 			{
 				oInternalSummaryInfo.setGust(oInternalGust.getValue());
-				oInternalSummaryInfo.setStationGust(oInternalGust.getStationName());				
+				oInternalSummaryInfo.setStationGust(oInternalGust.getStationName());
+				oInternalSummaryInfo.setRefDateGust(oInternalGust.getReferenceDate());
 			}
 			else
 			{
 				oInternalSummaryInfo.setGust(-9999.0);
-				oInternalSummaryInfo.setStationGust("N.D.");				
+				oInternalSummaryInfo.setStationGust("N.D.");
+				oInternalSummaryInfo.setRefDateGust(null);
 			}
 
 			oSummaryInfo.getWindInfo().add(oInternalSummaryInfo);
@@ -1531,7 +1571,8 @@ public class OmirlDaemon {
 		SensorListTableRowViewModel oVM = new SensorListTableRowViewModel();
 
 		oVM.setArea("");
-		oVM.setBasin(oStationAnag.getRiver());
+		oVM.setBasin(oStationAnag.getBasin());
+		oVM.setSubBasin(oStationAnag.getRiver());
 		oVM.setDistrict(oStationAnag.getDistrict());
 		oVM.setMunicipality(oStationAnag.getMunicipality());
 		oVM.setName(oStationAnag.getName());
@@ -2004,6 +2045,7 @@ public class OmirlDaemon {
 		oConfig.setMinutesPolling(2);
 		oConfig.setChartTimeRangeDays(16);
 		oConfig.setSflocTimeRangeDays(5);
+		oConfig.setSessioneTimeout(30);
 
 		ChartInfo oInfo = new ChartInfo();
 		oInfo.setAxisYMaxValue(150.0);
