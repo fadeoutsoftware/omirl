@@ -25,9 +25,9 @@
                 <tbody>
                 <tr ng-repeat="oDistrictRow in m_oController.getTemperatureDistrictSummary()">
                     <td>{{oDistrictRow.description}}</td>
-                    <td style="border-left: 1px solid #ddd;">{{oDistrictRow.min}}</td>
+                    <td style="border-left: 1px solid #ddd;">{{oDistrictRow.min}} {{m_oController.getFormattedRefDate(oDistrictRow.refDateMin)}}</td>
                     <td style="border-right: 1px solid #ddd;">{{oDistrictRow.stationMin}}</td>
-                    <td>{{oDistrictRow.max}}</td>
+                    <td>{{oDistrictRow.max}} {{m_oController.getFormattedRefDate(oDistrictRow.refDateMax)}}</td>
                     <td style="border-right: 1px solid #ddd;">{{oDistrictRow.stationMax}}</td>
                 </tr>
                 </tbody>
@@ -48,9 +48,9 @@
                 <tbody>
                 <tr ng-repeat="oAlertRow in m_oController.getTemperatureAlertSummary()">
                     <td>{{oAlertRow.description}}</td>
-                    <td style="border-left: 1px solid #ddd;">{{oAlertRow.min}}</td>
+                    <td style="border-left: 1px solid #ddd;">{{oAlertRow.min}} {{m_oController.getFormattedRefDate(oAlertRow.refDateMin)}}</td>
                     <td style="border-right: 1px solid #ddd;">{{oAlertRow.stationMin}}</td>
-                    <td>{{oAlertRow.max}}</td>
+                    <td>{{oAlertRow.max}} {{m_oController.getFormattedRefDate(oAlertRow.refDateMax)}}</td>
                     <td style="border-right: 1px solid #ddd;">{{oAlertRow.stationMax}}</td>
                 </tr>
                 </tbody>
@@ -63,18 +63,18 @@
                 <thead>
                 <tr>
                     <th>Vento</th>
-                    <th>Max (Km/h)</th>
+                    <th>Max (km/h)</th>
                     <th>Nella Stazione</th>
-                    <th>Raffica (Km/h)</th>
+                    <th>Raffica (km/h)</th>
                     <th>Nella Stazione</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="oWindRow in m_oController.getMaxWindSummary()">
                     <td>{{oWindRow.description}}</td>
-                    <td style="border-left: 1px solid #ddd;">{{oWindRow.max}}</td>
+                    <td style="border-left: 1px solid #ddd;">{{oWindRow.max}} {{m_oController.getFormattedRefDate(oWindRow.refDateWind)}}</td>
                     <td style="border-right: 1px solid #ddd;">{{oWindRow.stationMax}}</td>
-                    <td>{{oWindRow.gust}}</td>
+                    <td>{{oWindRow.gust}} {{m_oController.getFormattedRefDate(oWindRow.refDateGust)}}</td>
                     <td style="border-right: 1px solid #ddd;">{{oWindRow.stationGust}}</td>
                 </tr>
                 </tbody>

@@ -32,49 +32,57 @@
                 <div class="panel-footer">
                     <!--Panel footer-->
 
-                    <h4>Filtri colonne <span id="searchclear" class="searchclearall glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelAllFilters()" ng-show="m_oController.m_bShowCancelNameFilter || m_oController.m_bShowCancelDistrictFilter || m_oController.m_bShowCancelAreaFilter || m_oController.m_bShowCancelBasinFilter || m_oController.m_bShowCancelMunicipalityFilter"></span></h4>
+                    <h4>{{m_oController.m_sFilterLabel}} <span id="searchclear" class="searchclearall glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelAllFilters()" ng-show="m_oController.m_bShowCancelNameFilter || m_oController.m_bShowCancelDistrictFilter || m_oController.m_bShowCancelAreaFilter || m_oController.m_bShowCancelBasinFilter || m_oController.m_bShowCancelSubBasinFilter || m_oController.m_bShowCancelMunicipalityFilter"></span></h4>
+
 
                     <div class="row" id="tablesSearchPanel">
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-3">
                             <div class="btn-group">
                                 <label >Nome</label>
                                 <input id="searchinput" type="search" class="form-control searchinput" placeholder="type something..."  ng-model="search.name" ng-change="m_oController.NameChanged(search.name)" typeahead="station.name for station in m_oController.getStationList() | filter:$viewValue">
-                                <span id="searchclear" class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelNameFilter()" ng-show="m_oController.m_bShowCancelNameFilter"></span>
+                                <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelNameFilter()" ng-show="m_oController.m_bShowCancelNameFilter"></span>
                             </div>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-3">
                             <div class="btn-group">
                                 <label >Codice</label>
                                 <input type="search" class="form-control searchinput" placeholder="type something..."  ng-model="search.stationCode" ng-change="m_oController.CodeChanged(search.stationCode)" typeahead="station.stationCode for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelCodeFilter()" ng-show="m_oController.m_bShowCancelCodeFilter"></span>
                             </div>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-3">
                             <div class="btn-group">
                                 <label >Comune</label>
                                 <input type="search" class="form-control searchinput" placeholder="type something..."ng-model="search.municipality" ng-change="m_oController.MunicipalityChanged(search.municipality)" typeahead="station.municipality for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelMunicipalityFilter()" ng-show="m_oController.m_bShowCancelMunicipalityFilter"></span>
                             </div>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-3">
                             <div class="btn-group">
                                 <label>Provincia</label>
                                 <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.district" ng-change="m_oController.DistrictChanged(search.district)" typeahead="station.district for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelDistrictFilter()" ng-show="m_oController.m_bShowCancelDistrictFilter"></span>
                             </div>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-3">
                             <div class="btn-group">
                                 <label>Area</label>
                                 <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.area" ng-change="m_oController.AreaChanged(search.area)" typeahead="station.area for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelAreaFilter()" ng-show="m_oController.m_bShowCancelAreaFilter"></span>
                             </div>
                         </div>
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-3">
                             <div class="btn-group">
                                 <label >Bacino</label>
                                 <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.basin" ng-change="m_oController.BasinChanged(search.basin)" typeahead="station.basin for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelBasinFilter()" ng-show="m_oController.m_bShowCancelBasinFilter"></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-3">
+                            <div class="btn-group">
+                                <label >Sottobacino</label>
+                                <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.subBasin" ng-change="m_oController.SubBasinChanged(search.subBasin)" typeahead="station.subBasin for station in m_oController.getStationList() | filter:$viewValue">
+                                <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelSubBasinFilter()" ng-show="m_oController.m_bShowCancelSubBasinFilter"></span>
                             </div>
                         </div>
                     </div>
@@ -91,6 +99,7 @@
                             <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Provincia</th>
                             <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Area</th>
                             <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Bacino</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'subBasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Sottobacino</th>
                             <th class="table-list-header">Ultimo</th>
                             <th class="table-list-header">Max</th>
                             <th class="table-list-header">Min</th>
@@ -104,6 +113,7 @@
                             <td>{{oStation.district}}</td>
                             <td>{{oStation.area}}</td>
                             <td>{{oStation.basin}}</td>
+                            <td>{{oStation.subBasin}}</td>
                             <td>{{oStation.lastValue}}</td>
                             <td>{{oStation.value1}}</td>
                             <td>{{oStation.value2}}</td>

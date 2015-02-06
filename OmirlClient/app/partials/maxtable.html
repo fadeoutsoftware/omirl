@@ -14,6 +14,7 @@
                     <div class="row">
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
+                                <!--
                                 <div class="col-xs-12 col-sm-2 col-sm-offset-3 col-md-2 col-md-offset-4 col-lg-2 col-lg-offset-4">
                                     <label for="aggregation" class="control-label">Ritaglio</label>
                                 </div>
@@ -21,6 +22,7 @@
                                     <select class="form-control" id="aggregation" ng-change="m_oController.aggregationSelected()" ng-options="type.aggregation for aggregation in m_oController.m_aoAggregations" ng-model = "m_oController.m_oSelectedAggregation" ng-selected="m_oController.m_oSelectedAggregation">
                                     </select>
                                 </div>
+                                -->
                                 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 table-export-button-panel">
                                     <i class="fa fa-download" ng-show="m_oController.m_bDowloadEnabled" ng-click="m_oController.exportCsv()"></i>
                                 </div>
@@ -40,6 +42,7 @@
                         <thead>
                             <tr>
                                 <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Max (mm)</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'm5'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">5'</th>
                                 <th ng-click="m_oController.m_sOrderBy = 'm15'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">15'</th>
                                 <th ng-click="m_oController.m_sOrderBy = 'm30'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">30'</th>
                                 <th ng-click="m_oController.m_sOrderBy = 'h1'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">1h</th>
@@ -52,13 +55,14 @@
                         <tbody>
                             <tr ng-repeat="oMaxRow in m_oController.getMaxTableList() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
                                 <td>{{oMaxRow.name}}</td>
-                                <td class="{{oMaxRow.m15BkColor}}">{{oMaxRow.m15}}</td>
-                                <td class="{{oMaxRow.m30BkColor}}">{{oMaxRow.m30}}</td>
-                                <td class="{{oMaxRow.h1BkColor}}">{{oMaxRow.h1}}</td>
-                                <td class="{{oMaxRow.h3BkColor}}">{{oMaxRow.h3}}</td>
-                                <td class="{{oMaxRow.h6BkColor}}">{{oMaxRow.h6}}</td>
-                                <td class="{{oMaxRow.h12BkColor}}">{{oMaxRow.h12}}</td>
-                                <td class="{{oMaxRow.h24BkColor}}">{{oMaxRow.h24}}</td>
+                                <td class="{{oMaxRow.m5BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.m5)"></td>
+                                <td class="{{oMaxRow.m15BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.m15)"></td>
+                                <td class="{{oMaxRow.m30BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.m30)"></td>
+                                <td class="{{oMaxRow.h1BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h1)"></td>
+                                <td class="{{oMaxRow.h3BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h3)"></td>
+                                <td class="{{oMaxRow.h6BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h6)"></td>
+                                <td class="{{oMaxRow.h12BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h12)"></td>
+                                <td class="{{oMaxRow.h24BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h24)"></td>
                             </tr>
                         </tbody>
                     </table>
