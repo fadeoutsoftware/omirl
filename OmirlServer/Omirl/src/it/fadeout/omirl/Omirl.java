@@ -3,6 +3,8 @@ package it.fadeout.omirl;
 import it.fadeout.omirl.business.OmirlUser;
 import it.fadeout.omirl.business.OpenSession;
 import it.fadeout.omirl.business.config.HydroLinkConfig;
+import it.fadeout.omirl.business.config.LegendConfig;
+import it.fadeout.omirl.business.config.LegendStepConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
@@ -18,7 +20,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -93,6 +97,17 @@ public class Omirl extends Application {
 	 * @param sFilePath
 	 */
 	void WriteTestConfiguration(String sFilePath) {
+		
+		LegendStepConfig aoLegendStepConfig = new LegendStepConfig();
+		aoLegendStepConfig.setClr("#A000C8");
+		aoLegendStepConfig.setLmt(120);
+		LegendStepConfig aoLegendStepConfig2 = new LegendStepConfig();
+		aoLegendStepConfig2.setClr("#8200DC");
+		aoLegendStepConfig2.setLmt(240);
+		ArrayList<LegendStepConfig> oList = new ArrayList<LegendStepConfig>();
+		oList.add(aoLegendStepConfig);
+		oList.add(aoLegendStepConfig2);
+		
 		MapThirdLevelLinkConfig oThird = new MapThirdLevelLinkConfig();
 		oThird.setDefault(true);
 		oThird.setDescription("Interpolata");
@@ -135,6 +150,7 @@ public class Omirl extends Application {
 		oSensorLinkConfig.setMesUnit("mm");
 		oSensorLinkConfig.setFilePath("c:\\temp\\omirl");
 		oSensorLinkConfig.setColumnName("rain05m");
+		oSensorLinkConfig.setLegends(oList);
 		
 		StaticLinkConfig oStatic = new StaticLinkConfig();
 		oStatic.setDescription("Comuni");
@@ -272,7 +288,7 @@ public class Omirl extends Application {
 	}
  	
 	
-	public static File lastFileModified(String dir) {
+	public static File lastFileModified(String dir, Date oRefDate) {
 		File oDir = new File(dir);
 		
 		if (!oDir.exists()) {
@@ -293,6 +309,51 @@ public class Omirl extends Application {
 			if (file.lastModified() > liLastMod) {
 				oChoise = file;
 				liLastMod = file.lastModified();
+			}
+		}
+		
+		//se è presente una data allora prendiamo il file immediatamente più vicino in base ad ora e minuti
+		if (oRefDate != null)
+		{
+			long longRefDate = Long.MAX_VALUE;
+			SimpleDateFormat oFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+			try {
+				Date oParsed = oFormat.parse(oFormat.format(oRefDate));
+				longRefDate = oParsed.getTime();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			long lDiff = Long.MAX_VALUE;
+			for (File file : aoFiles) {
+				Date oDateFile = new Date(file.lastModified());
+				try {
+					Date oLastDateFile = oFormat.parse(oFormat.format(oDateFile));
+					long lTicksLastDateFile = oLastDateFile.getTime();
+					
+					//se per fortuna la differenza è uguale a 0 allora abbiamo trovato il file candidato
+					if (lTicksLastDateFile - longRefDate == 0)
+					{
+						oChoise = file;
+						break;
+					}
+					
+					//se la differenza è maggiore di 0 allora è un file precedente alla data
+					if (longRefDate - lTicksLastDateFile  > 0)
+					{
+						//vediamo se è il più vicino alla data selezionata
+						if ((longRefDate - lTicksLastDateFile) < lDiff)
+						{
+							oChoise = file;
+							lDiff = longRefDate - lTicksLastDateFile;
+						}
+					}
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		

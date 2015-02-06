@@ -13,8 +13,7 @@ public class OmirlNavigationConfig {
 	ArrayList<SatelliteLinkConfig> satelliteLinks = new ArrayList<SatelliteLinkConfig>();
 	ArrayList<TableLinkConfig> dataTableLinks = new ArrayList<>();
 	ArrayList<TableLinkConfig> tableLinks = new ArrayList<>();
-	ArrayList<LegendConfig> sensorLegends = new ArrayList<>();
-	ArrayList<LegendConfig> mapLegends = new ArrayList<>();
+	private ArrayList<LegendConfig> sensorLegends = new ArrayList<>();
 	
 	
 	public String getFilesBasePath() {
@@ -70,6 +69,12 @@ public class OmirlNavigationConfig {
 	}
 	public void setTableLinks(ArrayList<TableLinkConfig> tableLinks) {
 		this.tableLinks = tableLinks;
+	}
+	public ArrayList<LegendConfig> getSensorLegends() {
+		return sensorLegends;
+	}
+	public void setSensorLegends(ArrayList<LegendConfig> sensorLegends) {
+		this.sensorLegends = sensorLegends;
 	}
 	
 }

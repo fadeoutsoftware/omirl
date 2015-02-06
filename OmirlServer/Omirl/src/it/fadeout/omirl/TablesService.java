@@ -130,13 +130,22 @@ public class TablesService {
 	@GET
 	@Path("/summary")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public SummaryInfo GetSummaryTable(@HeaderParam("x-session-token") String sSessionId) {
+	public SummaryInfo GetSummaryTable(@HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
 		System.out.println("TablesService.GetSummaryTable");
 		
 		// Create return array List
 		SummaryInfo oSummaryInfo = null;
 		// Date: will be received from client...
 		Date oDate = new Date();
+		
+		if (sRefDate!=null)
+		{
+			if (sRefDate.equals("") == false) 
+			{
+				// TODO: Try e catch per fare il parsing 
+				// se è valido sostituire oDate.
+			}
+		}
 		
 		// Get Config
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
@@ -160,7 +169,7 @@ public class TablesService {
 				System.out.println("TablesService.GetSummaryTable: searching path " + sPath);
 				
 				// Get The Last File: TODO: here use also the date and get the last before the date!!
-				File oLastFile = Omirl.lastFileModified(sPath);
+				File oLastFile = Omirl.lastFileModified(sPath, oDate);
 				
 				// Found?
 				if (oLastFile != null) {

@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +46,7 @@ public class StationsService {
 	@Path("/{sCode}")
 	@Produces({"application/xml", "application/json", "text/xml"})
 	@Consumes({"application/xml", "application/json", "text/xml"})
-	public List<SensorViewModel> GetSensors(@PathParam("sCode") String sCode, @HeaderParam("x-session-token") String sSessionId) {
+	public List<SensorViewModel> GetSensors(@PathParam("sCode") String sCode, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
 		
 		System.out.println("StationsService.GetSensors: Code = " + sCode);
 		
@@ -52,6 +54,24 @@ public class StationsService {
 		List<SensorViewModel> aoSensors = new ArrayList<>();
 		// Date: will be received from client...
 		Date oDate = new Date();
+		
+		if (sRefDate!=null)
+		{
+			if (sRefDate.equals("") == false) 
+			{
+				// TODO: Try e catch per fare il parsing 
+				// se è valido sostituire oDate.
+				SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+				try {
+					
+					oDate = dtFormat.parse(sRefDate);
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		
 		// Get Config
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
@@ -78,7 +98,7 @@ public class StationsService {
 						System.out.println("StationsService.GetSensors: searching path " + sPath);
 						
 						// Get The Last File: TODO: here use also the date and get the last before the date!!
-						File oLastFile = Omirl.lastFileModified(sPath);
+						File oLastFile = Omirl.lastFileModified(sPath, oDate);
 						
 						// Found?
 						if (oLastFile != null) {

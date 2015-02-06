@@ -1,5 +1,7 @@
 package it.fadeout.omirl.business.config;
 
+import java.util.ArrayList;
+
 import it.fadeout.omirl.viewmodels.SensorLink;
 
 public class SensorLinkConfig {
@@ -15,6 +17,7 @@ public class SensorLinkConfig {
 	String columnName;
 	boolean isVisible = true;
 	boolean isClickable = true;
+	private ArrayList<LegendStepConfig> legends = new ArrayList<LegendStepConfig>();
 	
 	public String getCode() {
 		return code;
@@ -91,7 +94,7 @@ public class SensorLinkConfig {
 		oSensorLink.setMesUnit(mesUnit);
 		oSensorLink.setClickable(isClickable);
 		oSensorLink.setVisible(isVisible);
-		
+		oSensorLink.setLegends(legends);
 		return oSensorLink;
 	}
 	public boolean getIsVisible() {
@@ -105,6 +108,12 @@ public class SensorLinkConfig {
 	}
 	public void setIsClickable(boolean isClickable) {
 		this.isClickable = isClickable;
+	}
+	public ArrayList<LegendStepConfig> getLegends() {
+		return legends;
+	}
+	public void setLegends(ArrayList<LegendStepConfig> legends) {
+		this.legends = legends;
 	}
 
 }

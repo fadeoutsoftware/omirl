@@ -104,7 +104,7 @@ public class ChartService {
 				System.out.println("ChartService.GetChart: searching path " + sPath);
 				
 				// Get The Last File: TODO: here use also the date and get the last before the date!!
-				File oLastFile = Omirl.lastFileModified(sPath);
+				File oLastFile = Omirl.lastFileModified(sPath, oDate);
 				
 				// Found?
 				if (oLastFile != null) {
@@ -133,7 +133,7 @@ public class ChartService {
 	@GET
 	@Path("/csv/{sCode}/{sChart}")
 	@Produces({"application/octet-stream"})
-	public Response ExportCsvChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart, @HeaderParam("x-session-token") String sSessionId) {
+	public Response ExportCsvChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
 		
 	  	System.out.println("ChartService.GetChart: Code = " + sCode + " Chart = " + sChart);
 		
@@ -141,6 +141,15 @@ public class ChartService {
 		DataChart oDataChart = null;
 		// Date: will be received from client...
 		Date oDate = new Date();
+		
+		if (sRefDate!=null)
+		{
+			if (sRefDate.equals("") == false) 
+			{
+				// TODO: Try e catch per fare il parsing 
+				// se è valido sostituire oDate.
+			}
+		}
 		
 		// Get Config
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
@@ -178,7 +187,7 @@ public class ChartService {
 				System.out.println("ChartService.GetChart: searching path " + sPath);
 				
 				// Get The Last File: TODO: here use also the date and get the last before the date!!
-				File oLastFile = Omirl.lastFileModified(sPath);
+				File oLastFile = Omirl.lastFileModified(sPath, oDate);
 				
 				// Found?
 				if (oLastFile != null) {
