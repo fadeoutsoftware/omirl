@@ -22,7 +22,7 @@ var ChartController = (function() {
         this.m_sChartType = this.m_oScope.model.chartType;
 
         this.m_iHeight = 400;
-        this.m_iWidth = 550;
+        this.m_iWidth = 600;
 
         var oControllerVar = this;
 
@@ -234,6 +234,8 @@ var ChartController = (function() {
                 // Get Back the Chart Options
                 var oChartOptions;
 
+                var bold = false;
+
                 var oElement = oChart.options.chart.renderTo;
                 // Add Columns settings
                 if (bIsStockChart) {
@@ -244,7 +246,19 @@ var ChartController = (function() {
                             zoomType: "xy",
                             width: this.m_iWidth,
                             height: this.m_iHeight
-                            //,alignTicks: false
+
+                        },
+                        xAxis: {
+                            type:'datetime',
+                            labels: {
+                                formatter: function () {
+                                    var oDate = new Date(this.value);
+                                    if (oDate.getHours() != 0 && oDate.getMinutes() == 0)
+                                        return Highcharts.dateFormat('%H:%M', this.value);
+                                    else
+                                        return '<b>' + Highcharts.dateFormat('%d %b', this.value) + '</b>';
+                                }
+                            }
                         },
                         credits: {
                             enabled: false
@@ -342,7 +356,16 @@ var ChartController = (function() {
                             valueSuffix: this.oChartVM.tooltipValueSuffix
                         },
                         xAxis: {
-                            type: 'datetime'
+                            type: 'datetime',
+                            labels: {
+                                formatter: function () {
+                                    var oDate = new Date(this.value);
+                                    if (oDate.getHours() != 0 && oDate.getMinutes() == 0)
+                                        return Highcharts.dateFormat('%H:%M', this.value);
+                                    else
+                                        return '<b>' + Highcharts.dateFormat('%d %b', this.value) + '</b>';
+                                }
+                            }
                         },
                         title:{
                             text:''
@@ -429,19 +452,24 @@ var ChartController = (function() {
                                 oLine.color = oHorizontalLine.color;
                                 oLine.width = 2;
                                 oLine.value = oHorizontalLine.value;
-
                                 oPlotLines.push(oLine);
                             });
                         }
                     }
 
                     var iRotation=270;
-                    var iMargin = 40;
+                    var iMargin = 30;
+                    var xLabel =  -15;
+                    var yLabel = 3;
 
                     if (bIsStockChart) {
                         iRotation = 270;
-                        iMargin = 30;
+                        iMargin = 10;
+                        xLabel = 18;
+                        yLabel = 5;
                     }
+
+
                     // Set Main Axis Options
                     var oYAxisOptions = {
                         min: this.oChartVM.axisYMinValue,
@@ -450,12 +478,18 @@ var ChartController = (function() {
                         title: {
                             text: this.oChartVM.axisYTitle,
                             rotation: iRotation,
-                            margin: iMargin
+                            margin: iMargin,
+                            offset:40
                         },
                         opposite: this.oChartVM.axisIsOpposite,
                         plotLines: oPlotLines,
                         minPadding: 0,
-                        startOnTick: true
+                        startOnTick: true,
+                        alternateGridColor: 'rgba(0, 144, 201, 0.1)',
+                        labels:{
+                            x: xLabel,
+                            y: yLabel
+                        }
                     };
 
                     oChart.yAxis[0].setOptions(oYAxisOptions);
@@ -477,7 +511,7 @@ var ChartController = (function() {
                             title: {
                                 text:oAdditionalAxes.axisYTitle,
                                 rotation: 270,
-                                margin: 30
+                                margin: 20
                             },
                             opposite: oAdditionalAxes.isOpposite,
                             min: oAdditionalAxes.axisYMinValue,
@@ -509,31 +543,41 @@ var ChartController = (function() {
 */
                 }
 
+                /*
                 // X AXIS
                 if (angular.isDefined(oChart.xAxis[0])) {
-                    if (this.oChartVM.dataSeries.length > 0)
-                    {
-                        var oLastvalue = this.oChartVM.dataSeries[0].data[this.oChartVM.dataSeries[0].data.length-1][0];
+                    if (this.oChartVM.dataSeries.length > 0) {
+                        var oLastvalue = null;
+                        //search last value != null
+                        for (var iCount = this.oChartVM.dataSeries[0].data.length - 1; iCount >= 0; iCount--) {
+                            if (this.oChartVM.dataSeries[0].data[iCount][1] != null) {
+                                oLastvalue = this.oChartVM.dataSeries[0].data[iCount][0];
+                                break;
+                            }
+                        }
                         // X AXIS
                         if (angular.isDefined(oChart.xAxis[0])) {
                             var oXAxisOptions = {
                                 type: 'datetime',
-                                plotBands: [{
-                                    color: 'rgba(255, 208, 0, 0.3)', // Color value
-                                    from: timenow, // Start of the plot band
-                                    to: oLastvalue // End of the plot band
-                                }],
-                                plotLines: [{
-                                    color: 'rgba(69, 163, 202, 1)', // Color value
-                                    dashStyle: 'Solid', // Style of the plot line. Default to solid
-                                    value: timenow, // Value of where the line will appear
-                                    width: '2' // Width of the line
-                                }]
+                                plotBands: [
+                                    {
+                                        color: 'rgba(255, 208, 0, 0.3)', // Color value
+                                        from: timenow, // Start of the plot band
+                                        to: oLastvalue // End of the plot band
+                                    }
+                                ],
+                                plotLines: [
+                                    {
+                                        color: 'rgba(69, 163, 202, 1)', // Color value
+                                        dashStyle: 'Solid', // Style of the plot line. Default to solid
+                                        value: timenow, // Value of where the line will appear
+                                        width: '2' // Width of the line
+                                    }
+                                ]
                             };
                         }
                     }
-                    else
-                    {
+                    else {
                         var oXAxisOptions = {
                             type: 'datetime'
                         };
@@ -541,7 +585,8 @@ var ChartController = (function() {
 
                     oChart.xAxis[0].setOptions(oXAxisOptions);
                 }
-
+*/
+                var xAxisDefined = false;
 
                 // For each time Serie
                 this.oChartVM.dataSeries.forEach(function(oSerie) {
@@ -606,8 +651,57 @@ var ChartController = (function() {
 
                     }
 
+                    if (!xAxisDefined) {
+                        if (angular.isDefined(oChart.xAxis[0])) {
+                            if (oControllerVar.oChartVM.dataSeries.length > 0) {
+                                var oLastvalue = null;
+                                //search last value != null
+                                for (var iCount = oControllerVar.oChartVM.dataSeries[0].data.length - 1; iCount >= 0; iCount--) {
+                                    if (oControllerVar.oChartVM.dataSeries[0].data[iCount][1] != null) {
+                                        oLastvalue = oControllerVar.oChartVM.dataSeries[0].data[iCount][0];
+                                        break;
+                                    }
+                                }
+                                // X AXIS
+                                if (angular.isDefined(oChart.xAxis[0])) {
+                                    var oXAxisOptions = {
+                                        type: 'datetime',
+                                        gridLineWidth: 2,
+                                        plotBands: [
+                                            {
+                                                color: 'rgba(255, 208, 0, 0.3)', // Color value
+                                                from: timenow, // Start of the plot band
+                                                to: oLastvalue, // End of the plot band
+                                                zIndex: 4
+                                            }
+                                        ],
+                                        plotLines: [
+                                            {
+                                                color: 'rgba(69, 163, 202, 1)', // Color value
+                                                dashStyle: 'Solid', // Style of the plot line. Default to solid
+                                                value: timenow, // Value of where the line will appear
+                                                width: '2', // Width of the line
+                                                zIndex: 4
+                                            }
+                                        ]
+
+                                    };
+                                }
+                            }
+                            else {
+                                var oXAxisOptions = {
+                                    type: 'datetime'
+                                };
+                            }
+                            xAxisDefined = true;
+                            oChart.xAxis[0].setOptions(oXAxisOptions);
+                        }
+                    }
+
                     oChart.addSeries(oSerie);
                 });
+
+
             }
 
 

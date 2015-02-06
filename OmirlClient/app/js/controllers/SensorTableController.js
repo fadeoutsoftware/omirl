@@ -18,6 +18,7 @@ var SensorTableController = (function() {
         this.m_bShowCancelNameFilter = false;
         this.m_bShowCancelCodeFilter = false;
         this.m_bShowCancelBasinFilter = false;
+        this.m_bShowCancelSubBasinFilter = false;
         this.m_bShowCancelDistrictFilter = false;
         this.m_bShowCancelMunicipalityFilter = false;
         this.m_bShowCancelAreaFilter = false;
@@ -30,7 +31,7 @@ var SensorTableController = (function() {
 
         this.m_bReverseOrder = false;
         this.m_sOrderBy = "name";
-
+        this.m_sFilterLabel = "Filtri colonne";
 
         var oControllerVar = this;
 
@@ -103,6 +104,7 @@ var SensorTableController = (function() {
 
             if (value.municipality == null) aoStations[key].municipality = "";
             if (value.basin == null) aoStations[key].basin = "";
+            if (value.subBasin == null) aoStations[key].subBasin = "";
             if (value.area == null) aoStations[key].area = "";
         });
 
@@ -172,74 +174,116 @@ var SensorTableController = (function() {
     SensorTableController.prototype.NameChanged = function(sNameFilter)
     {
         if (sNameFilter == "") this.m_bShowCancelNameFilter = false;
-        else this.m_bShowCancelNameFilter = true;
+        else {
+            this.m_bShowCancelNameFilter = true;
+            this.m_sFilterLabel = "Pulisci Filtri";
+        }
     }
 
     SensorTableController.prototype.CancelNameFilter = function()
     {
         this.m_oScope.search.name="";
         this.m_bShowCancelNameFilter = false;
+        this.m_sFilterLabel = "Filtri colonne";
     }
 
 
     SensorTableController.prototype.CodeChanged = function(sCodeFilter)
     {
         if (sCodeFilter == "") this.m_bShowCancelCodeFilter = false;
-        else this.m_bShowCancelCodeFilter = true;
+        else {
+            this.m_bShowCancelCodeFilter = true;
+            this.m_sFilterLabel = "Pulisci Filtri";
+        }
     }
 
     SensorTableController.prototype.CancelCodeFilter = function()
     {
         this.m_oScope.search.stationCode="";
         this.m_bShowCancelCodeFilter = false;
+        this.m_sFilterLabel = "Filtri colonne";
     }
     SensorTableController.prototype.AreaChanged = function(sAreaFilter)
     {
         if (sAreaFilter == "") this.m_bShowCancelAreaFilter = false;
-        else this.m_bShowCancelAreaFilter = true;
+        else {
+            this.m_bShowCancelAreaFilter = true;
+            this.m_sFilterLabel = "Pulisci Filtri";
+        }
     }
 
     SensorTableController.prototype.CancelAreaFilter = function()
     {
         this.m_oScope.search.area="";
         this.m_bShowCancelAreaFilter = false;
+        this.m_sFilterLabel = "Filtri colonne";
     }
 
     SensorTableController.prototype.DistrictChanged = function(sFilter)
     {
         if (sFilter == "") this.m_bShowCancelDistrictFilter = false;
-        else this.m_bShowCancelDistrictFilter = true;
+        else {
+            this.m_bShowCancelDistrictFilter = true;
+            this.m_sFilterLabel = "Pulisci Filtri";
+        }
     }
 
     SensorTableController.prototype.CancelDistrictFilter = function()
     {
         this.m_oScope.search.district="";
         this.m_bShowCancelDistrictFilter = false;
+        this.m_sFilterLabel = "Filtri colonne";
     }
 
 
     SensorTableController.prototype.BasinChanged = function(sFilter)
     {
         if (sFilter == "") this.m_bShowCancelBasinFilter = false;
-        else this.m_bShowCancelBasinFilter = true;
+        else {
+            this.m_bShowCancelBasinFilter = true;
+            this.m_sFilterLabel = "Pulisci Filtri";
+        }
     }
+
 
     SensorTableController.prototype.CancelBasinFilter = function()
     {
         this.m_oScope.search.basin="";
         this.m_bShowCancelBasinFilter = false;
+        this.m_sFilterLabel = "Filtri colonne";
+    }
+
+    SensorTableController.prototype.SubBasinChanged = function(sFilter)
+    {
+        if (sFilter == "") this.m_bShowCancelSubBasinFilter = false;
+        else
+        {
+            this.m_bShowCancelSubBasinFilter = true;
+            this.m_sFilterLabel = "Pulisci Filtri";
+        }
+    }
+
+    SensorTableController.prototype.CancelSubBasinFilter = function()
+    {
+        this.m_oScope.search.subBasin="";
+        this.m_bShowCancelSubBasinFilter = false;
+        this.m_sFilterLabel = "Filtri colonne";
     }
 
     SensorTableController.prototype.MunicipalityChanged = function(sFilter)
     {
         if (sFilter == "") this.m_bShowCancelMunicipalityFilter = false;
-        else this.m_bShowCancelMunicipalityFilter = true;
+        else {
+            this.m_bShowCancelMunicipalityFilter = true;
+            this.m_sFilterLabel = "Pulisci Filtri";
+        }
     }
 
     SensorTableController.prototype.CancelMunicipalityFilter = function()
     {
         this.m_oScope.search.municipality="";
         this.m_bShowCancelMunicipalityFilter = false;
+        this.m_sFilterLabel = "Filtri colonne";
     }
 
 

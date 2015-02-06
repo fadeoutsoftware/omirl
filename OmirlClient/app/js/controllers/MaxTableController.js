@@ -3,7 +3,7 @@
  */
 
 var MaxTableController = (function() {
-    function MaxTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService) {
+    function MaxTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, oSce) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -13,6 +13,7 @@ var MaxTableController = (function() {
         this.m_oChartService = oChartService;
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
+        this.m_oSce = oSce;
         this.m_bDowloadEnabled = false;
 
         this.m_aoMaxTable = [];
@@ -147,6 +148,9 @@ var MaxTableController = (function() {
         this.m_oLocation.path(sPath);
     }
 
+    MaxTableController.prototype.TrustDangerousSnippet = function(data) {
+        return this.m_oSce.trustAsHtml(data);
+    }
 
 
     MaxTableController.$inject = [
@@ -157,7 +161,8 @@ var MaxTableController = (function() {
         'dialogService',
         'ChartService',
         '$location',
-        'TableService'
+        'TableService',
+        '$sce'
     ];
     return MaxTableController;
 }) ();

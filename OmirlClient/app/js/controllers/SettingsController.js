@@ -116,7 +116,7 @@ var SettingsController = (function() {
 
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
-            var oBaseLayer1 = new OpenLayers.Layer.Google("Physical", {type: google.maps.MapTypeId.TERRAIN, numZoomLevels: 20});
+            var oBaseLayer1 = new OpenLayers.Layer.Google("Physical", {type: google.maps.MapTypeId.TERRAIN});
             var oBaseLayer2 = new OpenLayers.Layer.Google("Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
             var oBaseLayer3 = new OpenLayers.Layer.Google("Streets", {numZoomLevels: 20});
             var oBaseLayer4 = new OpenLayers.Layer.Google("Satellite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20});
@@ -170,6 +170,30 @@ var SettingsController = (function() {
         for (var iElement = 0; iElement < aoSensorsLinks.length; iElement++) {
             this.m_aoSensorsLinks.push(aoSensorsLinks[iElement]);
         }
+
+        //Date ref
+        var oNow = new Date();
+        if (this.m_oContstantsService.getReferenceDate() != "")
+        {
+
+            oNow = this.m_oContstantsService.getReferenceDate();
+            this.checkNow = false;
+            this.onNowChanged();
+        }
+        else
+            this.checkNow = true;
+
+        var oMonth = oNow.getMonth() + 1;
+        var oDay = oNow.getDate();
+        if(oNow.getMonth()<10)
+            oMonth = '0' + oMonth;
+        if(oNow.getDate()<10)
+            oDay = '0' + oDay;
+        this.dataRef = oNow.getFullYear() + '-' + oMonth + '-' + oDay;
+        this.ore = oNow.getHours();
+        this.min = oNow.getMinutes();
+
+
     }
 
 
@@ -419,6 +443,46 @@ var SettingsController = (function() {
             oController.m_sMapSettingsMessageStyle = "bs-callout-error";
         });
 
+    }
+
+    SettingsController.prototype.onNowChanged = function() {
+
+        if (this.checkNow) {
+            this.m_oContstantsService.setReferenceDate('');
+            return;
+        }
+
+        var oDate = new Date(this.dataRef);
+        /*
+        this.ore = oDate.getHours();
+        this.min = oDate.getMinutes();
+        var year = oDate.getFullYear();
+        var month = oDate.getMonth() + 1;
+        if (month < 10)
+            month = '0' + month;
+        var data = this.dataRef.getDate();
+        if (data < 10)
+            data = '0' + data;
+        var dateString = year + '-' + month + '-' + data;
+        */
+
+        this.m_oContstantsService.setReferenceDate(oDate);
+
+        //$('#data').val(dateString);
+    }
+
+
+
+    SettingsController.prototype.onDataChanged = function() {
+        try {
+            //var oDate = new Date(this.dataRef.getFullYear(), this.dataRef.getMonth() + 1, this.dataRef.getDate(), this.ore, this.min, 0);
+            var oDateString = this.dataRef + 'T' + this.ore + ':' + this.min + ':00';
+            var oDate = new Date(oDateString);
+            if (oDate != null)
+                this.m_oContstantsService.setReferenceDate(oDate);
+        } catch (err) {
+            alert("Errore! Verificare la data inserita.");
+        }
     }
 
     SettingsController.$inject = [

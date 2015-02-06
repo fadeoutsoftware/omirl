@@ -68,6 +68,22 @@ var SummaryTableController = (function() {
 
         this.m_bSideBarCollapsed = !this.m_bSideBarCollapsed;
     }
+
+    SummaryTableController.prototype.getFormattedRefDate = function (oDate) {
+        if (oDate == null)
+            return '[ND]';
+
+        var oFormatDate = new Date(oDate);
+        var oHours = oFormatDate.getHours();
+        var oMinutes = oFormatDate.getMinutes();
+        if (oHours < 10)
+            oHours = '0' + oHours;
+        if (oMinutes < 10)
+            oMinutes = '0' + oMinutes;
+        return '[' + oHours + ':' + oMinutes + ']';
+
+    }
+
     SummaryTableController.$inject = [
         '$scope',
         '$log',

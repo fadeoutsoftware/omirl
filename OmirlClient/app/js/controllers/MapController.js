@@ -156,7 +156,7 @@ var MapController = (function () {
 
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
-            var oBaseLayer1 = new OpenLayers.Layer.Google("Physical", {type: google.maps.MapTypeId.TERRAIN, numZoomLevels: 20});
+            var oBaseLayer1 = new OpenLayers.Layer.Google("Physical", {type: google.maps.MapTypeId.TERRAIN});
             var oBaseLayer2 = new OpenLayers.Layer.Google("Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
             var oBaseLayer3 = new OpenLayers.Layer.Google("Streets", {numZoomLevels: 20});
             var oBaseLayer4 = new OpenLayers.Layer.Google("Satellite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20});
@@ -998,6 +998,25 @@ var MapController = (function () {
                 var oReferenceDate = new Date(oStation.refDate+"Z");
                 var dOpacity = oServiceVar.getFeatureOpacity(oReferenceDate);
 
+                //color
+                var dValue = oStation.value;
+                if (oSensorLink.code == 'Sfloc'){
+                    var now = new Date().getTime(); //now
+                    var orefDate = new Date(oStation.refDate).getTime();
+                    var millisec = now - orefDate;
+                    dValue = Math.floor(millisec / 60000);  //minutes
+                }
+
+                var oColor = null;
+                if (angular.isDefined(oSensorLink.legends)) {
+                    for (var iColors = 0; iColors < oSensorLink.legends.length; iColors++) {
+                        if (dValue < oSensorLink.legends[iColors].lmt) {
+                            oColor = oSensorLink.legends[iColors].clr;
+                            break;
+                        }
+                    }
+                }
+
                 // Set attributes of the Feature
                 oFeature.attributes = {
                     // Station Id
@@ -1030,7 +1049,9 @@ var MapController = (function () {
                     // Image Path
                     imgPath: oStation.imgPath,
                     // Opacity
-                    opacity: dOpacity
+                    opacity: dOpacity,
+                    //Color
+                    color: oColor
                 };
 
                 // Add the feature to the array
@@ -1079,7 +1100,7 @@ var MapController = (function () {
                 oServiceVar.m_oMapService.stationsPopupControllerAdded = true;
             }
         }).error(function(data,status){
-            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+            oServiceVar.m_oLog.error('Error Contacting Omirl Server');
         });
 
 
