@@ -1243,9 +1243,13 @@ color: #2a6496;
     background-color: red;
 }
 
-
 .max-table-green-cell {
-    background-color: green;
+    background-color: transparent;
+}
+
+.max-table-border-cell {
+    border: 2px solid #000000 !important;
+
 }
 
 .max-table-yellow-cell {
