@@ -10,6 +10,7 @@ public class SensorListTableRowViewModel {
 	String network;
 	String municipality;
 	String area;
+	String subBasin;
 	
 	public String getStationCode() {
 		return stationCode;
@@ -52,5 +53,11 @@ public class SensorListTableRowViewModel {
 	}
 	public void setArea(String area) {
 		this.area = area;
+	}
+	public String getSubBasin() {
+		return subBasin;
+	}
+	public void setSubBasin(String subBasin) {
+		this.subBasin = subBasin;
 	}
 }

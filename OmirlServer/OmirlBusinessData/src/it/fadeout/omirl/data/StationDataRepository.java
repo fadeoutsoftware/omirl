@@ -16,6 +16,11 @@ public class StationDataRepository extends Repository<StationData>{
 	
 	public List<DataSeriePoint> getDataSerie(String sStationCode, String sColumnName, Date oStartDate) {
 		
+		if (sStationCode.equals("PCERR"))
+		{
+			int b = 0;
+			b++;
+		}
 		Session oSession = null;
 		List<DataSeriePoint> aoLastValues = null;
 		try {
