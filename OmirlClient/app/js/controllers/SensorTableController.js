@@ -31,7 +31,9 @@ var SensorTableController = (function() {
 
         this.m_bReverseOrder = false;
         this.m_sOrderBy = "name";
-        this.m_sFilterLabel = "Filtri colonne";
+        this.m_sFILTRICOLONNE = "Filtri Colonne";
+        this.m_sPULISCIFILTRI = "Pulisci Filtri";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
 
         var oControllerVar = this;
 
@@ -173,10 +175,13 @@ var SensorTableController = (function() {
 
     SensorTableController.prototype.NameChanged = function(sNameFilter)
     {
-        if (sNameFilter == "") this.m_bShowCancelNameFilter = false;
+        if (sNameFilter == "") {
+            this.m_bShowCancelNameFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
         else {
             this.m_bShowCancelNameFilter = true;
-            this.m_sFilterLabel = "Pulisci Filtri";
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
         }
     }
 
@@ -184,16 +189,19 @@ var SensorTableController = (function() {
     {
         this.m_oScope.search.name="";
         this.m_bShowCancelNameFilter = false;
-        this.m_sFilterLabel = "Filtri colonne";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
 
     SensorTableController.prototype.CodeChanged = function(sCodeFilter)
     {
-        if (sCodeFilter == "") this.m_bShowCancelCodeFilter = false;
+        if (sCodeFilter == "") {
+            this.m_bShowCancelCodeFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
         else {
             this.m_bShowCancelCodeFilter = true;
-            this.m_sFilterLabel = "Pulisci Filtri";
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
         }
     }
 
@@ -201,14 +209,17 @@ var SensorTableController = (function() {
     {
         this.m_oScope.search.stationCode="";
         this.m_bShowCancelCodeFilter = false;
-        this.m_sFilterLabel = "Filtri colonne";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
     SensorTableController.prototype.AreaChanged = function(sAreaFilter)
     {
-        if (sAreaFilter == "") this.m_bShowCancelAreaFilter = false;
+        if (sAreaFilter == "") {
+            this.m_bShowCancelAreaFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
         else {
             this.m_bShowCancelAreaFilter = true;
-            this.m_sFilterLabel = "Pulisci Filtri";
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
         }
     }
 
@@ -216,15 +227,18 @@ var SensorTableController = (function() {
     {
         this.m_oScope.search.area="";
         this.m_bShowCancelAreaFilter = false;
-        this.m_sFilterLabel = "Filtri colonne";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
     SensorTableController.prototype.DistrictChanged = function(sFilter)
     {
-        if (sFilter == "") this.m_bShowCancelDistrictFilter = false;
+        if (sFilter == "") {
+            this.m_bShowCancelDistrictFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
         else {
             this.m_bShowCancelDistrictFilter = true;
-            this.m_sFilterLabel = "Pulisci Filtri";
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
         }
     }
 
@@ -232,16 +246,19 @@ var SensorTableController = (function() {
     {
         this.m_oScope.search.district="";
         this.m_bShowCancelDistrictFilter = false;
-        this.m_sFilterLabel = "Filtri colonne";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
 
     SensorTableController.prototype.BasinChanged = function(sFilter)
     {
-        if (sFilter == "") this.m_bShowCancelBasinFilter = false;
+        if (sFilter == "") {
+            this.m_bShowCancelBasinFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
         else {
             this.m_bShowCancelBasinFilter = true;
-            this.m_sFilterLabel = "Pulisci Filtri";
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
         }
     }
 
@@ -250,16 +267,19 @@ var SensorTableController = (function() {
     {
         this.m_oScope.search.basin="";
         this.m_bShowCancelBasinFilter = false;
-        this.m_sFilterLabel = "Filtri colonne";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
     SensorTableController.prototype.SubBasinChanged = function(sFilter)
     {
-        if (sFilter == "") this.m_bShowCancelSubBasinFilter = false;
+        if (sFilter == "") {
+            this.m_bShowCancelSubBasinFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
         else
         {
             this.m_bShowCancelSubBasinFilter = true;
-            this.m_sFilterLabel = "Pulisci Filtri";
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
         }
     }
 
@@ -267,15 +287,18 @@ var SensorTableController = (function() {
     {
         this.m_oScope.search.subBasin="";
         this.m_bShowCancelSubBasinFilter = false;
-        this.m_sFilterLabel = "Filtri colonne";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
     SensorTableController.prototype.MunicipalityChanged = function(sFilter)
     {
-        if (sFilter == "") this.m_bShowCancelMunicipalityFilter = false;
+        if (sFilter == "") {
+            this.m_bShowCancelMunicipalityFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
         else {
             this.m_bShowCancelMunicipalityFilter = true;
-            this.m_sFilterLabel = "Pulisci Filtri";
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
         }
     }
 
@@ -283,7 +306,7 @@ var SensorTableController = (function() {
     {
         this.m_oScope.search.municipality="";
         this.m_bShowCancelMunicipalityFilter = false;
-        this.m_sFilterLabel = "Filtri colonne";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
 

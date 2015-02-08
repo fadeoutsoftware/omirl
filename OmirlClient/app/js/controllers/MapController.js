@@ -164,7 +164,7 @@ var MapController = (function () {
             /* Base layers inclusion */
             var oOSMLayer = new OpenLayers.Layer.XYZ(
                 'OSM',
-                'http://www.toolserver.org/tiles/bw-mapnik//${z}/${x}/${y}.png',
+                'http://www.toolserver.org/tiles/bw-mapnik/${z}/${x}/${y}.png',
                 {
                     attribution: 'basemap data &copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>',
                     sphericalMercator: true,

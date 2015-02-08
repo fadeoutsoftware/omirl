@@ -17,9 +17,14 @@ var StationsTableController = (function() {
 
         this.m_bShowCancelNameFilter = false;
         this.m_bShowCancelBasinFilter = false;
+        this.m_bShowCancelSubBasinFilter = false;
         this.m_bShowCancelDistrictFilter = false;
         this.m_bShowCancelMunicipalityFilter = false;
         this.m_bShowCancelAreaFilter = false;
+
+        this.m_sFILTRICOLONNE = "Filtri Colonne";
+        this.m_sPULISCIFILTRI = "Pulisci Filtri";
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
 
         this.m_aoStations = [];
         this.m_aoTypes = [];
@@ -84,6 +89,7 @@ var StationsTableController = (function() {
 
                 if (value.municipality == null) aoStations[key].municipality = "";
                 if (value.basin == null) aoStations[key].basin = "";
+                if (value.subBasin == null) aoStations[key].subBasin = "";
                 if (value.area == null) aoStations[key].area = "";
             });
 
@@ -150,69 +156,124 @@ var StationsTableController = (function() {
         this.CancelDistrictFilter();
         this.CancelAreaFilter();
         this.CancelBasinFilter();
+        this.CancelSubBasinFilter();
         this.CancelMunicipalityFilter();
     }
 
     StationsTableController.prototype.NameChanged = function(sNameFilter)
     {
-        if (sNameFilter == "") this.m_bShowCancelNameFilter = false;
-        else this.m_bShowCancelNameFilter = true;
+        if (sNameFilter == "") {
+            this.m_bShowCancelNameFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
+        else {
+            this.m_bShowCancelNameFilter = true;
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
+        }
     }
 
     StationsTableController.prototype.CancelNameFilter = function()
     {
         this.m_oScope.search.nameCode="";
         this.m_bShowCancelNameFilter = false;
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
 
     StationsTableController.prototype.AreaChanged = function(sAreaFilter)
     {
-        if (sAreaFilter == "") this.m_bShowCancelAreaFilter = false;
-        else this.m_bShowCancelAreaFilter = true;
+        if (sAreaFilter == "") {
+            this.m_bShowCancelAreaFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
+        else {
+            this.m_bShowCancelAreaFilter = true;
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
+        }
     }
 
     StationsTableController.prototype.CancelAreaFilter = function()
     {
         this.m_oScope.search.area="";
         this.m_bShowCancelAreaFilter = false;
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
     StationsTableController.prototype.DistrictChanged = function(sFilter)
     {
-        if (sFilter == "") this.m_bShowCancelDistrictFilter = false;
-        else this.m_bShowCancelDistrictFilter = true;
+        if (sFilter == "") {
+            this.m_bShowCancelDistrictFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
+        else {
+            this.m_bShowCancelDistrictFilter = true;
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
+        }
     }
 
     StationsTableController.prototype.CancelDistrictFilter = function()
     {
         this.m_oScope.search.district="";
         this.m_bShowCancelDistrictFilter = false;
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
 
     StationsTableController.prototype.BasinChanged = function(sFilter)
     {
-        if (sFilter == "") this.m_bShowCancelBasinFilter = false;
-        else this.m_bShowCancelBasinFilter = true;
+        if (sFilter == "") {
+            this.m_bShowCancelBasinFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
+        else {
+            this.m_bShowCancelBasinFilter = true;
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
+        }
+    }
+
+    StationsTableController.prototype.SubBasinChanged = function(sFilter)
+    {
+        if (sFilter == "") {
+            this.m_bShowCancelSubBasinFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
+        else {
+            this.m_bShowCancelSubBasinFilter = true;
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
+        }
     }
 
     StationsTableController.prototype.CancelBasinFilter = function()
     {
         this.m_oScope.search.basin="";
         this.m_bShowCancelBasinFilter = false;
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+    }
+
+    StationsTableController.prototype.CancelSubBasinFilter = function()
+    {
+        this.m_oScope.search.subBasin="";
+        this.m_bShowCancelSubBasinFilter = false;
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
     StationsTableController.prototype.MunicipalityChanged = function(sFilter)
     {
-        if (sFilter == "") this.m_bShowCancelMunicipalityFilter = false;
-        else this.m_bShowCancelMunicipalityFilter = true;
+        if (sFilter == "") {
+            this.m_bShowCancelMunicipalityFilter = false;
+            this.m_sFilterLabel = this.m_sFILTRICOLONNE;
+        }
+        else {
+            this.m_bShowCancelMunicipalityFilter = true;
+            this.m_sFilterLabel = this.m_sPULISCIFILTRI;
+        }
     }
 
     StationsTableController.prototype.CancelMunicipalityFilter = function()
     {
         this.m_oScope.search.municipality="";
         this.m_bShowCancelMunicipalityFilter = false;
+        this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
 
 
