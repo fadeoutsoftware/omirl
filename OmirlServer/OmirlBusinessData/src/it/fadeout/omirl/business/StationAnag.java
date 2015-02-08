@@ -79,7 +79,8 @@ public class StationAnag {
 	Integer battery_voltage_every;
 	@Column(name="leaf_wetness_every")
 	Integer leaf_wetness_every;
-	
+	@Column(name="warn_area")
+	String warn_area;
 	
 	public String getStation_code() {
 		return station_code;
@@ -290,5 +291,11 @@ public class StationAnag {
 	}
 	public void setLeaf_wetness_every(Integer leaf_wetness_every) {
 		this.leaf_wetness_every = leaf_wetness_every;
+	}
+	public String getWarn_area() {
+		return warn_area;
+	}
+	public void setWarn_area(String warn_area) {
+		this.warn_area = warn_area;
 	}
 }

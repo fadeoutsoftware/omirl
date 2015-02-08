@@ -201,6 +201,8 @@ public class OmirlDaemon {
 
 					// Get all the stations
 					List<StationAnag> aoAllStations = oStationAnagRepository.SelectAll(StationAnag.class);
+					//ArrayList<StationAnag> aoAllStations = new ArrayList<>();
+					//aoAllStations.add(oStationAnagRepository.selectByStationCode("PCERR"));
 
 					// For Each
 					for (StationAnag oStationAnag : aoAllStations) {
@@ -1291,12 +1293,6 @@ public class OmirlDaemon {
 			oRetDate = oRetDate.withMillisOfSecond(0);
 		}
 
-
-		//long lRetDate = oRetDate.getMillis();
-		//Date oTest = new Date(lRetDate);
-
-		// Return Date
-		//return oLocalRetDate.toDate();
 		if (bFixedWindow) return oRetDate.toDate();
 		else return oLocalRetDate.toDate();
 	}
@@ -1407,12 +1403,17 @@ public class OmirlDaemon {
 		{
 			// Check all the points
 			for (int iPoints = 0; iPoints<aoPoints.size(); iPoints++) {
-				if (aoPoints.get(0)!=null) {
+				if (aoPoints.get(iPoints)!=null) {
 					// Is over the top?
-					if (aoPoints.get(0).getVal()>dYMax)
+					if (aoPoints.get(iPoints).getVal()>dYMax)
 					{
 						// Take the new Max
-						dYMax = aoPoints.get(0).getVal();
+						dYMax = aoPoints.get(iPoints).getVal();
+					}
+					
+					if (aoPoints.get(iPoints).getVal()<dYMin)
+					{
+						dYMin = aoPoints.get(iPoints).getVal();
 					}
 				}
 			}
@@ -1518,8 +1519,6 @@ public class OmirlDaemon {
 		RefreshThresholds();
 
 		RefreshStationTables();
-
-		//DeleteTask();
 	}
 
 	/**
@@ -1536,6 +1535,8 @@ public class OmirlDaemon {
 				AnagTableInfo oTableInfo = aoTables.get(iTables);
 
 				List<StationAnag> aoStations = oStationAnagRepository.getListByType(oTableInfo.getColumnName());
+				
+				if (aoStations==null) continue;
 
 				SensorListTableViewModel oTable = new SensorListTableViewModel();
 				oTable.setSensorTye(oTableInfo.getSensorType());
@@ -1570,7 +1571,7 @@ public class OmirlDaemon {
 	public SensorListTableRowViewModel getSensorListTableRowViewModel(StationAnag oStationAnag) {
 		SensorListTableRowViewModel oVM = new SensorListTableRowViewModel();
 
-		oVM.setArea("");
+		oVM.setArea(oStationAnag.getWarn_area());
 		oVM.setBasin(oStationAnag.getBasin());
 		oVM.setSubBasin(oStationAnag.getRiver());
 		oVM.setDistrict(oStationAnag.getDistrict());
@@ -1693,6 +1694,12 @@ public class OmirlDaemon {
 							if (oDataSeriePoint.getRefDate().getTime() == lTimeCycle) {
 								adPoint[1] = new Double(oDataSeriePoint.getVal())*dConversionFactor;
 								iPointIndex++;
+							}
+							else if (oDataSeriePoint.getRefDate().getTime() < lTimeCycle)
+							{
+								iPointIndex++;
+								lTimeCycle-=lTimeStep;
+								continue;
 							}
 							else {
 								adPoint[1] = null;
