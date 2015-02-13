@@ -14,7 +14,6 @@ public class OpenSessionRepository extends Repository<OpenSession> {
 		OpenSession oOpenSession = null;
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createQuery("from OpenSession where sessionId = '" + sSessionId+ "'");
 			if (oQuery.list().size() > 0)
 				oOpenSession =  (OpenSession) oQuery.list().get(0);
@@ -44,14 +43,25 @@ public class OpenSessionRepository extends Repository<OpenSession> {
 		int iDeletedRow = 0;
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
+			oSession.beginTransaction();
 			Query oQuery = oSession.createQuery("delete from OpenSession where lastTouch < " + lRefDate);
 			iDeletedRow = oQuery.executeUpdate();
-
+			oSession.getTransaction().commit();
 		}
 		catch(Throwable oEx) {
 			System.err.println(oEx.toString());
 			oEx.printStackTrace();
+			
+			if (oSession!=null)
+			{
+				try {
+					oSession.getTransaction().rollback();
+				}
+				catch(Exception oEx2) {
+					System.err.println(oEx2.toString());
+					oEx2.printStackTrace();					
+				}
+			}
 		}
 		finally {
 			if (oSession!=null) {

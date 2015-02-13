@@ -13,7 +13,6 @@ public class OmirlUserRepository  extends Repository<OmirlUser> {
 		OmirlUser oUser = null;
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createQuery("from OmirlUser where userid = '" + sUserId+ "'");
 			if (oQuery.list().size() > 0)
 				oUser =  (OmirlUser) oQuery.list().get(0);
@@ -42,7 +41,6 @@ public class OmirlUserRepository  extends Repository<OmirlUser> {
 		
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createQuery("from OmirlUser where userid = '" + sUserId+ "' and password = '"+ sPassword + "'");
 			if (oQuery.list().size() > 0)
 			{

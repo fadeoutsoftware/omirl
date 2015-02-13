@@ -15,7 +15,6 @@ public class StationAnagRepository extends Repository<StationAnag> {
 		StationAnag oStation = null;
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createQuery("from StationAnag where station_code = '" + sCode+ "'");
 			if (oQuery.list().size() > 0)
 				oStation =  (StationAnag) oQuery.list().get(0);
@@ -41,7 +40,6 @@ public class StationAnagRepository extends Repository<StationAnag> {
 		List<StationAnag> aoLastValues = null;
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createSQLQuery("select * from station_anag where " + sColumnToCheck + " is not null order by name").addEntity(StationAnag.class);
 			if (oQuery.list().size() > 0)
 				aoLastValues =  (List<StationAnag>) oQuery.list();

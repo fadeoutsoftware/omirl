@@ -19,7 +19,6 @@ public List<Sfloc> selectLastHour(int iHour) {
 		List<Sfloc> aoLastValues = null;
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(new Date()); // sets calendar time/date
 		    cal.add(Calendar.HOUR_OF_DAY, -iHour); // adds six hour

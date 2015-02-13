@@ -23,7 +23,6 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			String sQuery = "select reference_date, "+ sColumnName +" as value from station_data where station_code = '"+sStationCode+"' and "+sColumnName+" is not null and reference_date >= ? order by reference_date";
 			
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(DataSeriePoint.class);
 			oQuery.setParameter(0, oStartDate);
 			if (oQuery.list().size() > 0)
@@ -53,8 +52,7 @@ public class StationDataRepository extends Repository<StationData>{
 			oSession = HibernateUtils.getSessionFactory().openSession();
 			
 			String sQuery = "select reference_date, "+ sColumnName +" as value from station_data where station_code = '"+sStationCode+"' and "+sColumnName+" is not null and reference_date >= ? and date_part('minute', reference_date)=0 order by reference_date";
-			
-			//oSession.beginTransaction();
+
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(DataSeriePoint.class);
 			oQuery.setParameter(0, oStartDate);
 			if (oQuery.list().size() > 0)
@@ -85,8 +83,7 @@ public class StationDataRepository extends Repository<StationData>{
 			oSession = HibernateUtils.getSessionFactory().openSession();
 			
 			String sQuery = "select reference_date, "+ sColumnName +" as value from station_data where station_code = '"+sStationCode+"' and "+sColumnName+" is not null and reference_date >= ? and date_part('minute', reference_date)=0  and date_part('hour', reference_date)=0 order by reference_date";
-			
-			//oSession.beginTransaction();
+
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(DataSeriePoint.class);
 			oQuery.setParameter(0, oStartDate);
 			if (oQuery.list().size() > 0)
@@ -127,7 +124,6 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			String sQuery = "select station_data.max_air_temp as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where district = '"+sDistrict+"' and station_data.max_air_temp is not null and reference_date >= ? order by value desc limit 1";
 			
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(SummaryInfoEntity.class);
 			oQuery.setParameter(0, oDate);
 			oSummaryInfoEntity =  (SummaryInfoEntity) oQuery.uniqueResult();
@@ -168,7 +164,6 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			String sQuery = "select station_data.min_air_temp as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where district = '"+sDistrict+"' and station_data.min_air_temp is not null and reference_date >= ? order by value limit 1";
 			
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(SummaryInfoEntity.class);
 			oQuery.setParameter(0, oDate);
 			oSummaryInfoEntity =  (SummaryInfoEntity) oQuery.uniqueResult();
@@ -208,7 +203,6 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			String sQuery = "select station_data.mean_wind_speed as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where station_data.station_code in (" + sCodes + ") and station_data.mean_wind_speed is not null and reference_date >= ? order by value desc limit 1";
 			
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(SummaryInfoEntity.class);
 			oQuery.setParameter(0, oDate);
 			oSummaryInfoEntity =  (SummaryInfoEntity) oQuery.uniqueResult();
@@ -249,7 +243,6 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			String sQuery = "select station_data.wind_gust as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where station_data.station_code in (" + sCodes + ") and station_data.wind_gust is not null and reference_date >= ? order by value desc limit 1";
 			
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(SummaryInfoEntity.class);
 			oQuery.setParameter(0, oDate);
 			oSummaryInfoEntity =  (SummaryInfoEntity) oQuery.uniqueResult();
@@ -292,7 +285,6 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			String sQuery = "select station_data.max_air_temp as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where station_anag.warn_area LIKE '%"+sAlertZone+"%' and station_data.max_air_temp is not null and reference_date >= ? order by value desc limit 1";
 			
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(SummaryInfoEntity.class);
 			oQuery.setParameter(0, oDate);
 			oSummaryInfoEntity =  (SummaryInfoEntity) oQuery.uniqueResult();
@@ -333,7 +325,6 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			String sQuery = "select station_data.min_air_temp as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where station_anag.warn_area LIKE '%"+sAlertZone+"%' and station_data.min_air_temp is not null and reference_date >= ? order by value limit 1";
 			
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(SummaryInfoEntity.class);
 			oQuery.setParameter(0, oDate);
 			oSummaryInfoEntity =  (SummaryInfoEntity) oQuery.uniqueResult();

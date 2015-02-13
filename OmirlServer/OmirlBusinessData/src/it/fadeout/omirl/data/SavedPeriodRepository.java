@@ -18,7 +18,6 @@ public class SavedPeriodRepository extends Repository<SavedPeriod> {
 		
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
 			long lTime = oDate.getTime();
 			Query oQuery = oSession.createQuery("from SavedPeriod where timestampStart <= " + lTime + " and timestampEnd>= " + lTime);
 			if (oQuery.list().size() > 0)

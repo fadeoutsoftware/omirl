@@ -13,7 +13,6 @@ public class CreekThresholdRepository extends Repository<CreekThreshold> {
 		CreekThreshold oThreshold = null;
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
 			Query oQuery = oSession.createQuery("from CreekThreshold where code = '" + sCode+ "'");
 			if (oQuery.list().size() > 0)
 				oThreshold =  (CreekThreshold) oQuery.list().get(0);

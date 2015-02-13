@@ -1105,46 +1105,289 @@ public class OmirlDaemon {
 			// trova il max e min temperatura di oggi x zona allertamento
 			AlertZoneSummaryInfo oZoneASummary = new AlertZoneSummaryInfo();
 			oZoneASummary.setDescription("A");
-			oZoneASummary.setMax(0);
-			oZoneASummary.setMin(0);
-			oZoneASummary.setStationMax("ND");
-			oZoneASummary.setStationMin("ND");
+			
+			SummaryInfoEntity oAMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("A", oActualDate);
+			
+			if (oAMax!=null)
+			{
+				oZoneASummary.setMax(oAMax.getValue());
+				oZoneASummary.setStationMax(oAMax.getStationName());
+				oZoneASummary.setRefDateMax(oAMax.getReferenceDate());
+			}
+			else
+			{
+				oZoneASummary.setMax(-9999.0);
+				oZoneASummary.setStationMax("N.D.");
+				oZoneASummary.setRefDateMax(null);				
+			}
+			
+			SummaryInfoEntity oAMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("A", oActualDate);
+			
+			if (oAMin!=null)
+			{
+				oZoneASummary.setMin(oAMin.getValue());
+				oZoneASummary.setStationMin(oAMin.getStationName());
+				oZoneASummary.setRefDateMin(oAMin.getReferenceDate());
+			}
+			else
+			{
+				oZoneASummary.setMin(-9999.0);
+				oZoneASummary.setStationMin("N.D.");
+				oZoneASummary.setRefDateMin(null);				
+			}
+			
 
 			oSummaryInfo.getAlertInfo().add(oZoneASummary);
 
 			AlertZoneSummaryInfo oZoneBSummary = new AlertZoneSummaryInfo();
 			oZoneBSummary.setDescription("B");
-			oZoneBSummary.setMax(0);
-			oZoneBSummary.setMin(0);
-			oZoneBSummary.setStationMax("ND");
-			oZoneBSummary.setStationMin("ND");
 
+			
+			SummaryInfoEntity oBMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("B", oActualDate);
+			
+			if (oBMax!=null)
+			{
+				oZoneBSummary.setMax(oBMax.getValue());
+				oZoneBSummary.setStationMax(oBMax.getStationName());
+				oZoneBSummary.setRefDateMax(oBMax.getReferenceDate());
+			}
+			else
+			{
+				oZoneBSummary.setMax(-9999.0);
+				oZoneBSummary.setStationMax("N.D.");
+				oZoneBSummary.setRefDateMax(null);				
+			}
+			
+			SummaryInfoEntity oBMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("B", oActualDate);
+			
+			if (oBMin!=null)
+			{
+				oZoneBSummary.setMin(oBMin.getValue());
+				oZoneBSummary.setStationMin(oBMin.getStationName());
+				oZoneBSummary.setRefDateMin(oBMin.getReferenceDate());
+			}
+			else
+			{
+				oZoneBSummary.setMin(-9999.0);
+				oZoneBSummary.setStationMin("N.D.");
+				oZoneBSummary.setRefDateMin(null);				
+			}
+			
 			oSummaryInfo.getAlertInfo().add(oZoneBSummary);
 
 			AlertZoneSummaryInfo oZoneCSummary = new AlertZoneSummaryInfo();
 			oZoneCSummary.setDescription("C");
-			oZoneCSummary.setMax(0);
-			oZoneCSummary.setMin(0);
-			oZoneCSummary.setStationMax("ND");
-			oZoneCSummary.setStationMin("ND");
+
+			SummaryInfoEntity oCMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("B", oActualDate);
+			
+			if (oBMax!=null)
+			{
+				oZoneCSummary.setMax(oCMax.getValue());
+				oZoneCSummary.setStationMax(oCMax.getStationName());
+				oZoneCSummary.setRefDateMax(oCMax.getReferenceDate());
+			}
+			else
+			{
+				oZoneCSummary.setMax(-9999.0);
+				oZoneCSummary.setStationMax("N.D.");
+				oZoneCSummary.setRefDateMax(null);				
+			}
+			
+			SummaryInfoEntity oCMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("B", oActualDate);
+			
+			if (oBMin!=null)
+			{
+				oZoneCSummary.setMin(oCMin.getValue());
+				oZoneCSummary.setStationMin(oCMin.getStationName());
+				oZoneCSummary.setRefDateMin(oCMin.getReferenceDate());
+			}
+			else
+			{
+				oZoneCSummary.setMin(-9999.0);
+				oZoneCSummary.setStationMin("N.D.");
+				oZoneCSummary.setRefDateMin(null);				
+			}			
 
 			oSummaryInfo.getAlertInfo().add(oZoneCSummary);
+			
+			
+			AlertZoneSummaryInfo oZoneCPSummary = new AlertZoneSummaryInfo();
+			oZoneCPSummary.setDescription("C+");
 
+			SummaryInfoEntity oCPMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("C+", oActualDate);
+			
+			if (oCPMax!=null)
+			{
+				oZoneCPSummary.setMax(oCPMax.getValue());
+				oZoneCPSummary.setStationMax(oCPMax.getStationName());
+				oZoneCPSummary.setRefDateMax(oCPMax.getReferenceDate());
+			}
+			else
+			{
+				oZoneCPSummary.setMax(-9999.0);
+				oZoneCPSummary.setStationMax("N.D.");
+				oZoneCPSummary.setRefDateMax(null);				
+			}
+			
+			SummaryInfoEntity oCPMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("C+", oActualDate);
+			
+			if (oCPMin!=null)
+			{
+				oZoneCPSummary.setMin(oCPMin.getValue());
+				oZoneCPSummary.setStationMin(oCPMin.getStationName());
+				oZoneCPSummary.setRefDateMin(oCPMin.getReferenceDate());
+			}
+			else
+			{
+				oZoneCPSummary.setMin(-9999.0);
+				oZoneCPSummary.setStationMin("N.D.");
+				oZoneCPSummary.setRefDateMin(null);				
+			}			
+
+			oSummaryInfo.getAlertInfo().add(oZoneCPSummary);			
+			
+			
+			AlertZoneSummaryInfo oZoneCMSummary = new AlertZoneSummaryInfo();
+			oZoneCMSummary.setDescription("C-");
+
+			SummaryInfoEntity oCMMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("C-", oActualDate);
+			
+			if (oCMMax!=null)
+			{
+				oZoneCMSummary.setMax(oCMMax.getValue());
+				oZoneCMSummary.setStationMax(oCMMax.getStationName());
+				oZoneCMSummary.setRefDateMax(oCMMax.getReferenceDate());
+			}
+			else
+			{
+				oZoneCMSummary.setMax(-9999.0);
+				oZoneCMSummary.setStationMax("N.D.");
+				oZoneCMSummary.setRefDateMax(null);				
+			}
+			
+			SummaryInfoEntity oCMMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("C-", oActualDate);
+			
+			if (oCMMin!=null)
+			{
+				oZoneCMSummary.setMin(oCMMin.getValue());
+				oZoneCMSummary.setStationMin(oCMMin.getStationName());
+				oZoneCMSummary.setRefDateMin(oCMMin.getReferenceDate());
+			}
+			else
+			{
+				oZoneCMSummary.setMin(-9999.0);
+				oZoneCMSummary.setStationMin("N.D.");
+				oZoneCMSummary.setRefDateMin(null);				
+			}			
+
+			oSummaryInfo.getAlertInfo().add(oZoneCMSummary);			
+			
+
+			AlertZoneSummaryInfo oZoneMSummary = new AlertZoneSummaryInfo();
+			oZoneMSummary.setDescription("M");
+			
+			SummaryInfoEntity oMMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("M", oActualDate);
+			
+			if (oMMax!=null)
+			{
+				oZoneMSummary.setMax(oMMax.getValue());
+				oZoneMSummary.setStationMax(oMMax.getStationName());
+				oZoneMSummary.setRefDateMax(oMMax.getReferenceDate());
+			}
+			else
+			{
+				oZoneMSummary.setMax(-9999.0);
+				oZoneMSummary.setStationMax("N.D.");
+				oZoneMSummary.setRefDateMax(null);				
+			}
+			
+			SummaryInfoEntity oMMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("M", oActualDate);
+			
+			if (oMMin!=null)
+			{
+				oZoneMSummary.setMin(oMMin.getValue());
+				oZoneMSummary.setStationMin(oMMin.getStationName());
+				oZoneMSummary.setRefDateMin(oMMin.getReferenceDate());
+			}
+			else
+			{
+				oZoneMSummary.setMin(-9999.0);
+				oZoneMSummary.setStationMin("N.D.");
+				oZoneMSummary.setRefDateMin(null);				
+			}			
+
+			oSummaryInfo.getAlertInfo().add(oZoneMSummary);
+			
+			
+			
 			AlertZoneSummaryInfo oZoneDSummary = new AlertZoneSummaryInfo();
 			oZoneDSummary.setDescription("D");
-			oZoneDSummary.setMax(0);
-			oZoneDSummary.setMin(0);
-			oZoneDSummary.setStationMax("ND");
-			oZoneDSummary.setStationMin("ND");
+			
+			SummaryInfoEntity oDMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("D", oActualDate);
+			
+			if (oDMax!=null)
+			{
+				oZoneDSummary.setMax(oDMax.getValue());
+				oZoneDSummary.setStationMax(oDMax.getStationName());
+				oZoneDSummary.setRefDateMax(oDMax.getReferenceDate());
+			}
+			else
+			{
+				oZoneDSummary.setMax(-9999.0);
+				oZoneDSummary.setStationMax("N.D.");
+				oZoneDSummary.setRefDateMax(null);				
+			}
+			
+			SummaryInfoEntity oDMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("D", oActualDate);
+			
+			if (oDMin!=null)
+			{
+				oZoneDSummary.setMin(oDMin.getValue());
+				oZoneDSummary.setStationMin(oDMin.getStationName());
+				oZoneDSummary.setRefDateMin(oDMin.getReferenceDate());
+			}
+			else
+			{
+				oZoneDSummary.setMin(-9999.0);
+				oZoneDSummary.setStationMin("N.D.");
+				oZoneDSummary.setRefDateMin(null);				
+			}			
 
 			oSummaryInfo.getAlertInfo().add(oZoneDSummary);
 
 			AlertZoneSummaryInfo oZoneESummary = new AlertZoneSummaryInfo();
 			oZoneESummary.setDescription("E");
-			oZoneESummary.setMax(0);
-			oZoneESummary.setMin(0);
-			oZoneESummary.setStationMax("ND");
-			oZoneESummary.setStationMin("ND");
+
+			SummaryInfoEntity oEMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("E", oActualDate);
+			
+			if (oEMax!=null)
+			{
+				oZoneESummary.setMax(oEMax.getValue());
+				oZoneESummary.setStationMax(oEMax.getStationName());
+				oZoneESummary.setRefDateMax(oEMax.getReferenceDate());
+			}
+			else
+			{
+				oZoneESummary.setMax(-9999.0);
+				oZoneESummary.setStationMax("N.D.");
+				oZoneESummary.setRefDateMax(null);				
+			}
+			
+			SummaryInfoEntity oEMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("E", oActualDate);
+			
+			if (oEMin!=null)
+			{
+				oZoneESummary.setMin(oEMin.getValue());
+				oZoneESummary.setStationMin(oEMin.getStationName());
+				oZoneESummary.setRefDateMin(oEMin.getReferenceDate());
+			}
+			else
+			{
+				oZoneESummary.setMin(-9999.0);
+				oZoneESummary.setStationMin("N.D.");
+				oZoneESummary.setRefDateMin(null);				
+			}			
+			
 
 			oSummaryInfo.getAlertInfo().add(oZoneESummary);
 
@@ -2477,10 +2720,19 @@ public class OmirlDaemon {
 	public static void Test() {
 		try {
 
+			
 
 			StationDataRepository oStationDataRepositorySum = new StationDataRepository();
-			SummaryInfoEntity oSummaryTest = oStationDataRepositorySum.getDistrictMaxTemperatureSummaryInfo("GE", new Date());
-			SummaryInfoEntity oSummaryMin =  oStationDataRepositorySum.getDistrictMinTemperatureSummaryInfo("GE", new Date());
+			
+			SummaryInfoEntity oZoneTest = oStationDataRepositorySum.getAlertZoneMaxTemperatureSummaryInfo("A", new Date());
+			SummaryInfoEntity oZoneMin =  oStationDataRepositorySum.getAlertZoneMinTemperatureSummaryInfo("A", new Date());
+
+			SummaryInfoEntity oZoneTest2 = oStationDataRepositorySum.getAlertZoneMaxTemperatureSummaryInfo("C+", new Date());
+			SummaryInfoEntity oZoneMin2 =  oStationDataRepositorySum.getAlertZoneMinTemperatureSummaryInfo("C+", new Date());
+
+			
+			SummaryInfoEntity oSummaryTest = oStationDataRepositorySum.getAlertZoneMaxTemperatureSummaryInfo("GE", new Date());
+			SummaryInfoEntity oSummaryMin =  oStationDataRepositorySum.getAlertZoneMinTemperatureSummaryInfo("GE", new Date());
 
 
 			Date oNow = new Date();

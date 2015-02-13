@@ -16,7 +16,7 @@ public class StationLastDataRepository extends Repository<StationLastData> {
 		List<SensorLastData> aoLastValues = null;
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
-			//oSession.beginTransaction();
+			
 			Query oQuery = oSession.createSQLQuery("select * from " + sTableName).addEntity(SensorLastData.class);
 			if (oQuery.list().size() > 0)
 				aoLastValues =  (List<SensorLastData>) oQuery.list();
