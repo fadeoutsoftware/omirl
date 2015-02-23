@@ -14,7 +14,7 @@ angular.module('omirl.ConstantsService', []).
         this.m_iRefreshRateMs = 1000*60;
         this.m_bUserLogged = false;
         this.m_oUser = null;
-        this.m_sReferenceDate = ""; // Diventerà tipo AAAAMMDDhhmm
+        this.m_sReferenceDate = "";
 
         this.getAPIURL = function() {
             return this.APIURL;
@@ -114,4 +114,57 @@ angular.module('omirl.ConstantsService', []).
             else return "";
         }
 
+        this.pad = function (number, length){
+            var str = "" + number;
+            while (str.length < length) {
+                str = '0'+str;
+            }
+            return str;
+        }
+
+        this.getTimezoneOffset  = function () {
+            var offset = new Date().getTimezoneOffset()
+            offset = ((offset<0? '+':'-')+ // Note the reversed sign!
+                this.pad(parseInt(Math.abs(offset/60)), 2)+
+                this.pad(Math.abs(offset%60), 2));
+
+            return offset;
+        }
+
+        this.getReferenceDateString = function()
+        {
+            if (this.m_sReferenceDate == null) return "";
+            if (this.m_sReferenceDate == "") return "";
+
+
+            var oYear = this.m_sReferenceDate.getFullYear();
+            var oMonth = this.m_sReferenceDate.getMonth() + 1;
+            var oDay = this.m_sReferenceDate.getDate();
+            var oHour = this.m_sReferenceDate.getHours();
+            var oMin = this.m_sReferenceDate.getMinutes();
+
+            if (oMonth<10)
+            {
+                oMonth = "0"+oMonth;
+            }
+
+            if (oDay<10)
+            {
+                oDay = "0"+oDay;
+            }
+
+            if (oHour<10)
+            {
+                oHour = "0"+oHour;
+            }
+
+            if (oMin<10)
+            {
+                oMin = "0"+oMin;
+            }
+
+            var sDateString = oYear+"-"+oMonth+"-" + oDay + 'T' + oHour + ':' + oMin + ':00.000' + this.getTimezoneOffset();
+
+            return sDateString;
+        }
     }]);

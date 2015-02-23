@@ -884,6 +884,11 @@ var MapController = (function () {
 
         if (this.m_oSelectedSensorLink.isClickable==false) return;
 
+        if (oFeature.attributes.sensorType == 'Webcam') {
+            alert('Missing WebCam Image');
+            return;
+        }
+
         var oControllerVar = this;
         var sStationCode = oFeature.attributes.shortCode;
         var sMunicipality = oFeature.attributes.municipality;

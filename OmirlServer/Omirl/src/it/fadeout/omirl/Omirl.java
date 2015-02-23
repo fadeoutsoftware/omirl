@@ -36,6 +36,8 @@ public class Omirl extends Application {
 	
 	@Context
 	ServletConfig m_oServletConfig;
+	
+	public static String s_sDateHeaderFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXX";
 
 	
 	@Override
@@ -321,7 +323,6 @@ public class Omirl extends Application {
 				Date oParsed = oFormat.parse(oFormat.format(oRefDate));
 				longRefDate = oParsed.getTime();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -351,7 +352,6 @@ public class Omirl extends Application {
 					}
 					
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

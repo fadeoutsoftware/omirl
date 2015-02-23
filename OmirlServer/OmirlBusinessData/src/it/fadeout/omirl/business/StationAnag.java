@@ -81,6 +81,10 @@ public class StationAnag {
 	Integer leaf_wetness_every;
 	@Column(name="warn_area")
 	String warn_area;
+	@Column(name="near_sea")
+	Integer near_sea;
+	@Column(name="webcam_every")
+	Integer webcam_every;
 	
 	public String getStation_code() {
 		return station_code;
@@ -297,5 +301,17 @@ public class StationAnag {
 	}
 	public void setWarn_area(String warn_area) {
 		this.warn_area = warn_area;
+	}
+	public Integer getNear_sea() {
+		return near_sea;
+	}
+	public void setNear_sea(Integer near_sea) {
+		this.near_sea = near_sea;
+	}
+	public Integer getWebcam_every() {
+		return webcam_every;
+	}
+	public void setWebcam_every(Integer webcam_every) {
+		this.webcam_every = webcam_every;
 	}
 }

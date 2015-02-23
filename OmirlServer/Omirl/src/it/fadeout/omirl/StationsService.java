@@ -59,15 +59,14 @@ public class StationsService {
 		{
 			if (sRefDate.equals("") == false) 
 			{
-				// TODO: Try e catch per fare il parsing 
+				// Try e catch per fare il parsing 
 				// se è valido sostituire oDate.
-				SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 				try {
 					
 					oDate = dtFormat.parse(sRefDate);
 					
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -112,6 +111,9 @@ public class StationsService {
 								e.printStackTrace();
 							}							
 						}
+					}
+					else {
+						System.out.println("StationsService.GetSensors: WARNING path is null");
 					}
 					
 					// We are done

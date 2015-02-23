@@ -165,8 +165,6 @@ public class OmirlDaemon {
 		//publishMaps();
 		//if (true) return;
 
-		//summaryTable();
-
 		Date oLastDate = null;
 
 		try {
@@ -778,7 +776,9 @@ public class OmirlDaemon {
 					SerializeSensorLast("snow", oLastRepo);
 					SerializeSensorLast("boa", oLastRepo);
 					SerializeSensorLast("wind", oLastRepo);
-
+					
+					// Serialize WebCAM Layer
+					SerializeWebCamLayer();
 
 					// Serialize ALL SFLOC
 					serializeSfloc();
@@ -1391,14 +1391,25 @@ public class OmirlDaemon {
 
 			oSummaryInfo.getAlertInfo().add(oZoneESummary);
 
+			StationAnagRepository oStationAnagRepository  = new StationAnagRepository();
+			
+			List<StationAnag> aoCostalStations = oStationAnagRepository.getCostalWindStations();
 
 			// Trova il max del vento e raffica di oggi per le stazioni che sono in configurazione.
 			String sCostalCodes = "";
+			
+			/*
 			for (int iCodes=0; iCodes<m_oConfig.getWindSummaryInfo().getCostalCodes().size(); iCodes++) {
 				sCostalCodes += "'" + m_oConfig.getWindSummaryInfo().getCostalCodes().get(iCodes) + "'";
 				if (iCodes != m_oConfig.getWindSummaryInfo().getCostalCodes().size()-1) sCostalCodes += ", ";
 			}
+			*/
+			for (int iCodes=0; iCodes<aoCostalStations.size(); iCodes++) {
+				sCostalCodes += "'" + aoCostalStations.get(iCodes).getStation_code() + "'";
+				if (iCodes != aoCostalStations.size()-1) sCostalCodes += ", ";
+			}
 
+			
 			SummaryInfoEntity oCostalWind = oStationDataRepository.getWindMaxSummaryInfo(sCostalCodes, oActualDate);
 			SummaryInfoEntity oCostalGust = oStationDataRepository.getWindGustSummaryInfo(sCostalCodes, oActualDate);
 
@@ -1433,12 +1444,19 @@ public class OmirlDaemon {
 
 			oSummaryInfo.getWindInfo().add(oCostalSummaryInfo);
 
-
+			List<StationAnag> aoInternalStations = oStationAnagRepository.getInternalWindStations();
 			String sInternalCodes = "";
+			/*
 			for (int iCodes=0; iCodes<m_oConfig.getWindSummaryInfo().getInternalCodes().size(); iCodes++) {
 				sInternalCodes += "'" + m_oConfig.getWindSummaryInfo().getInternalCodes().get(iCodes) + "'";
 				if (iCodes != m_oConfig.getWindSummaryInfo().getInternalCodes().size()-1) sInternalCodes += ", ";
 			}
+			*/
+			for (int iCodes=0; iCodes<aoInternalStations.size(); iCodes++) {
+				sInternalCodes += "'" + aoInternalStations.get(iCodes).getStation_code() + "'";
+				if (iCodes != aoInternalStations.size()-1) sInternalCodes += ", ";
+			}
+			
 
 			SummaryInfoEntity oInternalWind = oStationDataRepository.getWindMaxSummaryInfo(sInternalCodes, oActualDate);
 			SummaryInfoEntity oInternalGust = oStationDataRepository.getWindGustSummaryInfo(sInternalCodes, oActualDate);
@@ -2035,6 +2053,78 @@ public class OmirlDaemon {
 				System.out.println("OmirlDaemon ");
 				System.out.println("OmirlDaemon - There was an error reading last values");
 			}							
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
+		}
+	}
+	
+	/**
+	 *  Serializes an XML file with the last list of all the stations with a webcam
+	 */
+	public void SerializeWebCamLayer()
+	{
+		try {
+			StationAnagRepository oStationAnagRepository = new StationAnagRepository();
+			
+			// Get Webcam list
+			List<StationAnag> aoWebCams = oStationAnagRepository.getListByType("webcam_every");
+			
+			if (aoWebCams!=null)
+			{
+				// One List for return
+				List<SensorViewModel> aoSensoViewModel = new ArrayList<>();
+
+				// For each station
+				for (StationAnag oStation : aoWebCams) {
+					try {
+						// Create the view model
+						SensorViewModel oSensorViewModel = new SensorViewModel();
+						
+						// Fill it
+						if (oStation.getElevation() != null) oSensorViewModel.setAlt(oStation.getElevation().intValue());
+						else oSensorViewModel.setAlt(-1);
+						
+						oSensorViewModel.setImgPath("");
+						oSensorViewModel.setLat(oStation.getLat()/100000.0);
+						oSensorViewModel.setLon(oStation.getLon()/100000.0);
+						if (oStation.getName()!=null) oSensorViewModel.setName(oStation.getName());
+						if (oStation.getMunicipality()!=null)
+						{
+							oSensorViewModel.setMunicipality(oStation.getMunicipality());
+						}
+						else
+						{
+							oSensorViewModel.setMunicipality("-");
+						}
+						
+						oSensorViewModel.setOtherHtml("");
+						oSensorViewModel.setRefDate(new Date());
+						oSensorViewModel.setShortCode(oStation.getStation_code());
+						oSensorViewModel.setStationId(1);
+						oSensorViewModel.setValue(0.0);
+						oSensorViewModel.setIncrement(0);
+						
+						if (oSensorViewModel != null) {
+							aoSensoViewModel.add(oSensorViewModel);
+						}						
+					}
+					catch(Exception oInnerEx) {
+						oInnerEx.printStackTrace();
+					}
+				}
+
+				//Serialize Result
+				Date oDate = new Date();
+				String sName = "webcam";
+
+				String sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/stations/" + sName,oDate);
+
+				if (sFullPath != null)  {
+					String sFileName = sName+m_oDateFormat.format(oDate)+".xml"; 
+					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoSensoViewModel);
+				}				
+			}
 		}
 		catch(Exception oEx) {
 			oEx.printStackTrace();

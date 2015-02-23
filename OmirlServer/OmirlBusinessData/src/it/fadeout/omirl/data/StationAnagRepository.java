@@ -1,5 +1,6 @@
 package it.fadeout.omirl.data;
 
+import it.fadeout.omirl.business.SectionAnag;
 import it.fadeout.omirl.business.StationAnag;
 
 import java.util.List;
@@ -58,5 +59,60 @@ public class StationAnagRepository extends Repository<StationAnag> {
 
 		}
 		return aoLastValues;	
+	}
+	
+	
+	
+	public List<StationAnag> getCostalWindStations() {
+		
+		Session oSession = null;
+		List<StationAnag> aoLastValues = null;
+		try {
+			oSession = HibernateUtils.getSessionFactory().openSession();
+			Query oQuery = oSession.createSQLQuery("select * from station_anag where near_sea=1 order by name").addEntity(StationAnag.class);
+			if (oQuery.list().size() > 0)
+				aoLastValues =  (List<StationAnag>) oQuery.list();
+
+		}
+		catch(Throwable oEx) {
+			System.err.println(oEx.toString());
+			oEx.printStackTrace();
+		}
+		finally {
+			if (oSession!=null) {
+				oSession.flush();
+				oSession.clear();
+				oSession.close();
+			}
+
+		}
+		return aoLastValues;		
+	}
+
+	
+	public List<StationAnag> getInternalWindStations() {
+		
+		Session oSession = null;
+		List<StationAnag> aoLastValues = null;
+		try {
+			oSession = HibernateUtils.getSessionFactory().openSession();
+			Query oQuery = oSession.createSQLQuery("select * from station_anag where near_sea=0 order by name").addEntity(StationAnag.class);
+			if (oQuery.list().size() > 0)
+				aoLastValues =  (List<StationAnag>) oQuery.list();
+
+		}
+		catch(Throwable oEx) {
+			System.err.println(oEx.toString());
+			oEx.printStackTrace();
+		}
+		finally {
+			if (oSession!=null) {
+				oSession.flush();
+				oSession.clear();
+				oSession.close();
+			}
+
+		}
+		return aoLastValues;			
 	}
 }

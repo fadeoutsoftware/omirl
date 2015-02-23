@@ -55,14 +55,14 @@
                         <tbody>
                             <tr ng-repeat="oMaxRow in m_oController.getMaxTableList() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
                                 <td>{{oMaxRow.name}}</td>
-                                <td class="{{oMaxRow.m5BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.m5)"></td>
-                                <td class="{{oMaxRow.m15BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.m15)"></td>
-                                <td class="{{oMaxRow.m30BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.m30)"></td>
-                                <td class="{{oMaxRow.h1BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h1)"></td>
-                                <td class="{{oMaxRow.h3BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h3)"></td>
-                                <td class="{{oMaxRow.h6BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h6)"></td>
-                                <td class="{{oMaxRow.h12BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h12)"></td>
-                                <td class="{{oMaxRow.h24BkColor}}" ng-bind-html="m_oController.TrustDangerousSnippet(oMaxRow.h24)"></td>
+                                <td class="{{oMaxRow.m5BkColor}}"><b>{{oMaxRow.m5val}}</b>&nbsp;{{oMaxRow.m5}}</td>
+                                <td class="{{oMaxRow.m15BkColor}}"><b>{{oMaxRow.m15val}}</b>&nbsp;{{oMaxRow.m15}}</td>
+                                <td class="{{oMaxRow.m30BkColor}}"><b>{{oMaxRow.m30val}}</b>&nbsp;{{oMaxRow.m30}}</td>
+                                <td class="{{oMaxRow.h1BkColor}}"><b>{{oMaxRow.h1val}}</b>&nbsp;{{oMaxRow.h1}}</td>
+                                <td class="{{oMaxRow.h3BkColor}}"><b>{{oMaxRow.h3val}}</b>&nbsp;{{oMaxRow.h3}}</td>
+                                <td class="{{oMaxRow.h6BkColor}}"><b>{{oMaxRow.h6val}}</b>&nbsp;{{oMaxRow.h6}}</td>
+                                <td class="{{oMaxRow.h12BkColor}}"><b>{{oMaxRow.h12val}}</b>&nbsp;{{oMaxRow.h12}}</td>
+                                <td class="{{oMaxRow.h24BkColor}}"><b>{{oMaxRow.h24val}}</b>&nbsp;{{oMaxRow.h24}}</td>
                             </tr>
                         </tbody>
                     </table>

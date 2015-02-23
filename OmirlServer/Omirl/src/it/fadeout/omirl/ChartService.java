@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -63,8 +64,16 @@ public class ChartService {
 		{
 			if (sRefDate.equals("") == false) 
 			{
-				// TODO: Try e catch per fare il parsing 
+				// Try e catch per fare il parsing 
 				// se è valido sostituire oDate.
+				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
+				try {
+					
+					oDate = dtFormat.parse(sRefDate);
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -146,8 +155,16 @@ public class ChartService {
 		{
 			if (sRefDate.equals("") == false) 
 			{
-				// TODO: Try e catch per fare il parsing 
+				// Try e catch per fare il parsing 
 				// se è valido sostituire oDate.
+				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
+				try {
+					
+					oDate = dtFormat.parse(sRefDate);
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		

@@ -219,6 +219,11 @@ var ChartController = (function() {
         //Date now to show vertical line
         var timenow = new Date().getTime();
 
+        if (this.m_oConstantsService.getReferenceDate()!="")
+        {
+            timenow = this.m_oConstantsService.getReferenceDate();
+        }
+
         if (oChart != null)
         {
             // Find if we have a Column Chart

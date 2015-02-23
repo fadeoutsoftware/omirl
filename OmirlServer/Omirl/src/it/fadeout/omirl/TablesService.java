@@ -1,6 +1,8 @@
 package it.fadeout.omirl;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -142,8 +144,16 @@ public class TablesService {
 		{
 			if (sRefDate.equals("") == false) 
 			{
-				// TODO: Try e catch per fare il parsing 
+				// Try e catch per fare il parsing 
 				// se è valido sostituire oDate.
+				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
+				try {
+					
+					oDate = dtFormat.parse(sRefDate);
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		

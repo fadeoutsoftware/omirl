@@ -124,7 +124,7 @@ var SettingsController = (function() {
             /* Base layers inclusion */
             var oOSMLayer = new OpenLayers.Layer.XYZ(
                 'OSM',
-                'http://www.toolserver.org/tiles/bw-mapnik//${z}/${x}/${y}.png',
+                'http://www.toolserver.org/tiles/bw-mapnik/${z}/${x}/${y}.png',
                 {
                     attribution: 'basemap data &copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>',
                     sphericalMercator: true,
@@ -172,28 +172,34 @@ var SettingsController = (function() {
         }
 
         //Date ref
-        var oNow = new Date();
+        var oReferenceDate = new Date();
+
         if (this.m_oContstantsService.getReferenceDate() != "")
         {
 
-            oNow = this.m_oContstantsService.getReferenceDate();
+            oReferenceDate = this.m_oContstantsService.getReferenceDate();
             this.checkNow = false;
-            this.onNowChanged();
         }
         else
-            this.checkNow = true;
+        {
+         this.checkNow = true;
+        }
 
-        var oMonth = oNow.getMonth() + 1;
-        var oDay = oNow.getDate();
-        if(oNow.getMonth()<10)
+        var oMonth = oReferenceDate.getMonth() + 1;
+        var oDay = oReferenceDate.getDate();
+
+        if(oMonth<10)
+        {
             oMonth = '0' + oMonth;
-        if(oNow.getDate()<10)
+        }
+        if(oDay<10)
+        {
             oDay = '0' + oDay;
-        this.dataRef = oNow.getFullYear() + '-' + oMonth + '-' + oDay;
-        this.ore = oNow.getHours();
-        this.min = oNow.getMinutes();
+        }
 
-
+        this.dataRef = oReferenceDate.getFullYear() + '-' + oMonth + '-' + oDay;
+        this.ore = oReferenceDate.getHours();
+        this.min = oReferenceDate.getMinutes();
     }
 
 
@@ -451,35 +457,55 @@ var SettingsController = (function() {
             this.m_oContstantsService.setReferenceDate('');
             return;
         }
+        else
+        {
+            var oDate = new Date(this.dataRef);
+            this.m_oContstantsService.setReferenceDate(oDate);
+        }
 
-        var oDate = new Date(this.dataRef);
-        /*
-        this.ore = oDate.getHours();
-        this.min = oDate.getMinutes();
-        var year = oDate.getFullYear();
-        var month = oDate.getMonth() + 1;
-        if (month < 10)
-            month = '0' + month;
-        var data = this.dataRef.getDate();
-        if (data < 10)
-            data = '0' + data;
-        var dateString = year + '-' + month + '-' + data;
-        */
-
-        this.m_oContstantsService.setReferenceDate(oDate);
-
-        //$('#data').val(dateString);
     }
 
+    SettingsController.prototype.pad = function (number, length){
+        var str = "" + number;
+        while (str.length < length) {
+            str = '0'+str;
+        }
+        return str;
+    }
 
+    SettingsController.prototype.getTimezoneOffset  = function () {
+
+        var offset = new Date().getTimezoneOffset()
+        offset = ((offset<0? '+':'-')+ // Note the reversed sign!
+            this.pad(parseInt(Math.abs(offset/60)), 2)+
+            this.pad(Math.abs(offset%60), 2));
+
+        return offset;
+    }
 
     SettingsController.prototype.onDataChanged = function() {
         try {
             //var oDate = new Date(this.dataRef.getFullYear(), this.dataRef.getMonth() + 1, this.dataRef.getDate(), this.ore, this.min, 0);
-            var oDateString = this.dataRef + 'T' + this.ore + ':' + this.min + ':00';
-            var oDate = new Date(oDateString);
+
+            var sOre = this.ore;
+            var sMinuti = this.min;
+
+            if (this.ore<10)
+            {
+                sOre = "0"+sOre;
+            }
+
+            if (this.min<10)
+            {
+                sMinuti = "0"+sMinuti;
+            }
+
+            var sDateString = this.dataRef + 'T' + sOre + ':' + sMinuti + ':00.000' + this.getTimezoneOffset();
+            var oDate = new Date(sDateString);
             if (oDate != null)
+            {
                 this.m_oContstantsService.setReferenceDate(oDate);
+            }
         } catch (err) {
             alert("Errore! Verificare la data inserita.");
         }
