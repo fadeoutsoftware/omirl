@@ -8,6 +8,7 @@
     value('az.services.mapService', {
         map: null,
         stationsPopupControllerAdded: false,
+        sectionsPopupControllerAdded: false,
         readyCallback: null,
         callbackArg: null
     })

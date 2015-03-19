@@ -16,6 +16,46 @@ angular.module('omirl.ConstantsService', []).
         this.m_oUser = null;
         this.m_sReferenceDate = "";
 
+        this.m_oMapCenter = null;
+        this.m_oMapZoom = null;
+
+        this.m_bJustLogged = false;
+
+        this.m_sSensorLayerActive = null;
+
+        this.setSensorLayerActive = function(oCode) {
+            this.m_sSensorLayerActive = oCode;
+        }
+
+        this.getSensorLayerActive = function() {
+            return this.m_sSensorLayerActive;
+        }
+
+        this.setJustLogged = function(oVal) {
+            this.m_bJustLogged = oVal;
+        }
+
+        this.getJustLogged = function() {
+            return this.m_bJustLogged;
+        }
+
+
+        this.getMapCenter = function() {
+            return this.m_oMapCenter;
+        }
+
+        this.getMapZoom = function() {
+            return this.m_oMapZoom;
+        }
+
+        this.setMapCenter = function(oCenter) {
+            this.m_oMapCenter = oCenter;
+        }
+
+        this.setMapZoom = function(oZoom) {
+            this.m_oMapZoom = oZoom;
+        }
+
         this.getAPIURL = function() {
             return this.APIURL;
         }
@@ -88,7 +128,16 @@ angular.module('omirl.ConstantsService', []).
                 if (oUser.isLogged == true)
                 {
                     this.m_bUserLogged = true;
+                    this.m_bJustLogged = true;
                 }
+                else
+                {
+                    this.m_bJustLogged = false;
+                }
+            }
+            else
+            {
+                this.m_bJustLogged = false;
             }
         }
 

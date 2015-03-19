@@ -7,7 +7,7 @@
 
 var MapController = (function () {
 
-    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService) {
+    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService, oHydroService) {
         // Initialize Members
         this.m_oScope = $scope;
         this.m_oWindow = $window;
@@ -23,6 +23,7 @@ var MapController = (function () {
         this.m_oLog =$log;
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
+        this.m_oHydroService = oHydroService;
 
         // Flag to know if maps first level is shown
         this.m_bIsFirstLevel = true;
@@ -153,6 +154,9 @@ var MapController = (function () {
         this.m_iSatelliteLevel = 1;
         this.m_bSatelliteLayerActive = false;
 
+        this.m_oReferenceDate = new Date();
+        this.m_bNowMode = true;
+
 
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
@@ -174,14 +178,6 @@ var MapController = (function () {
                     numZoomLevels: 20
                 }
             );
-
-
-            /*
-            oBaseLayer1.animationEnabled = false;
-            oBaseLayer2.animationEnabled = false;
-            oBaseLayer3.animationEnabled = false;
-            oBaseLayer4.animationEnabled = false;
-            */
 
             this.m_oLayerService.addBaseLayer(oOSMLayer);
             this.m_oLayerService.addBaseLayer(oBaseLayer1);
@@ -214,6 +210,18 @@ var MapController = (function () {
         }
 
         var oControllerVar = this;
+
+        if (this.m_oConstantsService.getReferenceDate() != null)
+        {
+            if (this.m_oConstantsService.getReferenceDate() != "")
+            {
+                this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+                this.m_bNowMode = false;
+            }
+        }
+        else {
+            this.m_bNowMode = true;
+        }
 
         this.m_oMapNavigatorService.fetchMapFirstLevels();
 
@@ -273,6 +281,14 @@ var MapController = (function () {
         $scope.$on('$locationChangeStart', function (event, next, current) {
 
             if (oControllerVar.m_oMapService.map != null) {
+
+                var oCenter = oControllerVar.m_oMapService.map.getCenter();
+
+                var oZoom = oControllerVar.m_oMapService.map.getZoom();
+
+                oControllerVar.m_oConstantsService.setMapCenter(oCenter);
+                oControllerVar.m_oConstantsService.setMapZoom(oZoom);
+
                 oControllerVar.m_oLayerService.clarAll();
                 oControllerVar.m_oMapService.map.destroy();
                 oControllerVar.m_oMapService.map = null;
@@ -285,14 +301,59 @@ var MapController = (function () {
         this.m_oScope.$on('mapInitComplete', function (event, next, current) {
             // Check if there is a user logged
             var oUser = oControllerVar.m_oConstantsService.getUser();
+            var bDataSet = false;
             if (angular.isDefined(oUser))
             {
                 if (oUser != null)
                 {
+                    bDataSet = true;
+
                     // Check Map Center
                     var dLat = oUser.defaultLat;
                     var dLon = oUser.defaultLon;
                     var iZoom = oUser.defaultZoom;
+
+                    if (!oControllerVar.m_oConstantsService.getJustLogged())
+                    {
+                        if (oControllerVar.m_oConstantsService.getMapZoom()!=null)
+                        {
+                            iZoom = oControllerVar.m_oConstantsService.getMapZoom();
+                        }
+
+                        if (oControllerVar.m_oConstantsService.getMapCenter()!=null)
+                        {
+                            var oCenter = oControllerVar.m_oConstantsService.getMapCenter();
+
+                            var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+                            var projectTo = oControllerVar.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
+
+                            // Tranform the point
+                            var oPoint = new OpenLayers.Geometry.Point(oCenter.lon, oCenter.lat).transform(projectTo, epsg4326);
+
+                            dLat = oPoint.x;
+                            dLon = oPoint.y;
+                        }
+
+                        if (oControllerVar.m_oConstantsService.getSensorLayerActive()!=null)
+                        {
+                            var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(oControllerVar.m_oConstantsService.getSensorLayerActive());
+                            oControllerVar.sensorLinkClicked(oSensorLink);
+                        }
+                    }
+                    else
+                    {
+                        oControllerVar.m_oConstantsService.setJustLogged(false);
+
+
+                        // Check Default Sensor View
+                        var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(oUser.defaultSensorType);
+
+                        if (oSensorLink != null)
+                        {
+                            oControllerVar.sensorLinkClicked(oSensorLink);
+                        }
+
+                    }
 
                     // Is defined
                     if (angular.isDefined(dLat) && angular.isDefined(dLon) && angular.isDefined(iZoom))
@@ -303,21 +364,8 @@ var MapController = (function () {
                             // Ok Let set center informations
                             var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
 
-                            oControllerVar.m_dCenterLat = dLat;
-                            oControllerVar.m_dCenterLon = dLon;
-                            oControllerVar.m_iCenterZoom = iZoom;
-
                             oControllerVar.resetZoom(oControllerVar.m_oMapService.map, dLat, dLon, epsg4326, iZoom);
                         }
-                    }
-
-
-                    // Check Default Sensor View
-                    var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(oUser.defaultSensorType);
-
-                    if (oSensorLink != null)
-                    {
-                        oControllerVar.sensorLinkClicked(oSensorLink);
                     }
 
                     if (oControllerVar.m_oConstantsService.getUser().defaultStatics != null)
@@ -343,6 +391,56 @@ var MapController = (function () {
                     oControllerVar.m_bShowSatellite = true;
 
                 }// End User != null
+            }
+
+            if (!bDataSet) {
+                // Get Default Center and Zoom
+                var dLat = oControllerVar.m_dCenterLat;
+                var dLon = oControllerVar.m_dCenterLon;
+                var iZoom = oControllerVar.m_iCenterZoom;
+
+                // Check if zoom available in constant service
+                if (oControllerVar.m_oConstantsService.getMapZoom()!=null)
+                {
+                    iZoom = oControllerVar.m_oConstantsService.getMapZoom();
+                }
+
+                // Check if center available in constant service
+                if (oControllerVar.m_oConstantsService.getMapCenter()!=null)
+                {
+                    // Get The center
+                    var oCenter = oControllerVar.m_oConstantsService.getMapCenter();
+
+                    // Need to convert
+                    var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+                    var projectTo = oControllerVar.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
+
+                    // Tranform the point
+                    var oPoint = new OpenLayers.Geometry.Point(oCenter.lon, oCenter.lat).transform(projectTo, epsg4326);
+
+                    // Set center lat and lon
+                    dLat = oPoint.x;
+                    dLon = oPoint.y;
+                }
+
+                // Is defined
+                if (angular.isDefined(dLat) && angular.isDefined(dLon) && angular.isDefined(iZoom))
+                {
+                    // And not null?
+                    if (dLat != null && dLon != null && iZoom != null)
+                    {
+                        // Ok Let set center informations
+                        var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+
+                        oControllerVar.resetZoom(oControllerVar.m_oMapService.map, dLat, dLon, epsg4326, iZoom);
+                    }
+                }
+
+                if (oControllerVar.m_oConstantsService.getSensorLayerActive()!=null)
+                {
+                    var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(oControllerVar.m_oConstantsService.getSensorLayerActive());
+                    oControllerVar.sensorLinkClicked(oSensorLink);
+                }
             }
         });
     }
@@ -410,7 +508,7 @@ var MapController = (function () {
         }
 
         // Decode the request
-        oGeoCoder.geocode( {'address': sGeocodingQuery}, function(aoResults, oStatus) {
+        oGeoCoder.geocode( {'address': sGeocodingQuery + " Liguria"}, function(aoResults, oStatus) {
 
            if (oStatus == google.maps.GeocoderStatus.OK) {
                // Get the location
@@ -687,8 +785,12 @@ var MapController = (function () {
             this.m_sSensorsLegendIconPath = oSensorLink.imageLinkOff;
             this.m_sSensorLegendTooltip = "Legenda " + oSensorLink.description;
             this.m_oSelectedSensorLink = oSensorLink;
+
+            this.m_oConstantsService.setSensorLayerActive(oSensorLink.code);
         }
         else {
+            this.m_oConstantsService.setSensorLayerActive(null);
+
             // Set the textual description
             this.m_sSensorLegendSelected = "";
 
@@ -841,6 +943,68 @@ var MapController = (function () {
         return sHtml;
     }
 
+    /**
+     * Gets the HTML content of the pop up
+     * @param oFeature
+     * @returns {string}
+     */
+    MapController.prototype.getSectionPopupContent = function(oFeature) {
+        // Get the time value from the Json Date Rapresentation
+        //var iNum = parseInt(oFeature.attributes.referenceDate.replace(/[^0-9]/g, ""));
+        // Create Reference Date
+        //var oReferenceDate = new Date(iNum);
+        //var oReferenceDate = new Date(oFeature.attributes.referenceDate+"Z");
+
+        // Compute time delta
+        //var sTimeDelta = this.getDelayString(oReferenceDate);
+        //var sTimeDelta = "";
+
+        //var iMonth = oReferenceDate.getMonth() + 1;
+        //var iMonth = oReferenceDate.getUTCMonth() + 1;
+
+        //var sMinutes = "" + oReferenceDate.getMinutes();
+        //var sMinutes = "" + oReferenceDate.getUTCMinutes();
+
+        //if (sMinutes.length<2) {
+        //    sMinutes = "0" + sMinutes;
+        //}
+
+        // Write reference date text
+        //var sReferenceData = oReferenceDate.getDate() + "/" + iMonth + "/" + oReferenceDate.getFullYear() + " - " + oReferenceDate.getHours() + ":" + sMinutes + " Locali";
+        //var sReferenceDataUTC = oReferenceDate.getUTCHours() + ":" + sMinutes + " UTC";
+
+        // Start Pop up HTML
+        var sHtml = "<div class='stationsPopupPanel'>";
+
+        // Stations Informations
+        sHtml += "<strong style=\"font-size: 15px;\">"+oFeature.attributes.municipality+"</strong><br>";
+
+        // Stations Informations
+        sHtml += "<p><strong>" + oFeature.attributes.name + " [" + oFeature.attributes.altitude + "  s.l.m.]" + "</strong></p>";
+
+        //var iFixedCount  = 1;
+
+        //if (oFeature.attributes.sensorType == "Idro") iFixedCount = 2;
+        //var sValue = parseFloat(oFeature.attributes.value ).toFixed(iFixedCount);
+
+        // Sensor Value
+        sHtml +="<h4>"+"<img class='stationsPopupImage' src='"+oFeature.attributes.imageLinkInv+"' style=\"font-family: 'Glyphicons Halflings';font-size: 16px;border: 1px solid #ffffff;padding: 2px;border-radius: 3px;\"/> " + "</h4>";
+
+        // Time reference
+        sHtml += "<p><span class='popupglyphicon glyphicon glyphicon-time' style=\"font-family: 'Glyphicons Halflings';font-size: 15px;\"></span> <span style=\"font-size: 14px;\">" + oFeature.attributes.model + "</span></p>";
+
+        // Station Code
+        sHtml += "<br><div>Codice: " + oFeature.attributes.shortCode + "</div>";
+        // Lat Lon
+        sHtml += "<div>Lat: " + oFeature.attributes.lat + " Lon: " + oFeature.attributes.lon + "</div>";
+
+        // Close Popup Div
+        sHtml += "</div>";
+
+        // Return HTML
+        return sHtml;
+    }
+
 
     /**
      * Function called to show station pop up
@@ -850,6 +1014,41 @@ var MapController = (function () {
 
         // Get Pop Up HTML
         var sHtml = this.getStationPopupContent(oFeature);
+        // Dummy size
+        var oSize = new OpenLayers.Size(190,190);
+
+        // Create Popup
+        var oPopUp = new OpenLayers.Popup(
+            oFeature.id + "_popup",
+            oFeature.geometry.getBounds().getCenterLonLat(),
+            oSize,
+            sHtml,
+            false,
+            null
+        );
+
+        // Opacity and back color
+        oPopUp.setOpacity(0.8);
+        oPopUp.setBackgroundColor("#000000");
+        // Auto size please
+        oPopUp.autoSize = false;
+
+        // Set the popup to the feature
+        oFeature.popup = oPopUp;
+
+        // Add Popup to the map
+        oFeature.layer.map.addPopup(oPopUp);
+    }
+
+
+    /**
+     * Function called to show station pop up
+     * @param oFeature
+     */
+    MapController.prototype.showSectionsPopup = function(oFeature) {
+
+        // Get Pop Up HTML
+        var sHtml = this.getSectionPopupContent(oFeature);
         // Dummy size
         var oSize = new OpenLayers.Size(190,190);
 
@@ -955,6 +1154,13 @@ var MapController = (function () {
 
         var oServiceVar = this;
 
+        if (angular.isDefined(oSensorLink.legends)) {
+            if (oSensorLink.legends.length>0){
+                this.m_oLayerService.addLayerLegend(oSensorLink.code, oSensorLink.legends);
+            }
+        }
+
+
         // Obtain Stations Values from the server
         this.m_oStationsService.getStations(oSensorLink).success(function(data,status) {
 
@@ -1006,10 +1212,11 @@ var MapController = (function () {
                 //color
                 var dValue = oStation.value;
                 if (oSensorLink.code == 'Sfloc'){
-                    var now = new Date().getTime(); //now
-                    var orefDate = new Date(oStation.refDate).getTime();
-                    var millisec = now - orefDate;
-                    dValue = Math.floor(millisec / 60000);  //minutes
+
+                    var oRefDate = new Date(oStation.refDate);
+
+                    dValue = oRefDate.getHours()*60;
+                    dValue += oRefDate.getMinutes();
                 }
 
                 var oColor = null;
@@ -1107,10 +1314,147 @@ var MapController = (function () {
         }).error(function(data,status){
             oServiceVar.m_oLog.error('Error Contacting Omirl Server');
         });
+    }
+
+
+
+
+
+    /**
+     * Function called to show the selected sensor layer
+     * @param oSensorLink
+     */
+    MapController.prototype.showSectionsLayer = function(oSectionLink) {
+
+        var oControllerVar = this;
+
+        // Obtain Stations Values from the server
+        this.m_oHydroService.getSections(oSectionLink).success(function(data,status) {
+
+            var aoSections = data;
+
+            try{
+
+                while( oControllerVar.m_oMapService.map.popups.length ) {
+                    oControllerVar.m_oMapService.map.removePopup(oControllerVar.m_oMapService.map.popups[0]);
+                }
+
+                // remove the actual Sensors Layer from the map
+                oControllerVar.m_oMapService.map.removeLayer(oControllerVar.m_oLayerService.getSectionsLayer());
+            }
+            catch (err) {
+
+            }
+
+            // Clear the layer
+            oControllerVar.m_oLayerService.getSectionsLayer().destroyFeatures();
+
+            // Projection change for points
+            var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+            var projectTo = oControllerVar.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
+
+            // For each station
+            var iSections;
+            var aoFeatures = [];
+
+            aoSections.sort(oControllerVar.compareStations);
+
+            for ( iSections =0; iSections<aoSections.length; iSections++) {
+                var oSection = aoSections[iSections];
+
+                // Create the feature
+                var oFeature = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(oSection.lon, oSection.lat).transform(epsg4326, projectTo),
+                    {description: oSection.name}
+                    //,{externalGraphic: oStation.imgPath, graphicHeight: 32, graphicWidth: 32, graphicXOffset:0, graphicYOffset:0, title: oStation.name + " " + oStation.value }
+                    //,{title: oStation.name + " " + oStation.value }
+                );
+
+
+                // Set attributes of the Feature
+                oFeature.attributes = {
+                    // Station Id
+                    stationId: oSection.code,
+                    // Station Name
+                    name: oSection.name,
+                    // Other Html content for the pop up, received from the server
+                    otherHtml: oSection.otherHtml,
+                    // Altitude
+                    altitude: oSection.alt,
+                    // Coordinates
+                    lat: oSection.lat,
+                    lon: oSection.lon,
+                    // Station Code
+                    shortCode: oSection.code,
+                    // Image Link to use in the popup
+                    imageLinkInv: oSectionLink.link,
+                    // Sensor Type
+                    model: oSection.model,
+                    // Municipality
+                    municipality: oSection.municipality,
+                    // Image Path
+                    imgPath: oSection.link,
+                    // Opacity
+                    opacity: 1.0,
+                    //Color
+                    color: "#FFFFFF"
+                };
+
+                // Add the feature to the array
+                aoFeatures.push(oFeature);
+            }
+
+            // Add feature array to the layer
+            oControllerVar.m_oLayerService.getSectionsLayer().addFeatures(aoFeatures);
+
+            // Add the layer to the map
+            oControllerVar.m_oMapService.map.addLayer(oControllerVar.m_oLayerService.getSectionsLayer());
+            oControllerVar.m_oMapService.map.setLayerIndex(oControllerVar.m_oLayerService.getSectionsLayer(), oControllerVar.m_oLayerService.getSectionsLayerIndex());
+
+            // Feature Click and Hover Control: added?
+            if (oControllerVar.m_oMapService.sectionsPopupControllerAdded == false) {
+
+                // No: take a reference to the map controller
+                var oMapController = oControllerVar;
+
+                // Create the Control
+                var oPopupCtrl = new OpenLayers.Control.SelectFeature(oControllerVar.m_oLayerService.getSectionsLayer(), {
+                    hover: true,
+                    onSelect: function(feature) {
+                        // Hover Select: call internal function
+                        oMapController.showSectionsPopup(feature);
+                    },
+                    onUnselect: function(feature) {
+                        // Hover Unselect: remove pop u
+                        // TODO POPUP
+                        feature.layer.map.removePopup(feature.popup);
+                    },
+                    callbacks: {
+                        // Click
+                        click: function(feature) {
+                            // Show chart
+                            oMapController.showSectionChart(feature);
+                        }
+                    }
+                });
+
+                // Add and activate the control
+                oControllerVar.m_oMapService.map.addControl(oPopupCtrl);
+                oPopupCtrl.activate();
+
+                // Remember it exists now
+                oControllerVar.m_oMapService.sectionsPopupControllerAdded = true;
+            }
+        }).error(function(data,status){
+            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+        });
 
 
 
     }
+
+
+
 
     /**
      * Called when a static layer is clicked
@@ -1549,20 +1893,25 @@ var MapController = (function () {
         {
 
             this.setSelectedHydroLinkOnScreen(this,oHydroLink);
-            //this.selectedDynamicLayer(oHydroLink, this.m_sHydroThirdLevelSelectedModifier);
-            alert('attivo ' + oHydroLink.description);
+            this.showSectionsLayer(oHydroLink);
+            //alert('attivo ' + oHydroLink.description);
         }
         else
         {
 
             // Remove from the map
 
-            //if (this.m_oLayerService.getDynamicLayer() != null) {
-            //    this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
-            //    this.m_oLayerService.setDynamicLayer(null);
-            //}
+            //this.m_oConstantsService.setSensorLayerActive(null);
+            try{
+                // remove the Sensors Layer from the map
+                this.m_oMapService.map.removeLayer(this.m_oLayerService.getSectionsLayer());
+            }
+            catch (err) {
 
-            alert('DISattivo ' + oHydroLink.description);
+            }
+
+
+            //alert('DISattivo ' + oHydroLink.description);
 
             this.m_sHydroLegendSelected = oHydroLink.parentDescription;
             this.m_bHydroLayerActive = false;
@@ -2120,6 +2469,13 @@ var MapController = (function () {
         this.m_oLocation.path(sPath);
     }
 
+    MapController.prototype.onTimeSet = function (newDate, oldDate) {
+
+        this.m_oConstantsService.setReferenceDate(newDate);
+        //console.log(newDate);
+        //console.log(oldDate);
+    }
+
     MapController.$inject = [
         '$scope',
         '$window',
@@ -2133,7 +2489,8 @@ var MapController = (function () {
         '$interval',
         '$log',
         '$location',
-        'TableService'
+        'TableService',
+        'HydroService'
     ];
 
     return MapController;

@@ -1,12 +1,14 @@
 package it.fadeout.omirl.business;
 
+import it.fadeout.omirl.viewmodels.SectionViewModel;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="section_anag")
+@Table(name="anag_drift")
 public class SectionAnag {
 	@Id
 	@Column(name="code")
@@ -25,8 +27,8 @@ public class SectionAnag {
 	String river;
 	@Column(name="district")
 	String district;
-	@Column(name="ygird")
-	Integer ygird;
+	@Column(name="ygrid")
+	Integer ygrid;
 	@Column(name="xgrid")
 	Integer xgrid;
 	@Column(name="basin_area")
@@ -61,18 +63,20 @@ public class SectionAnag {
 	Integer q_100;
 	@Column(name="q_200")
 	Integer q_200;
-	@Column(name="osservato")
-	Integer osservato;
-	@Column(name="piccoli_bacini")
-	Integer piccoli_bacini;
-	@Column(name="deterministico")
-	Integer deterministico;
+	@Column(name="observations")
+	Integer observations;
+	@Column(name="small_basins")
+	Integer small_basins;
+	@Column(name="multiensemble")
+	Integer multiensemble;
 	@Column(name="rainfarm")
 	Integer rainfarm;
 	@Column(name="radar")
 	Integer radar;
-	@Column(name="catena_magra")
-	Integer catena_magra;
+	@Column(name="magra_chain")
+	Integer magra_chain;
+	@Column(name="subjective")
+	Integer subjective;
 	
 	public String getCode() {
 		return code;
@@ -122,11 +126,11 @@ public class SectionAnag {
 	public void setDistrict(String district) {
 		this.district = district;
 	}
-	public Integer getYgird() {
-		return ygird;
+	public Integer getYgrid() {
+		return ygrid;
 	}
-	public void setYgird(Integer ygird) {
-		this.ygird = ygird;
+	public void setYgrid(Integer ygrid) {
+		this.ygrid = ygrid;
 	}
 	public Integer getXgrid() {
 		return xgrid;
@@ -230,24 +234,7 @@ public class SectionAnag {
 	public void setQ_200(Integer q_200) {
 		this.q_200 = q_200;
 	}
-	public Integer getOsservato() {
-		return osservato;
-	}
-	public void setOsservato(Integer osservato) {
-		this.osservato = osservato;
-	}
-	public Integer getPiccoli_bacini() {
-		return piccoli_bacini;
-	}
-	public void setPiccoli_bacini(Integer piccoli_bacini) {
-		this.piccoli_bacini = piccoli_bacini;
-	}
-	public Integer getDeterministico() {
-		return deterministico;
-	}
-	public void setDeterministico(Integer deterministico) {
-		this.deterministico = deterministico;
-	}
+	
 	public Integer getRainfarm() {
 		return rainfarm;
 	}
@@ -260,10 +247,51 @@ public class SectionAnag {
 	public void setRadar(Integer radar) {
 		this.radar = radar;
 	}
-	public Integer getCatena_magra() {
-		return catena_magra;
+	
+	public SectionViewModel getSectionViewModel()
+	{
+		SectionViewModel oViewModel = new SectionViewModel();
+		
+		if (this.elev!=null) oViewModel.setAlt( this.elev.intValue());
+		else oViewModel.setAlt(0);
+		oViewModel.setBasin(this.basin);
+		oViewModel.setCode(this.code);
+		if (this.lat != null) oViewModel.setLat(this.lat);
+		if (this.lon != null) oViewModel.setLon(this.lon);
+		oViewModel.setMunicipality(this.district);
+		oViewModel.setName(this.name);
+		oViewModel.setRiver(this.river);
+		
+		return oViewModel;
 	}
-	public void setCatena_magra(Integer catena_magra) {
-		this.catena_magra = catena_magra;
+	public Integer getSubjective() {
+		return subjective;
+	}
+	public void setSubjective(Integer subjective) {
+		this.subjective = subjective;
+	}
+	public Integer getObservations() {
+		return observations;
+	}
+	public void setObservations(Integer observations) {
+		this.observations = observations;
+	}
+	public Integer getSmall_basins() {
+		return small_basins;
+	}
+	public void setSmall_basins(Integer small_basins) {
+		this.small_basins = small_basins;
+	}
+	public Integer getMultiensemble() {
+		return multiensemble;
+	}
+	public void setMultiensemble(Integer multiensemble) {
+		this.multiensemble = multiensemble;
+	}
+	public Integer getMagra_chain() {
+		return magra_chain;
+	}
+	public void setMagra_chain(Integer magra_chain) {
+		this.magra_chain = magra_chain;
 	}
 }

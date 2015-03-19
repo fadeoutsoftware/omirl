@@ -80,8 +80,18 @@ var SummaryTableController = (function() {
             oHours = '0' + oHours;
         if (oMinutes < 10)
             oMinutes = '0' + oMinutes;
+        //return '[' + oHours + ':' + oMinutes + ' Locali]';
         return '[' + oHours + ':' + oMinutes + ']';
+    }
 
+    SummaryTableController.prototype.getDayString = function () {
+
+        var oFormatDate = new Date();
+        var oDay = oFormatDate.getDate();
+        var oMonth = oFormatDate.getMonth()+1;
+        var oYear = oFormatDate.getFullYear();
+
+        return oDay+'/' + oMonth + '/' + oYear;
     }
 
     SummaryTableController.$inject = [

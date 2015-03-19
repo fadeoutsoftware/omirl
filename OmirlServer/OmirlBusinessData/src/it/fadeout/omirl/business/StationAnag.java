@@ -85,6 +85,8 @@ public class StationAnag {
 	Integer near_sea;
 	@Column(name="webcam_every")
 	Integer webcam_every;
+	@Column(name="mean_wave_height_every")
+	Integer mean_wave_height_every;
 	
 	public String getStation_code() {
 		return station_code;
@@ -313,5 +315,11 @@ public class StationAnag {
 	}
 	public void setWebcam_every(Integer webcam_every) {
 		this.webcam_every = webcam_every;
+	}
+	public Integer getMean_wave_height_every() {
+		return mean_wave_height_every;
+	}
+	public void setMean_wave_height_every(Integer mean_wave_height_every) {
+		this.mean_wave_height_every = mean_wave_height_every;
 	}
 }

@@ -46,7 +46,7 @@
                         <div class="col-xs-1 col-sm-1 col-md-1">
                             <div class="btn-group">
                                 <label >Codice</label>
-                                <input type="search" class="form-control searchinput" placeholder="type something..."  ng-model="search.stationCode" ng-change="m_oController.CodeChanged(search.stationCode)" typeahead="station.stationCode for station in m_oController.getStationList() | filter:$viewValue">
+                                <input type="search" class="form-control searchinput" placeholder="type something..."  ng-model="search.code" ng-change="m_oController.CodeChanged(search.code)" typeahead="station.code for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelCodeFilter()" ng-show="m_oController.m_bShowCancelCodeFilter"></span>
                             </div>
                         </div>
@@ -81,43 +81,43 @@
                         <div class="col-xs-2 col-sm-2 col-md-2">
                             <div class="btn-group">
                                 <label >Sottobacino</label>
-                                <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.subBasin" ng-change="m_oController.SubBasinChanged(search.subBasin)" typeahead="station.subBasin for station in m_oController.getStationList() | filter:$viewValue">
+                                <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.underbasin" ng-change="m_oController.SubBasinChanged(search.underbasin)" typeahead="station.underbasin for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelSubBasinFilter()" ng-show="m_oController.m_bShowCancelSubBasinFilter"></span>
                             </div>
                         </div>
                     </div>
 
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" style="padding: 0px">
                     <!--Panel content-->
-                    <table class="table stationtablerow" >
-                        <thead>
-                        <tr>
-                            <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Nome</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'code'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Codice</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Comune</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Provincia</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Area</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Bacino</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'subBasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Sottobacino</th>
-                            <th class="table-list-header">Ultimo</th>
-                            <th class="table-list-header">Max</th>
-                            <th class="table-list-header">Min</th>
-                        </tr>
+                    <table class="omirltbl" style="margin-left: 0px; margin-right: 0px; width: 100%">
+                        <thead class="omirltbl">
+                            <tr>
+                                <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Nome</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'code'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Codice</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Comune</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Provincia</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Area</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Bacino</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'underbasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Sottobacino</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'last'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">Ultimo</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'max'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">Max</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'min'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">Min</th>
+                            </tr>
                         </thead>
-                        <tbody>
-                        <tr ng-repeat="oStation in m_oController.getStationList() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search" ng-click="m_oController.stationClicked(oStation.stationCode, oStation.municipality, oStation.name)">
-                            <td>{{oStation.name}}</td>
-                            <td>{{oStation.stationCode}}</td>
-                            <td>{{oStation.municipality}}</td>
-                            <td>{{oStation.district}}</td>
-                            <td>{{oStation.area}}</td>
-                            <td>{{oStation.basin}}</td>
-                            <td>{{oStation.subBasin}}</td>
-                            <td>{{oStation.lastValue}}</td>
-                            <td>{{oStation.value1}}</td>
-                            <td>{{oStation.value2}}</td>
-                        </tr>
+                        <tbody class="omirltbl">
+                            <tr ng-repeat="oStation in m_oController.getStationList() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search" ng-click="m_oController.stationClicked(oStation.code, oStation.municipality, oStation.name)" ng-class="{odd: bHover}" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" style="cursor:pointer;">
+                                <th scope="row">{{oStation.name}}</th>
+                                <td>{{oStation.code}}</td>
+                                <td>{{oStation.municipality}}</td>
+                                <td>{{oStation.district}}</td>
+                                <td>{{oStation.area}}</td>
+                                <td>{{oStation.basin}}</td>
+                                <td>{{oStation.underbasin}}</td>
+                                <td>{{oStation.last}}</td>
+                                <td>{{oStation.max}}</td>
+                                <td>{{oStation.min}}</td>
+                            </tr>
                         </tbody>
                     </table>
 

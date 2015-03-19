@@ -1,5 +1,18 @@
 'use strict';
 
+moment.locale("it");
+
+Date.prototype.toString = function() {
+
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+    var dd  = this.getDate().toString();
+
+    var hh  = this.getHours().toString();
+    var min  = this.getMinutes().toString();
+    // padding
+    return (dd[1]?dd:"0"+dd[0]) + "/" + (mm[1]?mm:"0"+mm[0]) + "/" + yyyy + " " + (hh[1]?hh:"0"+hh[0]) + ":" + (min[1]?min:"0"+min[0]);
+}
 
 // Declare app level module which depends on filters, and services
 var omirlApp = angular.module('omirl', [
@@ -9,6 +22,7 @@ var omirlApp = angular.module('omirl', [
     'az.services',
     'az',
     'ui.bootstrap',
+    'ui.bootstrap.datetimepicker',
     'dialogService',
     /*'omirl.stockDirective',*/
     'omirl.chartDirective',

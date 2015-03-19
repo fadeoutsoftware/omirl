@@ -34,7 +34,8 @@ angular.module('omirl.chartDirective', []).
                             series: {
                                 dataGrouping: {
                                     enabled: true
-                                }
+                                },
+                                animation: false
                             },
                             line: {
                                 marker: {
@@ -115,6 +116,9 @@ angular.module('omirl.chartDirective', []).
                                 marker: {
                                     enabled: false
                                 }
+                            },
+                            series: {
+                                animation: false
                             }
                         },
                         xAxis: {

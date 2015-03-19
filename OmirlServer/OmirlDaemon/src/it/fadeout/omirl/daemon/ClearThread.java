@@ -16,10 +16,12 @@ import org.joda.time.DateTimeZone;
 public class ClearThread extends Thread {
 	String m_sFileRepoPath = "";
 	List<SavedPeriod> m_aoSavedPeriods = new ArrayList<>();
+	int m_iSavedDays = 1;
 	
-	public ClearThread(String arg) {
+	public ClearThread(String arg, int iDays) {
 		super(arg);
 		m_sFileRepoPath = arg;
+		m_iSavedDays = iDays;
 	}
 	
 	
@@ -34,7 +36,7 @@ public class ClearThread extends Thread {
 			
 			// Create Now and get yesterday
 			DateTime oDateTime = new DateTime();
-			DateTime oYesterday = oDateTime.minusDays(1);
+			DateTime oYesterday = oDateTime.minusDays(m_iSavedDays);
 			
 			// Read all saved periods
 			SavedPeriodRepository oSavedPeriodRepository = new SavedPeriodRepository();

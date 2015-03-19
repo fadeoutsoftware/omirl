@@ -80,22 +80,22 @@
                     </div>
 
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" style="padding: 0px">
                     <!--Panel content-->
-                        <table class="table stationtablerow" >
-                            <thead>
+                        <table class="omirltbl" style="margin-left: 0px; margin-right: 0px; width: 100%; cursor: pointer">
+                            <thead class="omirltbl">
                                 <tr>
-                                    <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Nome</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Provincia</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Zona di Allerta</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Bacino</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'subBasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Sotto Bacino</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Comune</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Nome</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Provincia</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Zona di Allerta</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Bacino</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'subBasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Sotto Bacino</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Comune</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr ng-repeat="oStation in m_oController.getStationList() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search" ng-click="m_oController.stationClicked(oStation.stationCode, oStation.municipality, oStation.name)">
-                                    <td>{{oStation.name}}</td>
+                            <tbody class="omirltbl">
+                                <tr ng-repeat="oStation in m_oController.getStationList() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search" ng-click="m_oController.stationClicked(oStation.stationCode, oStation.municipality, oStation.name)" ng-class="{odd: bHover}" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false">
+                                    <th scope="row">{{oStation.name}}</th>
                                     <td>{{oStation.district}}</td>
                                     <td>{{oStation.area}}</td>
                                     <td>{{oStation.basin}}</td>

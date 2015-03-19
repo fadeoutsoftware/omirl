@@ -21,66 +21,12 @@ var ChartController = (function() {
         this.m_sStationCode = this.m_oScope.model.stationCode;
         this.m_sChartType = this.m_oScope.model.chartType;
 
-        this.m_iHeight = 400;
-        this.m_iWidth = 600;
+        this.m_iHeight = 490;
+        this.m_iWidth = 730;
 
         var oControllerVar = this;
 
         oControllerVar.LoadData();
-
-/*
-        oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sStationCode,this.m_sChartType).success(function(data,status) {
-
-            if (!angular.isDefined(data)){
-                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sStationCode);
-                oControllerVar.m_bLoading = false;
-                return;
-            }
-            if (data=="") {
-                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sStationCode);
-                oControllerVar.m_bLoading = false;
-                return;
-            }
-
-            oControllerVar.oChartVM = data;
-
-            var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sStationCode);
-
-            if(angular.isDefined(oControllerVar.oChartVM.otherChart)) {
-
-                oControllerVar.oChartVM.otherChart.forEach(function(sType){
-                    var oOtherChartLink = {};
-                    oOtherChartLink.sensorType = sType;
-
-                    if (oControllerVar.m_sChartType == sType)
-                    {
-                        oOtherChartLink.isActive = true;
-                    }
-                    else
-                    {
-                        oOtherChartLink.isActive = false;
-                    }
-
-                    var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(sType);
-
-                    if (oSensorLink != null)
-                    {
-                        oOtherChartLink.description = oSensorLink.description;
-                        oOtherChartLink.imageLinkOff = oSensorLink.imageLinkOff;
-                    }
-
-                    oControllerVar.m_aoOtherCharts.push(oOtherChartLink);
-                });
-
-            }
-
-            oControllerVar.addSeriesToChart();
-
-            oControllerVar.m_bLoading = false;
-        }).error(function(data,status){
-            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
-        });
-        */
 
     }
 
@@ -101,7 +47,7 @@ var ChartController = (function() {
             }
 
             oControllerVar.oChartVM = data;
-            oControllerVar.m_aoOtherCharts = []
+            oControllerVar.m_aoOtherCharts = [];
 
             var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sStationCode);
 
@@ -276,7 +222,8 @@ var ChartController = (function() {
                                 dataGrouping: {
                                     enabled: true,
                                     approximation :"high"
-                                }
+                                },
+                                animation: false
                             },
                             line: {
                                 marker: {
@@ -383,8 +330,10 @@ var ChartController = (function() {
                                 //pointRange: 1000*60*60,
                                 //pointWidth: 5,
                                 pointPlacement: -0.5,
+                                pointPadding: 0,
                                 grouping: false,
-                                borderWidth: 0
+                                borderWidth: 0,
+                                groupPadding: false
                             },
                             spline: {
                                 marker: {
@@ -403,7 +352,11 @@ var ChartController = (function() {
                                     enabled: true,
                                     radius: 1
                                 }
+                            },
+                            series: {
+                                animation: false
                             }
+
                         },
                         exporting: {
                             buttons: {
@@ -528,69 +481,8 @@ var ChartController = (function() {
 
                         oChart.yAxis[iAxis+1].setExtremes(oAdditionalAxes.axisYMinValue,oAdditionalAxes.axisYMaxValue);
                     }
-/*
-                    // Add Additional Axes
-                    this.oChartVM.verticalAxes.forEach(function(oAdditionalAxes) {
-                        oChart.addAxis({
-                            title: {
-                                text:oAdditionalAxes.axisYTitle,
-                                rotation: 270,
-                                margin: 30
-                            },
-                            opposite: oAdditionalAxes.isOpposite,
-                            min: oAdditionalAxes.axisYMinValue,
-                            max: oAdditionalAxes.axisYMaxValue,
-                            tickInterval: oAdditionalAxes.axisYTickInterval,
-                            minPadding: 0,
-                            startOnTick: true
-                        });
-                    });
-*/
                 }
 
-                /*
-                // X AXIS
-                if (angular.isDefined(oChart.xAxis[0])) {
-                    if (this.oChartVM.dataSeries.length > 0) {
-                        var oLastvalue = null;
-                        //search last value != null
-                        for (var iCount = this.oChartVM.dataSeries[0].data.length - 1; iCount >= 0; iCount--) {
-                            if (this.oChartVM.dataSeries[0].data[iCount][1] != null) {
-                                oLastvalue = this.oChartVM.dataSeries[0].data[iCount][0];
-                                break;
-                            }
-                        }
-                        // X AXIS
-                        if (angular.isDefined(oChart.xAxis[0])) {
-                            var oXAxisOptions = {
-                                type: 'datetime',
-                                plotBands: [
-                                    {
-                                        color: 'rgba(255, 208, 0, 0.3)', // Color value
-                                        from: timenow, // Start of the plot band
-                                        to: oLastvalue // End of the plot band
-                                    }
-                                ],
-                                plotLines: [
-                                    {
-                                        color: 'rgba(69, 163, 202, 1)', // Color value
-                                        dashStyle: 'Solid', // Style of the plot line. Default to solid
-                                        value: timenow, // Value of where the line will appear
-                                        width: '2' // Width of the line
-                                    }
-                                ]
-                            };
-                        }
-                    }
-                    else {
-                        var oXAxisOptions = {
-                            type: 'datetime'
-                        };
-                    }
-
-                    oChart.xAxis[0].setOptions(oXAxisOptions);
-                }
-*/
                 var xAxisDefined = false;
 
                 // For each time Serie
@@ -688,8 +580,9 @@ var ChartController = (function() {
                                                 width: '2', // Width of the line
                                                 zIndex: 4
                                             }
-                                        ]
-
+                                        ],
+                                        tickPixelInterval: 50,
+                                        minorTickInterval: 'auto'
                                     };
                                 }
                             }

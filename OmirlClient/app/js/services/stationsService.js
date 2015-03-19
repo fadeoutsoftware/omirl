@@ -61,9 +61,13 @@ angular.module('omirl.stationsService', ['omirl.ConstantsService']).
             return aoSensors;
         }
 
-        this.getSensorsTable = function(oStationsLink) {
-            //var sLayerType = oStationsLink.code;
-            return this.m_aoSensorsTable;
+        this.getSensorsTable = function(sType) {
+            return this.m_oHttp.get(this.APIURL + '/stations/sensorvalues/'+sType);
+        }
+
+        this.exportCsvSensorsTable = function(sSensorCode) {
+            var sAPIURL = this.APIURL;
+            return sAPIURL + '/stations/exportsensorvalues/'+sSensorCode;
         }
 
 

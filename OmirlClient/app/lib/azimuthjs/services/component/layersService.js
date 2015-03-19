@@ -12,9 +12,11 @@ angular.module('az.services').factory('az.services.layersService',function($root
     	m_aoBaseLayers: [],
         m_oDynamicLayer: null,
         m_oSensorsLayer: null,
+        m_oSectionsLayer: null,
         m_oWeatherLayer: null,
         m_oMarkerLayer: null,
         m_aoStaticLayers: [],
+        m_aoLegendsMap: [],
         m_aoSensorLayerColorRanges: [
             {"lmt":0.2,"clr":"#FFFFFF"},
             {"lmt":1,"clr":"#E6F5FF"},
@@ -51,12 +53,12 @@ angular.module('az.services').factory('az.services.layersService',function($root
             {"lmt":10000,"clr":"#C800CD"}
         ],
         m_aoHydroSensorLayerColorRanges: [
-            {"lmt":1,"clr":"#FFFFFF"},
-            {"lmt":2,"clr":"#33CC33"},
-            {"lmt":3,"clr":"#FF6600"},
-            {"lmt":4,"clr":"#FF0000"},
-            {"lmt":5,"clr":"#0033CC"},
-            {"lmt":10000,"clr":"#000000"}
+            {"lmt":1,"clr":"#00DC00"},
+            {"lmt":2,"clr":"#E6DC32"},
+            {"lmt":3,"clr":"#F08228"},
+            {"lmt":4,"clr":"#FA3C3C"},
+            {"lmt":5,"clr":"#FA3C3C"},
+            {"lmt":10000,"clr":"#FA3C3C"}
         ],
         clarAll: function() {
             this.clearBaseLayers();
@@ -66,7 +68,28 @@ angular.module('az.services').factory('az.services.layersService',function($root
             this.m_oSensorsLayer = null;
             this.m_oWeatherLayer = null;
         },
+        addLayerLegend: function(layerCode,colorRanges){
 
+            var bFound=false;
+
+            for (var iCount = 0; iCount<this.m_aoLegendsMap.length; iCount++) {
+                var oLegendReference = this.m_aoLegendsMap[iCount];
+                if (angular.isDefined(oLegendReference)) {
+                    if (oLegendReference.sCode == layerCode) {
+                        oLegendReference.oLegend = colorRanges;
+                        bFound = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!bFound) {
+                var oLegendReference = {};
+                oLegendReference.sCode = layerCode;
+                oLegendReference.oLegend = colorRanges;
+                this.m_aoLegendsMap.push(oLegendReference);
+            }
+        },
         /**
          * Gets Map base layers array
          * @returns {*}
@@ -147,6 +170,30 @@ angular.module('az.services').factory('az.services.layersService',function($root
          */
         setSensorsLayer: function(oLayer) {
             this.m_oSensorsLayer = oLayer;
+        },
+        /**
+         * Gets the Sections layer
+         * @returns {null}
+         */
+        getSectionsLayer: function() {
+
+            if (this.m_oSectionsLayer == null) {
+                // No: create it
+                var oStyleMap = new OpenLayers.StyleMap(this.getSectionsLayerStyle());
+                this.m_oSectionsLayer = new OpenLayers.Layer.Vector("Sezioni", {
+                    styleMap: oStyleMap,
+                    rendererOptions: {zIndexing: true}
+                });
+            }
+
+            return this.m_oSectionsLayer;
+        },
+        /**
+         * Sets the sensors layer
+         * @param oLayer
+         */
+        setSectionsLayer: function(oLayer) {
+            this.m_oSectionsLayer = oLayer;
         },
         /**
          * Gets the Weather Layer
@@ -235,6 +282,15 @@ angular.module('az.services').factory('az.services.layersService',function($root
 
             return iIndex;
         },
+        getSectionsLayerIndex : function() {
+            var iIndex = this.m_aoBaseLayers.length;
+
+            if (this.m_oDynamicLayer != null) iIndex ++;
+
+            iIndex += this.m_aoStaticLayers.length;
+
+            return iIndex;
+        },
         getWeatherLayerIndex : function() {
             var iIndex = this.m_aoBaseLayers.length;
 
@@ -253,6 +309,16 @@ angular.module('az.services').factory('az.services.layersService',function($root
             //console.log("Zoom End");
         },
         getStationsLayerColorMap: function (oSensorType) {
+
+            for (var iCount = 0; iCount<this.m_aoLegendsMap.length; iCount++) {
+                var oLegendReference = this.m_aoLegendsMap[iCount];
+                if (angular.isDefined(oLegendReference)) {
+                    if (oLegendReference.sCode == oSensorType) {
+                        return oLegendReference.oLegend;
+                    }
+                }
+            }
+
             if (oSensorType!="Idro") return this.m_aoSensorLayerColorRanges;
             return this.m_aoHydroSensorLayerColorRanges;
         },
@@ -423,6 +489,82 @@ angular.module('az.services').factory('az.services.layersService',function($root
                         else {
                             return 0;
                         }
+                    }
+                }
+            });
+
+            return style;
+        },
+        /**
+         * Creates an Open Layer style for stations Data
+         * @returns {OpenLayers.Style}
+         */
+        getSectionsLayerStyle: function() {
+            // Define three rules to style the cluster features.
+            var lowRule = new OpenLayers.Rule({
+                symbolizer: {
+                    fillColor: "${colorFunction}",
+                    fillOpacity: "${opacityFunction}",
+                    strokeColor: "${strokeColorFunction}",
+                    strokeOpacity: "${strokeOpacityFunction}",
+                    strokeWidth: "${strokeWidthFunction}",
+                    pointRadius: "${radiusFunction}",
+                    label: "${valueFunction}",
+                    'labelOutlineColor' : "${colorFunction}",
+                    labelOutlineWidth: 2,
+                    fontColor: "#ffffff",
+                    fontOpacity: 0.8,
+                    fontSize: "12px",
+                    graphicName: '${graphicNameFunction}',
+                    rotation: "${rotationFunction}",
+                    externalGraphic: '${externalGraphicFunction}',
+                    graphicWidth: '${externalGraphicSize}',
+                    graphicHeight: '${externalGraphicSize}'
+                }
+            });
+
+            var oService = this;
+
+            // Create a Style that uses the three previous rules
+            var style = new OpenLayers.Style(null, {
+                rules: [lowRule],
+                context: {
+                    valueFunction: function(feature) {
+                        return "";
+                    },
+                    radiusFunction: function(feature) {
+                        return 5;
+                    },
+                    strokeWidthFunction: function(feature) {
+                        return 2;
+                    },
+                    strokeOpacityFunction: function(feature) {
+                        return 1;
+                    },
+                    colorFunction: function(feature) {
+                        return "#FFFFFF";
+                    },
+                    opacityFunction: function(feature) {
+                        if (feature.attributes.opacity==-1.0)
+                        {
+                            return 0.9;
+                        }
+                        return feature.attributes.opacity;
+                    },
+                    strokeColorFunction: function(feature) {
+                        return "#000000";
+                    },
+                    graphicNameFunction: function(feature) {
+                        return 'circle';
+                    },
+                    rotationFunction: function(feature) {
+                        return 0;
+                    },
+                    externalGraphicFunction: function(feature) {
+                        return '';
+                    },
+                    externalGraphicSize: function(feature) {
+                        return 0;
                     }
                 }
             });

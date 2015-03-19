@@ -49,18 +49,6 @@ var SensorTableController = (function() {
             oControllerVar.m_aoTypes = data;
 
 
-
-
-            // QUESTO CHIUDE LA BARRA DI NAVIGAZIONE VOLENDO
-            var oElement = angular.element("#mapNavigation");
-
-            if (oElement != null) {
-                if (oElement.length>0) {
-                    var iWidth = oElement[0].clientWidth;
-                    oElement[0].style.left = "-" + iWidth + "px";
-                }
-            }
-
             oControllerVar.typeSelected();
 
         }).error(function (data, status) {
@@ -78,17 +66,18 @@ var SensorTableController = (function() {
 
         var oControllerVar = this;
 
-        /*
+
         this.m_oStationsService.getSensorsTable(this.m_oSelectedType.code).success(function (data, status) {
             oControllerVar.m_aoStations = data.tableRows;
             var aoStations = oControllerVar.m_aoStations;
 
             angular.forEach(oControllerVar.m_aoStations, function(value, key) {
-                var NameCode = value.stationCode + ' ' + value.name;
-                aoStations[key].nameCode = NameCode;
+                //var NameCode = value.stationCode + ' ' + value.name;
+                //aoStations[key].nameCode = NameCode;
 
                 if (value.municipality == null) aoStations[key].municipality = "";
                 if (value.basin == null) aoStations[key].basin = "";
+                if (value.subBasin == null) aoStations[key].subBasin = "";
                 if (value.area == null) aoStations[key].area = "";
             });
 
@@ -96,25 +85,13 @@ var SensorTableController = (function() {
         }).error(function (data, status) {
             oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
         });
-        */
-
-        this.m_aoStations = this.m_oStationsService.getSensorsTable(this.m_oSelectedType.code);
-
-        var aoStations = oControllerVar.m_aoStations;
-
-        angular.forEach(oControllerVar.m_aoStations, function(value, key) {
-
-            if (value.municipality == null) aoStations[key].municipality = "";
-            if (value.basin == null) aoStations[key].basin = "";
-            if (value.subBasin == null) aoStations[key].subBasin = "";
-            if (value.area == null) aoStations[key].area = "";
-        });
 
         oControllerVar.m_bDowloadEnabled = true;
     }
 
+
     SensorTableController.prototype.exportCsv = function() {
-        window.open(this.m_oStationsService.exportCsvStationList(this.m_oSelectedType.code), '_blank', '');
+        window.open(this.m_oStationsService.exportCsvSensorsTable(this.m_oSelectedType.code), '_blank', '');
     }
 
     SensorTableController.prototype.stationClicked = function(sCode, sMunicipality, sName) {
@@ -152,7 +129,7 @@ var SensorTableController = (function() {
         var options = {
             autoOpen: false,
             modal: false,
-            width: 600,
+            width: 'auto',
             resizable: false,
             close: function(event, ui) {
                 // Remove the chart from the Chart Service
@@ -207,10 +184,11 @@ var SensorTableController = (function() {
 
     SensorTableController.prototype.CancelCodeFilter = function()
     {
-        this.m_oScope.search.stationCode="";
+        this.m_oScope.search.code="";
         this.m_bShowCancelCodeFilter = false;
         this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
+
     SensorTableController.prototype.AreaChanged = function(sAreaFilter)
     {
         if (sAreaFilter == "") {
@@ -285,7 +263,7 @@ var SensorTableController = (function() {
 
     SensorTableController.prototype.CancelSubBasinFilter = function()
     {
-        this.m_oScope.search.subBasin="";
+        this.m_oScope.search.underbasin="";
         this.m_bShowCancelSubBasinFilter = false;
         this.m_sFilterLabel = this.m_sFILTRICOLONNE;
     }
@@ -326,8 +304,6 @@ var SensorTableController = (function() {
                 else {
                     oElement[0].style.left =  "0px";
                 }
-
-                //oElement.sty
             }
         }
 

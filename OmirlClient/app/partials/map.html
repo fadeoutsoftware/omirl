@@ -103,6 +103,18 @@
             <br/>
 
             <div id="omirl-collapsable-panels">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        <div class="input-group"><input type="text" class="form-control" data-ng-model="m_oController.m_oReferenceDate"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker data-ng-model="m_oController.m_oReferenceDate" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="m_oController.onTimeSet(newDate, oldDate)"/>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="omirl-collapsable-panels">
 
 
                 <!--------------------------------------------------------------------------- Stazioni --------------------------------------------------------------------------->
@@ -326,13 +338,13 @@
 
 
 <div class="container">
-    <div class="row map-legend-map  pull-right" ng-show="m_oController.m_bDynamicLayerActive">
+    <div class="row map-legend-map  pull-left" ng-show="m_oController.m_bDynamicLayerActive">
         <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sMapLegendTooltip}}"
            ng-click="m_oController.mapLegendClicked()">
             <table>
 
                 <tr>
-                    <td><img class="map-legend-icon" src="{{m_oController.m_sMapLegendIconPath}}"></td>
+                    <td><img class="map-legend-icon" src="{{m_oController.m_sMapLegendIconPath}}" style="height: 35px; vertical-align: super;"></td>
                     <td><img class="map-legend-image" src="{{m_oController.m_sMapLegendPath}}"
                              ng-show="m_oController.m_bShowMapLegendImage"></td>
                 </tr>
@@ -341,13 +353,13 @@
         </a>
     </div>
 
-    <div class="row map-legend-stations pull-right" ng-show="m_oController.m_bSensorLayerActive">
+    <div class="row map-legend-stations pull-left" ng-show="m_oController.m_bSensorLayerActive">
         <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip}}"
            ng-click="m_oController.sensorsLegendClicked()">
             <table>
 
                 <tr>
-                    <td><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}"></td>
+                    <td><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" style="height: 35px; vertical-align: super;"></td>
                     <td><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}"
                              ng-show="m_oController.m_bShowSensorsLegendImage"></td>
 

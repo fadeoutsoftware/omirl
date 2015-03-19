@@ -163,4 +163,8 @@ angular.module('omirl.HydroService', ['omirl.ConstantsService']).
             return this.m_aoModelTable;
         }
 
+
+        this.getSections = function(oSectionLink) {
+            return this.m_oHttp.get(this.APIURL + '/sections/'+oSectionLink.linkCode);
+        }
     }]);

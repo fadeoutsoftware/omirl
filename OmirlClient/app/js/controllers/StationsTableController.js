@@ -49,9 +49,7 @@ var StationsTableController = (function() {
 
             oControllerVar.m_aoTypes = data;
 
-
-
-
+            /*
             // QUESTO CHIUDE LA BARRA DI NAVIGAZIONE VOLENDO
             var oElement = angular.element("#mapNavigation");
 
@@ -61,6 +59,7 @@ var StationsTableController = (function() {
                     oElement[0].style.left = "-" + iWidth + "px";
                 }
             }
+            */
 
             oControllerVar.typeSelected();
 
@@ -139,7 +138,7 @@ var StationsTableController = (function() {
         var options = {
             autoOpen: false,
             modal: false,
-            width: 600,
+            width: 'auto',
             resizable: false,
             close: function(event, ui) {
                 // Remove the chart from the Chart Service
