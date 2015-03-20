@@ -262,6 +262,10 @@ public class SectionAnag {
 		oViewModel.setName(this.name);
 		oViewModel.setRiver(this.river);
 		
+		oViewModel.setBasinArea(this.basin_area);
+		oViewModel.setWarningArea(this.warn_area);
+		oViewModel.setBasinClass(this.basin_class);
+		
 		return oViewModel;
 	}
 	public Integer getSubjective() {

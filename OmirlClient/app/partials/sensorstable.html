@@ -32,6 +32,8 @@
                 <div class="panel-footer">
                     <!--Panel footer-->
 
+                    <h4>{{m_oController.getFormattedReferenceDate()}}</h4>
+
                     <h4>{{m_oController.m_sFilterLabel}} <span id="searchclear" class="searchclearall glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelAllFilters()" ng-show="m_oController.m_bShowCancelNameFilter || m_oController.m_bShowCancelDistrictFilter || m_oController.m_bShowCancelAreaFilter || m_oController.m_bShowCancelBasinFilter || m_oController.m_bShowCancelSubBasinFilter || m_oController.m_bShowCancelMunicipalityFilter"></span></h4>
 
 
@@ -114,9 +116,9 @@
                                 <td>{{oStation.area}}</td>
                                 <td>{{oStation.basin}}</td>
                                 <td>{{oStation.underbasin}}</td>
-                                <td>{{oStation.last}}</td>
-                                <td>{{oStation.max}}</td>
-                                <td>{{oStation.min}}</td>
+                                <td>{{m_oController.getFormattedValue(oStation.last)}}</td>
+                                <td>{{m_oController.getFormattedValue(oStation.max)}}</td>
+                                <td>{{m_oController.getFormattedValue(oStation.min)}}</td>
                             </tr>
                         </tbody>
                     </table>

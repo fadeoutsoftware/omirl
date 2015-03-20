@@ -15,6 +15,10 @@ public class SectionViewModel {
 	int alt;
 	String otherHtml;
 	
+	String basinClass;
+	String warningArea;
+	Double basinArea;
+	
 	String imgPath;
 	
 	Date refDate;
@@ -97,6 +101,24 @@ public class SectionViewModel {
 	}
 	public void setValue(double value) {
 		this.value = value;
+	}
+	public String getBasinClass() {
+		return basinClass;
+	}
+	public void setBasinClass(String basinClass) {
+		this.basinClass = basinClass;
+	}
+	public String getWarningArea() {
+		return warningArea;
+	}
+	public void setWarningArea(String warningArea) {
+		this.warningArea = warningArea;
+	}
+	public Double getBasinArea() {
+		return basinArea;
+	}
+	public void setBasinArea(Double basinArea) {
+		this.basinArea = basinArea;
 	}
 
 }

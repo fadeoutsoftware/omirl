@@ -35,6 +35,9 @@ var SensorTableController = (function() {
         this.m_sPULISCIFILTRI = "Pulisci Filtri";
         this.m_sFilterLabel = this.m_sFILTRICOLONNE;
 
+        // Decimals to show on the table
+        this.m_iDecimalCount = 1;
+
         var oControllerVar = this;
 
         this.m_oStationsService.getStationsTypes().success(function (data, status) {
@@ -66,6 +69,13 @@ var SensorTableController = (function() {
 
         var oControllerVar = this;
 
+        // Reset Decimal Count
+        this.m_iDecimalCount = 1;
+
+        // Is Snow or Hydro ?
+        if (this.m_oSelectedType.code == "Idro" || this.m_oSelectedType.code == "Neve" ) {
+            this.m_iDecimalCount = 2;
+        }
 
         this.m_oStationsService.getSensorsTable(this.m_oSelectedType.code).success(function (data, status) {
             oControllerVar.m_aoStations = data.tableRows;
@@ -87,6 +97,11 @@ var SensorTableController = (function() {
         });
 
         oControllerVar.m_bDowloadEnabled = true;
+    }
+
+    SensorTableController.prototype.getFormattedValue = function(dValue) {
+        if (dValue == null) return "N.D.";
+        return parseFloat(dValue).toFixed(this.m_iDecimalCount).toString();
     }
 
 
@@ -320,6 +335,24 @@ var SensorTableController = (function() {
 
     SensorTableController.prototype.linkClicked = function (sPath) {
         this.m_oLocation.path(sPath);
+    }
+
+
+    SensorTableController.prototype.getFormattedReferenceDate = function() {
+        var oDate = this.m_oConstantsService.getReferenceDate();
+
+        if (oDate==null) {
+            oDate = new Date();
+        }
+        if (oDate == "") {
+            oDate = new Date();
+        }
+
+        var iMonth = oDate.getMonth() + 1;
+
+        // Write reference date text
+        return "Valori misurati dalle 00:00 del " + oDate.getDate() + "/" + iMonth + "/" + oDate.getFullYear();
+
     }
 
 
