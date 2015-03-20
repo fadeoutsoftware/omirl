@@ -797,8 +797,8 @@ padding: 0 0px 0 0px;
     width: 50%;
     position: relative;
     margin-top:-80px;
-/*    left:0px;*/
-    right:0px;
+    left:0px;
+/*    right:0px;*/
     opacity: 0.8;
     text-align: center;
 /*    margin: auto;*/
@@ -1127,8 +1127,8 @@ color: #2a6496;
 
 .loading {
     position:absolute;
-    width: 550px;
-    height: 400px;
+    width: 730px;
+    height: 490px;
     display: inline;
     z-index: 1001;
     background: url('../img/Spinner.gif') no-repeat center #fff;
@@ -1243,6 +1243,7 @@ color: #2a6496;
     background-color: red;
 }
 
+
 .max-table-green-cell {
     background-color: transparent;
 }
@@ -1259,3 +1260,61 @@ color: #2a6496;
     background-color: red;
 }
 /*.table-export-button-panel:hover { font-size: 30px;}*/
+
+
+
+
+table.omirltbl {
+    border-collapse:collapse;
+    margin-bottom:15px;
+    width:90%;
+}
+
+caption.omirltbl {
+    text-align:left;
+    font-size:15px;
+    padding-bottom:10px;
+}
+
+table.omirltbl td,
+table.omirltbl th {
+    padding:5px;
+    border:1px solid #fff;
+    border-width:0 1px 1px 0;
+}
+
+thead.omirltbl th {
+    /*background:#91c5d4;*/
+    background:#7fbbda;
+}
+
+thead.omirltbl th[colspan],
+thead.omirltbl th[rowspan] {
+    background:#66a9bd;
+}
+
+tbody.omirltbl th,
+tfoot.omirltbl th {
+    text-align:left;
+    /*background:#91c5d4;*/
+    background:#7fbbda;
+}
+
+tbody.omirltbl td,
+tfoot.omirltbl td {
+    text-align:center;
+    background:#d5eaf0;
+}
+
+tfoot.omirltbl th {
+    background:#b0cc7f;
+}
+
+tfoot.omirltbl td {
+    background:#d7e1c5;
+    font-weight:bold;
+}
+
+tbody.omirltbl tr.odd td {
+    background:#bcd9e1;
+}
