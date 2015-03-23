@@ -14,6 +14,7 @@ public class SectionViewModel {
 	double lon;
 	int alt;
 	String otherHtml;
+	int color;
 	
 	String basinClass;
 	String warningArea;
@@ -119,6 +120,12 @@ public class SectionViewModel {
 	}
 	public void setBasinArea(Double basinArea) {
 		this.basinArea = basinArea;
+	}
+	public int getColor() {
+		return color;
+	}
+	public void setColor(int color) {
+		this.color = color;
 	}
 
 }

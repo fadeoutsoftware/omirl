@@ -40,6 +40,7 @@ import it.fadeout.omirl.viewmodels.WindSummaryInfo;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +51,10 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -186,6 +191,8 @@ public class OmirlDaemon {
 		//if (true) return;
 		
 		InitSensorValueTables();
+		
+		RefreshSectionsLayer();
 
 		Date oLastDate = null;
 
@@ -2359,6 +2366,57 @@ public class OmirlDaemon {
 	}
 	
 	
+	public HashMap<String, Integer> ReadSectionsLegend(String sFullPath) {
+		HashMap<String, Integer> aoRetDictionary = new HashMap<>();
+		
+		try {
+			
+			File oXmlConfig = new File((String) sFullPath+"/legend.xml");
+			
+			if (oXmlConfig.exists()) {
+
+				try {
+					SAXBuilder oBuilder = new SAXBuilder();
+					Document oDocument = oBuilder.build(oXmlConfig);
+
+					Element oRoot = oDocument.getRootElement();
+					
+					if (oRoot != null) {
+						List<Element> aoMarkers = (List<Element>) oRoot.getChildren("marker");
+						
+						if (aoMarkers != null) {
+							for (Element oMarker : aoMarkers) {
+								String sCode = oMarker.getAttribute("code").getValue();
+								Integer iColor = oMarker.getAttribute("ALERT").getIntValue();
+								
+								if (!aoRetDictionary.containsKey(sCode)){
+									aoRetDictionary.put(sCode, iColor);
+								}
+							}
+						}
+					}
+
+				} catch (IOException oEx) {
+					System.out.println("ReadSectionsLegend: " + oEx.getMessage());
+				} 
+				catch (JDOMException oEx) {
+					System.out.println("ReadSectionsLegend: " + oEx.getMessage());
+				} 
+				catch (NumberFormatException oEx) {
+					System.out.println("ReadSectionsLegend: " + oEx.getMessage());
+				} 
+				catch (Throwable oEx) {
+					System.out.println("ReadSectionsLegend: " + oEx.getMessage());
+				}
+			}			
+		}
+		catch(Exception oEx) {
+			oEx.toString();
+		}
+		
+		return aoRetDictionary;
+	}
+	
 	
 	
 	
@@ -2372,12 +2430,23 @@ public class OmirlDaemon {
 			List<SectionAnag> aoSections = oSectionsRepository.selectByModel(sFlagColumn);
 
 			if (aoSections != null) {
+				
+				// Read Legend xml file
+				Date oDate = new Date();
+				
+				String sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
+				HashMap<String, Integer> aoSectionsMap = ReadSectionsLegend(sFullPath);
+				
 
 				for (SectionAnag oSection : aoSections) {
 					try {
 						SectionViewModel oSectionViewModel = oSection.getSectionViewModel();
 						
 						oSectionViewModel.setModel(sModelName);
+						
+						if (aoSectionsMap.containsKey(oSectionViewModel.getCode())) {
+							oSectionViewModel.setColor(aoSectionsMap.get(oSectionViewModel.getCode()));
+						}
 						
 						aoSectionsViewModel.add(oSectionViewModel);
 					}
@@ -2386,10 +2455,7 @@ public class OmirlDaemon {
 					}
 				}
 
-
-				Date oDate = new Date();
-
-				String sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
+				sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
 
 				if (sFullPath != null)  {
 					String sFileName = sModelCode+m_oDateFormat.format(oDate)+".xml"; 

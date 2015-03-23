@@ -290,7 +290,21 @@ public class Omirl extends Application {
 		
 		return sFullDir;
 	}
- 	
+
+
+	/**
+	 * Gets a full path starting from the Base Path appending oDate
+	 * @param sBasePath
+	 * @param oDate
+	 * @return
+	 */
+	public static String getSubPathWithoutCheck(String sBasePath, Date oDate) {
+		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		
+		String sFullDir = sBasePath + "/" + oDateFormat.format(oDate);
+				
+		return sFullDir;
+	}	
 	
 	public static File lastFileModified(String dir, Date oRefDate) {
 		File oDir = new File(dir);

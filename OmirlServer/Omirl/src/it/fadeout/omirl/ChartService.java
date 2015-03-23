@@ -2,9 +2,11 @@ package it.fadeout.omirl;
 
 import it.fadeout.omirl.business.DataChart;
 import it.fadeout.omirl.business.DataSerie;
+import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
+import it.fadeout.omirl.viewmodels.SectionChartViewModel;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -291,6 +293,128 @@ public class ChartService {
 		
 		
 	  	return Response.ok(stream).header("Content-Disposition", "attachment;filename="+sCode+sChart+".csv").build();
+	}
+	
+	/**
+	 * Gets sensors data
+	 * @return
+	 */
+	@GET
+	@Path("/sections/{sSection}/{sModel}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public SectionChartViewModel GetSectionChart(@PathParam("sSection") String sSection, @PathParam("sModel") String sModel, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
+		
+		
+		System.out.println("ChartService.GetSectionChart: Section = " + sSection + " Model = " + sModel);
+		
+		// Create return object
+		SectionChartViewModel oDataChart = null;
+
+		try {			
+
+			if (Omirl.getUserFromSession(sSessionId)!=null) {
+				// Date: will be received from client...
+				Date oDate = new Date();
+				
+				if (sRefDate!=null)
+				{
+					if (sRefDate.equals("") == false) 
+					{
+						// Try e catch per fare il parsing 
+						// se è valido sostituire oDate.
+						SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
+						try {
+							
+							oDate = dtFormat.parse(sRefDate);
+							
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				// Get Config
+				Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+				
+				if (oConfObj != null)  {
+					
+					System.out.println("ChartService.GetSectionChart: Config Found");
+					
+					// Cast Config
+					OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+					
+					String sBasePath = oConfig.getFilesBasePath();
+					
+					sBasePath += "/sections/"+sModel;
+					
+					System.out.println("ChartService.GetSectionChart: sBasePath = " + sBasePath);
+					
+					// Get The path of the right date
+					String sPath = Omirl.getSubPath(sBasePath, oDate);
+					
+					if (sPath != null) {
+						
+						String sFile = sPath+"/"+sSection+".png";
+						
+						System.out.println("ChartService.GetSectionChart: searching file " + sFile);
+						
+						// Check if the file exists
+						File oChartFile = new File(sFile);
+						
+						// Found?					
+						if (oChartFile.exists()) {
+							
+							// Create return object
+							oDataChart = new SectionChartViewModel();
+							
+							// Compose the img relative path
+							String sRelativePath = Omirl.getSubPathWithoutCheck("img/sections/" + sModel, oDate);
+							sRelativePath+="/"+sSection+".png";
+							
+							// Save it
+							oDataChart.setsImageLink(sRelativePath);
+							// and log
+							System.out.println("ChartService.GetSectionChart: return path " + sRelativePath);
+
+							// Find the config object
+							HydroLinkConfig oSelectedHydroConfig = null;
+							
+							for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
+								if (oHydroConfig.getLinkCode().equals(sModel)) {
+									// This is my model
+									oSelectedHydroConfig=oHydroConfig;
+									break;
+								}
+							}
+
+							// Find related models in the same section
+							if (oSelectedHydroConfig!=null) {
+								for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
+									
+									if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
+										oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
+									}
+								}								
+							}
+							
+						}
+						else {
+							System.out.println("ChartService.GetSectionChart: cannot find file " + sFile);
+						}
+						
+					}
+				}
+				
+			}
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
+		}
+
+				
+		// Return the list of sensors
+		return oDataChart;
 	}	
+	
 
 }

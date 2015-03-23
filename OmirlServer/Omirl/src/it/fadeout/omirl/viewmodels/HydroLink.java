@@ -1,5 +1,9 @@
 package it.fadeout.omirl.viewmodels;
 
+import it.fadeout.omirl.business.config.LegendStepConfig;
+
+import java.util.ArrayList;
+
 public class HydroLink {
 	// Unique link id
 	String linkCode;	
@@ -19,6 +23,7 @@ public class HydroLink {
 	String parentLinkCode;
 	// Parent Code
 	String parentDescription;
+
 	
 	public String getLinkCode() {
 		return linkCode;

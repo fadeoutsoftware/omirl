@@ -17,6 +17,8 @@ public class HydroLinkConfig {
 	String filePath;
 	// Link to the legend image path
 	String legendLink;
+	// Col Flag (if needed)
+	String colFlag;
 	
 	ArrayList<HydroLinkConfig> children = new ArrayList<HydroLinkConfig>();
 	/*
@@ -87,5 +89,11 @@ public class HydroLinkConfig {
 		}
 		
 		return oLink;
+	}
+	public String getColFlag() {
+		return colFlag;
+	}
+	public void setColFlag(String colFlag) {
+		this.colFlag = colFlag;
 	}
 }
