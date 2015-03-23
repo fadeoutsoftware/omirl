@@ -64,6 +64,10 @@ angular.module('omirl.chartService', ['omirl.ConstantsService']).
             return this.m_oHttp.get(sAPIURL + '/charts/'+sSensorCode+'/'+sChart);
         }
 
+        this.getSectionChart = function(sSectionCode, sModel) {
+            var sAPIURL = this.m_oConstantsService.getAPIURL();
+            return this.m_oHttp.get(sAPIURL + '/charts/sections/'+ sSectionCode+'/'+ sModel);
+        }
 
         this.exportCsvStationChart = function(sSensorCode, sChart) {
             var sAPIURL = this.m_oConstantsService.getAPIURL();

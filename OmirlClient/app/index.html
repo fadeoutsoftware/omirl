@@ -293,6 +293,7 @@
     <script src="js/controllers/MaxTableController.js"></script>
     <script src="js/controllers/SummaryTableController.js"></script>
     <script src="js/controllers/ModelsTableController.js"></script>
+    <script src="js/controllers/SectionChartController.js"></script>
     <script src="js/filters.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/app.js"></script>
@@ -393,5 +394,42 @@ dialogCtrl controller in app.js.
             <img class="img-map-firstlevel-icon" src="img/zoom_out.png"
                  ng-click="m_oController.zoomOut()"/>
         </div>
+    </div>
+</script>
+
+
+
+<!--
+This is the template for the main dialog that is displayed. It uses the
+dialogCtrl controller in app.js.
+-->
+<script type="text/ng-template" id="sectionChart.html">
+    <div ng-controller="SectionChartController" >
+        <div id="loading" class="loading" ng-show="m_oController.isLoadingVisibile()" ></div>
+        <!--div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <!--div omirl-high-chart="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <div>
+            <img src="{{m_oController.getImageLink()}}">
+        </div>
+
+        <div ng-repeat="oOtherChart in m_oController.getOtherLinks()"
+             class="col-md-1 col-xs-1 map-firstlevel-icon"
+             ng-class="{'map-firstlevel-icon-selected': oOtherChart.isActive}"
+             tooltip-popup-delay="500" tooltip="{{oOtherChart.description}}">
+            <img class="img-map-firstlevel-icon" ng-src="{{oOtherChart.imageLinkOff}}"
+                 ng-click="m_oController.otherLinkClicked(oOtherChart)"/>
+        </div>
+
+        <!--div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" tooltip="Ingrandisci">
+            <img class="img-map-firstlevel-icon" src="img/zoom_in.png"
+                 ng-click="m_oController.zoomIn()"/>
+        </div>
+
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" tooltip="Riduci">
+            <img class="img-map-firstlevel-icon" src="img/zoom_out.png"
+                 ng-click="m_oController.zoomOut()"/>
+        </div-->
     </div>
 </script>

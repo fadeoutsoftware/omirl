@@ -8,6 +8,8 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
 
         this.APIURL = oConstantsService.getAPIURL();
 
+        this.m_oConstantsService = oConstantsService;
+
         this.m_oHttp = $http;
 
         this.m_aoMapFirstLevels = [];
@@ -66,12 +68,18 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
 
 
         this.fetchHydroFirstLevels = function() {
-            var oServiceVar = this;
+            var oControllerVar = this;
 
-            oServiceVar.m_aoHydroFirstLevels = [];
+            oControllerVar.m_aoHydroFirstLevels = [];
 
             this.m_oHttp.get(this.APIURL + '/mapnavigator/hydro').success(function(data,status) {
-                oServiceVar.m_aoHydroFirstLevels = data;
+                oControllerVar.m_aoHydroFirstLevels = data;
+
+                // Remember links
+                for (var iElement = 0; iElement < data.length; iElement++) {
+                    oControllerVar.m_oConstantsService.pushToHydroLinks(data[iElement]);
+                }
+
             }).error(function(data,status){
                 alert('Error Contacting Omirl Server');
             });

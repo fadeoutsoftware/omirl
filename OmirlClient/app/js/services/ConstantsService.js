@@ -10,6 +10,7 @@ angular.module('omirl.ConstantsService', []).
         this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
 
         this.m_aoSensorLinks = [];
+        this.m_aoHydroLinks = [];
         this.m_aoStaticLinks = [];
         this.m_iRefreshRateMs = 1000*60;
         this.m_bUserLogged = false;
@@ -84,6 +85,29 @@ angular.module('omirl.ConstantsService', []).
             return this.m_aoSensorLinks;
         }
 
+        this.clearHydroLinks = function() {
+            this.m_aoHydroLinks = [];
+        }
+
+        this.pushToHydroLinks = function(oHydroLink) {
+            this.m_aoHydroLinks.push(oHydroLink);
+        }
+
+        this.getHydroLinkByType = function(sType) {
+
+            for (var iElement = 0; iElement < this.m_aoHydroLinks.length; iElement++) {
+                if (this.m_aoHydroLinks[iElement].linkCode == sType) {
+                    return this.m_aoHydroLinks[iElement];
+                    break;
+                }
+            }
+
+            return null;
+        }
+
+        this.getHydroLinks = function() {
+            return this.m_aoHydroLinks;
+        }
 
         this.clearStaticLinks = function() {
             this.m_aoStaticLinks = [];

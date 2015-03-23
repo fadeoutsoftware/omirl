@@ -1852,6 +1852,7 @@ var MapController = (function () {
                     //,{title: oStation.name + " " + oStation.value }
                 );
 
+                if (angular.isUndefined(oSection.color)) oSection.color=0;
 
                 // Set attributes of the Feature
                 oFeature.attributes = {
@@ -1879,7 +1880,7 @@ var MapController = (function () {
                     // Opacity
                     opacity: 1.0,
                     //Color
-                    color: "#FFFFFF",
+                    color: oSection.color,
                     basin: oSection.basin,
                     river: oSection.river,
                     basinArea: oSection.basinArea,
@@ -2021,6 +2022,45 @@ var MapController = (function () {
 
         // Add Popup to the map
         oFeature.layer.map.addPopup(oPopUp);
+    }
+
+    MapController.prototype.showSectionChart = function(oFeature) {
+
+        var oControllerVar = this;
+        var sSectionCode = oFeature.attributes.stationId;
+        var sBasin = oFeature.attributes.basin;
+        var sName = oFeature.attributes.name;
+
+        if (this.m_oDialogService.isExistingDialog(sSectionCode)) {
+            return;
+        }
+
+        var sModel = this.m_oSelectedHydroLink.linkCode;
+
+
+        // The data for the dialog
+        var model = {
+            "sectionCode": sSectionCode,
+            "chartType": sModel,
+            "basin": sBasin,
+            "name": sName
+        };
+
+
+        // jQuery UI dialog options
+        var options = {
+            autoOpen: false,
+            modal: false,
+            width: 'auto',
+            resizable: false,
+            close: function(event, ui) {
+                // Remove the chart from the Chart Service
+                oControllerVar.m_oChartService.removeChart(sSectionCode);
+            },
+            title:  oFeature.attributes.name + " - " + sBasin + ""
+        };
+
+        this.m_oDialogService.open(sSectionCode,"sectionChart.html", model, options)
     }
 
 

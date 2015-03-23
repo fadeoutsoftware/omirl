@@ -18,7 +18,7 @@ var ChartController = (function() {
 
         this.oChartVM = [];
 
-        this.m_sStationCode = this.m_oScope.model.stationCode;
+        this.m_sSectionCode = this.m_oScope.model.stationCode;
         this.m_sChartType = this.m_oScope.model.chartType;
 
         this.m_iHeight = 490;
@@ -33,15 +33,15 @@ var ChartController = (function() {
     ChartController.prototype.LoadData = function () {
         var oControllerVar = this;
 
-        oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sStationCode,this.m_sChartType).success(function(data,status) {
+        oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sSectionCode,this.m_sChartType).success(function(data,status) {
 
             if (!angular.isDefined(data)){
-                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sStationCode);
+                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sSectionCode);
                 oControllerVar.m_bLoading = false;
                 return;
             }
             if (data=="") {
-                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sStationCode);
+                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sSectionCode);
                 oControllerVar.m_bLoading = false;
                 return;
             }
@@ -49,7 +49,7 @@ var ChartController = (function() {
             oControllerVar.oChartVM = data;
             oControllerVar.m_aoOtherCharts = [];
 
-            var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sStationCode);
+            var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sSectionCode);
 
             if(angular.isDefined(oControllerVar.oChartVM.otherChart)) {
 
@@ -104,7 +104,7 @@ var ChartController = (function() {
         var bIsStockChart = true;
         bIsStockChart = oControllerVar.m_oChartService.isStockChart(oOtherLink.sensorType);
 
-        oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sStationCode,oOtherLink.sensorType).success(function(data,status) {
+        oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sSectionCode,oOtherLink.sensorType).success(function(data,status) {
 
             oControllerVar.m_oScope.model.isStock = bIsStockChart;
             oControllerVar.oChartVM = data;
@@ -149,7 +149,7 @@ var ChartController = (function() {
     }
 
     ChartController.prototype.csvExport = function (sCode, sChart) {
-        window.open(this.m_oChartService.exportCsvStationChart(this.m_sStationCode,this.m_sChartType), '_blank', '');
+        window.open(this.m_oChartService.exportCsvStationChart(this.m_sSectionCode,this.m_sChartType), '_blank', '');
     }
 
     ChartController.prototype.addSeriesToChart = function () {
@@ -157,7 +157,7 @@ var ChartController = (function() {
         var oControllerVar = this;
 
         // Get Chart reference for this Chart
-        var oChart = this.m_oChartService.getChart(this.m_sStationCode);
+        var oChart = this.m_oChartService.getChart(this.m_sSectionCode);
 
         // Get From the model if it is a Stock or a Normal Chart
         var bIsStockChart = this.m_oScope.model.isStock;
@@ -380,7 +380,7 @@ var ChartController = (function() {
                 }
 
                 // Update the Chart in the service
-                this.m_oChartService.setChart(this.m_sStationCode,oChart);
+                this.m_oChartService.setChart(this.m_sSectionCode,oChart);
 
 
 
@@ -608,7 +608,7 @@ var ChartController = (function() {
     }
 
     ChartController.prototype.zoomIn = function() {
-        //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sStationCode);
+        //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sSectionCode);
         this.m_iHeight *= 1.1;
         this.m_iWidth *= 1.1;
         this.LoadData();

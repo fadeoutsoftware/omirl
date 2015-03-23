@@ -542,7 +542,13 @@ angular.module('az.services').factory('az.services.layersService',function($root
                         return 1;
                     },
                     colorFunction: function(feature) {
-                        return "#FFFFFF";
+                        try {
+                            var oColor = oService.m_aoHydroSensorLayerColorRanges[feature.attributes.color];
+                            return oColor.clr;
+                        }
+                        catch (e) {
+                            return "#FFFFFF";
+                        }
                     },
                     opacityFunction: function(feature) {
                         if (feature.attributes.opacity==-1.0)
