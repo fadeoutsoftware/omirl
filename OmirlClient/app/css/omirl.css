@@ -6,9 +6,9 @@
     font-family: 'omirl';
     src:url('../fonts/omirl.eot?qtxzml');
     src:url('../fonts/omirl.eot?#iefixqtxzml') format('embedded-opentype'),
-        url('../fonts/omirl.woff?qtxzml') format('woff'),
-        url('../fonts/omirl.ttf?qtxzml') format('truetype'),
-        url('../fonts/omirl.svg?qtxzml#omirl') format('svg');
+    url('../fonts/omirl.woff?qtxzml') format('woff'),
+    url('../fonts/omirl.ttf?qtxzml') format('truetype'),
+    url('../fonts/omirl.svg?qtxzml#omirl') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -506,8 +506,8 @@ i.scroll:hover {
 
 .map-accordion-title:hover {
     /*color: #7fbbda;*/
-/*    color: #ffffff;*/
-/*    background: blue;*/
+    /*    color: #ffffff;*/
+    /*    background: blue;*/
     text-shadow: 0 0 3px #ffffff;
     text-decoration: none!important;
 }
@@ -607,8 +607,8 @@ i.scroll:hover {
 
 .map-third-level-link
 {
-     margin-left:-30px;
-     
+    margin-left:-30px;
+
 }
 
 #mapNavigation
@@ -617,20 +617,20 @@ i.scroll:hover {
 }
 
 .map-controls-panel {
-    
+
     position: absolute;
     background: #7fbbda;
-    
-    
-    
-    
+
+
+
+
 
 }
 
 .map-controls-panel {
-padding: 0 0px 0 0px;
+    padding: 0 0px 0 0px;
     min-width: 230px;
-    
+
 }
 
 
@@ -792,32 +792,39 @@ padding: 0 0px 0 0px;
 [class^="map-legend-"] table 
 
 */
-.map-legend-map,.map-legend-stations
-{
-    width: 50%;
-    position: relative;
-    margin-top:-80px;
-    left:0px;
-/*    right:0px;*/
-    opacity: 0.8;
-    text-align: center;
-/*    margin: auto;*/
-/*    background: #fff;*/
-/*    box-shadow: 0px 0px 3px #333;*/
+/*.map-legend-map,*/
+/*.map-legend-stations*/
+/*{*/
+/*width: 50%;*/
+/*position: relative;*/
+/*margin-top:-80px;*/
+/*left:0px;*/
+/*opacity: 0.8;*/
+/*text-align: center;*/
 
-}
-.map-legend-stations {margin-top:-130px;}
-
-[class*="-legend-icon"] {
-
-    text-align: center;
-
-}
+/*}*/
+/*.map-legend-stations {margin-top:-130px;}*/
 
 /*.dropdown {position: inherit;}*/
 /*.dropdown .open {position: absolute;}*/
 
-.map-legend-stations {margin-bottom:50px!important;}
+.map-legend ul{
+    position:fixed;
+    bottom:0px;
+
+}
+
+
+[class*="map-legend-"] li {display: -webkit-box; list-style: none;float: left;}
+
+[class*="map-legend-"] li:first-child {width:50px; height:60 }
+.map-legend-stations a,
+.map-legend-stations ul {margin-bottom:65px;}
+
+
+/*[class*="-legend-icon"] {  text-align: center;  }*/
+
+.map-legend-map {}
 
 .basemaps-dropdown-menu-item {
     color: #333333 !important;
@@ -838,10 +845,10 @@ padding: 0 0px 0 0px;
 
 
 ul.dropdown-menu {
-position: fixed;
+    position: fixed;
 
-top: 0;
-left: 150px;
+    top: 0;
+    left: 150px;
 }
 
 #tablesSearchPanel ul.dropdown-menu {
@@ -858,8 +865,8 @@ left: 150px;
 ================================================ */
 
 a:hover, a:focus {
-color: #2a6496;
- text-decoration: inherit; 
+    color: #2a6496;
+    text-decoration: inherit;
 }
 
 .map-weather-panel
@@ -876,7 +883,7 @@ color: #2a6496;
 
 .dropdown li {width:100%; line-height: 1em;}
 .map-weather-panel > .dropdown ul li, [class*="accordion-content"] .dropdown ul li  { font-size:0.85em; width: 100%; margin-left: 0; }
-  [class*="accordion-content"] .dropdown ul li {margin: 0; }
+[class*="accordion-content"] .dropdown ul li {margin: 0; }
 .map-weather-panel > .dropdown ul li :hover,
 [class*="accordion-content"] .dropdown ul li :hover{background-color: #7fbbda; color:white;  width: 100%; }
 
@@ -1092,7 +1099,7 @@ color: #2a6496;
         background: url(../img/callout.jpg) no-repeat center center scroll;
     }
 
-/*    .map {        height: 75%;    }*/
+    /*    .map {        height: 75%;    }*/
 
 }
 
@@ -1120,7 +1127,7 @@ color: #2a6496;
 
 /* Stile della barra del titolo delle finestre di dialogo di jQuery: viene usata nella finestra di visualizzazione grafici dei sensori. Io preferisco nasconderla direttamente */
 .ui-dialog-titlebar {
-  /*  display: none;*/
+    /*  display: none;*/
 }
 
 
@@ -1172,29 +1179,29 @@ color: #2a6496;
 }
 
 /*.stationtablerow {*/
-    /*padding-top: 3px;*/
-    /*padding-bottom: 3px;*/
-    /*cursor: pointer;*/
-    /*text-align: left;*/
+/*padding-top: 3px;*/
+/*padding-bottom: 3px;*/
+/*cursor: pointer;*/
+/*text-align: left;*/
 /*}*/
 
 /*.stationtablerow tr {*/
-    /*padding-top: 3px;*/
-    /*padding-bottom: 3px;*/
-    /*cursor: pointer;*/
-    /*background-color: rgba(255,255,255,.65);*/
-    /*-webkit-transition: 0.5s;*/
-    /*-moz-transition: 0.5s;*/
-    /*-o-transition: 0.5s;*/
-    /*-ms-transition: 0.5s;*/
-    /*transition: 0.5s;*/
+/*padding-top: 3px;*/
+/*padding-bottom: 3px;*/
+/*cursor: pointer;*/
+/*background-color: rgba(255,255,255,.65);*/
+/*-webkit-transition: 0.5s;*/
+/*-moz-transition: 0.5s;*/
+/*-o-transition: 0.5s;*/
+/*-ms-transition: 0.5s;*/
+/*transition: 0.5s;*/
 /*}*/
 
 
 /*.stationtablerow th*/
 /*{*/
-    /*text-align: left;*/
-    /*font-size: 18px;*/
+/*text-align: left;*/
+/*font-size: 18px;*/
 /*}*/
 
 .stationtablerow th {font-size:1em; text-align: center; font-family: 'Open Sans', sans-serif; font-weight: 100;}
@@ -1203,8 +1210,8 @@ color: #2a6496;
 .table>tbody>tr>td {border-top: none;}
 .Tabella_Stazioni {padding: 1em 5em;}
 /*.stationtablerow tr:hover :not(th)  {*/
-    /*color: #ffffff;*/
-    /*background-color: #7fbbda;*/
+/*color: #ffffff;*/
+/*background-color: #7fbbda;*/
 /*}*/
 /*.table tr {border-bottom:none; border-top:none;}*/
 

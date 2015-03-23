@@ -334,38 +334,34 @@
             </div>
         </nav>
     </div>
-</div>
+    <div class="map-legend">
+        <div class="row">
+            <div class="map-legend-map" ng-show="m_oController.m_bDynamicLayerActive" >
+                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sMapLegendTooltip}}" ng-click="m_oController.mapLegendClicked()">
+                    <ul>
+                        <li>
+                            <img class="map-legend-icon" src="{{m_oController.m_sMapLegendIconPath}}" >
+                        </li>
+                        <li>
+                            <img class="map-legend-image" src="{{m_oController.m_sMapLegendPath}}"
+                                 ng-show="m_oController.m_bShowMapLegendImage">
+                        </li>
+                    </ul>
+                </a>
+            </div>
 
-
-<div class="container">
-    <div class="row map-legend-map  pull-left" ng-show="m_oController.m_bDynamicLayerActive">
-        <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sMapLegendTooltip}}" ng-click="m_oController.mapLegendClicked()">
-            <table>
-
-                <tr>
-                    <td><img class="map-legend-icon" src="{{m_oController.m_sMapLegendIconPath}}" style="height: 35px; vertical-align: super;"></td>
-                    <td><img class="map-legend-image" src="{{m_oController.m_sMapLegendPath}}"
-                             ng-show="m_oController.m_bShowMapLegendImage"></td>
-                </tr>
-
-            </table>
-        </a>
-    </div>
-
-    <div class="row map-legend-stations pull-left" ng-show="m_oController.m_bSensorLayerActive">
-        <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip}}"  ng-click="m_oController.sensorsLegendClicked()">
-            <table>
-
-                <tr>
-                    <td><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" style="height: 35px; vertical-align: super;"></td>
-                    <td><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}"
-                             ng-show="m_oController.m_bShowSensorsLegendImage"></td>
-
-                </tr>
-
-            </table>
-
-        </a>
-
+            <div class="map-legend-stations" ng-show="m_oController.m_bSensorLayerActive">
+                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip}}"  ng-click="m_oController.sensorsLegendClicked()">
+                    <ul>
+                        <li><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" style="height: 35px; vertical-align: super;"></li>
+                        <li><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}"
+                                 ng-show="m_oController.m_bShowSensorsLegendImage"></li>
+                    </ul>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
+
+
+
