@@ -1,7 +1,10 @@
 package it.fadeout.omirl;
 
+import it.fadeout.omirl.business.StationAnag;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
+import it.fadeout.omirl.data.StationAnagRepository;
+import it.fadeout.omirl.viewmodels.MobileStation;
 import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableViewModel;
 import it.fadeout.omirl.viewmodels.SensorValueRowViewModel;
@@ -161,6 +164,72 @@ public class StationsService {
 		return aoTypes;
 	}
 	
+	
+	/**
+	 * Get a list of stations near the device position
+	 * @param dLat
+	 * @param dLat
+	 * @return A list with all the station around the mobile device position
+	 */
+	@GET
+	@Path("/mobile/stationlist/{dLat}/{dLon}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	@Consumes({"application/xml", "application/json", "text/xml"})	
+	public List<MobileStation> getStationsByLatLon(
+			@PathParam("dLat") String dLat,
+			@PathParam("dLon") String dLon
+			//@HeaderParam("x-session-token") String sSessionId
+			)
+	{
+		
+		System.out.println("StationsService.GetSensors: GetStationsByLatLon = [" + dLat + ", " + dLon + "]");
+		
+		// Create return array List
+		ArrayList<MobileStation> iStationsList = new ArrayList<MobileStation>();
+		
+		try {
+			// perform query
+			ArrayList<StationAnag> oStationList = new StationAnagRepository().getListByLatLon( Double.parseDouble(dLat), Double.parseDouble(dLon), 5);
+			// and build the retval array
+			for(StationAnag stationAnag : oStationList)
+			{
+				iStationsList.add( new MobileStation(stationAnag) );
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+//		// Get Config
+//		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+//		
+//		if (oConfObj != null)  {
+//			
+//			System.out.println("StationsService.GetStationsListTable: Config Found");
+//			
+//			// Cast Config
+//			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+//			
+//			String sPath = oConfig.getFilesBasePath()+"/tables/list/";
+//			sPath+=sCode+".xml";
+//			
+//			System.out.println("StationsService.GetStationsListTable: Opening File " + sPath);
+//
+//			try {
+//				// Ok read sensors 
+//				oTable = (SensorListTableViewModel) Omirl.deserializeXMLToObject(sPath);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}							
+//		}
+		
+		
+		// Return the list of stations
+		return iStationsList;
+	}
+	
+	
+	
 	@GET
 	@Path("/stationlist/{sCode}")
 	@Produces({"application/xml", "application/json", "text/xml"})
@@ -199,8 +268,6 @@ public class StationsService {
 		// Return the list of sensors
 		return oTable;
 	}
-	
-	
 	
 	
 	
