@@ -1,0 +1,258 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the     -->
+<!-- browser's rendering engine into                -->
+<!-- "Standards Mode". Replacing this declaration   -->
+<!-- with a "Quirks Mode" doctype is not supported. -->
+
+<html ng-app="omirl">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title>Omirl On-Line</title>
+
+    <!-- Google Maps Scripts -->
+    <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
+    <!-- Open Layers Scripts -->
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <!--link href="css/bootstrap.css" rel="stylesheet"-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <!-- Add custom CSS here -->
+    <link href="css/customfonts.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/datetimepicker.css" rel="stylesheet">
+    <link href="css/omirl.css" rel="stylesheet">
+    <!--link rel="stylesheet" href="css/override.css"/-->
+
+</head>
+
+<body ng-controller="MiniController">
+<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+<noscript>
+    <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+    </div>
+</noscript>
+
+<!-- Map -->
+<div id = "contentcontainer" ng-style="m_oController.m_sContainerStyle">
+    <div ng-view ></div>
+</div>
+<!-- /Map -->
+
+
+<!-- JavaScript -->
+<!-- In production use:
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+-->
+<!-- jQuery -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/start/jquery-ui.css">
+<!--script src="lib/jquery/jquery-1.10.2.js"></script-->
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<!-- Bootstrap -->
+<!--script src="lib/bootstrap/bootstrap.js"></script-->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<!-- jQueryUI -->
+<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+
+<!-- Angular -->
+<script src="lib/angular/angular.js"></script>
+<script src="lib/angular/angular-route.js"></script>
+<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+<!-- Moment js -->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.min.js"></script>
+
+<!-- Highstock Scripts -->
+<!--script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script-->
+<script src="lib/Highstock/highstock.js"></script>
+<script src="lib/Highstock/modules/exporting.js"></script>
+<!-- DateTimePicker -->
+<script src="lib/datetimepicker/datetimepicker.js"></script>
+<!-- Map Control -->
+<script src="lib/azimuthjs/module.js"></script>
+<script src="lib/azimuthjs/services/component/mapService.js"></script>
+<script src="lib/azimuthjs/services/component/layersService.js"></script>
+<script src="lib/azimuthjs/directives/Layer.js"></script>
+<script src="lib/azimuthjs/directives/leafletMap.js"></script>
+<script src="lib/azimuthjs/directives/olMap.js"></script>
+<!-- Chart Directive -->
+<!--script src="js/directives/StockDirective.js"></script-->
+<script src="js/directives/ChartDirective.js"></script>
+<!-- Omirl Services -->
+<script src="js/services/dialog-service.js"></script>
+<script src="js/services/ConstantsService.js"></script>
+<script src="js/services/authService.js"></script>
+<script src="js/services/mapNavigatorService.js"></script>
+<script src="js/services/stationsService.js"></script>
+<script src="js/services/chartService.js"></script>
+<script src="js/services/SessionInjector.js"></script>
+<script src="js/services/tablesService.js"></script>
+<script src="js/services/hydroService.js"></script>
+<script src="js/services/MapLayerService.js"></script>
+<!-- Omirl Controllers -->
+<script src="js/controllers/TemplateController.js"></script>
+<script src="js/controllers/MiniController.js"></script>
+<script src="js/controllers/MapController.js"></script>
+<script src="js/controllers/TablesController.js"></script>
+<script src="js/controllers/AnimationsController.js"></script>
+<script src="js/controllers/CreditsController.js"></script>
+<script src="js/controllers/ChartController.js"></script>
+<script src="js/controllers/SettingsController.js"></script>
+<script src="js/controllers/StationsTableController.js"></script>
+<script src="js/controllers/SensorTableController.js"></script>
+<script src="js/controllers/MaxTableController.js"></script>
+<script src="js/controllers/SummaryTableController.js"></script>
+<script src="js/controllers/ModelsTableController.js"></script>
+<script src="js/controllers/SectionChartController.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/directives.js"></script>
+<script src="js/app_mini.js"></script>
+
+<!-- Custom JavaScript for the Side Menu and Smooth Scrolling -->
+<script>
+    $("#menu-close").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+</script>
+<script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+</script>
+<script>
+    $(function() {
+        $('a[href*=#]:not([href=#])').click(function() {
+            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
+                    || location.hostname == this.hostname) {
+
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+    });
+
+    function OmirlMoveTo(sHash) {
+        var target = $(sHash);
+        target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+        if (target.length) {
+            $('html,body').animate({
+                scrollTop: target.offset().top
+            }, 1000);
+            return false;
+        }
+    }
+</script>
+<script>
+    $(resizeMap());
+    $(window).resize(resizeMap);
+
+    function resizeMap(){
+        var mapHeight = $("#top").height();// - $("#yr-map-header").outerHeight() - $("#yr-map-footer").outerHeight();
+        var mapWidth = $("#top").width();
+
+        if ($("#omirlMap").length>0) {
+            $("#contentcontainer").height(mapHeight);
+            $("#omirlMap").height(mapHeight);
+            $("#omirlMap").width(mapWidth);
+            console.log( 'RESIZE MAP SET HEIGHT' );
+        }
+        else {
+            $("#contentcontainer").height("100%");
+            console.log( 'RESIZE MAP SET 100%' );
+        }
+    }
+</script>
+
+</body>
+</html>
+
+<!--
+This is the template for the main dialog that is displayed. It uses the
+dialogCtrl controller in app.js.
+-->
+<script type="text/ng-template" id="stationsChart.html">
+    <div ng-controller="ChartController" >
+        <div id="loading" class="loading" ng-show="m_oController.isLoadingVisibile()" ></div>
+        <!--div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <!--div omirl-high-chart="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <div omirl-high-chart="{{model.stationCode}}" ng-style="{ 'height': m_oController.getHeight(), 'min-width': m_oController.getMinWidth(), 'width': m_oController.getWidth()}"></div>
+
+        <div ng-repeat="oOtherChart in m_oController.getOtherLinks()"
+             class="col-md-1 col-xs-1 map-firstlevel-icon"
+             ng-class="{'map-firstlevel-icon-selected': oOtherChart.isActive}"
+             tooltip-popup-delay="500" tooltip="{{oOtherChart.description}}">
+            <img class="img-map-firstlevel-icon" ng-src="{{oOtherChart.imageLinkOff}}"
+                 ng-click="m_oController.otherLinkClicked(oOtherChart)"/>
+        </div>
+
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" tooltip="Ingrandisci">
+            <img class="img-map-firstlevel-icon" src="img/zoom_in.png"
+                 ng-click="m_oController.zoomIn()"/>
+        </div>
+
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" tooltip="Riduci">
+            <img class="img-map-firstlevel-icon" src="img/zoom_out.png"
+                 ng-click="m_oController.zoomOut()"/>
+        </div>
+    </div>
+</script>
+
+
+
+<!--
+This is the template for the main dialog that is displayed. It uses the
+dialogCtrl controller in app.js.
+-->
+<script type="text/ng-template" id="sectionChart.html">
+    <div ng-controller="SectionChartController" >
+        <div id="loading" class="loading" ng-show="m_oController.isLoadingVisibile()" ></div>
+        <!--div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <!--div omirl-high-chart="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <div>
+            <img src="{{m_oController.getImageLink()}}">
+        </div>
+
+        <div ng-repeat="oOtherChart in m_oController.getOtherLinks()"
+             class="col-md-1 col-xs-1 map-firstlevel-icon"
+             ng-class="{'map-firstlevel-icon-selected': oOtherChart.isActive}"
+             tooltip-popup-delay="500" tooltip="{{oOtherChart.description}}">
+            <img class="img-map-firstlevel-icon" ng-src="{{oOtherChart.imageLinkOff}}"
+                 ng-click="m_oController.otherLinkClicked(oOtherChart)"/>
+        </div>
+
+        <!--div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" tooltip="Ingrandisci">
+            <img class="img-map-firstlevel-icon" src="img/zoom_in.png"
+                 ng-click="m_oController.zoomIn()"/>
+        </div>
+
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" tooltip="Riduci">
+            <img class="img-map-firstlevel-icon" src="img/zoom_out.png"
+                 ng-click="m_oController.zoomOut()"/>
+        </div-->
+    </div>
+</script>

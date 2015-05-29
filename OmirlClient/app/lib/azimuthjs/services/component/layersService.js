@@ -360,7 +360,18 @@ angular.module('az.services').factory('az.services.layersService',function($root
                         if (feature.attributes.sensorType == 'Vento') return '';
 
                         if (feature.layer.map.zoom < 12) return "";
-                        else return feature.attributes.value;
+                        else
+                        {
+                            if (feature.attributes.sensorType == 'Idro')
+                            {
+                                return feature.attributes.value.toFixed(2);
+                            }
+                            else
+                            {
+                                return feature.attributes.value.toFixed(1);
+                            }
+
+                        }
                     },
                     radiusFunction: function(feature) {
                         if (feature.attributes.sensorType == 'Vento') return 0;
@@ -424,6 +435,10 @@ angular.module('az.services').factory('az.services.layersService',function($root
                             // SAME AS COLOR FUNCTION
                             // I was unable to recall colorFunction from here!!
                             var dValue = feature.attributes.value;
+
+                            if (feature.attributes.sensorType == 'Idro') {
+                                dValue = feature.attributes.otherHtml;
+                            }
 
                             if (feature.attributes.sensorType == 'Sfloc'){
                                 var now = new Date().getTime(); //now

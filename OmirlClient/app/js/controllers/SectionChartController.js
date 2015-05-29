@@ -20,6 +20,7 @@ var SectionChartController = (function() {
 
         this.m_sSectionCode = this.m_oScope.model.sectionCode;
         this.m_sChartType = this.m_oScope.model.chartType;
+        this.m_sSubFolder = this.m_oScope.model.subFolder;
 
         this.m_iHeight = 490;
         this.m_iWidth = 730;

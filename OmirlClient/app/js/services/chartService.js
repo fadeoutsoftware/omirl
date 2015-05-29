@@ -64,7 +64,7 @@ angular.module('omirl.chartService', ['omirl.ConstantsService']).
             return this.m_oHttp.get(sAPIURL + '/charts/'+sSensorCode+'/'+sChart);
         }
 
-        this.getSectionChart = function(sSectionCode, sModel) {
+        this.getSectionChart = function(sSectionCode, sModel, sSubFolder) {
             var sAPIURL = this.m_oConstantsService.getAPIURL();
             return this.m_oHttp.get(sAPIURL + '/charts/sections/'+ sSectionCode+'/'+ sModel);
         }

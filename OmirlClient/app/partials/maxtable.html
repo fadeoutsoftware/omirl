@@ -38,8 +38,11 @@
 
                 <div class="panel-body">
                     <!--Panel content-->
-                    <table class="table stationtablerow" >
-                        <thead>
+
+                    <p>Zone di Allerta</p>
+
+                    <table class="omirltbl" >
+                        <thead class="omirltbl">
                             <tr>
                                 <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Max (mm)</th>
                                 <th ng-click="m_oController.m_sOrderBy = 'm5'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">5'</th>
@@ -52,8 +55,8 @@
                                 <th ng-click="m_oController.m_sOrderBy = 'h24'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">24h</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr ng-repeat="oMaxRow in m_oController.getMaxTableList() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
+                        <tbody class="omirltbl">
+                            <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZones | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
                                 <td>{{oMaxRow.name}}</td>
                                 <td class="{{oMaxRow.m5BkColor}}"><b>{{oMaxRow.m5val}}</b>&nbsp;{{oMaxRow.m5}}</td>
                                 <td class="{{oMaxRow.m15BkColor}}"><b>{{oMaxRow.m15val}}</b>&nbsp;{{oMaxRow.m15}}</td>
@@ -64,6 +67,37 @@
                                 <td class="{{oMaxRow.h12BkColor}}"><b>{{oMaxRow.h12val}}</b>&nbsp;{{oMaxRow.h12}}</td>
                                 <td class="{{oMaxRow.h24BkColor}}"><b>{{oMaxRow.h24val}}</b>&nbsp;{{oMaxRow.h24}}</td>
                             </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Province</p>
+                    <!--Panel content-->
+                    <table class="omirltbl" >
+                        <thead class="omirltbl">
+                        <tr>
+                            <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Max (mm)</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'm5'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">5'</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'm15'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">15'</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'm30'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">30'</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'h1'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">1h</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'h3'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">3h</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'h6'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">6h</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'h12'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">12h</th>
+                            <th ng-click="m_oController.m_sOrderBy = 'h24'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">24h</th>
+                        </tr>
+                        </thead>
+                        <tbody class="omirltbl">
+                        <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().districts | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
+                            <td>{{oMaxRow.name}}</td>
+                            <td class="{{oMaxRow.m5BkColor}}"><b>{{oMaxRow.m5val}}</b>&nbsp;{{oMaxRow.m5}}</td>
+                            <td class="{{oMaxRow.m15BkColor}}"><b>{{oMaxRow.m15val}}</b>&nbsp;{{oMaxRow.m15}}</td>
+                            <td class="{{oMaxRow.m30BkColor}}"><b>{{oMaxRow.m30val}}</b>&nbsp;{{oMaxRow.m30}}</td>
+                            <td class="{{oMaxRow.h1BkColor}}"><b>{{oMaxRow.h1val}}</b>&nbsp;{{oMaxRow.h1}}</td>
+                            <td class="{{oMaxRow.h3BkColor}}"><b>{{oMaxRow.h3val}}</b>&nbsp;{{oMaxRow.h3}}</td>
+                            <td class="{{oMaxRow.h6BkColor}}"><b>{{oMaxRow.h6val}}</b>&nbsp;{{oMaxRow.h6}}</td>
+                            <td class="{{oMaxRow.h12BkColor}}"><b>{{oMaxRow.h12val}}</b>&nbsp;{{oMaxRow.h12}}</td>
+                            <td class="{{oMaxRow.h24BkColor}}"><b>{{oMaxRow.h24val}}</b>&nbsp;{{oMaxRow.h24}}</td>
+                        </tr>
                         </tbody>
                     </table>
 

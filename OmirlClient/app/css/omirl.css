@@ -1250,21 +1250,20 @@ a:hover, a:focus {
     background-color: red;
 }
 
-
-.max-table-green-cell {
-    background-color: transparent;
-}
-
 .max-table-border-cell {
     border: 2px solid #000000 !important;
 
 }
 
+.max-table-green-cell {
+    background-color: transparent;
+}
+
 .max-table-yellow-cell {
-    background-color: #ffff00;
+    background-color: #ffff00 !important;
 }
 .max-table-red-cell {
-    background-color: red;
+    background-color: red !important;
 }
 /*.table-export-button-panel:hover { font-size: 30px;}*/
 

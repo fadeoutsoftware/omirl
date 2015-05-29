@@ -84,32 +84,14 @@ var MaxTableController = (function() {
     }
 
     MaxTableController.prototype.aggregationSelected = function() {
-
         var oControllerVar = this;
 
-        /*
-         this.m_oStationsService.getSensorsTable(this.m_oSelectedType.code).success(function (data, status) {
-         oControllerVar.m_aoStations = data.tableRows;
-         var aoStations = oControllerVar.m_aoStations;
-
-         angular.forEach(oControllerVar.m_aoStations, function(value, key) {
-         var NameCode = value.stationCode + ' ' + value.name;
-         aoStations[key].nameCode = NameCode;
-
-         if (value.municipality == null) aoStations[key].municipality = "";
-         if (value.basin == null) aoStations[key].basin = "";
-         if (value.area == null) aoStations[key].area = "";
-         });
-
-         oControllerVar.m_bDowloadEnabled = true;
+         this.m_oTableService.getMaxStationsTable().success(function (data, status) {
+             oControllerVar.m_aoMaxTable = data;
+             oControllerVar.m_bDowloadEnabled = true;
          }).error(function (data, status) {
-         oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
+            oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
          });
-         */
-
-        this.m_aoMaxTable = this.m_oStationsService.getMaxStationsTable(this.m_oSelectedAggregation.code);
-
-        oControllerVar.m_bDowloadEnabled = true;
     }
 
     MaxTableController.prototype.exportCsv = function() {

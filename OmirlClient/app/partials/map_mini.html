@@ -1,0 +1,40 @@
+<div class="map container-fluid" style="padding-left: 0px; padding-right: 0px">
+
+    <div class="row">
+        <div class="map-panel col-md-10 col-xs-9" id="omirlMap" ol-map zoom="9" center="8.60,44.20"
+             controls="zoom,navigation,attribution,mousePosition"></div>
+        <!--<div class="map-controls-panel" >
+        <!--        col-md-10 col-xs-9          -->
+
+    </div>
+    <div class="map-legend">
+        <div class="row">
+            <div class="map-legend-map" ng-show="m_oController.m_bDynamicLayerActive" >
+                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sMapLegendTooltip}}" ng-click="m_oController.mapLegendClicked()">
+                    <ul>
+                        <li>
+                            <img class="map-legend-icon" src="{{m_oController.m_sMapLegendIconPath}}" >
+                        </li>
+                        <li>
+                            <img class="map-legend-image" src="{{m_oController.m_sMapLegendPath}}"
+                                 ng-show="m_oController.m_bShowMapLegendImage">
+                        </li>
+                    </ul>
+                </a>
+            </div>
+
+            <div class="map-legend-stations" ng-show="m_oController.m_bSensorLayerActive">
+                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip}}"  ng-click="m_oController.sensorsLegendClicked()">
+                    <ul>
+                        <li><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" style="height: 35px; vertical-align: super;"></li>
+                        <li><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}"
+                                 ng-show="m_oController.m_bShowSensorsLegendImage"></li>
+                    </ul>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

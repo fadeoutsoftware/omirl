@@ -23,6 +23,7 @@ angular.module('omirl.ConstantsService', []).
         this.m_bJustLogged = false;
 
         this.m_sSensorLayerActive = null;
+        this.m_bIsMiniVersion=false;
 
         this.setSensorLayerActive = function(oCode) {
             this.m_sSensorLayerActive = oCode;
@@ -40,6 +41,13 @@ angular.module('omirl.ConstantsService', []).
             return this.m_bJustLogged;
         }
 
+        this.setIsMiniVersion = function(oVal) {
+            this.m_bIsMiniVersion = oVal;
+        }
+
+        this.getIsMiniVersion = function() {
+            return this.m_bIsMiniVersion;
+        }
 
         this.getMapCenter = function() {
             return this.m_oMapCenter;

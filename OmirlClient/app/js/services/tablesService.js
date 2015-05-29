@@ -243,8 +243,12 @@ angular.module('omirl.TableService', ['omirl.ConstantsService']).
         }
 
 
-        this.getSummaryTable = function(sType) {
+        this.getSummaryTable = function() {
             return this.m_oHttp.get(this.APIURL + '/tables/summary');
+        }
+
+        this.getMaxStationsTable = function() {
+            return this.m_oHttp.get(this.APIURL + '/tables/max');
         }
 
     }]);

@@ -7,7 +7,7 @@
 
 var MapController = (function () {
 
-    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService, oHydroService) {
+    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService, oHydroService, oMapLayerService) {
         // Initialize Members
         this.m_oScope = $scope;
         this.m_oWindow = $window;
@@ -24,6 +24,7 @@ var MapController = (function () {
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
         this.m_oHydroService = oHydroService;
+        this.m_oMapLayerService= oMapLayerService;
 
         // Flag to know if maps first level is shown
         this.m_bIsFirstLevel = true;
@@ -317,6 +318,14 @@ var MapController = (function () {
         });
 
         this.m_oScope.$on('mapInitComplete', function (event, next, current) {
+
+            if (oControllerVar.m_oConstantsService.getIsMiniVersion()) {
+                var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType("Vento");
+                oControllerVar.m_oSelectedSensorLink = oSensorLink;
+                oControllerVar.sensorLinkClicked(oSensorLink);
+                return;
+            }
+
             // Check if there is a user logged
             var oUser = oControllerVar.m_oConstantsService.getUser();
             var bDataSet = false;
@@ -809,20 +818,49 @@ var MapController = (function () {
      */
     MapController.prototype.selectedDynamicLayer = function (oMapLink, sModifier) {
 
-        // Create WMS Layer
-        var oLayer = new OpenLayers.Layer.WMS( oMapLink.description, oMapLink.layerWMS, {layers: oMapLink.layerID+sModifier, transparent: "true", format: "image/png"} );
-        oLayer.isBaseLayer = false;
-
-        // Remove last one
-        if (this.m_oLayerService.getDynamicLayer() != null) {
-            this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+        if (!angular.isDefined(sModifier)) {
+            sModifier = "none";
         }
 
-        oLayer.setOpacity(0.6);
-        // Add the new layer to the map
-        this.m_oLayerService.setDynamicLayer(oLayer);
-        this.m_oMapService.map.addLayer(oLayer);
-        this.m_oMapService.map.setLayerIndex(oLayer,this.m_oLayerService.getBaseLayers().length);
+        if (sModifier == "") {
+            sModifier = "none";
+        }
+
+        var oController = this;
+
+        var sLayerCode = oMapLink.layerID;
+        var asStrings = oMapLink.layerID.split(":");
+        if (asStrings != null)
+        {
+            sLayerCode = asStrings[1];
+        }
+
+        this.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
+
+            if (data.StringValue != null) {
+                // Create WMS Layer
+                var oLayer = new OpenLayers.Layer.WMS(oMapLink.description, oMapLink.layerWMS, {
+                    layers: data.StringValue,
+                    transparent: "true",
+                    format: "image/png"
+                });
+                oLayer.isBaseLayer = false;
+
+                // Remove last one
+                if (oController.m_oLayerService.getDynamicLayer() != null) {
+                    oController.m_oMapService.map.removeLayer(oController.m_oLayerService.getDynamicLayer());
+                }
+
+                oLayer.setOpacity(0.6);
+                // Add the new layer to the map
+                oController.m_oLayerService.setDynamicLayer(oLayer);
+                oController.m_oMapService.map.addLayer(oLayer);
+                oController.m_oMapService.map.setLayerIndex(oLayer, oController.m_oLayerService.getBaseLayers().length);
+            }
+        }).error(function (data, status) {
+
+        });
+
     }
 
     /**
@@ -2601,7 +2639,8 @@ var MapController = (function () {
         '$log',
         '$location',
         'TableService',
-        'HydroService'
+        'HydroService',
+        'MapLayerService'
     ];
 
     return MapController;
