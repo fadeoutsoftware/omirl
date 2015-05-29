@@ -4,6 +4,7 @@ public class SectionLayerInfo {
 	String modelName;
 	String modelCode;
 	String flagColumn;
+	Boolean hasSubFolders=false;
 	
 	public String getModelName() {
 		return modelName;
@@ -22,6 +23,12 @@ public class SectionLayerInfo {
 	}
 	public void setFlagColumn(String flagColumn) {
 		this.flagColumn = flagColumn;
+	}
+	public Boolean getHasSubFolders() {
+		return hasSubFolders;
+	}
+	public void setHasSubFolders(Boolean hasSubFolders) {
+		this.hasSubFolders = hasSubFolders;
 	}
 
 }

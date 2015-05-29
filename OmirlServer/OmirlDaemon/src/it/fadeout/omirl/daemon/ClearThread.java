@@ -42,6 +42,9 @@ public class ClearThread extends Thread {
 			SavedPeriodRepository oSavedPeriodRepository = new SavedPeriodRepository();
 			m_aoSavedPeriods = oSavedPeriodRepository.SelectAll(SavedPeriod.class);
 			
+			
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////
 			System.out.println("OmirlDaemon ClearThread - clearing charts");
 			
 			// Start from Charts Folder
@@ -56,7 +59,7 @@ public class ClearThread extends Thread {
 			for (String sYear : asYears) {
 				aoYears.add(new File(oChartFolder.getAbsolutePath()+"/" + sYear));
 			}
-			
+			/*
 			
 			// For each year
 			for (File oYearFolder : aoYears) {
@@ -274,6 +277,257 @@ public class ClearThread extends Thread {
 					}
 				}	
 			}
+			
+			
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////
+			System.out.println("OmirlDaemon ClearThread - clearing sections");
+			
+			// Sections Folder
+			File oSectionsFolder = new File(m_sFileRepoPath+"/sections");
+			
+			String [] asModels = oSectionsFolder.list();
+			
+			Collection<File> aoModels = new ArrayList<File> ();
+			
+			for (String sModel : asModels) {
+				aoModels.add(new File(oSectionsFolder.getAbsolutePath()+"/" + sModel));
+			}
+			
+			
+			// For each model
+			for (File oModelFolder : aoModels) {
+				
+				//System.out.println("OmirlDaemon ClearThread - clearing sections PATH " + oModelFolder.getAbsolutePath());
+				
+				asYears = oModelFolder.list();				
+				aoYears = new ArrayList<File> ();
+				
+				for (String sYear : asYears) {
+					aoYears.add(new File(oModelFolder.getAbsolutePath()+"/" + sYear));
+				}
+				
+				
+				// For each year
+				for (File oYearFolder : aoYears) {
+					
+					// Initialize Year
+					int iYear = oYesterday.getYear();
+					
+					// Parse folder name
+					try{
+						iYear = Integer.parseInt(oYearFolder.getName());
+					}
+					catch(Exception oEx) {
+						System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
+						oEx.printStackTrace();
+					}
+									
+					String [] asMonths = oYearFolder.list();				
+					Collection<File> aoMonths = new ArrayList<File> ();
+					
+					for (String sMonth : asMonths) {
+						aoMonths.add(new File(oYearFolder.getAbsolutePath()+"/" + sMonth));
+					}
+					
+					// For each month
+					for (File oMonthFolder : aoMonths) {
+						
+						// Initialize month
+						int iMonth = oYesterday.getMonthOfYear();
+						
+						// Parse the name 
+						try{
+							iMonth = Integer.parseInt(oMonthFolder.getName());
+						}
+						catch(Exception oEx) {
+							System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
+							oEx.printStackTrace();					
+						}				
+											
+						String [] asDays = oMonthFolder.list();				
+						Collection<File> aoDays = new ArrayList<File> ();
+						
+						for (String sDay : asDays) {
+							aoDays.add(new File(oMonthFolder.getAbsolutePath()+"/" + sDay));
+						}					
+						
+						// For each day
+						for (File oDayFolder : aoDays) {
+							
+							// Initialize day
+							int iDay = oYesterday.getDayOfMonth();
+							
+							// Parse the name
+							try{
+								iDay = Integer.parseInt(oDayFolder.getName());
+							}
+							catch(Exception oEx) {
+								System.out.println("OmirlDaemon Clear Thread: excpetion reading day folder " + oEx.toString());
+								oEx.printStackTrace();					
+							}				
+							
+							// Get all subfolders and files
+							Collection<File> aoSubFolders = FileUtils.listFiles(oDayFolder,TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+							
+							// Create a Date Time with the created date
+							DateTime oFileDateTime = new DateTime(iYear, iMonth, iDay, 12, 00);
+							
+							// Keep the last day
+							if (oFileDateTime.isAfter(oYesterday)) continue;
+							// Keep Saved periods
+							if (IsSavedPeriod(oFileDateTime)) continue;
+							
+							// Delete otherwise!
+							for (File oSubFolder : aoSubFolders) {
+								FileUtils.deleteQuietly(oSubFolder);
+							}
+							
+							// Delete the day folder
+							FileUtils.deleteQuietly(oDayFolder);
+						}
+						
+						
+						File oCheckMonth = new File(oMonthFolder.getAbsolutePath());
+						if (oCheckMonth.list().length==0) {
+							// Delete the day folder
+							FileUtils.deleteQuietly(oCheckMonth);						
+						}
+					}
+					
+					File oCheckYear = new File(oYearFolder.getAbsolutePath());
+					if (oCheckYear.list().length==0) {
+						// Delete the day folder
+						FileUtils.deleteQuietly(oCheckYear);						
+					}
+				}	
+			}
+			
+			*/
+			
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////
+			System.out.println("OmirlDaemon ClearThread - clearing maps");
+			
+			// Sections Folder
+			File oMapsFolder = new File(m_sFileRepoPath+"/maps");
+			
+			String [] asMapTypes = oMapsFolder.list();
+			
+			Collection<File> aoMapTypes = new ArrayList<File> ();
+			
+			for (String sMap : asMapTypes) {
+				aoMapTypes.add(new File(oMapsFolder.getAbsolutePath()+"/" + sMap));
+			}
+			
+			
+			// For each folder
+			for (File oMapFolder : aoMapTypes) {
+				
+				//System.out.println("OmirlDaemon ClearThread - clearing sections PATH " + oModelFolder.getAbsolutePath());
+				
+				asYears = oMapFolder.list();				
+				aoYears = new ArrayList<File> ();
+				
+				for (String sYear : asYears) {
+					aoYears.add(new File(oMapFolder.getAbsolutePath()+"/" + sYear));
+				}
+				
+				
+				// For each year
+				for (File oYearFolder : aoYears) {
+					
+					// Initialize Year
+					int iYear = oYesterday.getYear();
+					
+					// Parse folder name
+					try{
+						iYear = Integer.parseInt(oYearFolder.getName());
+					}
+					catch(Exception oEx) {
+						System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
+						oEx.printStackTrace();
+					}
+									
+					String [] asMonths = oYearFolder.list();				
+					Collection<File> aoMonths = new ArrayList<File> ();
+					
+					for (String sMonth : asMonths) {
+						aoMonths.add(new File(oYearFolder.getAbsolutePath()+"/" + sMonth));
+					}
+					
+					// For each month
+					for (File oMonthFolder : aoMonths) {
+						
+						// Initialize month
+						int iMonth = oYesterday.getMonthOfYear();
+						
+						// Parse the name 
+						try{
+							iMonth = Integer.parseInt(oMonthFolder.getName());
+						}
+						catch(Exception oEx) {
+							System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
+							oEx.printStackTrace();					
+						}				
+											
+						String [] asDays = oMonthFolder.list();				
+						Collection<File> aoDays = new ArrayList<File> ();
+						
+						for (String sDay : asDays) {
+							aoDays.add(new File(oMonthFolder.getAbsolutePath()+"/" + sDay));
+						}					
+						
+						// For each day
+						for (File oDayFolder : aoDays) {
+							
+							// Initialize day
+							int iDay = oYesterday.getDayOfMonth();
+							
+							// Parse the name
+							try{
+								iDay = Integer.parseInt(oDayFolder.getName());
+							}
+							catch(Exception oEx) {
+								System.out.println("OmirlDaemon Clear Thread: excpetion reading day folder " + oEx.toString());
+								oEx.printStackTrace();					
+							}				
+							
+							// Get all subfolders and files
+							Collection<File> aoSubFolders = FileUtils.listFiles(oDayFolder,TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+							
+							// Create a Date Time with the created date
+							DateTime oFileDateTime = new DateTime(iYear, iMonth, iDay, 12, 00);
+							
+							// Keep the last day
+							if (oFileDateTime.isAfter(oYesterday)) continue;
+							// Keep Saved periods
+							if (IsSavedPeriod(oFileDateTime)) continue;
+							
+							// Delete otherwise!
+							for (File oSubFolder : aoSubFolders) {
+								FileUtils.deleteQuietly(oSubFolder);
+							}
+							
+							// Delete the day folder
+							FileUtils.deleteQuietly(oDayFolder);
+						}
+						
+						
+						File oCheckMonth = new File(oMonthFolder.getAbsolutePath());
+						if (oCheckMonth.list().length==0) {
+							// Delete the day folder
+							FileUtils.deleteQuietly(oCheckMonth);						
+						}
+					}
+					
+					File oCheckYear = new File(oYearFolder.getAbsolutePath());
+					if (oCheckYear.list().length==0) {
+						// Delete the day folder
+						FileUtils.deleteQuietly(oCheckYear);						
+					}
+				}	
+			}			
 			
 			
 			System.out.println("OmirlDaemon ClearThread - clear done");

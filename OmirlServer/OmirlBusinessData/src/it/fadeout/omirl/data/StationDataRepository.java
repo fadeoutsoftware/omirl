@@ -1,9 +1,11 @@
 package it.fadeout.omirl.data;
 
 import it.fadeout.omirl.business.DataSeriePoint;
+import it.fadeout.omirl.business.MaxTableRow;
 import it.fadeout.omirl.business.StationData;
 import it.fadeout.omirl.business.SummaryInfoEntity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -342,6 +344,84 @@ public class StationDataRepository extends Repository<StationData>{
 
 		}
 		return oSummaryInfoEntity;		
+		
+	}
+	
+	public List<MaxTableRow> GetDistrictMaxTableCell(String sColumn, String sFilter, Date oDate)
+	{
+		Session oSession = null;
+		List<MaxTableRow> aoMaxList = new ArrayList<>();
+		
+		try {
+			
+			Calendar calStart = new GregorianCalendar();
+			calStart.setTime(oDate);
+			calStart.set(Calendar.HOUR_OF_DAY, 0);
+			calStart.set(Calendar.MINUTE, 0);
+			calStart.set(Calendar.SECOND, 0);
+			calStart.set(Calendar.MILLISECOND, 0);
+			oDate = calStart.getTime();
+			
+			oSession = HibernateUtils.getSessionFactory().openSession();
+			
+			String sQuery = "select station_data." + sColumn +" as value, station_data.reference_date, station_anag.name as station_name, station_anag.station_code as station_code from station_data inner join station_anag on station_data.station_code = station_anag.station_code where district = '"+sFilter+"' and station_data." + sColumn + " is not null and reference_date >= ? order by value desc";
+			
+			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(MaxTableRow.class);
+			oQuery.setParameter(0, oDate);
+			aoMaxList =  (List<MaxTableRow>) oQuery.list();
+		}
+		catch(Throwable oEx) {
+			System.err.println(oEx.toString());
+			oEx.printStackTrace();
+		}
+		finally {
+			if (oSession!=null) {
+				oSession.flush();
+				oSession.clear();
+				oSession.close();
+			}
+
+		}
+		return aoMaxList;		
+		
+	}
+	
+	public List<MaxTableRow> GetAlertZonesMaxTableCell(String sColumn, String sFilter, Date oDate)
+	{
+		Session oSession = null;
+		List<MaxTableRow> aoMaxList = new ArrayList<>();
+		
+		try {
+			
+			Calendar calStart = new GregorianCalendar();
+			calStart.setTime(oDate);
+			calStart.set(Calendar.HOUR_OF_DAY, 0);
+			calStart.set(Calendar.MINUTE, 0);
+			calStart.set(Calendar.SECOND, 0);
+			calStart.set(Calendar.MILLISECOND, 0);
+			oDate = calStart.getTime();
+			
+			oSession = HibernateUtils.getSessionFactory().openSession();
+			
+			String sQuery = "select station_data." + sColumn +" as value, station_data.reference_date, station_anag.name as station_name, station_anag.station_code as station_code from station_data inner join station_anag on station_data.station_code = station_anag.station_code where warn_area like '%"+sFilter+"%' and station_data." + sColumn + " is not null and reference_date >= ? order by value desc";
+			
+			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(MaxTableRow.class);
+			oQuery.setParameter(0, oDate);
+			aoMaxList =  (List<MaxTableRow>) oQuery.list();
+		}
+		catch(Throwable oEx) {
+			System.err.println(oEx.toString());
+			oEx.printStackTrace();
+		}
+		finally {
+			if (oSession!=null) {
+				oSession.flush();
+				oSession.clear();
+				oSession.close();
+			}
+
+		}
+		return aoMaxList;		
 		
 	}
 	

@@ -51,6 +51,7 @@ public class Omirl extends Application {
         classes.add(AuthService.class);
         classes.add(TablesService.class);
         classes.add(SectionsService.class);
+        classes.add(MapService.class);
         
         return classes;
 	}

@@ -32,5 +32,6 @@
 		<mapping class="it.fadeout.omirl.business.SummaryInfoEntity" />
 		<mapping class="it.fadeout.omirl.business.Sfloc" />
 		<mapping class="it.fadeout.omirl.business.SectionAnag" />
+		<mapping class="it.fadeout.omirl.business.MaxTableRow" />
 	</session-factory>
 </hibernate-configuration>

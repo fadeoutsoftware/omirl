@@ -22,6 +22,8 @@ public class SectionViewModel {
 	
 	String imgPath;
 	
+	String subFolder;
+	
 	Date refDate;
 	double value;
 	
@@ -126,6 +128,12 @@ public class SectionViewModel {
 	}
 	public void setColor(int color) {
 		this.color = color;
+	}
+	public String getSubFolder() {
+		return subFolder;
+	}
+	public void setSubFolder(String subFolder) {
+		this.subFolder = subFolder;
 	}
 
 }

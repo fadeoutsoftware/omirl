@@ -85,9 +85,11 @@ public class SectionsService {
 					
 					if (sPath != null) {
 						
+						sPath = sPath + "/features";
+						
 						System.out.println("SectionsService.GetSection: searching path " + sPath);
 						
-						// Get The Last File: TODO: here use also the date and get the last before the date!!
+						// Get The Last File
 						File oLastFile = Omirl.lastFileModified(sPath, oDate);
 						
 						// Found?

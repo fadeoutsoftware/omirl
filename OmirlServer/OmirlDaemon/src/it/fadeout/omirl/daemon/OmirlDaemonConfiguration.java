@@ -2,7 +2,8 @@ package it.fadeout.omirl.daemon;
 
 import it.fadeout.omirl.business.AnagTableInfo;
 import it.fadeout.omirl.business.ChartInfo;
-import it.fadeout.omirl.business.DynamicLayerInfo;
+import it.fadeout.omirl.business.MapInfo;
+import it.fadeout.omirl.business.MaxTableInfo;
 import it.fadeout.omirl.business.SectionLayerInfo;
 import it.fadeout.omirl.business.WindSummaryConfiguration;
 
@@ -23,11 +24,11 @@ public class OmirlDaemonConfiguration {
 	
 	ArrayList<AnagTableInfo> anagTablesInfo = new ArrayList<>();
 	
-	ArrayList<DynamicLayerInfo> dynamicLayersInfo = new ArrayList<>();
-	
 	WindSummaryConfiguration windSummaryInfo = new WindSummaryConfiguration();
 	
 	ArrayList<SectionLayerInfo> sectionLayersInfo = new ArrayList<>();
+	
+	ArrayList<MapInfo> mapsInfo = new ArrayList<>();
 	
 	boolean enableCharts;
 	boolean enableSensorLast;
@@ -41,8 +42,18 @@ public class OmirlDaemonConfiguration {
 	boolean enableStationsTable;
 	boolean enableSectionsLayer;
 	boolean enableDailyTask;
+	boolean enableMaxTable;
+	
+	MaxTableInfo alertMaxTable;
+	MaxTableInfo districtMaxTable;
 	
 	int circleBufferDays = 1;
+	
+	String geoServerAddress;
+	String geoServerUser;
+	String geoServerPassword;
+	String geoServerDataFolder;
+	String geoServerWorkspace;
 
 	public String getFileRepositoryPath() {
 		return fileRepositoryPath;
@@ -83,14 +94,6 @@ public class OmirlDaemonConfiguration {
 
 	public void setAnagTablesInfo(ArrayList<AnagTableInfo> anagTablesInfo) {
 		this.anagTablesInfo = anagTablesInfo;
-	}
-
-	public ArrayList<DynamicLayerInfo> getDynamicLayersInfo() {
-		return dynamicLayersInfo;
-	}
-
-	public void setDynamicLayersInfo(ArrayList<DynamicLayerInfo> dynamicLayersInfo) {
-		this.dynamicLayersInfo = dynamicLayersInfo;
 	}
 
 	public WindSummaryConfiguration getWindSummaryInfo() {
@@ -219,5 +222,77 @@ public class OmirlDaemonConfiguration {
 
 	public void setCircleBufferDays(int circleBufferDays) {
 		this.circleBufferDays = circleBufferDays;
+	}
+
+	public boolean isEnableMaxTable() {
+		return enableMaxTable;
+	}
+
+	public void setEnableMaxTable(boolean enableMaxTable) {
+		this.enableMaxTable = enableMaxTable;
+	}
+
+	public MaxTableInfo getAlertMaxTable() {
+		return alertMaxTable;
+	}
+
+	public void setAlertMaxTable(MaxTableInfo alertMaxTable) {
+		this.alertMaxTable = alertMaxTable;
+	}
+
+	public MaxTableInfo getDistrictMaxTable() {
+		return districtMaxTable;
+	}
+
+	public void setDistrictMaxTable(MaxTableInfo districtMaxTable) {
+		this.districtMaxTable = districtMaxTable;
+	}
+
+	public String getGeoServerAddress() {
+		return geoServerAddress;
+	}
+
+	public void setGeoServerAddress(String geoServerAddress) {
+		this.geoServerAddress = geoServerAddress;
+	}
+
+	public String getGeoServerUser() {
+		return geoServerUser;
+	}
+
+	public void setGeoServerUser(String geoServerUser) {
+		this.geoServerUser = geoServerUser;
+	}
+
+	public String getGeoServerPassword() {
+		return geoServerPassword;
+	}
+
+	public void setGeoServerPassword(String geoServerPassword) {
+		this.geoServerPassword = geoServerPassword;
+	}
+
+	public String getGeoServerDataFolder() {
+		return geoServerDataFolder;
+	}
+
+	public void setGeoServerDataFolder(String geoServerDataFolder) {
+		this.geoServerDataFolder = geoServerDataFolder;
+	}
+
+	public ArrayList<MapInfo> getMapsInfo() {
+		return mapsInfo;
+	}
+
+	public void setMapsInfo(ArrayList<MapInfo> mapsInfo) {
+		this.mapsInfo = mapsInfo;
+	}
+
+	public String getGeoServerWorkspace() {
+		return geoServerWorkspace;
+	}
+
+	public void setGeoServerWorkspace(String geoServerWorkspace) {
+		this.geoServerWorkspace = geoServerWorkspace;
 	}	
 }

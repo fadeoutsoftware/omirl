@@ -7,6 +7,7 @@ import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
 import it.fadeout.omirl.viewmodels.SectionChartViewModel;
+import it.fadeout.omirl.viewmodels.SectionViewModel;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,6 +20,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
@@ -354,7 +356,40 @@ public class ChartService {
 					
 					if (sPath != null) {
 						
-						String sFile = sPath+"/"+sSection+".png";
+						String sSubPath = "";
+						
+						String sFeaturesPath = sPath + "/features";
+						
+						// Get The Last File
+						File oLastFile = Omirl.lastFileModified(sFeaturesPath, oDate);
+
+						if (oLastFile != null) {
+							
+							System.out.println("SectionsService.GetSectionChart: Opening Sections File " + oLastFile.getAbsolutePath());
+
+							try {
+								// Ok read sections 
+								List<SectionViewModel> aoSections = (List<SectionViewModel>) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+								if (aoSections !=null) {
+									if (aoSections.size()>0) {
+										sSubPath = aoSections.get(0).getSubFolder();
+										System.out.println("SectionsService.GetSectionChart: SubPath found " + sSubPath);
+									}
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}							
+						}
+
+						
+						String sFile = "";
+						
+						if (sSubPath.equals("")){
+							sFile = sPath+"/"+sSection+".png";
+						}
+						else {
+							sFile = sPath+"/"+sSubPath + "/" + sSection+".png";
+						}
 						
 						System.out.println("ChartService.GetSectionChart: searching file " + sFile);
 						
@@ -369,7 +404,16 @@ public class ChartService {
 							
 							// Compose the img relative path
 							String sRelativePath = Omirl.getSubPathWithoutCheck("img/sections/" + sModel, oDate);
-							sRelativePath+="/"+sSection+".png";
+							
+							
+							if (sSubPath.equals("")){
+								sRelativePath+="/"+sSection+".png";
+							}
+							else {
+								sRelativePath+="/"+sSubPath + "/" + sSection+".png";
+							}
+							
+							
 							
 							// Save it
 							oDataChart.setsImageLink(sRelativePath);

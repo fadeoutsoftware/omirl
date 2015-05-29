@@ -53,7 +53,7 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 				+ "<name>" + sLayerName + "</name>"
 				+ "<nativeName>" + sLayerName + "</nativeName>"
 				+ "<namespace><name>" + sNameSpace + "</name></namespace>"
-				+ "<nativeCRS>EPSG:4326</nativeCRS>"
+				/*+ "<nativeCRS>EPSG:4326</nativeCRS>"
 				+ "<srs>EPSG:4326</srs>"
 				+ "<nativeBoundingBox>"
 				+ "<minx>5.0</minx><maxx>19.0</maxx><miny>37.0</miny><maxy>50.0</maxy>"
@@ -67,7 +67,7 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 				+ "<enabled>true</enabled>"
 				+ "<store><name>" + sLayerName + "</name></store>"
 				+ "<grid><range><low>0 0</low><high>0 0</high></range><transform><scaleX>0.5</scaleX><scaleY>-0.5</scaleY><shearX>0.0</shearX><shearX>0.0</shearX>"
-				+ "<translateX>0.0</translateX><translateY>0.0</translateY></transform><crs>EPSG:4326</crs></grid>"
+				+ "<translateX>0.0</translateX><translateY>0.0</translateY></transform><crs>EPSG:4326</crs></grid>"*/
 				+ "</coverage>";
 			geoserverAction("POST", oUrlCoverages, m_GsUser, m_GsPsw, sInCoverages);
 
@@ -304,6 +304,21 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 	}
 
 
+	public boolean ExistsLayer(String sNameSpace, String sLayerName) throws IOException
+	{
+		synchronized(m_oGeoServerCriticalSection) {
+
+			URL oUrlLayerStyle = new URL(m_GsUrl + "rest/layers/"+ sNameSpace + ":" + sLayerName);
+
+			String sInLayer = "<layer>"
+				+ "<name>" + sLayerName + "</name>"
+				+ "</layer>";
+
+			geoserverAction("GET", oUrlLayerStyle, m_GsUser, m_GsPsw, sInLayer);
+
+			return true;
+		}
+	}
 
 
 	private void geoserverAction(String sMethod, URL oUrlToSand, String sUser, String sPsw, String sInputAction)

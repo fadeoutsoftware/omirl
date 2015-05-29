@@ -8,7 +8,9 @@ import it.fadeout.omirl.business.CreekThreshold;
 import it.fadeout.omirl.business.DataChart;
 import it.fadeout.omirl.business.DataSerie;
 import it.fadeout.omirl.business.DataSeriePoint;
-import it.fadeout.omirl.business.DynamicLayerInfo;
+import it.fadeout.omirl.business.MapInfo;
+import it.fadeout.omirl.business.MaxTableInfo;
+import it.fadeout.omirl.business.MaxTableRow;
 import it.fadeout.omirl.business.SectionAnag;
 import it.fadeout.omirl.business.SectionLayerInfo;
 import it.fadeout.omirl.business.SensorLastData;
@@ -29,6 +31,9 @@ import it.fadeout.omirl.data.StationDataRepository;
 import it.fadeout.omirl.data.StationLastDataRepository;
 import it.fadeout.omirl.viewmodels.AlertZoneSummaryInfo;
 import it.fadeout.omirl.viewmodels.DistrictSummaryInfo;
+import it.fadeout.omirl.viewmodels.MapInfoViewModel;
+import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
+import it.fadeout.omirl.viewmodels.MaxTableViewModel;
 import it.fadeout.omirl.viewmodels.SectionViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableViewModel;
@@ -100,7 +105,7 @@ public class OmirlDaemon {
 		//testDate();
 
 		//WriteSampleConfig();
-
+		
 		OmirlDaemon oDaemon = new OmirlDaemon();
 		oDaemon.OmirlDaemonCycle(args[0]);
 	}	
@@ -188,6 +193,9 @@ public class OmirlDaemon {
 		
 		//TEST
 		//publishMaps();
+		//maxTable();
+		//RefreshSectionsLayer();
+		//DailyTask();
 		//if (true) return;
 		
 		InitSensorValueTables();
@@ -207,7 +215,20 @@ public class OmirlDaemon {
 				System.out.println("OmirlDaemon - Cycle Start " + oActualDate);	
 
 				if (DayChanged(oActualDate, oLastDate)) {
-					oLastDate=oActualDate;
+					
+					if (oLastDate == null)
+					{
+						oLastDate= new Date(oActualDate.getTime());
+						oLastDate.setHours(0);
+						oLastDate.setMinutes(0);
+						oLastDate.setSeconds(0);
+					}
+					else 
+					{
+						oLastDate=oActualDate;
+					}
+					
+					
 					if (m_oConfig.isEnableDailyTask())
 					{
 						DailyTask();
@@ -277,12 +298,14 @@ public class OmirlDaemon {
 						if (oStationAnag.getMean_sea_level_press_every() != null)  asOtherLinks.add("Press");
 						if (oStationAnag.getBattery_voltage_every() != null) asOtherLinks.add("Batt");
 						if (oStationAnag.getMean_wave_height_every() !=null) asOtherLinks.add("Boa");
+						if (oStationAnag.getMean_snow_depth_every() != null) asOtherLinks.add("Neve");
 						//if (oStationAnag.get != null) asOtherLinks.add("humidity");
 						
 						
 						if (m_oConfig.isEnableCharts())
 						{
 							try {
+								
 								// --------------------------------------------------------RAIN CHART
 								if (oStationAnag.getRain_01h_every() != null) {
 	
@@ -797,7 +820,26 @@ public class OmirlDaemon {
 							}
 							catch(Exception oChartEx) {
 								oChartEx.printStackTrace();
-							}	
+							}
+							
+							
+							try {
+								
+								// --------------------------------------------------------SNOW CHART
+								if (oStationAnag.getMean_snow_depth_every() != null) {
+	
+									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Neve");
+	
+									// Initialize Start Date
+									Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
+	
+									SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate);
+								}
+							}
+							catch(Exception oChartEx) {
+								oChartEx.printStackTrace();
+							}
+														
 						}
 					}
 					
@@ -876,6 +918,12 @@ public class OmirlDaemon {
 					// Update Summary Table
 					if (m_oConfig.isEnableSummaryTable()) summaryTable();
 					
+					// Max Table
+					if (m_oConfig.isEnableMaxTable()) maxTable();
+					
+					// Sections Layer
+					if (m_oConfig.isEnableSectionsLayer()) RefreshSectionsLayer();
+					
 					System.out.println("OmirlDaemon - Clearing Sessions");
 					//Delete old session
 					deleteOldSession();
@@ -904,6 +952,9 @@ public class OmirlDaemon {
 		}		
 	}
 	
+	/**
+	 * Clears unused sessions
+	 */
 	private void deleteOldSession()
 	{
 		OpenSessionRepository oRepository = new OpenSessionRepository();
@@ -916,6 +967,9 @@ public class OmirlDaemon {
 		}
 	}
 
+	/**
+	 * Serialzes on disk the sfloc layer
+	 */
 	private void serializeSfloc()
 	{
 		try
@@ -964,87 +1018,430 @@ public class OmirlDaemon {
 	}
 
 
+	private String publishGeoTiff(String sFileName, String sNameSpace, String sStyle, String sGeoServerDataDir, String sGeoServerAddress,String sGeoServerUser,String sGeoServerPassword)
+	{
+		try {
+			System.out.println("ENTRO IN publishGeoTiff: publish file " + sFileName);
+
+			File oFile = new File(sFileName);
+			
+			if (!oFile.exists()) {
+				return "";
+			}
+			
+			String sLayerId = oFile.getName().substring(0, oFile.getName().length()-4);
+			
+			SimpleDateFormat oNameDateFormat = new SimpleDateFormat("yyyyMMdd");
+			
+			sLayerId = oNameDateFormat.format(new Date()) + sLayerId;
+
+			String sDestinationFileFolder = sGeoServerDataDir;
+
+			File oGeoServerDataDirFile = new File(sDestinationFileFolder+"/"+sLayerId + ".tif");
+			
+			FileUtils.copyFile(oFile, oGeoServerDataDirFile);
+
+			System.out.println("Copy to: " + oGeoServerDataDirFile.getAbsolutePath());
+
+			GeoServerDataManager2 oGeoManager = new GeoServerDataManager2(sGeoServerAddress, "", sGeoServerUser, sGeoServerPassword);
+
+			
+			/*
+			if (!oGeoManager.ExistsLayer(sNameSpace, sLayerId))
+			{
+				oGeoManager.addLayer(sLayerId, sNameSpace, oFile.getAbsolutePath(), sStyle);
+			}
+			*/
+			
+			oGeoManager.addLayer(sLayerId, sNameSpace, oFile.getAbsolutePath(), sStyle);
+
+			System.out.println("File added to geoserver");
+			
+			return sLayerId;
+		}
+		catch(Exception oEx) {
+			System.out.println("publishMaps Exception " + oEx.toString());
+			oEx.printStackTrace();
+			return "";
+		}				
+	}
+	
 	/**
 	 * Publish maps
 	 */
 	private void publishMaps() {
 		try {
 			System.out.println("ENTRO IN PUBLISH MAPS");
-
-			Date oActualDate = new Date();
-			// Get Start Date Time Filter
-			long lNowTime = oActualDate.getTime();
-
-			DynamicLayerInfo oLayerInfo = new DynamicLayerInfo();
-			oLayerInfo.setLayerId("rainfall12h");
-			oLayerInfo.setShapeFile(true);
-			oLayerInfo.setStyleId("polygon");
-
+			
+			// Creare nella conf un MapInfo
+			// 	.codice della mappa
+			//	.stile
+			//	.tipo tiff o shape
+			// Per ognuno di quelli
+			//		Andare nelle cartelle
+			// 		Prendere ultimo file non ancora pubblicato
+			//		Se c'è pubblicarlo
+			//		Se c'è aggiornare il riferimento al link id per quel codice (oggetto MapInfoViewModel)
+			// Scrivi un xml con per ogni codice il layerId più recente o cmq di riferimento
+			
+			List<MapInfo> aoMapsInfo = m_oConfig.getMapsInfo();
+			
+			List<MapInfoViewModel> aoOutputInfo = new ArrayList<MapInfoViewModel>();
+			
 			String sBasePath = m_oConfig.getFileRepositoryPath();
 
-			String sLayerPath = sBasePath + "/maps/" + oLayerInfo.getLayerId();
-
 			SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			Date oActualDate = new Date();
 
-			String sFullDir = sLayerPath + "/" + oDateFormat.format(oActualDate);
+			
+			for (MapInfo oMapInfo : aoMapsInfo) {
+				String sLayerPath = sBasePath + "/maps/" + oMapInfo.getCode();
+				
+				// Get Start Date Time Filter
+				//long lNowTime = oActualDate.getTime();
 
-			File oFullPathDir = new File(sFullDir);
+				String sFullDir = sLayerPath + "/" + oDateFormat.format(oActualDate);
+				
+				File oFile = OmirlDaemon.lastFileModified(sFullDir);
+				if (oFile == null) 
+				{
+					System.out.println("Map Code " + oMapInfo.getCode() + " Path Not Available " + sFullDir);
+					continue;
+				}
 
-			/*if (!oFullPathDir.exists()) {
-				return ;
-			}*/
-
-			File oFile = OmirlDaemon.lastFileModified(sFullDir);
-			if (oFile == null) return;
-
-			String sFileShp = oFile.getAbsolutePath();
-			sFileShp = sFileShp.substring(0, sFileShp.length()-4);
-			sFileShp += ".shp";
-			oFile = new File(sFileShp);
-
-			if (!oFile.exists()) {
-				return;
+				String sFileName = oFile.getAbsolutePath();
+				
+				String sLayerId = publishGeoTiff(sFileName,"omirl",oMapInfo.getStyle(), m_oConfig.getGeoServerDataFolder(), m_oConfig.getGeoServerAddress(), m_oConfig.getGeoServerUser(), m_oConfig.getGeoServerPassword());
+				
+				if (sLayerId != null)
+				{
+					if (!sLayerId.isEmpty())
+					{
+						MapInfoViewModel oMapInfoViewModel = new MapInfoViewModel();
+						oMapInfoViewModel.setCode(oMapInfo.getCode());
+						oMapInfoViewModel.setLayerId(sLayerId);
+						
+						aoOutputInfo.add(oMapInfoViewModel);
+					}
+				}
 			}
-
-			String sLayerId = oFile.getName().substring(0, oFile.getName().length()-4);
-			//String sShpStore = sLayerId;
-			String sShpStore = "omirl_shp";
-
-			String sGeoServerDataDir = "/var/lib/tomcat6/webapps/geoserver/data";
-			//sGeoServerDataDir = "C:\\Program Files (x86)\\GeoServer 2.3.2\\data_dir\\data";
-			String sDestinationFileFolder = sGeoServerDataDir + "/" + "omirl"; //sLayerId
-
-			File oGeoServerDataDir = new File(sDestinationFileFolder);
-
-			FileUtils.copyDirectory(oFullPathDir, oGeoServerDataDir);
-
-			String sFile = sDestinationFileFolder + "/" + sLayerId + ".shp";
-
-			System.out.println("FILE: " + sFile);
-
-			GeoServerDataManager2 oGeoManager = new GeoServerDataManager2("http://127.0.0.1:8080/geoserver/", "", "admin", "geo4Omirl");
-
-			System.out.println("GeoServerDataManager2 creato ");
-
-			oGeoManager.addShapeLayer(sLayerId, "OMIRL",sFile, "polygon", sShpStore);
-
+			
+			String sIndexPath = sBasePath + "/maps/index/" + oDateFormat.format(oActualDate);
+			
+			File oOutPath = new File(sIndexPath);
+			if (oOutPath.exists() == false) {
+				oOutPath.mkdirs();
+				oOutPath.setReadable(true,false);
+				oOutPath.setWritable(true, false);
+			}
+			
+			if (aoOutputInfo.size()>0)
+			{
+				String sFileName = sIndexPath + "/index"+m_oDateFormat.format(oActualDate)+".xml"; 
+				SerializationUtils.serializeObjectToXML(sFileName , aoOutputInfo);
+			}
+			
 			System.out.println("Finita PUBLISH MAPS");
 
 		}
 		catch(Exception oEx) {
 			System.out.println("publishMaps Exception " + oEx.toString());
+			oEx.printStackTrace();
 		}		
 	}
 	
+	/**
+	 * Generates the Values Table
+	 */
 	private void valuesTable() {
 		try {
 			System.out.println("Sensor Value Table Start");
+			
+			System.out.println("Sensor Value Table End");
 		}
 		catch(Exception oEx) {
 			oEx.printStackTrace();
 		}
 	}
+	
+	@SuppressWarnings("deprecation")
+	private void maxTable() {
+		try {
+			System.out.println("Max Table Start");
+			
+			// Data Repository
+			StationDataRepository oStationDataRepository = new StationDataRepository();
+			
+			// Date Format for hour formatting
+			SimpleDateFormat oHourFormat = new SimpleDateFormat("HH:mm");
+			
+			// Reference Date: today starting from midnight
+			Date oActualDate = new Date();
+			
+			oActualDate.setHours(0);
+			oActualDate.setMinutes(0);
+			oActualDate.setSeconds(0);
 
+			// Query result
+			List<MaxTableRow> aoMaxTableRows = null;
+			
+			// View model to serialize
+			MaxTableViewModel oMaxTableViewModel = new MaxTableViewModel();
+			
+			
+			// Alert Zone table
+			for (int iRows=0; iRows<m_oConfig.getAlertMaxTable().getRows().size(); iRows++)
+			{
+				// Max Table Row
+				MaxTableRowViewModel oRow = new MaxTableRowViewModel();
+				
+				String sRow = m_oConfig.getAlertMaxTable().getRows().get(iRows);
+				// Set Name
+				oRow.setName(sRow);
+				
+				String sRowFilter = m_oConfig.getAlertMaxTable().getRowFilters().get(iRows);
+				
+
+				for (int iCols =0; iCols<m_oConfig.getAlertMaxTable().getColumns().size(); iCols++)
+				{
+					String sMethodCode = m_oConfig.getAlertMaxTable().getMethodCodes().get(iCols);
+					String sMethodName = "";
+					java.lang.reflect.Method oMethod;					
+					
+					// Read Data from Db
+					aoMaxTableRows = oStationDataRepository.GetAlertZonesMaxTableCell(m_oConfig.getAlertMaxTable().getColumns().get(iCols), sRowFilter, oActualDate);
+					
+					// Any result?
+					if (aoMaxTableRows.size()>0) {
+						
+						// Get first
+						MaxTableRow oTableRow = aoMaxTableRows.get(0);
+						
+						// Get Value
+						double dValue = oTableRow.getValue();
+					
+						// Set hh:mm stationName
+						String sText = "["+ oHourFormat.format(oTableRow.getReference_date())+ "] ";
+						sText += oTableRow.getStation_name();
+						
+						// Set station code
+						String sStationCode = oTableRow.getStation_code();
+						
+						sMethodName = "set" + sMethodCode + "val";					
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, "" + dValue);
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set max Table values. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+
+
+						sMethodName = "set" + sMethodCode;
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, sText);
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set max Table text. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+
+
+						sMethodName = "set" + sMethodCode + "code";
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, sStationCode);
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set max Table code. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+						
+						String sStyle = "";
+						
+						if (dValue> m_oConfig.getAlertMaxTable().getThreshold2().get(iCols))
+						{
+							sStyle = m_oConfig.getAlertMaxTable().getThreshold2Style();
+						}
+						else if (dValue > m_oConfig.getAlertMaxTable().getThreshold1().get(iCols))
+						{
+							sStyle = m_oConfig.getAlertMaxTable().getThreshold1Style();
+						}
+						
+						sMethodName = "set" + sMethodCode + "BkColor";
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, sStyle);
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set cell style. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+						
+					}
+					else {
+						// No data available
+						
+						sMethodName = "set" + sMethodCode + "val";
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, "-");
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set max Table code. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+					}					
+				}
+
+				// Add row
+				oMaxTableViewModel.getAlertZones().add(oRow);
+			}
+
+
+			// Districts Table
+			
+			for (int iRows=0; iRows<m_oConfig.getDistrictMaxTable().getRows().size(); iRows++)
+			{
+				// Max Table Row
+				MaxTableRowViewModel oRow = new MaxTableRowViewModel();
+				
+				String sRow = m_oConfig.getDistrictMaxTable().getRows().get(iRows);
+				// Set Name
+				oRow.setName(sRow);
+				
+				String sRowFilter = m_oConfig.getDistrictMaxTable().getRowFilters().get(iRows);
+				
+
+				for (int iCols =0; iCols<m_oConfig.getDistrictMaxTable().getColumns().size(); iCols++)
+				{
+					String sMethodCode = m_oConfig.getDistrictMaxTable().getMethodCodes().get(iCols);
+					String sMethodName = "";
+					java.lang.reflect.Method oMethod;					
+					
+					// Read Data from Db
+					aoMaxTableRows = oStationDataRepository.GetDistrictMaxTableCell(m_oConfig.getDistrictMaxTable().getColumns().get(iCols), sRowFilter, oActualDate);
+					
+					// Any result?
+					if (aoMaxTableRows.size()>0) {
+						
+						// Get first
+						MaxTableRow oTableRow = aoMaxTableRows.get(0);
+						
+						// Get Value
+						double dValue = oTableRow.getValue();
+					
+						// Set hh:mm stationName
+						String sText = "["+ oHourFormat.format(oTableRow.getReference_date())+ "] ";
+						sText += oTableRow.getStation_name();
+						
+						// Set station code
+						String sStationCode = oTableRow.getStation_code();
+						
+						sMethodName = "set" + sMethodCode + "val";					
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, "" + dValue);
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set max Table values. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+
+
+						sMethodName = "set" + sMethodCode;
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, sText);
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set max Table text. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+
+
+						sMethodName = "set" + sMethodCode + "code";
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, sStationCode);
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set max Table code. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+						
+						String sStyle = "";
+						
+						if (dValue> m_oConfig.getDistrictMaxTable().getThreshold2().get(iCols))
+						{
+							sStyle = m_oConfig.getDistrictMaxTable().getThreshold2Style();
+						}
+						else if (dValue > m_oConfig.getDistrictMaxTable().getThreshold1().get(iCols))
+						{
+							sStyle = m_oConfig.getDistrictMaxTable().getThreshold1Style();
+						}
+						
+						sMethodName = "set" + sMethodCode + "BkColor";
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, sStyle);
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set cell style. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+					}
+					else {
+						// No data available
+						
+						sMethodName = "set" + sMethodCode + "val";
+						try {
+							oMethod = oRow.getClass().getMethod(sMethodName, String.class);
+							oMethod.invoke(oRow, "-");
+						} 
+						catch (Exception oEx) {
+							System.out.println("Exception trying to set max Table code. Method Name = " + sMethodName);
+							oEx.printStackTrace();
+						}
+					}					
+				}
+
+				// Add row
+				oMaxTableViewModel.getDistricts().add(oRow);
+			}
+
+			String sBasePath = m_oConfig.getFileRepositoryPath();
+
+			String sOutputPath = sBasePath + "/tables/max";
+
+			SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+			String sFullDir = sOutputPath + "/" + oDateFormat.format(oActualDate);
+
+			File oOutPath = new File(sFullDir);
+			if (oOutPath.exists() == false) {
+				oOutPath.mkdirs();
+				oOutPath.setReadable(true,false);
+				oOutPath.setWritable(true, false);
+			}
+
+			String sOutputFile = sFullDir + "/maxtable" +m_oDateFormat.format(new Date())+".xml"; 
+
+			SerializationUtils.serializeObjectToXML(sOutputFile, oMaxTableViewModel);
+			
+			System.out.println("Max Table End");
+		}
+		catch(Exception oEx)
+		{
+			oEx.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Generates the summary table
+	 */
 	private void summaryTable() {
 		try {
 
@@ -1597,7 +1994,11 @@ public class OmirlDaemon {
 			String sFullDir = sOutputPath + "/" + oDateFormat.format(oActualDate);
 
 			File oOutPath = new File(sFullDir);
-			if (oOutPath.exists() == false) oOutPath.mkdirs();
+			if (oOutPath.exists() == false) {
+				oOutPath.mkdirs();
+				oOutPath.setReadable(true, false);
+				oOutPath.setWritable(true, false);
+			}
 
 			String sOutputFile = sFullDir + "/summary.xml"; 
 
@@ -1877,8 +2278,6 @@ public class OmirlDaemon {
 		if (m_oConfig.isEnableThreshold()) RefreshThresholds();
 
 		if (m_oConfig.isEnableStationsTable()) RefreshStationTables();
-		
-		if (m_oConfig.isEnableSectionsLayer()) RefreshSectionsLayer();
 	}
 
 	public void RefreshSectionsLayer() {
@@ -1892,7 +2291,7 @@ public class OmirlDaemon {
 				
 				System.out.println("OmirlDaemon - Model " + oLayerInfo.getModelName() + " Code: " + oLayerInfo.getModelCode() +  " Flag Col " + oLayerInfo.getFlagColumn());
 				
-				SerializeSectionsLayer(oLayerInfo.getModelName(), oLayerInfo.getModelCode(), oLayerInfo.getFlagColumn());
+				SerializeSectionsLayer(oLayerInfo.getModelName(), oLayerInfo.getModelCode(), oLayerInfo.getFlagColumn(), oLayerInfo.getHasSubFolders());
 			}
 		}
 		catch(Exception oEx)
@@ -2420,7 +2819,7 @@ public class OmirlDaemon {
 	
 	
 	
-	public void SerializeSectionsLayer(String sModelName, String sModelCode, String sFlagColumn) {
+	public void SerializeSectionsLayer(String sModelName, String sModelCode, String sFlagColumn, Boolean bHasSubFolders) {
 
 		List<SectionViewModel> aoSectionsViewModel = new ArrayList<>();
 
@@ -2428,6 +2827,8 @@ public class OmirlDaemon {
 			
 			SectionAnagRepository oSectionsRepository = new SectionAnagRepository();
 			List<SectionAnag> aoSections = oSectionsRepository.selectByModel(sFlagColumn);
+			
+			String sSubFolderVM = "";
 
 			if (aoSections != null) {
 				
@@ -2435,6 +2836,37 @@ public class OmirlDaemon {
 				Date oDate = new Date();
 				
 				String sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
+				
+				if (bHasSubFolders)
+				{
+					File oParentFolder = new File(sFullPath);
+					
+					String [] asSubFolders = oParentFolder.list();
+					
+					long lTimestamp = 0;
+					String sNewFullPath = sFullPath;
+					
+					if (asSubFolders!=null)
+					{
+						for (String sSubFolder : asSubFolders) {
+							File oTempFile = new File(sFullPath+"/"+sSubFolder);
+							if (oTempFile.isDirectory())
+							{
+								if (oTempFile.getName().contains("features")) continue;
+								
+								if (oTempFile.lastModified()>lTimestamp)
+								{
+									lTimestamp = oTempFile.lastModified();
+									sNewFullPath = sFullPath+"/"+sSubFolder;
+									sSubFolderVM = sSubFolder;
+								}
+							}
+						}
+					}
+					
+					sFullPath = sNewFullPath;
+				}
+				
 				HashMap<String, Integer> aoSectionsMap = ReadSectionsLegend(sFullPath);
 				
 
@@ -2443,6 +2875,7 @@ public class OmirlDaemon {
 						SectionViewModel oSectionViewModel = oSection.getSectionViewModel();
 						
 						oSectionViewModel.setModel(sModelName);
+						oSectionViewModel.setSubFolder(sSubFolderVM);
 						
 						if (aoSectionsMap.containsKey(oSectionViewModel.getCode())) {
 							oSectionViewModel.setColor(aoSectionsMap.get(oSectionViewModel.getCode()));
@@ -2458,6 +2891,13 @@ public class OmirlDaemon {
 				sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
 
 				if (sFullPath != null)  {
+					
+					sFullPath = sFullPath+"/features";
+					File oFile = new File(sFullPath);
+					oFile.mkdirs();
+					oFile.setWritable(true, false);
+					oFile.setReadable(true, false);
+					
 					String sFileName = sModelCode+m_oDateFormat.format(oDate)+".xml"; 
 					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoSectionsViewModel);
 				}
@@ -2546,6 +2986,10 @@ public class OmirlDaemon {
 
 		if (!oBasePathDir.exists()) {
 			if (!oBasePathDir.mkdirs()) return null;
+			else {
+				oBasePathDir.setReadable(true, false);
+				oBasePathDir.setWritable(true,false);
+			}
 		}
 
 		String sFullDir = sBasePath + "/" + oDateFormat.format(oDate);
@@ -2553,6 +2997,10 @@ public class OmirlDaemon {
 		File oFullPathDir = new File(sFullDir);
 		if (!oFullPathDir.exists()) {
 			if (!oFullPathDir.mkdirs()) return null;
+			else {
+				oFullPathDir.setReadable(true,false);
+				oFullPathDir.setWritable(true,false);
+			}
 		}
 
 		return sFullDir;
@@ -3142,6 +3590,7 @@ public class OmirlDaemon {
 		oSectionLayerInfo.setModelCode("piccolibacini");
 		oSectionLayerInfo.setModelName("Piccoli Bacini");
 		oSectionLayerInfo.setFlagColumn("piccoli_bacini");
+		oSectionLayerInfo.setHasSubFolders(true);
 		
 		oConfig.getSectionLayersInfo().add(oSectionLayerInfo);
 		
@@ -3149,6 +3598,7 @@ public class OmirlDaemon {
 		oSectionLayerInfo.setModelCode("monitmagraq");
 		oSectionLayerInfo.setModelName("Monitoraggio Magra Q");
 		oSectionLayerInfo.setFlagColumn("catena_magra");
+		oSectionLayerInfo.setHasSubFolders(false);
 		
 		oConfig.getSectionLayersInfo().add(oSectionLayerInfo);
 		
@@ -3160,7 +3610,210 @@ public class OmirlDaemon {
 		oConfig.setEnableSummaryTable(true);
 		oConfig.setEnableValueTable(true);
 		oConfig.setEnableWebcam(true);
+		oConfig.setEnableMaxTable(true);
 		
+		MaxTableInfo oAlertMaxTableInfo  = new MaxTableInfo();
+		
+		oAlertMaxTableInfo.setTableName("Zone di Allerta");
+		oAlertMaxTableInfo.getRows().add("A");
+		oAlertMaxTableInfo.getRows().add("B");
+		oAlertMaxTableInfo.getRows().add("C");
+		oAlertMaxTableInfo.getRows().add("C+");
+		oAlertMaxTableInfo.getRows().add("C-");
+		oAlertMaxTableInfo.getRows().add("D");
+		oAlertMaxTableInfo.getRows().add("E");
+		
+		oAlertMaxTableInfo.getRowFilters().add("A");
+		oAlertMaxTableInfo.getRowFilters().add("B");
+		oAlertMaxTableInfo.getRowFilters().add("C");
+		oAlertMaxTableInfo.getRowFilters().add("C+");
+		oAlertMaxTableInfo.getRowFilters().add("C-");
+		oAlertMaxTableInfo.getRowFilters().add("D");
+		oAlertMaxTableInfo.getRowFilters().add("E");
+		
+		oAlertMaxTableInfo.getColumns().add("rain_05m");
+		oAlertMaxTableInfo.getColumns().add("rain_15m");
+		oAlertMaxTableInfo.getColumns().add("rain_30m");
+		oAlertMaxTableInfo.getColumns().add("rain_1h");
+		oAlertMaxTableInfo.getColumns().add("rain_3h");
+		oAlertMaxTableInfo.getColumns().add("rain_6h");
+		oAlertMaxTableInfo.getColumns().add("rain_12h");
+		oAlertMaxTableInfo.getColumns().add("rain_24h");
+		
+		oAlertMaxTableInfo.getMethodCodes().add("M5");
+		oAlertMaxTableInfo.getMethodCodes().add("M15");
+		oAlertMaxTableInfo.getMethodCodes().add("M30");
+		oAlertMaxTableInfo.getMethodCodes().add("H1");
+		oAlertMaxTableInfo.getMethodCodes().add("H3");
+		oAlertMaxTableInfo.getMethodCodes().add("H6");
+		oAlertMaxTableInfo.getMethodCodes().add("H12");
+		oAlertMaxTableInfo.getMethodCodes().add("H24");
+		
+		oAlertMaxTableInfo.getThreshold1().add(4.0);
+		oAlertMaxTableInfo.getThreshold1().add(6.0);
+		oAlertMaxTableInfo.getThreshold1().add(10.0);
+		oAlertMaxTableInfo.getThreshold1().add(15.0);
+		oAlertMaxTableInfo.getThreshold1().add(30.0);
+		oAlertMaxTableInfo.getThreshold1().add(40.0);
+		oAlertMaxTableInfo.getThreshold1().add(50.0);
+		oAlertMaxTableInfo.getThreshold1().add(60.0);
+
+		
+		oAlertMaxTableInfo.getThreshold2().add(8.0);
+		oAlertMaxTableInfo.getThreshold2().add(12.0);
+		oAlertMaxTableInfo.getThreshold2().add(20.0);
+		oAlertMaxTableInfo.getThreshold2().add(30.0);
+		oAlertMaxTableInfo.getThreshold2().add(60.0);
+		oAlertMaxTableInfo.getThreshold2().add(80.0);
+		oAlertMaxTableInfo.getThreshold2().add(100.0);
+		oAlertMaxTableInfo.getThreshold2().add(120.0);
+		
+		oAlertMaxTableInfo.setThreshold1Style("max-table-yellow-cell");
+		oAlertMaxTableInfo.setThreshold2Style("max-table-red-cell");
+		
+		oConfig.setAlertMaxTable(oAlertMaxTableInfo);
+
+		MaxTableInfo oDistrictMaxTableInfo  = new MaxTableInfo();
+		
+		oDistrictMaxTableInfo.setTableName("Province");
+		oDistrictMaxTableInfo.getRows().add("Genova");
+		oDistrictMaxTableInfo.getRows().add("La Spezia");
+		oDistrictMaxTableInfo.getRows().add("Savona");
+		oDistrictMaxTableInfo.getRows().add("Imperia");
+		
+		oDistrictMaxTableInfo.getRowFilters().add("GE");
+		oDistrictMaxTableInfo.getRowFilters().add("SP");
+		oDistrictMaxTableInfo.getRowFilters().add("SV");
+		oDistrictMaxTableInfo.getRowFilters().add("IM");		
+		
+		oDistrictMaxTableInfo.getColumns().add("rain_05m");
+		oDistrictMaxTableInfo.getColumns().add("rain_15m");
+		oDistrictMaxTableInfo.getColumns().add("rain_30m");
+		oDistrictMaxTableInfo.getColumns().add("rain_1h");
+		oDistrictMaxTableInfo.getColumns().add("rain_3h");
+		oDistrictMaxTableInfo.getColumns().add("rain_6h");
+		oDistrictMaxTableInfo.getColumns().add("rain_12h");
+		oDistrictMaxTableInfo.getColumns().add("rain_24h");
+		
+		oDistrictMaxTableInfo.getMethodCodes().add("M5");
+		oDistrictMaxTableInfo.getMethodCodes().add("M15");
+		oDistrictMaxTableInfo.getMethodCodes().add("M30");
+		oDistrictMaxTableInfo.getMethodCodes().add("H1");
+		oDistrictMaxTableInfo.getMethodCodes().add("H3");
+		oDistrictMaxTableInfo.getMethodCodes().add("H6");
+		oDistrictMaxTableInfo.getMethodCodes().add("H12");
+		oDistrictMaxTableInfo.getMethodCodes().add("H24");
+		
+		oDistrictMaxTableInfo.getThreshold1().add(4.0);
+		oDistrictMaxTableInfo.getThreshold1().add(6.0);
+		oDistrictMaxTableInfo.getThreshold1().add(10.0);
+		oDistrictMaxTableInfo.getThreshold1().add(15.0);
+		oDistrictMaxTableInfo.getThreshold1().add(30.0);
+		oDistrictMaxTableInfo.getThreshold1().add(40.0);
+		oDistrictMaxTableInfo.getThreshold1().add(50.0);
+		oDistrictMaxTableInfo.getThreshold1().add(60.0);
+
+		
+		oDistrictMaxTableInfo.getThreshold2().add(8.0);
+		oDistrictMaxTableInfo.getThreshold2().add(12.0);
+		oDistrictMaxTableInfo.getThreshold2().add(20.0);
+		oDistrictMaxTableInfo.getThreshold2().add(30.0);
+		oDistrictMaxTableInfo.getThreshold2().add(60.0);
+		oDistrictMaxTableInfo.getThreshold2().add(80.0);
+		oDistrictMaxTableInfo.getThreshold2().add(100.0);
+		oDistrictMaxTableInfo.getThreshold2().add(120.0);
+		
+		oDistrictMaxTableInfo.setThreshold1Style("max-table-yellow-cell");
+		oDistrictMaxTableInfo.setThreshold2Style("max-table-red-cell");
+
+		
+		oConfig.setDistrictMaxTable(oDistrictMaxTableInfo);
+		
+		oConfig.setGeoServerAddress("http://127.0.0.1:8888/geoserver/");
+		oConfig.setGeoServerDataFolder("C:\\Program Files (x86)\\GeoServer 2.3.2\\data_dir\\data");
+		oConfig.setGeoServerPassword("geoserver");
+		oConfig.setGeoServerUser("admin");
+		
+		
+		MapInfo oMapInfo = new MapInfo();
+		oMapInfo.setCode("rainfall10m");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+		
+		
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("rainfall1d");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+
+
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("rainfall30m");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("rainfall6h");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+		
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("rainfall12h");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("rainfall1h");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+
+
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("rainfall3h");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("tempMean");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("tempTheta");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("tempMax");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
+
+		oMapInfo = new MapInfo();
+		oMapInfo.setCode("tempMin");
+		oMapInfo.setStyle("raster");
+		oMapInfo.setTiff(true);
+		
+		oConfig.getMapsInfo().add(oMapInfo);
 
 		try {
 			SerializationUtils.serializeObjectToXML("C:\\temp\\Omirl\\OmirlDaemonConfigSAMPLE.xml", oConfig);

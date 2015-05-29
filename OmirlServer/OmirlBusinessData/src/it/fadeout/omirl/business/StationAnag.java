@@ -87,6 +87,8 @@ public class StationAnag {
 	Integer webcam_every;
 	@Column(name="mean_wave_height_every")
 	Integer mean_wave_height_every;
+	@Column(name="mean_snow_depth_every")
+	Integer mean_snow_depth_every;
 	
 	public String getStation_code() {
 		return station_code;
@@ -321,5 +323,11 @@ public class StationAnag {
 	}
 	public void setMean_wave_height_every(Integer mean_wave_height_every) {
 		this.mean_wave_height_every = mean_wave_height_every;
+	}
+	public Integer getMean_snow_depth_every() {
+		return mean_snow_depth_every;
+	}
+	public void setMean_snow_depth_every(Integer mean_snow_depth_every) {
+		this.mean_snow_depth_every = mean_snow_depth_every;
 	}
 }

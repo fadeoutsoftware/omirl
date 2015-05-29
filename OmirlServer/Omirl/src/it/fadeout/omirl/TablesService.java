@@ -11,6 +11,7 @@ import it.fadeout.omirl.business.OmirlUser;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.TableLinkConfig;
+import it.fadeout.omirl.viewmodels.MaxTableViewModel;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
 import it.fadeout.omirl.viewmodels.SummaryInfo;
 import it.fadeout.omirl.viewmodels.TableLink;
@@ -129,6 +130,7 @@ public class TablesService {
 		
 		return aoRet;
 	}	
+	
 	@GET
 	@Path("/summary")
 	@Produces({"application/xml", "application/json", "text/xml"})
@@ -202,5 +204,76 @@ public class TablesService {
 	
 	
 	
+	
+	@GET
+	@Path("/max")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public MaxTableViewModel GetMaxTable(@HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
+		System.out.println("TablesService.GetMaxTable");
+		
+		// Create return array List
+		MaxTableViewModel oMaxTable = null;
+		// Date: will be received from client...
+		Date oDate = new Date();
+		
+		if (sRefDate!=null)
+		{
+			if (sRefDate.equals("") == false) 
+			{
+				// Try e catch per fare il parsing 
+				// se è valido sostituire oDate.
+				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
+				try {
+					
+					oDate = dtFormat.parse(sRefDate);
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		// Get Config
+		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+		
+		if (oConfObj != null)  {
+			
+			// Cast Config
+			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
+			
+			String sBasePath = oConfig.getFilesBasePath();
+			
+			sBasePath += "/tables/max";
+			
+			System.out.println("TablesService.GetMaxTable = " + sBasePath);
+			
+			// Get The path of the right date
+			String sPath = Omirl.getSubPath(sBasePath, oDate);
+			
+			if (sPath != null) {
+				
+				System.out.println("TablesService.GetSummaryTable: searching path " + sPath);
+				
+				// Get The Last File:
+				File oLastFile = Omirl.lastFileModified(sPath, oDate);
+				
+				// Found?
+				if (oLastFile != null) {
+					
+					System.out.println("TablesService.GetSummaryTable: Opening File " + oLastFile.getAbsolutePath());
+					
+					try {
+						// Ok read sensors 
+						oMaxTable = (MaxTableViewModel) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}							
+				}
+			}
+		}
+		
+		// Return the list of sensors
+		return oMaxTable;
+	}
 	
 }
