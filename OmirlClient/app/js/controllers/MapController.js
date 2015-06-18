@@ -2095,7 +2095,10 @@ var MapController = (function () {
                 // Remove the chart from the Chart Service
                 oControllerVar.m_oChartService.removeChart(sSectionCode);
             },
-            title:  oFeature.attributes.name + " - " + sBasin + ""
+            title:  oFeature.attributes.name + " - " + sBasin + "",
+            position: {my: "left top", at: "left top"},
+            width: 660,
+            height: 495
         };
 
         this.m_oDialogService.open(sSectionCode,"sectionChart.html", model, options)

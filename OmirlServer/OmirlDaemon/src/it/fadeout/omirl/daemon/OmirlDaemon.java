@@ -191,6 +191,9 @@ public class OmirlDaemon {
 			return;
 		}
 		
+		
+		
+		
 		//TEST
 		//publishMaps();
 		//maxTable();
@@ -906,26 +909,27 @@ public class OmirlDaemon {
 					// Serialize WebCAM Layer
 					if (m_oConfig.isEnableWebcam()) SerializeWebCamLayer();
 
-					System.out.println("OmirlDaemon - Sfloc Layer");
 					// Serialize ALL SFLOC
+					System.out.println("OmirlDaemon - Sfloc Layer");
 					if (m_oConfig.isEnableSfloc()) serializeSfloc();
 
-					System.out.println("OmirlDaemon - Publish Maps");
 					// Publish new Maps
+					System.out.println("OmirlDaemon - Publish Maps");
 					if (m_oConfig.isEnableMaps()) publishMaps();
 
-					System.out.println("OmirlDaemon - Summary Table");
 					// Update Summary Table
+					System.out.println("OmirlDaemon - Summary Table");
 					if (m_oConfig.isEnableSummaryTable()) summaryTable();
 					
 					// Max Table
+					System.out.println("OmirlDaemon - Max Table");
 					if (m_oConfig.isEnableMaxTable()) maxTable();
 					
 					// Sections Layer
 					if (m_oConfig.isEnableSectionsLayer()) RefreshSectionsLayer();
 					
-					System.out.println("OmirlDaemon - Clearing Sessions");
 					//Delete old session
+					System.out.println("OmirlDaemon - Clearing Sessions");
 					deleteOldSession();
 
 				}
@@ -1017,7 +1021,6 @@ public class OmirlDaemon {
 
 	}
 
-
 	private String publishGeoTiff(String sFileName, String sNameSpace, String sStyle, String sGeoServerDataDir, String sGeoServerAddress,String sGeoServerUser,String sGeoServerPassword)
 	{
 		try {
@@ -1045,17 +1048,15 @@ public class OmirlDaemon {
 
 			GeoServerDataManager2 oGeoManager = new GeoServerDataManager2(sGeoServerAddress, "", sGeoServerUser, sGeoServerPassword);
 
-			
-			/*
 			if (!oGeoManager.ExistsLayer(sNameSpace, sLayerId))
 			{
 				oGeoManager.addLayer(sLayerId, sNameSpace, oFile.getAbsolutePath(), sStyle);
+				System.out.println("File added to geoserver");
 			}
-			*/
-			
-			oGeoManager.addLayer(sLayerId, sNameSpace, oFile.getAbsolutePath(), sStyle);
-
-			System.out.println("File added to geoserver");
+			else 
+			{
+				System.out.println("File already published");
+			}			
 			
 			return sLayerId;
 		}
@@ -1070,6 +1071,7 @@ public class OmirlDaemon {
 	 * Publish maps
 	 */
 	private void publishMaps() {
+		
 		try {
 			System.out.println("ENTRO IN PUBLISH MAPS");
 			
@@ -1102,7 +1104,7 @@ public class OmirlDaemon {
 
 				String sFullDir = sLayerPath + "/" + oDateFormat.format(oActualDate);
 				
-				File oFile = OmirlDaemon.lastFileModified(sFullDir);
+				File oFile = OmirlDaemon.lastFileModified(sFullDir, ".tif");
 				if (oFile == null) 
 				{
 					System.out.println("Map Code " + oMapInfo.getCode() + " Path Not Available " + sFullDir);
@@ -2265,7 +2267,7 @@ public class OmirlDaemon {
 		System.out.println("OmirlDaemon - DailyTask");
 
 		try {
-			ClearThread oThread = new ClearThread(m_oConfig.getFileRepositoryPath(), m_oConfig.getCircleBufferDays());
+			ClearThread oThread = new ClearThread(m_oConfig.getFileRepositoryPath(), m_oConfig.getCircleBufferDays(), m_oConfig.getGeoServerAddress(), m_oConfig.getGeoServerUser(), m_oConfig.getGeoServerPassword(), m_oConfig.getGeoServerDataFolder());
 			oThread.start();			
 		}
 		catch(Exception oEx) {
@@ -3925,6 +3927,43 @@ public class OmirlDaemon {
 		File[] aoFiles = oDir.listFiles(new FileFilter() {			
 			public boolean accept(File file) {
 				return file.isFile();
+			}
+		});
+
+		long liLastMod = Long.MIN_VALUE;
+
+		File oChoise = null;
+		for (File file : aoFiles) {
+			if (file.lastModified() > liLastMod) {
+				oChoise = file;
+				liLastMod = file.lastModified();
+			}
+		}
+
+		return oChoise;
+	}
+	
+	public static File lastFileModified(String dir, String sExtension) {
+		File oDir = new File(dir);
+
+		if (!oDir.exists()) {
+			System.out.println("OMIRL.lastFileModified: folder does not exists " + dir);
+			return null;
+		}
+		
+		final String sExt = sExtension;
+
+		File[] aoFiles = oDir.listFiles(new FileFilter() {			
+			public boolean accept(File file) {
+				
+				if (file.isFile())
+				{
+					if (file.getName().endsWith(sExt))
+					{
+						return true;
+					}
+				}
+				return false;
 			}
 		});
 

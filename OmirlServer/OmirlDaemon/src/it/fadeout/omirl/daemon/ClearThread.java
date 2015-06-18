@@ -1,11 +1,14 @@
 package it.fadeout.omirl.daemon;
 
 import it.fadeout.omirl.business.SavedPeriod;
+import it.fadeout.omirl.daemon.geoserver.GeoServerDataManager2;
 import it.fadeout.omirl.data.SavedPeriodRepository;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -17,11 +20,20 @@ public class ClearThread extends Thread {
 	String m_sFileRepoPath = "";
 	List<SavedPeriod> m_aoSavedPeriods = new ArrayList<>();
 	int m_iSavedDays = 1;
+	String m_sGeoServerAddress;
+	String m_sGeoServerUser;
+	String m_sGeoServerPassword;
+	String m_sGeoServerDataFolder;
 	
-	public ClearThread(String arg, int iDays) {
+	public ClearThread(String arg, int iDays,String sGeoServerAddress,String sGeoServerUser,String sGeoServerPassword,String sGeoServerDataFolder) {
 		super(arg);
 		m_sFileRepoPath = arg;
 		m_iSavedDays = iDays;
+		
+		m_sGeoServerAddress = sGeoServerAddress;
+		m_sGeoServerUser = sGeoServerUser;
+		m_sGeoServerPassword = sGeoServerPassword;
+		m_sGeoServerDataFolder = sGeoServerDataFolder;
 	}
 	
 	
@@ -59,7 +71,7 @@ public class ClearThread extends Thread {
 			for (String sYear : asYears) {
 				aoYears.add(new File(oChartFolder.getAbsolutePath()+"/" + sYear));
 			}
-			/*
+			
 			
 			// For each year
 			for (File oYearFolder : aoYears) {
@@ -126,10 +138,12 @@ public class ClearThread extends Thread {
 						// Create a Date Time with the created date
 						DateTime oFileDateTime = new DateTime(iYear, iMonth, iDay, 12, 00);
 						
-						// Keep the last day
-						if (oFileDateTime.isAfter(oYesterday)) continue;
-						// Keep Saved periods
-						if (IsSavedPeriod(oFileDateTime)) continue;
+						// Keep the last day and Saved periods
+						if (oFileDateTime.isAfter(oYesterday) || IsSavedPeriod(oFileDateTime)) {
+							continue;
+						}
+						
+						System.out.println("Clear Thread - charts: Deleted folder " + oDayFolder.getAbsolutePath());
 						
 						// Delete otherwise!
 						for (File oSubFolder : aoSubFolders) {
@@ -248,10 +262,14 @@ public class ClearThread extends Thread {
 							// Create a Date Time with the created date
 							DateTime oFileDateTime = new DateTime(iYear, iMonth, iDay, 12, 00);
 							
-							// Keep the last day
-							if (oFileDateTime.isAfter(oYesterday)) continue;
-							// Keep Saved periods
-							if (IsSavedPeriod(oFileDateTime)) continue;
+							
+							
+							// Keep the last day and Saved periods
+							if (oFileDateTime.isAfter(oYesterday) || IsSavedPeriod(oFileDateTime)) {
+								continue;
+							}
+							
+							System.out.println("Clear Thread - stations: Deleted folder " + oDayFolder.getAbsolutePath());
 							
 							// Delete otherwise!
 							for (File oSubFolder : aoSubFolders) {
@@ -373,10 +391,12 @@ public class ClearThread extends Thread {
 							// Create a Date Time with the created date
 							DateTime oFileDateTime = new DateTime(iYear, iMonth, iDay, 12, 00);
 							
-							// Keep the last day
-							if (oFileDateTime.isAfter(oYesterday)) continue;
-							// Keep Saved periods
-							if (IsSavedPeriod(oFileDateTime)) continue;
+							// Keep the last day and Saved periods
+							if (oFileDateTime.isAfter(oYesterday) || IsSavedPeriod(oFileDateTime)) {
+								continue;
+							}
+							
+							System.out.println("Clear Thread - sections: Deleted folder " + oDayFolder.getAbsolutePath());
 							
 							// Delete otherwise!
 							for (File oSubFolder : aoSubFolders) {
@@ -403,7 +423,7 @@ public class ClearThread extends Thread {
 				}	
 			}
 			
-			*/
+			
 			
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -499,13 +519,51 @@ public class ClearThread extends Thread {
 							// Create a Date Time with the created date
 							DateTime oFileDateTime = new DateTime(iYear, iMonth, iDay, 12, 00);
 							
-							// Keep the last day
-							if (oFileDateTime.isAfter(oYesterday)) continue;
-							// Keep Saved periods
-							if (IsSavedPeriod(oFileDateTime)) continue;
+							// Keep the last day and Saved periods
+							if (oFileDateTime.isAfter(oYesterday) || IsSavedPeriod(oFileDateTime)) {
+								continue;
+							}
+
+							System.out.println("Clear Thread - maps: Deleted folder " + oDayFolder.getAbsolutePath());
 							
 							// Delete otherwise!
 							for (File oSubFolder : aoSubFolders) {
+								
+								if (oSubFolder.isFile())
+								{
+									String sName = oSubFolder.getName();
+									if (sName.length()>4)
+									{
+										sName = sName.substring(0, sName.length()-4);
+									}
+									
+									if (!sName.startsWith("index"))
+									{
+																			
+										String sPrefix ="" + iYear;
+										if (iMonth<10) sPrefix += "0";
+										sPrefix += iMonth;
+										if (iDay<10) sPrefix +="0";
+										sPrefix +=iDay;
+										
+										sName =  sPrefix + sName;
+	
+										
+										//System.out.println("CLEAR THREAD DELETE LAYER "+sName);
+										deleteLayer(sName, "omirl", m_sGeoServerAddress, m_sGeoServerUser, m_sGeoServerPassword);
+										
+										try {
+											File oFile = new File(m_sGeoServerDataFolder+"/"+sName+".tif");
+											//System.out.println("CLEAR THREAD DELETE FILE "+oFile.getAbsolutePath());
+											FileUtils.deleteQuietly(oFile);										
+										}
+										catch(Exception oEx)
+										{
+											oEx.printStackTrace();
+										}
+									}
+								}
+								
 								FileUtils.deleteQuietly(oSubFolder);
 							}
 							
@@ -539,6 +597,21 @@ public class ClearThread extends Thread {
 		}
 		
 	}
+	
+	private boolean deleteLayer(String sLayerName, String sNameSpace, String sGeoServerAddress,String sGeoServerUser,String sGeoServerPassword)
+	{
+		try {
+			GeoServerDataManager2 oGeoManager = new GeoServerDataManager2(sGeoServerAddress, "", sGeoServerUser, sGeoServerPassword);
+			oGeoManager.removeLayer(sLayerName, sNameSpace);
+			
+			return true;
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
+		}
+		
+		return false;
+	}	
 	
 	public boolean IsSavedPeriod(DateTime oDateTime) {
 		

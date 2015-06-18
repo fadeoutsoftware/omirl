@@ -31,13 +31,17 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 	}
 
 
-	public void addLayer(String sLayerName, String sNameSpace, String gsFile,
-			String styleId) throws MalformedURLException, IOException {
+	public void addLayer(String sLayerName, String sNameSpace, String gsFile, String styleId) throws MalformedURLException, IOException {
+		
+		System.out.println("addLayer: Name: " + sLayerName + " NameSpace: " + sNameSpace + " File " + gsFile + " Style " + styleId);
 
 		synchronized(m_oGeoServerCriticalSection) {
 
 			//crea il coveragestores
 			URL oUrlCoverageStore = new URL(m_GsUrl + "rest/workspaces/" + sNameSpace + "/coveragestores/");
+			
+			System.out.println("COVERAGE STORE: " + oUrlCoverageStore.toString());
+			
 			String sInDataStore =  "<coverageStore>"
 				+ "<name>" + sLayerName + "</name>"
 				+ "<enabled>true</enabled>"
@@ -49,11 +53,14 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 
 			//crea il coverage
 			URL oUrlCoverages = new URL(m_GsUrl + "rest/workspaces/" + sNameSpace + "/coveragestores/" + sLayerName + "/coverages/");
+			
+			System.out.println("COVERAGE: " + oUrlCoverages.toString());
+			
 			String sInCoverages = "<coverage>"
 				+ "<name>" + sLayerName + "</name>"
 				+ "<nativeName>" + sLayerName + "</nativeName>"
 				+ "<namespace><name>" + sNameSpace + "</name></namespace>"
-				/*+ "<nativeCRS>EPSG:4326</nativeCRS>"
+				+ "<nativeCRS>EPSG:4326</nativeCRS>"
 				+ "<srs>EPSG:4326</srs>"
 				+ "<nativeBoundingBox>"
 				+ "<minx>5.0</minx><maxx>19.0</maxx><miny>37.0</miny><maxy>50.0</maxy>"
@@ -67,14 +74,17 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 				+ "<enabled>true</enabled>"
 				+ "<store><name>" + sLayerName + "</name></store>"
 				+ "<grid><range><low>0 0</low><high>0 0</high></range><transform><scaleX>0.5</scaleX><scaleY>-0.5</scaleY><shearX>0.0</shearX><shearX>0.0</shearX>"
-				+ "<translateX>0.0</translateX><translateY>0.0</translateY></transform><crs>EPSG:4326</crs></grid>"*/
+				+ "<translateX>0.0</translateX><translateY>0.0</translateY></transform><crs>EPSG:4326</crs></grid>"
 				+ "</coverage>";
+			
 			geoserverAction("POST", oUrlCoverages, m_GsUser, m_GsPsw, sInCoverages);
 
 
 			//definisce lo stile del layer
 
 			URL oUrlLayerStyle = new URL(m_GsUrl + "rest/layers/"+ sNameSpace + ":" + sLayerName);
+			
+			System.out.println("LAYER: " + oUrlLayerStyle.toString());
 
 			String sInStyle = "<layer>"
 				+ "<name>" + sLayerName + "</name>"
@@ -306,23 +316,36 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 
 	public boolean ExistsLayer(String sNameSpace, String sLayerName) throws IOException
 	{
-		synchronized(m_oGeoServerCriticalSection) {
+		try {
+			synchronized(m_oGeoServerCriticalSection) {
 
-			URL oUrlLayerStyle = new URL(m_GsUrl + "rest/layers/"+ sNameSpace + ":" + sLayerName);
+				URL oUrlLayer = new URL(m_GsUrl + "rest/layers/"+ sNameSpace + ":" + sLayerName);
 
-			String sInLayer = "<layer>"
-				+ "<name>" + sLayerName + "</name>"
-				+ "</layer>";
+				String sResponse = geoserverGETAction(oUrlLayer, m_GsUser, m_GsPsw);
+				
+				if (sResponse!=null)
+				{
+					if (!sResponse.isEmpty())
+					{
+						if (sResponse.startsWith("<layer>"))
+						{
+							return true;
+						}
+					}
+				}
 
-			geoserverAction("GET", oUrlLayerStyle, m_GsUser, m_GsPsw, sInLayer);
-
-			return true;
+				return false;
+			}			
 		}
+		catch (Exception oEx) {
+			oEx.printStackTrace();
+		}
+		
+		return false;
 	}
 
 
-	private void geoserverAction(String sMethod, URL oUrlToSand, String sUser, String sPsw, String sInputAction)
-	throws IOException
+	private void geoserverAction(String sMethod, URL oUrlToSand, String sUser, String sPsw, String sInputAction) throws IOException
 	{
 
 		HttpURLConnection oGeoServerConn = (HttpURLConnection)oUrlToSand.openConnection();
@@ -356,6 +379,38 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 		oGeoServerConn.disconnect();
 
 
+	}
+
+	
+	private String geoserverGETAction(URL oUrlToSand, String sUser, String sPsw) throws IOException
+	{
+
+		HttpURLConnection oGeoServerConn = (HttpURLConnection)oUrlToSand.openConnection();
+		oGeoServerConn.setRequestMethod("GET");
+
+		BASE64Encoder oEncoder = new BASE64Encoder();
+		String encodedCredential = oEncoder.encode((sUser + ":" + sPsw).getBytes());
+		oGeoServerConn.setRequestProperty("Authorization", "Basic " + encodedCredential);
+		//oGeoServerConn.setRequestProperty("Content-Type","text/xml");
+		oGeoServerConn.setRequestProperty("Accept","text/xml");
+
+		//oGeoServerConn.setDoOutput(true);
+		//OutputStream output = oGeoServerConn.getOutputStream();
+
+		oGeoServerConn.connect();
+		byte abBuffer[] = new byte[8192];
+		int read = 0;
+
+		//risposta 
+		InputStream responseBodyStream = oGeoServerConn.getInputStream();
+		StringBuffer responseBody = new StringBuffer();
+		while ((read = responseBodyStream.read(abBuffer)) != -1)
+		{
+			responseBody.append(new String(abBuffer, 0, read));
+		}
+		oGeoServerConn.disconnect();
+
+		return responseBody.toString();
 	}
 
 
