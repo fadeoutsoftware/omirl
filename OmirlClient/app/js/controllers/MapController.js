@@ -168,10 +168,12 @@ var MapController = (function () {
             var oBaseLayer3 = new OpenLayers.Layer.Google("Streets", {numZoomLevels: 20});
             var oBaseLayer4 = new OpenLayers.Layer.Google("Satellite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20});
 
+            /*
             // OSM tiles
             var oOSMLayer = new OpenLayers.Layer.XYZ(
                 'OSM',
-                'http://www.toolserver.org/tiles/bw-mapnik/${z}/${x}/${y}.png',
+                //'http://www.toolserver.org/tiles/bw-mapnik/${z}/${x}/${y}.png',
+                'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {
                     attribution: 'basemap data &copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>',
                     sphericalMercator: true,
@@ -181,6 +183,9 @@ var MapController = (function () {
                     numZoomLevels: 20
                 }
             );
+            */
+
+            var oOSMLayer = new OpenLayers.Layer.OSM();
 
             // Add Base Layers
             this.m_oLayerService.addBaseLayer(oOSMLayer);

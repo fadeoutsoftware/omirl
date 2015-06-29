@@ -81,6 +81,21 @@ var SensorTableController = (function() {
             oControllerVar.m_aoStations = data.tableRows;
             var aoStations = oControllerVar.m_aoStations;
 
+            var oSensorLink =oControllerVar.m_oConstantsService.getSensorLinkByType(oControllerVar.m_oSelectedType.code);
+
+            var sMesUnit = "ND";
+
+            if (angular.isDefined(oSensorLink))
+            {
+                // NOTA: "Misura Hard Coded" solo per Radiazione Solare...
+                sMesUnit = oSensorLink.mesUnit;
+                if (sMesUnit.slice(0, 5) == "<sup>")
+                {
+                    sMesUnit = "W/(m^2)";
+                }
+
+            }
+
             angular.forEach(oControllerVar.m_aoStations, function(value, key) {
                 //var NameCode = value.stationCode + ' ' + value.name;
                 //aoStations[key].nameCode = NameCode;
@@ -89,6 +104,7 @@ var SensorTableController = (function() {
                 if (value.basin == null) aoStations[key].basin = "";
                 if (value.subBasin == null) aoStations[key].subBasin = "";
                 if (value.area == null) aoStations[key].area = "";
+                value.mesUnit = sMesUnit;
             });
 
             oControllerVar.m_bDowloadEnabled = true;

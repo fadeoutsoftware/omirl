@@ -105,6 +105,7 @@
                                 <th ng-click="m_oController.m_sOrderBy = 'last'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">Ultimo</th>
                                 <th ng-click="m_oController.m_sOrderBy = 'max'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">Max</th>
                                 <th ng-click="m_oController.m_sOrderBy = 'min'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">Min</th>
+                                <th ng-click="m_oController.m_sOrderBy = 'min'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">UM</th>
                             </tr>
                         </thead>
                         <tbody class="omirltbl">
@@ -119,6 +120,7 @@
                                 <td>{{m_oController.getFormattedValue(oStation.last)}}</td>
                                 <td>{{m_oController.getFormattedValue(oStation.max)}}</td>
                                 <td>{{m_oController.getFormattedValue(oStation.min)}}</td>
+                                <td>{{oStation.mesUnit}}</td>
                             </tr>
                         </tbody>
                     </table>
