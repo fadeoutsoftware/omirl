@@ -1020,18 +1020,12 @@ public class OmirlDaemon {
 				if (windDataSeriePoint.getRefDate().getTime() <= lTimeCycle && windDataSeriePoint.getRefDate().getTime() >= (lTimeCycle-lTimeStep)) {
 					oRefWindDirections.add(windDataSeriePoint);
 				}
-				else if (windDataSeriePoint.getRefDate().getTime() < lTimeCycle)
-				{
-					iPointIndex++;
-					lTimeCycle-=lTimeStep;
-					continue;
-				}
 				
 			}
 
 			adPoint.setWindDir(GetPrevalentWindDirectionAlgorithm(oRefWindDirections));
 
-			lStart = lTimeCycle+=lTimeStep;
+			lStart = lTimeCycle-=lTimeStep;
 
 			oOutputWindDir.add(adPoint);
 
@@ -1047,7 +1041,7 @@ public class OmirlDaemon {
 		double dMaxValue = -1;
 		int iFirstMaxSectorContainer = 0;
 		int iSecondMaxSectorContainer = 0;
-		HashMap<Integer, ArrayList<WindDataSeriePoint>> oSectorMap = new HashMap<Integer, ArrayList<WindDataSeriePoint>>();
+		//HashMap<Integer, ArrayList<WindDataSeriePoint>> oSectorMap = new HashMap<Integer, ArrayList<WindDataSeriePoint>>();
 
 		for (WindDataSeriePoint windDataSeriePoint : oRefWindDirection) {
 
@@ -1059,6 +1053,7 @@ public class OmirlDaemon {
 			//Max value
 			if (windDataSeriePoint.getWindSpeed() > dMaxValue)
 			{
+				// mem sector with max value
 				iFirstMaxSectorContainer = iSector;
 				dMaxValue = windDataSeriePoint.getWindSpeed();
 			}
@@ -1071,6 +1066,7 @@ public class OmirlDaemon {
 				}
 			}
 
+			/*
 			if (!oSectorMap.containsKey(iSector))
 			{
 				ArrayList<WindDataSeriePoint> oList = new ArrayList<WindDataSeriePoint>();
@@ -1081,15 +1077,16 @@ public class OmirlDaemon {
 			{
 				oSectorMap.get(iSector).add(windDataSeriePoint);
 			}
+			*/
 		}
 
-		if (iNumCalma > oRefWindDirection.size())
+		if (iNumCalma > (oRefWindDirection.size() / 2))
 			return 0; //calma
 
-		if (iNumCalma == oRefWindDirection.size())
+		if (iNumCalma == (oRefWindDirection.size() / 2))
 			return -1; //variabile
 
-		//filter formula
+		//filter formula wmo
 
 
 		if (iFirstMaxSectorContainer  > 0 && iSecondMaxSectorContainer > 0)
