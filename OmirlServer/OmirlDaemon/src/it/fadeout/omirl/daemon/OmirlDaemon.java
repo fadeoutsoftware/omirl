@@ -11,6 +11,8 @@ import it.fadeout.omirl.business.DataSeriePoint;
 import it.fadeout.omirl.business.MapInfo;
 import it.fadeout.omirl.business.MaxTableInfo;
 import it.fadeout.omirl.business.MaxTableRow;
+import it.fadeout.omirl.business.ModelGalleryInfo;
+import it.fadeout.omirl.business.ModelImageInfo;
 import it.fadeout.omirl.business.SectionAnag;
 import it.fadeout.omirl.business.SectionLayerInfo;
 import it.fadeout.omirl.business.SensorLastData;
@@ -35,6 +37,7 @@ import it.fadeout.omirl.viewmodels.DistrictSummaryInfo;
 import it.fadeout.omirl.viewmodels.MapInfoViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableViewModel;
+import it.fadeout.omirl.viewmodels.ModelGallery;
 import it.fadeout.omirl.viewmodels.SectionViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableViewModel;
@@ -970,8 +973,12 @@ public class OmirlDaemon {
 					if (m_oConfig.isEnableMaxTable()) maxTable();
 
 					// Sections Layer
+					System.out.println("OmirlDaemon - Sections Layer");
 					if (m_oConfig.isEnableSectionsLayer()) RefreshSectionsLayer();
 
+					System.out.println("OmirlDaemon - Gallery");
+					if (m_oConfig.isEnableGallery()) RefreshGallery();
+					
 					//Delete old session
 					System.out.println("OmirlDaemon - Clearing Sessions");
 					deleteOldSession();
@@ -3396,6 +3403,96 @@ public class OmirlDaemon {
 		}
 
 	}
+	
+	
+	public void RefreshGallery() {
+		List<ModelGalleryInfo> aoModels = m_oConfig.getModelsGallery();
+		
+		String sBasePath = m_oConfig.getFileRepositoryPath();
+		
+		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date oActualDate = new Date();
+		
+		String sGalleryPath = sBasePath + "/gallery";
+
+		String sFullDir = sGalleryPath + "/" + oDateFormat.format(oActualDate);
+		
+		File oFolder = new File(sFullDir);
+		
+		String [] asSubFolders = oFolder.list();
+		
+		long lTimestamp = 0;
+		String sNewFullPath = sFullDir;
+		String sHourFolder = "";
+		
+		if (asSubFolders!=null)
+		{
+			for (String sSubFolder : asSubFolders) {
+				File oTempFile = new File(sFullDir+"/"+sSubFolder);
+				if (oTempFile.isDirectory())
+				{
+					if (oTempFile.lastModified()>lTimestamp)
+					{
+						lTimestamp = oTempFile.lastModified();
+						sNewFullPath = sFullDir+"/"+sSubFolder;
+						sHourFolder = sSubFolder;
+					}
+				}
+			}
+		}
+		
+		sFullDir = sNewFullPath;
+		
+		int iHourFolder = 0;
+		
+		try {
+			iHourFolder = Integer.parseInt(sHourFolder);
+		}
+		catch(Exception oEx)
+		{
+			oEx.printStackTrace();
+		}
+		
+		for (ModelGalleryInfo oGalleryInfo : aoModels) {
+
+			for (ModelImageInfo oVariable : oGalleryInfo.getVariables()) {
+				
+				String sFileFilter = oVariable.getCodeNumber();
+				sFileFilter += "_";
+				sFileFilter += oGalleryInfo.getCodeModel();
+				sFileFilter+=oVariable.getCodeVariable();
+				
+				if (oVariable.isUseAt())
+				{
+					sFileFilter+="@";
+				}
+				else 
+				{
+					sFileFilter+="_";
+				}
+				
+				sFileFilter+=oVariable.getCodeSubVariable();
+				
+				File [] aoImages = OmirlDaemon.listFilesStartingWith(sFullDir, sFileFilter);
+				if (aoImages == null) 
+				{
+					System.out.println("Gallery Code " + oGalleryInfo.getModel() +" Varialbe " + oVariable.getCodeVariable() + " Sub " + oVariable.getSubVarialbe() + ": no images");
+					continue;
+				}			
+				
+				ModelGallery oGalleryVM = new ModelGallery();
+				oGalleryVM.setModel(oGalleryInfo.getModel());
+				oGalleryVM.setVariable(oVariable.getVariable());
+				oGalleryVM.setSubVarialbe(oVariable.getSubVarialbe());
+				DateTime oDate = new DateTime(oActualDate.getYear(), oActualDate.getMonth()+1, oActualDate.getDate(),iHourFolder , 0);
+				oGalleryVM.setRefDateMin(oDate.toDate());
+				//oGalleryVM
+			}
+			
+			
+			
+		}
+	}
 
 	/**
 	 * Writes a Sample Configuration
@@ -4049,6 +4146,31 @@ public class OmirlDaemon {
 		oMapInfo.setTiff(true);
 
 		oConfig.getMapsInfo().add(oMapInfo);
+		
+		ModelGalleryInfo oGalleryInfo = new ModelGalleryInfo();
+		oGalleryInfo.setCodeModel("bo10ar");
+		oGalleryInfo.setModel("Bolam Europe");
+		
+		ModelImageInfo oImageInfo = new ModelImageInfo();
+		oImageInfo.setCodeNumber("08");
+		oImageInfo.setCodeVariable("TPrec12");
+		oImageInfo.setVariable("12h Total Precipitation");
+		oImageInfo.setUseAt(false);
+		oImageInfo.setCodeSubVariable("GH_TCK_Europe");
+		
+		oGalleryInfo.getVariables().add(oImageInfo);
+		
+
+		oImageInfo = new ModelImageInfo();
+		oImageInfo.setCodeNumber("09");
+		oImageInfo.setCodeVariable("MSLP");
+		oImageInfo.setVariable("Mean Sea Level Pressure");
+		oImageInfo.setUseAt(false);
+		oImageInfo.setCodeSubVariable("_Europe");
+		
+		oGalleryInfo.getVariables().add(oImageInfo);
+		
+		oConfig.getModelsGallery().add(oGalleryInfo);
 
 		try {
 			SerializationUtils.serializeObjectToXML("C:\\temp\\Omirl\\OmirlDaemonConfigSAMPLE.xml", oConfig);
@@ -4211,5 +4333,32 @@ public class OmirlDaemon {
 		}
 
 		return oChoise;
+	}
+	
+	public static File [] listFilesStartingWith(String dir, String sStart) {
+		File oDir = new File(dir);
+
+		if (!oDir.exists()) {
+			System.out.println("OMIRL.lastFileModified: folder does not exists " + dir);
+			return null;
+		}
+		
+		final String sFilter = sStart;
+
+		File[] aoFiles = oDir.listFiles(new FileFilter() {			
+			public boolean accept(File file) {
+				
+				if (file.isFile())
+				{
+					if (file.getName().startsWith(sFilter))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+
+		return aoFiles;
 	}
 }

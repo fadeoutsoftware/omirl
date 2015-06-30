@@ -4,6 +4,7 @@ import it.fadeout.omirl.business.AnagTableInfo;
 import it.fadeout.omirl.business.ChartInfo;
 import it.fadeout.omirl.business.MapInfo;
 import it.fadeout.omirl.business.MaxTableInfo;
+import it.fadeout.omirl.business.ModelGalleryInfo;
 import it.fadeout.omirl.business.SectionLayerInfo;
 import it.fadeout.omirl.business.WindSummaryConfiguration;
 
@@ -30,6 +31,8 @@ public class OmirlDaemonConfiguration {
 	
 	ArrayList<MapInfo> mapsInfo = new ArrayList<>();
 	
+	ArrayList<ModelGalleryInfo> modelsGallery = new ArrayList<ModelGalleryInfo>();
+	
 	boolean enableCharts;
 	boolean enableSensorLast;
 	boolean enableWebcam;
@@ -37,6 +40,7 @@ public class OmirlDaemonConfiguration {
 	boolean enableMaps;
 	boolean enableSummaryTable;
 	boolean enableValueTable;
+	boolean enableGallery;
 	
 	boolean enableThreshold;
 	boolean enableStationsTable;
@@ -294,5 +298,21 @@ public class OmirlDaemonConfiguration {
 
 	public void setGeoServerWorkspace(String geoServerWorkspace) {
 		this.geoServerWorkspace = geoServerWorkspace;
+	}
+
+	public ArrayList<ModelGalleryInfo> getModelsGallery() {
+		return modelsGallery;
+	}
+
+	public void setModelsGallery(ArrayList<ModelGalleryInfo> modelsGallery) {
+		this.modelsGallery = modelsGallery;
+	}
+
+	public boolean isEnableGallery() {
+		return enableGallery;
+	}
+
+	public void setEnableGallery(boolean enableGallery) {
+		this.enableGallery = enableGallery;
 	}	
 }

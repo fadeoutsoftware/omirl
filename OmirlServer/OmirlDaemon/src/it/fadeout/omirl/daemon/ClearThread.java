@@ -588,6 +588,116 @@ public class ClearThread extends Thread {
 			}			
 			
 			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////
+			System.out.println("OmirlDaemon ClearThread - clearing gallery");
+			
+			// Sections Folder
+			File oGalleryFolder = new File(m_sFileRepoPath+"/gallery");
+			
+			asYears = oGalleryFolder.list();				
+			aoYears = new ArrayList<File> ();
+			
+			for (String sYear : asYears) {
+				aoYears.add(new File(oGalleryFolder.getAbsolutePath()+"/" + sYear));
+			}
+			
+			
+			// For each year
+			for (File oYearFolder : aoYears) {
+				
+				// Initialize Year
+				int iYear = oYesterday.getYear();
+				
+				// Parse folder name
+				try{
+					iYear = Integer.parseInt(oYearFolder.getName());
+				}
+				catch(Exception oEx) {
+					System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
+					oEx.printStackTrace();
+				}
+								
+				String [] asMonths = oYearFolder.list();				
+				Collection<File> aoMonths = new ArrayList<File> ();
+				
+				for (String sMonth : asMonths) {
+					aoMonths.add(new File(oYearFolder.getAbsolutePath()+"/" + sMonth));
+				}
+				
+				// For each month
+				for (File oMonthFolder : aoMonths) {
+					
+					// Initialize month
+					int iMonth = oYesterday.getMonthOfYear();
+					
+					// Parse the name 
+					try{
+						iMonth = Integer.parseInt(oMonthFolder.getName());
+					}
+					catch(Exception oEx) {
+						System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
+						oEx.printStackTrace();					
+					}				
+										
+					String [] asDays = oMonthFolder.list();				
+					Collection<File> aoDays = new ArrayList<File> ();
+					
+					for (String sDay : asDays) {
+						aoDays.add(new File(oMonthFolder.getAbsolutePath()+"/" + sDay));
+					}					
+					
+					// For each day
+					for (File oDayFolder : aoDays) {
+						
+						// Initialize day
+						int iDay = oYesterday.getDayOfMonth();
+						
+						// Parse the name
+						try{
+							iDay = Integer.parseInt(oDayFolder.getName());
+						}
+						catch(Exception oEx) {
+							System.out.println("OmirlDaemon Clear Thread: excpetion reading day folder " + oEx.toString());
+							oEx.printStackTrace();					
+						}				
+						
+						// Get all subfolders and files
+						Collection<File> aoSubFolders = FileUtils.listFiles(oDayFolder,TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+						
+						// Create a Date Time with the created date
+						DateTime oFileDateTime = new DateTime(iYear, iMonth, iDay, 12, 00);
+						
+						// Keep the last day and Saved periods
+						if (oFileDateTime.isAfter(oYesterday) || IsSavedPeriod(oFileDateTime)) {
+							continue;
+						}
+
+						System.out.println("Clear Thread - gallery: Deleted folder " + oDayFolder.getAbsolutePath());
+						
+//						// Delete otherwise!
+//						for (File oSubFolder : aoSubFolders) {
+//							FileUtils.deleteQuietly(oSubFolder);
+//						}
+						
+						// Delete the day folder
+						FileUtils.deleteQuietly(oDayFolder);
+					}
+					
+					
+					File oCheckMonth = new File(oMonthFolder.getAbsolutePath());
+					if (oCheckMonth.list().length==0) {
+						// Delete the day folder
+						FileUtils.deleteQuietly(oCheckMonth);						
+					}
+				}
+				
+				File oCheckYear = new File(oYearFolder.getAbsolutePath());
+				if (oCheckYear.list().length==0) {
+					// Delete the day folder
+					FileUtils.deleteQuietly(oCheckYear);						
+				}
+			}			
+			
 			System.out.println("OmirlDaemon ClearThread - clear done");
 			
 		}
