@@ -54,7 +54,7 @@ public class StationDataRepository extends Repository<StationData>{
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
 			
-			String sQuery = "select reference_date, mean_wind_speed, prevailing_wind_dir from station_data where station_code = '"+sStationCode+"' and mean_wind_speed is not null and prevailing_wind_dir is not null and reference_date >= ? order by reference_date desc";
+			String sQuery = "select reference_date, mean_wind_speed, prevailing_wind_dir from station_data where station_code = '"+sStationCode+"' and mean_wind_speed is not null and prevailing_wind_dir is not null and reference_date >= ? order by reference_date asc";
 			
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(WindDataSeriePoint.class);
 			oQuery.setParameter(0, oStartDate);
