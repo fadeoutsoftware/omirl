@@ -28,7 +28,22 @@ var ChartController = (function() {
 
         oControllerVar.LoadData();
 
+        oControllerVar.drawArrow = function(fromx, fromy, tox, toy, deg){
+
+            return [
+                'M', 0, 7, // base of arrow
+                'L', -1.5, 7,
+                0, 10,
+                1.5, 7,
+                0, 7,
+                0, -10 // top
+            ];
+        };
+
     }
+
+
+
 
     ChartController.prototype.LoadData = function () {
         var oControllerVar = this;
@@ -525,10 +540,23 @@ var ChartController = (function() {
                     }
 
 
-                    if (oSerie.name=="Raffica del Vento") {
+                    if (oSerie.name=="Wind Direction") {
 
+                        var oSerieCustomMarker = new Highcharts.();
+                        oSerieCustomMarker.data = new Array();
+                        oSerieCustomMarker.name = 'Wind Direction';
+                        for(var iElement = 0; iElement< oSerie.data.length; iElement++)
+                        {
+                            // if direction not null
+                            if (oSerie.data[iElement][1] != null) {
+                                var oData = {x: oSerie.data[iElement][0], y:255, marker:{symbol: 'drawArrow'}};
+                                oSerieCustomMarker.data.push(oData);
+                            }
+                        }
+                        // replace data serie
+                        oSerie = oSerieCustomMarker;
                         //wind direction arrow
-                        oControllerVar.drawWindArrows(oChart);
+                        //oControllerVar.drawWindArrows(oChart, oSerie);
 
                         // I need at least two points
                         if (oSerie.data.length>1) {
@@ -640,6 +668,7 @@ var ChartController = (function() {
         var level,
             path;
 
+
         // The stem and the arrow head
         path = [
             'M', 0, 7, // base of arrow
@@ -685,34 +714,39 @@ var ChartController = (function() {
         return path;
     };
 
-    ChartController.prototype.drawWindArrows = function (chart) {
+    ChartController.prototype.drawWindArrows = function (chart, serie) {
         var meteogram = this;
 
         $.each(chart.series[0].data, function (i, point) {
             var sprite, arrow, x, y;
-            var deg = '20';
 
-            if (i % 100 === 0) {
 
-                // Draw the wind arrows
-                x = point.plotX + chart.plotLeft + 7;
-                y = 255;
+            for (var iArrowCount = 0; iArrowCount < serie.data.length; iArrowCount++) {
+                if (point.x == serie.data[iArrowCount][0]) {
 
-                arrow = chart.renderer.path(
-                    meteogram.windArrow("Light air")
-                ).attr({
-                        rotation: parseInt(deg, 10),
-                        translateX: x, // rotation center
-                        translateY: y // rotation center
-                    });
+                    var deg = serie.data[iArrowCount][1];
+                    if (deg != null) {
+                        // Draw the wind arrows
+                        x = point.plotX + chart.plotLeft + 7;
+                        y = 255;
 
-                arrow.attr({
-                    stroke: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
-                    'stroke-width': 1.5,
-                    zIndex: 5
-                })
-                    .add();
+                        arrow = chart.renderer.path(
+                            meteogram.windArrow("Light air")
+                        ).attr({
+                                rotation: parseInt(deg, 10),
+                                translateX: x, // rotation center
+                                translateY: y // rotation center
+                            });
 
+                        arrow.attr({
+                            stroke: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                            'stroke-width': 1.5,
+                            zIndex: 5
+                        })
+                            .add();
+                    }
+
+                }
             }
         });
     };
