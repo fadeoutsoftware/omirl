@@ -3405,8 +3405,11 @@ public class OmirlDaemon {
 	
 	
 	public void RefreshGallery() {
+		
+		// Get configured models
 		List<ModelGalleryInfo> aoModels = m_oConfig.getModelsGallery();
 		
+		// Get Repo Path
 		String sBasePath = m_oConfig.getFileRepositoryPath();
 		
 		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -3418,6 +3421,7 @@ public class OmirlDaemon {
 		
 		File oFolder = new File(sFullDir);
 		
+		// Find Subfolders
 		String [] asSubFolders = oFolder.list();
 		
 		long lTimestamp = 0;
@@ -3432,6 +3436,7 @@ public class OmirlDaemon {
 				{
 					if (oTempFile.lastModified()>lTimestamp)
 					{
+						// This is the last one!
 						lTimestamp = oTempFile.lastModified();
 						sNewFullPath = sFullDir+"/"+sSubFolder;
 						sHourFolder = sSubFolder;
@@ -3452,10 +3457,13 @@ public class OmirlDaemon {
 			oEx.printStackTrace();
 		}
 		
+		// For each model
 		for (ModelGalleryInfo oGalleryInfo : aoModels) {
-
+			
+			//  For each variable
 			for (ModelImageInfo oVariable : oGalleryInfo.getVariables()) {
 				
+				// Generate file name 
 				String sFileFilter = oVariable.getCodeNumber();
 				sFileFilter += "_";
 				sFileFilter += oGalleryInfo.getCodeModel();
@@ -3472,6 +3480,7 @@ public class OmirlDaemon {
 				
 				sFileFilter+=oVariable.getCodeSubVariable();
 				
+				// Get Images from folder
 				File [] aoImages = OmirlDaemon.listFilesStartingWith(sFullDir, sFileFilter);
 				if (aoImages == null) 
 				{
@@ -3479,13 +3488,16 @@ public class OmirlDaemon {
 					continue;
 				}			
 				
+				// Create View Model
 				ModelGallery oGalleryVM = new ModelGallery();
 				oGalleryVM.setModel(oGalleryInfo.getModel());
 				oGalleryVM.setVariable(oVariable.getVariable());
 				oGalleryVM.setSubVarialbe(oVariable.getSubVarialbe());
 				DateTime oDate = new DateTime(oActualDate.getYear(), oActualDate.getMonth()+1, oActualDate.getDate(),iHourFolder , 0);
 				oGalleryVM.setRefDateMin(oDate.toDate());
-				//oGalleryVM
+				
+				
+				
 			}
 			
 			
