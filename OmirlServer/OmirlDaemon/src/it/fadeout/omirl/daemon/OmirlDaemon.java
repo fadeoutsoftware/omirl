@@ -1019,12 +1019,12 @@ public class OmirlDaemon {
 		{
 			WindDataSeriePoint adPoint = new WindDataSeriePoint();
 			adPoint.setWindSpeed(0);
-			adPoint.setRefDate(oInputWindDir.get(iPointIndex).getRefDate());
+			adPoint.setRefDate(new Date(lStart));
 
 			List<WindDataSeriePoint> oRefWindDirections = new ArrayList<WindDataSeriePoint>();
 			for (WindDataSeriePoint windDataSeriePoint : oInputWindDir) {
 				
-				if (windDataSeriePoint.getRefDate().getTime() <= lTimeCycle && windDataSeriePoint.getRefDate().getTime() >= (lTimeCycle-lTimeStep)) {
+				if (windDataSeriePoint.getRefDate().getTime() <= (lTimeCycle+lTimeStep) && windDataSeriePoint.getRefDate().getTime() >= lTimeCycle) {
 					oRefWindDirections.add(windDataSeriePoint);
 				}
 				
@@ -1032,8 +1032,7 @@ public class OmirlDaemon {
 
 			adPoint.setWindDir(GetPrevalentWindDirectionAlgorithm(oRefWindDirections));
 
-			lStart = lTimeCycle-=lTimeStep;
-
+			lStart = lTimeCycle+=lTimeStep;
 			oOutputWindDir.add(adPoint);
 
 		}
@@ -1162,33 +1161,33 @@ public class OmirlDaemon {
 		case 15:
 			return 348.75 - 11.25;
 		case 14:
-			return 348.75 - 11.25;
+			return 326.75 - 11.25;
 		case 13:
-			return 348.75 - 11.25;
+			return 303.75 - 11.25;
 		case 12:
-			return 348.75 - 11.25;
+			return 281.25 - 11.25;
 		case 11:
-			return 348.75 - 11.25;
+			return 258.75 - 11.25;
 		case 10:
-			return 348.75 - 11.25;
+			return 236.25 - 11.25;
 		case 9:
-			return 348.75 - 11.25;
+			return 213.75 - 11.25;
 		case 8:
-			return 348.75 - 11.25;
+			return 191.25 - 11.25;
 		case 7:
-			return 348.75 - 11.25;
+			return 168.75 - 11.25;
 		case 6:
-			return 348.75 - 11.25;
+			return 146.25 - 11.25;
 		case 5:
-			return 348.75 - 11.25;
+			return 123.75 - 11.25;
 		case 4:
-			return 348.75 - 11.25;
+			return 101.25 - 11.25;
 		case 3:
-			return 348.75 - 11.25;
+			return 78.75 - 11.25;
 		case 2:
-			return 348.75 - 11.25;
+			return 56.25 - 11.25;
 		case 1:
-			return 348.75 - 11.25;
+			return 33.75 - 11.25;
 
 		default:
 			return -1;
