@@ -16,8 +16,8 @@ and open the template in the editor.
     Author     : d.fiori
 */
 .gallery-wrapper {
-  width: 800px;
-  height: 500px;
+  width: 1000px;
+  height: 700px;
   margin: 20px auto;
   position: relative; }
   .gallery-wrapper .loading {
@@ -118,7 +118,8 @@ and open the template in the editor.
   .gallery-wrapper .slide {
     position: absolute;
     top: 0;
-    left: 0; }
+    left: 0;
+    height: 100%; }
   .gallery-wrapper .slide.ng-hide-add {
     opacity: 1;
     -webkit-transition: 1s linear all;

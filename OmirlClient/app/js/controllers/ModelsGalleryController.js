@@ -169,7 +169,6 @@ var ModelsGalleryController = (function() {
             .success(function(data, status, headers, config){
                 
                 // Get photos and set gallery visible
-        debugger;
                 $scope.photos = data.images;
                 $scope.updateThumbsVisibility();
                 

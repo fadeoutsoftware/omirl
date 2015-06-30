@@ -22,8 +22,8 @@
     $thumbsBorderColor: #efefef;
     $thumbsBorderColorActive: $color_blue_active;
     
-    width: 800px;
-    height: 500px;
+    width: 1000px;
+    height: 700px;
     margin: 20px auto;
     position: relative;
 
@@ -185,6 +185,8 @@
         position: absolute;
         top: 0;
         left: 0;
+        
+        height: 100%;
     }
     .slide.ng-hide-add {
         opacity:1;
