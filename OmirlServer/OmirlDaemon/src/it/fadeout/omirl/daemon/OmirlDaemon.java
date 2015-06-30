@@ -673,6 +673,33 @@ public class OmirlDaemon {
 
 										// Add serie to the chart
 										oWindChart.getDataSeries().add(oGustSerie);
+
+										//-------------------------WIND DIRECTION
+										try
+										{
+											DataSerie oWindDirSerie = new DataSerie();
+											// get points
+											List<WindDataSeriePoint> aoWindPoints = oStationDataRepository.getWindDataSerie(oStationAnag.getStation_code(), oStartDate);
+
+											// set minute step
+											iMinuteTimeStep = 60;
+
+											// Convert points to Data Serie
+											if (aoWindPoints != null && aoWindPoints.size() > 0)
+												GetWindDirectionSerie(aoWindPoints, oWindDirSerie, iMinuteTimeStep);
+											// name
+											oWindDirSerie.setName("Wind Direction");
+											
+											// Main Axis Reference
+											oGustSerie.setAxisId(0);
+											
+											// add to wind chart
+											oWindChart.getDataSeries().add(oWindDirSerie);
+										}
+										catch(Exception oChartEx) {
+											oChartEx.printStackTrace();
+										}
+
 									}
 
 									serializeStationChart(oWindChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
@@ -718,50 +745,6 @@ public class OmirlDaemon {
 							catch(Exception oChartEx) {
 								oChartEx.printStackTrace();
 							}
-
-							try {
-
-								// --------------------------------------------------------WIND DIRECTION
-
-								
-								// Initialize Start Date
-								List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Vento");
-								Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
-
-								DataSerie oWindDirSerie = new DataSerie();
-
-								List<WindDataSeriePoint> aoPoints = oStationDataRepository.getWindDataSerie(oStationAnag.getStation_code(), oStartDate);
-
-								int iMinuteTimeStep = 60;
-
-								// Convert points to Data Serie
-								List<WindDataSeriePoint> aoSeriePoints = GetWindDirectionSerie(aoPoints, iMinuteTimeStep);
-								DataSerie oSerie = new DataSerie();
-								for (WindDataSeriePoint windDataSeriePoint : aoSeriePoints) {
-									Object [] adPoint = new Object[2];
-									adPoint[0] = new Long(windDataSeriePoint.getRefDate().getTime());
-									adPoint[1] = new Double(windDataSeriePoint.getWindDir());
-									oSerie.getData().add(adPoint);
-								}
-								
-								
-								// Add serie to the chart
-								// Set Serie Name
-								ChartInfo oGustInfo = aoInfo.get(1);
-								oWindDirSerie.setName(oGustInfo.getName());
-								// Main Axis Reference
-								oWindDirSerie.setAxisId(0);
-								// Add serie to the chart
-								DataChart oWindDir2Chart = new DataChart();
-								oWindDir2Chart.getDataSeries().add(oSerie);
-								
-								serializeStationChart(oWindDir2Chart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
-
-							}
-							catch(Exception oChartEx) {
-								oChartEx.printStackTrace();
-							}	
-
 
 							try {
 
@@ -978,7 +961,7 @@ public class OmirlDaemon {
 
 					System.out.println("OmirlDaemon - Gallery");
 					if (m_oConfig.isEnableGallery()) RefreshGallery();
-					
+
 					//Delete old session
 					System.out.println("OmirlDaemon - Clearing Sessions");
 					deleteOldSession();
@@ -1007,14 +990,14 @@ public class OmirlDaemon {
 		}		
 	}
 
-	private List<WindDataSeriePoint> GetWindDirectionSerie(List<WindDataSeriePoint> oInputWindDir, int iMinuteTimeStep)
+	private void GetWindDirectionSerie(List<WindDataSeriePoint> oInputWindDir, DataSerie oSerie, int iMinuteTimeStep)
 	{
 		List<WindDataSeriePoint> oOutputWindDir = new ArrayList<WindDataSeriePoint>();
 		DateTime oNow = new DateTime();
 		long lTimeStep = iMinuteTimeStep*60L*1000L;
 		long lNow = oNow.getMillis();
 		long lStart = oInputWindDir.get(0).getRefDate().getTime();
-		int iPointIndex = 0;
+		
 		for (long lTimeCycle = lStart; lTimeCycle<=lNow; lTimeCycle+=lTimeStep)
 		{
 			WindDataSeriePoint adPoint = new WindDataSeriePoint();
@@ -1023,11 +1006,11 @@ public class OmirlDaemon {
 
 			List<WindDataSeriePoint> oRefWindDirections = new ArrayList<WindDataSeriePoint>();
 			for (WindDataSeriePoint windDataSeriePoint : oInputWindDir) {
-				
+
 				if (windDataSeriePoint.getRefDate().getTime() <= (lTimeCycle+lTimeStep) && windDataSeriePoint.getRefDate().getTime() >= lTimeCycle) {
 					oRefWindDirections.add(windDataSeriePoint);
 				}
-				
+
 			}
 
 			adPoint.setWindDir(GetPrevalentWindDirectionAlgorithm(oRefWindDirections));
@@ -1037,7 +1020,9 @@ public class OmirlDaemon {
 
 		}
 
-		return oOutputWindDir;
+		// convert to data serie
+		WindDataSeriePointToDataSerie(oOutputWindDir,oSerie,1.0,iMinuteTimeStep);
+
 	}
 
 	private double GetPrevalentWindDirectionAlgorithm(List<WindDataSeriePoint> oRefWindDirection)
@@ -1083,7 +1068,7 @@ public class OmirlDaemon {
 			{
 				oSectorMap.get(iSector).add(windDataSeriePoint);
 			}
-			*/
+			 */
 		}
 
 		if (iNumCalma > (oRefWindDirection.size() / 2))
@@ -2770,6 +2755,92 @@ public class OmirlDaemon {
 	}
 
 	/**
+	 * Converts Points from db to points for xml exchange format
+	 * @param aoPoints
+	 * @param oDataSerie
+	 * @param dConversionFactor
+	 */
+	public void WindDataSeriePointToDataSerie(List<WindDataSeriePoint> aoPoints, DataSerie oDataSerie, double dConversionFactor, int iMinutesStep) {
+
+		try {
+			if (aoPoints != null) {
+
+				if (aoPoints.size()>0)
+				{			
+					DateTime oNow = new DateTime();
+					long lTimeStep = iMinutesStep*60L*1000L;
+					long lNow = oNow.getMillis();
+
+					long lStart = aoPoints.get(0).getRefDate().getTime();
+
+					int iPointIndex = 0;
+
+					for (long lTimeCycle = lStart; lTimeCycle<=lNow; lTimeCycle+=lTimeStep)
+					{
+						Object [] adPoint = new Object[2];
+						adPoint[0] = new Long(lTimeCycle);
+
+						if (iPointIndex<aoPoints.size())
+						{
+							WindDataSeriePoint oDataSeriePoint = aoPoints.get(iPointIndex);
+
+							if (oDataSeriePoint.getRefDate().getTime() == lTimeCycle) {
+								adPoint[1] = new Double(oDataSeriePoint.getWindDir())*dConversionFactor;
+								iPointIndex++;
+							}
+							else if (oDataSeriePoint.getRefDate().getTime() < lTimeCycle)
+							{
+								iPointIndex++;
+								lTimeCycle-=lTimeStep;
+								continue;
+							}
+							else {
+								adPoint[1] = null;
+							}
+						}
+
+						oDataSerie.getData().add(adPoint);
+
+					}
+				}
+
+				/*
+				for (int iPoints = 0; iPoints<aoPoints.size(); iPoints++) {
+					Object [] adPoint = new Object[2];
+					adPoint[0] = new Long(aoPoints.get(iPoints).getRefDate().getTime());
+					adPoint[1] = new Double(aoPoints.get(iPoints).getVal())*dConversionFactor;
+					oDataSerie.getData().add(adPoint);
+				}
+				if (aoPoints.size()>1){
+					DateTime oNow = new DateTime();
+					long lFirstStep = aoPoints.get(0).getRefDate().getTime();
+					long lSecondStep = aoPoints.get(1).getRefDate().getTime();
+					long lStep = lSecondStep-lFirstStep;
+
+					long lNow = oNow.getMillis();
+
+					long lTime = aoPoints.get(aoPoints.size()-1).getRefDate().getTime();
+					lTime+=lStep;
+
+					for (; lTime<lNow; lTime+=lStep) {
+						Object [] adPoint = new Object[2];
+						adPoint[0] = new Long(lTime);
+						adPoint[1] = null;
+						oDataSerie.getData().add(adPoint);
+					}
+				}				
+				 */
+
+
+
+			}					
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
+		}		
+	}
+
+	/**
 	 * Serializes an XML file with the last observations of all the stations with a specified sensor
 	 * @param sName
 	 * @param oLastRepo
@@ -3402,32 +3473,32 @@ public class OmirlDaemon {
 		}
 
 	}
-	
-	
+
+
 	public void RefreshGallery() {
-		
+
 		// Get configured models
 		List<ModelGalleryInfo> aoModels = m_oConfig.getModelsGallery();
-		
+
 		// Get Repo Path
 		String sBasePath = m_oConfig.getFileRepositoryPath();
-		
+
 		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		Date oActualDate = new Date();
-		
+
 		String sGalleryPath = sBasePath + "/gallery";
 
 		String sFullDir = sGalleryPath + "/" + oDateFormat.format(oActualDate);
-		
+
 		File oFolder = new File(sFullDir);
-		
+
 		// Find Subfolders
 		String [] asSubFolders = oFolder.list();
-		
+
 		long lTimestamp = 0;
 		String sNewFullPath = sFullDir;
 		String sHourFolder = "";
-		
+
 		if (asSubFolders!=null)
 		{
 			for (String sSubFolder : asSubFolders) {
@@ -3444,11 +3515,11 @@ public class OmirlDaemon {
 				}
 			}
 		}
-		
+
 		sFullDir = sNewFullPath;
-		
+
 		int iHourFolder = 0;
-		
+
 		try {
 			iHourFolder = Integer.parseInt(sHourFolder);
 		}
@@ -3456,19 +3527,19 @@ public class OmirlDaemon {
 		{
 			oEx.printStackTrace();
 		}
-		
+
 		// For each model
 		for (ModelGalleryInfo oGalleryInfo : aoModels) {
-			
+
 			//  For each variable
 			for (ModelImageInfo oVariable : oGalleryInfo.getVariables()) {
-				
+
 				// Generate file name 
 				String sFileFilter = oVariable.getCodeNumber();
 				sFileFilter += "_";
 				sFileFilter += oGalleryInfo.getCodeModel();
 				sFileFilter+=oVariable.getCodeVariable();
-				
+
 				if (oVariable.isUseAt())
 				{
 					sFileFilter+="@";
@@ -3477,9 +3548,9 @@ public class OmirlDaemon {
 				{
 					sFileFilter+="_";
 				}
-				
+
 				sFileFilter+=oVariable.getCodeSubVariable();
-				
+
 				// Get Images from folder
 				File [] aoImages = OmirlDaemon.listFilesStartingWith(sFullDir, sFileFilter);
 				if (aoImages == null) 
@@ -3487,7 +3558,7 @@ public class OmirlDaemon {
 					System.out.println("Gallery Code " + oGalleryInfo.getModel() +" Varialbe " + oVariable.getCodeVariable() + " Sub " + oVariable.getSubVarialbe() + ": no images");
 					continue;
 				}			
-				
+
 				// Create View Model
 				ModelGallery oGalleryVM = new ModelGallery();
 				oGalleryVM.setModel(oGalleryInfo.getModel());
@@ -3495,13 +3566,13 @@ public class OmirlDaemon {
 				oGalleryVM.setSubVarialbe(oVariable.getSubVarialbe());
 				DateTime oDate = new DateTime(oActualDate.getYear(), oActualDate.getMonth()+1, oActualDate.getDate(),iHourFolder , 0);
 				oGalleryVM.setRefDateMin(oDate.toDate());
-				
-				
-				
+
+
+
 			}
-			
-			
-			
+
+
+
 		}
 	}
 
@@ -4157,20 +4228,20 @@ public class OmirlDaemon {
 		oMapInfo.setTiff(true);
 
 		oConfig.getMapsInfo().add(oMapInfo);
-		
+
 		ModelGalleryInfo oGalleryInfo = new ModelGalleryInfo();
 		oGalleryInfo.setCodeModel("bo10ar");
 		oGalleryInfo.setModel("Bolam Europe");
-		
+
 		ModelImageInfo oImageInfo = new ModelImageInfo();
 		oImageInfo.setCodeNumber("08");
 		oImageInfo.setCodeVariable("TPrec12");
 		oImageInfo.setVariable("12h Total Precipitation");
 		oImageInfo.setUseAt(false);
 		oImageInfo.setCodeSubVariable("GH_TCK_Europe");
-		
+
 		oGalleryInfo.getVariables().add(oImageInfo);
-		
+
 
 		oImageInfo = new ModelImageInfo();
 		oImageInfo.setCodeNumber("09");
@@ -4178,9 +4249,9 @@ public class OmirlDaemon {
 		oImageInfo.setVariable("Mean Sea Level Pressure");
 		oImageInfo.setUseAt(false);
 		oImageInfo.setCodeSubVariable("_Europe");
-		
+
 		oGalleryInfo.getVariables().add(oImageInfo);
-		
+
 		oConfig.getModelsGallery().add(oGalleryInfo);
 
 		try {
@@ -4345,7 +4416,7 @@ public class OmirlDaemon {
 
 		return oChoise;
 	}
-	
+
 	public static File [] listFilesStartingWith(String dir, String sStart) {
 		File oDir = new File(dir);
 
@@ -4353,12 +4424,12 @@ public class OmirlDaemon {
 			System.out.println("OMIRL.lastFileModified: folder does not exists " + dir);
 			return null;
 		}
-		
+
 		final String sFilter = sStart;
 
 		File[] aoFiles = oDir.listFiles(new FileFilter() {			
 			public boolean accept(File file) {
-				
+
 				if (file.isFile())
 				{
 					if (file.getName().startsWith(sFilter))
