@@ -1,0 +1,25 @@
+/* 
+    Created on : 30-giu-2015, 15.02.54
+    Author     : d.fiori
+*/
+
+$color_blue_active: #428bca;
+$color_omirl_blue: #7fbbda;
+
+@import "mixins";
+@import "gallery";
+@import "sidebar_menu";
+
+
+
+.no-text-select{ @include noselect;}
+
+.float{
+    &-left{ float: left;}
+    &-right{ float: right;}
+}
+
+
+.side-bar-toggle{
+    &:hover{ cursor: pointer;}
+}

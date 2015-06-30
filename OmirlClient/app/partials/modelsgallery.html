@@ -1,4 +1,4 @@
-
+<div ng-include="'partials/gallerymenu.html'"></div>
 
 <div class='gallery-wrapper' ng-init='initGallery()'>
     
@@ -13,7 +13,12 @@
         <div class="container slider no-text-select">
 
             <!-- enumerate all photos -->
-            <img ng-repeat="photo in photos" class="slide" ng-swipe-right="showPrev()" ng-swipe-left="showNext()" ng-show="isActive($index)" ng-src="{{photo.src}}" />
+            <img class="slide" 
+                 ng-repeat="photo in photos"
+                 ng-swipe-right="showPrev()"
+                 ng-swipe-left="showNext()"
+                 ng-show="isActive($index)"
+                 ng-src="{{photo.imageLink}}" />
 
             <!-- prev / next controls -->
             <span class="arrow prev no-text-select" ng-click="showPrev()">
@@ -34,23 +39,32 @@
         </div>
 
         <!-- extra navigation controls -->
-        <div class='thumbnails-wrapper float-left'>
+        <div class='thumbnails-wrapper'>
             <ul class="nav">
                 <li ng-repeat="photo in photos" ng-class="{'active':isActive($index)}" ng-show="photo.visible">
-                    <img ng-src="{{photo.src}}" alt="{{photo.desc}}" title="{{photo.desc}}" ng-click="showPhoto($index);"/>
+                    <img ng-src="{{photo.imageLink}}" alt="{{photo.description}}" title="{{photo.description}}" ng-click="showPhoto($index);"/>
                     <span>{{$index}}</span>
                 </li>
             </ul>
         </div>
 
-        <div class='controls float-left'>
+        <div class='controls'>
             <button ng-click="goToFirst()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
                 <i class="fa fa-step-backward"></i>
             </button>
+            <button ng-click="showPrev()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
+                <i class="fa fa-backward"></i>
+            </button>
+            <button ng-click="stopAutoplay()">
+                <i class="fa fa-stop"></i>
+            </button>
             <button ng-click="toggleAutoplay()">
                 <i class="fa fa-play" ng-show="m_bIsAutoplayEnabled == false"></i>
-                <i class="fa fa-stop" ng-show="m_bIsAutoplayEnabled == true"></i>
+                <i class="fa fa-pause" ng-show="m_bIsAutoplayEnabled == true"></i>
             </button>
+            <button ng-click="showNext()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
+                <i class="fa fa-forward"></i>
+            </button>           
             <button ng-click="goToLast()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
                 <i class="fa fa-step-forward"></i>
             </button>

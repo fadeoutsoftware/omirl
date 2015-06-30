@@ -1,20 +1,10 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
 /* 
     Created on : 29-giu-2015, 17.30.25
     Author     : d.fiori
 */
-@import "mixins";
 
-.no-text-select{ @include noselect;}
 
-.float{
-    &-left{ float: left;}
-    &-right{ float: right;}
-}
+
 
 .gallery-wrapper{
     
@@ -23,14 +13,14 @@ and open the template in the editor.
     $vOffset: 0px;
     $arrowsMarginFromBorder: 10px;
     
-    $thumbsWrapperWidth: 80%;
+    $thumbsWrapperWidth: 100%;
     $thumbsRatio: 4/3;
     $thumbsWidth: 64px;
     $thumbsBorder: 4px;
     $thumbsMarginH: 2px;
     
-    $thumbsBorderColor: #AAAAAA;
-    $thumbsBorderColorActive: #428bca;
+    $thumbsBorderColor: #efefef;
+    $thumbsBorderColorActive: $color_blue_active;
     
     width: 800px;
     height: 500px;
@@ -121,7 +111,7 @@ and open the template in the editor.
 
                 &.active {
                     border:{
-                        color: $thumbsBorderColorActive;
+                        color: $color_omirl_blue;
                     }
                 }
 
@@ -145,13 +135,25 @@ and open the template in the editor.
     }
     
     .controls{
-        width: 100% - $thumbsWrapperWidth;
+        //width: 100% - $thumbsWrapperWidth;
+        width: 100%;
         text-align: center;
+        margin:{top: 10px;}
         
         button{
-            width: 32px;
+            width: 48px;
+            height: 32px;
+            
+            background-color: white;
+            border: 1px solid #aaa;
+            
+            &:hover{
+                border:{color: $color_blue_active;}
+                color: $color_blue_active;
+            }
             
             &.disabled{ opacity: 0.5}
+            
         }
     }
     

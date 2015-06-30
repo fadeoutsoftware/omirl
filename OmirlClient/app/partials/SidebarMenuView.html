@@ -1,0 +1,41 @@
+<div class="sidebar-menu">
+    <div class="row">
+        <div class="map-text-legend">
+            <div class="map-text-legend-selected">{{m_sLegendText}}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        
+        <ul class="menu-items-wrapper">
+            <li class='map-firstlevel-icon' 
+                ng-repeat="oItem in menuItemsList"
+                ng-class="{'map-firstlevel-icon-selected': isActive(oItem) == true}"
+                tooltip-popup-delay="500" tooltip="{{oItem.description}}">
+                <img class="img-map-firstlevel-icon" ng-src="{{oItem.iconSrc}}"
+                 ng-click="mainItemClick(oItem)"/>
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+        <div class='submenu' ng-show="m_bIsSubmenuVisible == true">
+            <ul class="menu-items-wrapper">
+                <li class='map-firstlevel-icon' 
+                    ng-repeat="oItem in submenuItems"
+                    tooltip-popup-delay="500" tooltip="{{oItem.description}}">
+                    <img class="img-map-firstlevel-icon" ng-src="{{oItem.iconSrc}}"
+                     ng-click="submenuItemClick(oItem)"/>
+                </li>
+            </ul>
+        </div>
+        <!--
+        <div ng-repeat="oTable in m_oController.m_oTableService.getTableLinks()"
+             class="col-md-1 col-xs-1 map-firstlevel-icon"
+             ng-class="{'map-firstlevel-icon-selected': oTable.isActive}"
+             tooltip-popup-delay="500" tooltip="{{oTable.description}}">
+            <img class="img-map-firstlevel-icon" ng-src="{{oTable.imageLinkOff}}"
+                 ng-click="m_oController.m_oTableService.tableLinkClicked(oTable)"/>
+        </div>
+        -->
+    </div>
+</div>

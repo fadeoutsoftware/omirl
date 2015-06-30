@@ -37,6 +37,9 @@ var omirlApp = angular.module('omirl', [
     'omirl.MapLayerService',
     'omirl.filters',
     'omirl.directives',
+    
+    'omirl.sidebarMenuDirective',
+    'omirl.galleryService',
     'angular-flexslider'
 ]);
 
