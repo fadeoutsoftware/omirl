@@ -28,7 +28,7 @@ var ChartController = (function() {
 
         oControllerVar.LoadData();
 
-        oControllerVar.drawArrow = function(fromx, fromy, tox, toy, deg){
+        Highcharts.SVGRenderer.prototype.symbols.windArrow = function(x, y, w, h){
 
             return [
                 'M', 0, 7, // base of arrow
@@ -39,6 +39,10 @@ var ChartController = (function() {
                 0, -10 // top
             ];
         };
+
+        if (Highcharts.VMLRenderer) {
+            Highcharts.VMLRenderer.prototype.symbols.cross = Highcharts.SVGRenderer.prototype.symbols.cross;
+        }
 
     }
 
@@ -542,14 +546,18 @@ var ChartController = (function() {
 
                     if (oSerie.name=="Wind Direction") {
 
-                        var oSerieCustomMarker = new Highcharts.();
+                        var oSerieCustomMarker = new Highcharts.Series();
                         oSerieCustomMarker.data = new Array();
                         oSerieCustomMarker.name = 'Wind Direction';
+                        oSerieCustomMarker.axisId = oSerie.axisId;
+                        oSerieCustomMarker.type = "scatter";
                         for(var iElement = 0; iElement< oSerie.data.length; iElement++)
                         {
                             // if direction not null
                             if (oSerie.data[iElement][1] != null) {
-                                var oData = {x: oSerie.data[iElement][0], y:255, marker:{symbol: 'drawArrow'}};
+
+                                var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'windArrow'}};
+                                //var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'url(http://www.highcharts.com/demo/gfx/sun.png)'}};
                                 oSerieCustomMarker.data.push(oData);
                             }
                         }
