@@ -203,7 +203,8 @@ public class OmirlDaemon {
 		//maxTable();
 		//RefreshSectionsLayer();
 		//DailyTask();
-		//if (true) return;
+		RefreshGallery();
+		if (true) return;
 
 		InitSensorValueTables();
 
@@ -701,7 +702,7 @@ public class OmirlDaemon {
 										}
 
 									}
-
+									
 									serializeStationChart(oWindChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
 
 
@@ -3548,9 +3549,7 @@ public class OmirlDaemon {
 				{
 					sFileFilter+="_";
 				}
-
 				sFileFilter+=oVariable.getCodeSubVariable();
-
 				// Get Images from folder
 				File [] aoImages = OmirlDaemon.listFilesStartingWith(sFullDir, sFileFilter);
 				if (aoImages == null) 
@@ -3558,7 +3557,6 @@ public class OmirlDaemon {
 					System.out.println("Gallery Code " + oGalleryInfo.getModel() +" Varialbe " + oVariable.getCodeVariable() + " Sub " + oVariable.getSubVarialbe() + ": no images");
 					continue;
 				}			
-
 				// Create View Model
 				ModelGallery oGalleryVM = new ModelGallery();
 				oGalleryVM.setModel(oGalleryInfo.getModel());
@@ -3566,13 +3564,8 @@ public class OmirlDaemon {
 				oGalleryVM.setSubVarialbe(oVariable.getSubVarialbe());
 				DateTime oDate = new DateTime(oActualDate.getYear(), oActualDate.getMonth()+1, oActualDate.getDate(),iHourFolder , 0);
 				oGalleryVM.setRefDateMin(oDate.toDate());
-
-
-
+				
 			}
-
-
-
 		}
 	}
 
