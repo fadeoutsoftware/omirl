@@ -1,0 +1,223 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 29-giu-2015, 17.30.25
+    Author     : d.fiori
+*/
+@import "mixins";
+
+.no-text-select{ @include noselect;}
+
+.float{
+    &-left{ float: left;}
+    &-right{ float: right;}
+}
+
+.gallery-wrapper{
+    
+    $arrowsFontSize: 2rem;
+    $arrowsSize: 5rem;
+    $vOffset: 0px;
+    $arrowsMarginFromBorder: 10px;
+    
+    $thumbsWrapperWidth: 80%;
+    $thumbsRatio: 4/3;
+    $thumbsWidth: 64px;
+    $thumbsBorder: 4px;
+    $thumbsMarginH: 2px;
+    
+    $thumbsBorderColor: #AAAAAA;
+    $thumbsBorderColorActive: #428bca;
+    
+    width: 800px;
+    height: 500px;
+    margin: 20px auto;
+    position: relative;
+
+    
+    .loading{
+        width: 100%;
+        height: 100%;
+        background: #ededed;
+        text-align: center;
+        
+        h1{ margin:{top: 20%}}
+    }
+    
+    .arrow {
+        cursor: pointer;
+        display: block;
+        height: $arrowsSize;
+        width: $arrowsSize;
+        margin-top: $vOffset;
+        outline: medium none;
+        position: absolute;
+        top: 50%;
+        z-index: 5;
+        
+        font:{
+            size: $arrowsFontSize;
+        }
+        
+        opacity: 0.4;
+        transition: all 0.2s linear 0s;
+        
+        &:hover{ opacity: 1; }
+        
+        &.prev{
+            //background-image: url("../images/prev.png");
+            left: $arrowsMarginFromBorder;
+            text-align: left;
+        }
+        
+        &.next{
+            //background-image: url("../images/next.png");
+            right: $arrowsMarginFromBorder;
+            text-align: right;
+        }
+        
+        .fa{ width: 100%; }
+        
+        .arrow-icon{
+            //.fa-circle{ color: white;}
+        }
+    }
+
+    .thumbnails-wrapper{
+        width: $thumbsWrapperWidth;
+        
+        .nav {
+            bottom: -4px;
+            display: block;
+            //height: calc( (#{$thumbsWidth} / #{$thumbsRatio}) + (#{$thumbsBorder} * 2));;
+            //height: calc( #{$thumbsWidth} / #{$thumbsRatio} );;
+            left: 0;
+            margin: 0 auto;
+            //padding: 1em 0 0.8em;
+            //position: absolute;
+            right: 0;
+            text-align: center;
+            width: 100%;
+            z-index: 5;
+            overflow: hidden;
+
+            li {
+                $labelHeight: 20px;
+
+                border: $thumbsBorder solid $thumbsBorderColor{
+                };
+                //border-radius: 5px;
+                cursor: pointer;
+                display: inline-block;
+                margin: 0 $thumbsMarginH;
+                position: relative;
+                width: $thumbsWidth;
+                height: calc( #{$thumbsWidth} / #{$thumbsRatio} + #{$labelHeight});
+                text-align: center;
+                overflow: hidden;
+
+                &.active {
+                    border:{
+                        color: $thumbsBorderColorActive;
+                    }
+                }
+
+                img {
+                    //width: 100%;
+                    height: calc(100% - #{$labelHeight});
+                }
+
+                span{
+                    position: absolute;
+                    height: $labelHeight;
+                    font-size: 1.5rem;
+                    color: #333;
+                    background-color: rgba(255,255,255, 0.5);
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                }
+            }
+        }
+    }
+    
+    .controls{
+        width: 100% - $thumbsWrapperWidth;
+        text-align: center;
+        
+        button{
+            width: 32px;
+            
+            &.disabled{ opacity: 0.5}
+        }
+    }
+    
+
+    .slider {
+        //border: 15px solid #FFFFFF;
+        //border-radius: 5px;
+        margin: 20px auto;
+        height: 100%;
+        //width: 800px;
+        width: 100%;
+        position: relative;
+        
+        overflow: hidden;
+
+        -webkit-perspective: 1000px;
+        -moz-perspective: 1000px;
+        -ms-perspective: 1000px;
+        -o-perspective: 1000px;
+        perspective: 1000px;
+
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        -ms-transform-style: preserve-3d;
+        -o-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+    }
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .slide.ng-hide-add {
+        opacity:1;
+
+        -webkit-transition:1s linear all;
+        -moz-transition:1s linear all;
+        -o-transition:1s linear all;
+        transition:1s linear all;
+
+        -webkit-transform: rotateX(50deg) rotateY(30deg);
+        -moz-transform: rotateX(50deg) rotateY(30deg);
+        -ms-transform: rotateX(50deg) rotateY(30deg);
+        -o-transform: rotateX(50deg) rotateY(30deg);
+        transform: rotateX(50deg) rotateY(30deg);
+
+        -webkit-transform-origin: right top 0;
+        -moz-transform-origin: right top 0;
+        -ms-transform-origin: right top 0;
+        -o-transform-origin: right top 0;
+        transform-origin: right top 0;
+    }
+    .slide.ng-hide-add.ng-hide-add-active {
+        opacity:0;
+    }
+    .slide.ng-hide-remove {
+        -webkit-transition:1s linear all;
+        -moz-transition:1s linear all;
+        -o-transition:1s linear all;
+        transition:1s linear all;
+
+        display:block!important;
+        opacity:0;
+    }
+    .slide, .slide.ng-hide-remove.ng-hide-remove-active {
+        opacity:1;
+    }
+}
+

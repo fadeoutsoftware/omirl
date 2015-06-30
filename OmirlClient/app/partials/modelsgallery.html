@@ -1,0 +1,61 @@
+
+
+<div class='gallery-wrapper' ng-init='initGallery()'>
+    
+    <!-- Loading block -->
+    <div class='loading' ng-if="isGalleryReady == false">
+        <h1>Loading...</h1>
+    </div>
+    
+    <!-- Gallery -->
+    <div ng-if="isGalleryReady == true" style='height: 100%; width: 100%;'>
+        <!-- slider container -->
+        <div class="container slider no-text-select">
+
+            <!-- enumerate all photos -->
+            <img ng-repeat="photo in photos" class="slide" ng-swipe-right="showPrev()" ng-swipe-left="showNext()" ng-show="isActive($index)" ng-src="{{photo.src}}" />
+
+            <!-- prev / next controls -->
+            <span class="arrow prev no-text-select" ng-click="showPrev()">
+                <span class="arrow-icon fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                    <i class="fa fa-arrow-left fa-stack-1x"></i>
+                </span>
+            </span>
+            <span class="arrow next no-text-select" ng-click="showNext()">
+                <span class="arrow-icon fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                    <i class="fa fa-arrow-right fa-stack-1x"></i>
+                </span>
+            </span>
+
+
+
+        </div>
+
+        <!-- extra navigation controls -->
+        <div class='thumbnails-wrapper float-left'>
+            <ul class="nav">
+                <li ng-repeat="photo in photos" ng-class="{'active':isActive($index)}" ng-show="photo.visible">
+                    <img ng-src="{{photo.src}}" alt="{{photo.desc}}" title="{{photo.desc}}" ng-click="showPhoto($index);"/>
+                    <span>{{$index}}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class='controls float-left'>
+            <button ng-click="goToFirst()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
+                <i class="fa fa-step-backward"></i>
+            </button>
+            <button ng-click="toggleAutoplay()">
+                <i class="fa fa-play" ng-show="m_bIsAutoplayEnabled == false"></i>
+                <i class="fa fa-stop" ng-show="m_bIsAutoplayEnabled == true"></i>
+            </button>
+            <button ng-click="goToLast()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
+                <i class="fa fa-step-forward"></i>
+            </button>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>

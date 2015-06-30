@@ -36,7 +36,8 @@ var omirlApp = angular.module('omirl', [
     'omirl.HydroService',
     'omirl.MapLayerService',
     'omirl.filters',
-    'omirl.directives'
+    'omirl.directives',
+    'angular-flexslider'
 ]);
 
 omirlApp.config(['$httpProvider', function($httpProvider) {
@@ -54,6 +55,7 @@ omirlApp.config(function($routeProvider) {
         $routeProvider.when('/maxtable', {templateUrl: 'partials/maxtable.html', controller: 'MaxTableController'});
         $routeProvider.when('/summarytable', {templateUrl: 'partials/summarytable.html', controller: 'SummaryTableController'});
         $routeProvider.when('/modelstable', {templateUrl: 'partials/modelstable.html', controller: 'ModelsTableController'});
+        $routeProvider.when('/modelsgallery', {templateUrl: 'partials/modelsgallery.html', controller: 'ModelsGalleryController'});
 
         $routeProvider.otherwise({redirectTo: '/map'});
     }

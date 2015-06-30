@@ -32,6 +32,7 @@
     <link href="css/datetimepicker.css" rel="stylesheet">
     <link href="css/omirl.css" rel="stylesheet">
     <!--link rel="stylesheet" href="css/override.css"/-->
+    <link href="css/gallery.css" rel="stylesheet">
 
 </head>
 
@@ -61,7 +62,7 @@
         <li><a ng-click="m_oController.serviceIconClicked('/maps')">Dati</a></li>
         <li><a ng-click="m_oController.serviceIconClicked('/summarytable')">Tabelle</a></li>
         <li><a ng-click="m_oController.serviceIconClicked('/animations')">Satellite e Radar</a></li>
-        <li><a ng-click="m_oController.serviceIconClicked('/animations')">Modelli Meteo Marini</a></li>
+        <li><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">Modelli Meteo Marini</a></li>
         <li><a ng-click="m_oController.serviceIconClicked('/credits')">Crediti</a></li>
         <br>
         <li>
@@ -186,8 +187,8 @@
                 </div>
                 <div class="col-md-2 text-center">
                     <div class="service-item">
-                        <i class="service-icon fa fa-globe" ng-click="m_oController.serviceIconClicked('/credits')"></i>
-                        <h4><a ng-click="m_oController.serviceIconClicked('/animations')">Modelli meteo-marini</a></h4>
+                        <i class="service-icon fa fa-globe" ng-click="m_oController.serviceIconClicked('/modelsgallery')"></i>
+                        <h4><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">Modelli meteo-marini</a></h4>
                         <p>Mappe di previsione dei principali parametri meteo-marini</p>
                     </div>
                 </div>
@@ -245,11 +246,20 @@
 
     <!-- jQueryUI -->
     <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-
+    
+    
+    <!-- Flex Slider (part 1) -->
+    <link rel="stylesheet" href="lib/flexslider/flexslider.css" type="text/css" media="screen" />
+    <script defer src="lib/flexslider/jquery.flexslider.js"></script>
+    
     <!-- Angular -->
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular/angular-route.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+    
+    <!-- Flex Slider (part 2) -->
+    <script src="lib/angular-flexslider/angular-flexslider.js"></script>
+    
     <!-- Moment js -->
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.min.js"></script>
 
@@ -295,6 +305,7 @@
     <script src="js/controllers/SummaryTableController.js"></script>
     <script src="js/controllers/ModelsTableController.js"></script>
     <script src="js/controllers/SectionChartController.js"></script>
+    <script src="js/controllers/ModelsGalleryController.js"></script>
     <script src="js/filters.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/app.js"></script>
