@@ -33,5 +33,6 @@
 		<mapping class="it.fadeout.omirl.business.Sfloc" />
 		<mapping class="it.fadeout.omirl.business.SectionAnag" />
 		<mapping class="it.fadeout.omirl.business.MaxTableRow" />
+		<mapping class="it.fadeout.omirl.business.WindDataSeriePoint" />
 	</session-factory>
 </hibernate-configuration>
