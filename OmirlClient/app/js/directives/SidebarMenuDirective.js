@@ -11,19 +11,21 @@ angular.module('omirl.sidebarMenuDirective', [])
     return {
         restrict    : 'E',
         templateUrl : "partials/SidebarMenuView.html",
-        controller  : "ModelsGalleryController",
+        //controller  : "ModelsGalleryController",
         replace     : true,
         scope       : {
             "id" : "@id",
             "menuTitle" : "@menuTitle",
-            "onMainItemClick" : "=onMainItemClick"
+            "onMainItemClick" : "=onMainItemClick",
+            "menuItemsList" : "=menuLinkItems",
+            "submenuItemsListVarName" : "@submenuListVarName"
         },
         link: function($scope, elem, attrs)
         {
             $scope.m_sLegendText = ""; //$scope.menuTitle;
-
-            $scope.initGallery();
-
+            
+            if( !$scope.submenuItemsListVarName )
+                $scope.submenuItemsListVarName = "submenuItems";
 /*
             $scope.menuItemsList = [
                 {
@@ -46,6 +48,7 @@ angular.module('omirl.sidebarMenuDirective', [])
                 }
             ];
             */
+            
             
             $scope.submenuItems = [];
             
@@ -77,8 +80,10 @@ angular.module('omirl.sidebarMenuDirective', [])
                     
                     $scope.m_sLegendText = item.description;
                     
-                    if( item.submenuItems )
-                        $scope.submenuItems = item.submenuItems;
+                    if( item[$scope.submenuItemsListVarName] )
+                    {
+                        $scope.submenuItems = item[$scope.submenuItemsListVarName];
+                    }
                     else
                         item.submenuItems = [];
 

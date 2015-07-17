@@ -163,6 +163,8 @@ and open the template in the editor.
   .sidebar-menu ul.menu-items-wrapper li {
     float: left;
     box-sizing: content-box; }
+.sidebar-menu .submenu {
+  margin-left: 15px; }
 
 .no-text-select {
   -webkit-touch-callout: none;

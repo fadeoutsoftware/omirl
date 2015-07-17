@@ -27,9 +27,18 @@ var ModelsGalleryController = (function() {
         $scope.m_bSideBarCollapsed = false;
 
         //load gallery link
-        GalleryService.loadGalleryLink().success(function(data){
-            $scope.menuItemsList = data;
-        })
+//        GalleryService.loadGalleryLink().success(function(data){
+//            $scope.menuLinkItemsList = data;
+//        })
+        // DEBUG (+)
+        var json = '[{"active":false,"code":"bo10ar","description":"Sintesi 1","imageLinkOff":"img/wet.png","isActive":false,"location":"/summarytable","sublevelGalleryLink":null},{"active":false,"code":"bo10ac","description":"Sintesi 2","imageLinkOff":"img/rain_drops.png","isActive":false,"location":"/summarytable","sublevelGalleryLink":null}]';
+        $scope.menuLinkItemsList = JSON.parse(json);
+        
+        for( var key in $scope.menuLinkItemsList)
+        {
+            $scope.menuLinkItemsList[key].sublevelGalleryLink = JSON.parse(json);
+        }
+        // DEBUG (-)
         
 
         //****************************************************************************************
