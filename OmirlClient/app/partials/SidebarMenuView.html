@@ -20,8 +20,9 @@
         <div class="clearfix"></div>
         <div class='submenu' ng-show="m_bIsSubmenuVisible == true">
             <ul class="menu-items-wrapper">
-                <li class='map-firstlevel-icon' 
+                <li class='map-firstlevel-icon'
                     ng-repeat="oItem in submenuItems"
+                    ng-class="{'map-firstlevel-icon-selected': isSubActive(oItem) == true}"
                     tooltip-popup-delay="500" tooltip="{{oItem.description}}">
                     <img class="img-map-firstlevel-icon" ng-src="{{oItem.imageLinkOff}}"
                      ng-click="submenuItemClick(oItem)"/>

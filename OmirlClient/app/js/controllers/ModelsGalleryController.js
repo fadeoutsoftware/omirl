@@ -27,10 +27,11 @@ var ModelsGalleryController = (function() {
         $scope.m_bSideBarCollapsed = false;
 
         //load gallery link
-//        GalleryService.loadGalleryLink().success(function(data){
-//            $scope.menuLinkItemsList = data;
-//        })
+        GalleryService.loadGalleryLink().success(function(data){
+            $scope.menuLinkItemsList = data;
+        })
         // DEBUG (+)
+        /*
         var json = '[{"active":false,"code":"bo10ar","description":"Sintesi 1","imageLinkOff":"img/wet.png","isActive":false,"location":"/summarytable","sublevelGalleryLink":null},{"active":false,"code":"bo10ac","description":"Sintesi 2","imageLinkOff":"img/rain_drops.png","isActive":false,"location":"/summarytable","sublevelGalleryLink":null}]';
         $scope.menuLinkItemsList = JSON.parse(json);
         
@@ -38,6 +39,7 @@ var ModelsGalleryController = (function() {
         {
             $scope.menuLinkItemsList[key].sublevelGalleryLink = JSON.parse(json);
         }
+        */
         // DEBUG (-)
         
 
@@ -165,6 +167,31 @@ var ModelsGalleryController = (function() {
                         $scope.setThumbVisibility(i, false);
                 }
             }
+        }
+
+        $scope.getGallery = function(oLink){
+            GalleryService.getData(oLink.codeParent, oLink.codeVariable, oLink.code)
+                .success(function(data, status, headers, config){
+
+                    // Get photos and set gallery visible
+                    $scope.photos = data.images;
+                    $scope.updateThumbsVisibility();
+
+                    $scope.isGalleryReady = true;
+
+                    // Set autoplay
+                    setInterval(function(){
+                        if( $scope.m_bIsAutoplayEnabled === true)
+                        {
+                            console.debug("HERE");
+                            $scope.showNext();
+                            $scope.$apply();
+                        }
+                    }, $scope.m_iAutoplayDuration_ms);
+                })
+                .error(function(data, status, headers, config) {
+                    console.error("Fail to do GET:");
+                });
         }
         
         $scope.initGallery = function()

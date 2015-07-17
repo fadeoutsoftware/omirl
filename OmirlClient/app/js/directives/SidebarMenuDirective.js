@@ -17,6 +17,7 @@ angular.module('omirl.sidebarMenuDirective', [])
             "id" : "@id",
             "menuTitle" : "@menuTitle",
             "onMainItemClick" : "=onMainItemClick",
+            "onSubItemClick" : "=onSubItemClick",
             "menuItemsList" : "=menuLinkItems",
             "submenuItemsListVarName" : "@submenuListVarName"
         },
@@ -60,6 +61,11 @@ angular.module('omirl.sidebarMenuDirective', [])
             {
                return ($scope.activeMenuItem == menuItem);
             }
+
+            $scope.isSubActive = function(menuItem)
+            {
+                return ($scope.activeSubItem == menuItem);
+            }
             
             
             $scope.mainItemClick = function(item)
@@ -89,14 +95,33 @@ angular.module('omirl.sidebarMenuDirective', [])
 
                     if( typeof $scope.onMainItemClick == "function")
                     {
-                        $scope.onMainItemClick();
+                        $scope.onMainItemClick(item);
                     }
                 }
             }
             
             $scope.submenuItemClick = function(item)
             {
+
                 console.debug("submenuItemClick:", item);
+
+                if( $scope.isSubActive(item) == true)
+                {
+                    $scope.activeSubItem = null;
+
+                    $scope.m_sLegendText = $scope.m_sLegendText.split("->")[0];
+                }
+                else
+                {
+                    $scope.activeSubItem = item;
+
+                    $scope.m_sLegendText += "->" + item.description;
+
+                    if( typeof $scope.onSubItemClick == "function")
+                    {
+                        $scope.onSubItemClick(item);
+                    }
+                }
             }
         }
     }
