@@ -693,7 +693,7 @@ public class OmirlDaemon {
 											oWindDirSerie.setName("Wind Direction");
 											
 											// Main Axis Reference
-											oGustSerie.setAxisId(0);
+											oWindDirSerie.setAxisId(0);
 											
 											// add to wind chart
 											oWindChart.getDataSeries().add(oWindDirSerie);
