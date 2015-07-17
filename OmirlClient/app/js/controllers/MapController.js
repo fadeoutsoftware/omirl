@@ -2094,7 +2094,6 @@ var MapController = (function () {
         var options = {
             autoOpen: false,
             modal: false,
-            width: 'auto',
             resizable: false,
             close: function(event, ui) {
                 // Remove the chart from the Chart Service

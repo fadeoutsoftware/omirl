@@ -52,6 +52,7 @@ public class Omirl extends Application {
         classes.add(TablesService.class);
         classes.add(SectionsService.class);
         classes.add(MapService.class);
+        classes.add(GalleryService.class);
         
         return classes;
 	}
@@ -324,6 +325,78 @@ public class Omirl extends Application {
 		long liLastMod = Long.MIN_VALUE;
 		
 		File oChoise = null;
+		for (File file : aoFiles) {
+			if (file.lastModified() > liLastMod) {
+				oChoise = file;
+				liLastMod = file.lastModified();
+			}
+		}
+		
+		//se è presente una data allora prendiamo il file immediatamente più vicino in base ad ora e minuti
+		if (oRefDate != null)
+		{
+			long longRefDate = Long.MAX_VALUE;
+			SimpleDateFormat oFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+			try {
+				Date oParsed = oFormat.parse(oFormat.format(oRefDate));
+				longRefDate = oParsed.getTime();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			long lDiff = Long.MAX_VALUE;
+			for (File file : aoFiles) {
+				Date oDateFile = new Date(file.lastModified());
+				try {
+					Date oLastDateFile = oFormat.parse(oFormat.format(oDateFile));
+					long lTicksLastDateFile = oLastDateFile.getTime();
+					
+					//se per fortuna la differenza è uguale a 0 allora abbiamo trovato il file candidato
+					if (lTicksLastDateFile - longRefDate == 0)
+					{
+						oChoise = file;
+						break;
+					}
+					
+					//se la differenza è maggiore di 0 allora è un file precedente alla data
+					if (longRefDate - lTicksLastDateFile  > 0)
+					{
+						//vediamo se è il più vicino alla data selezionata
+						if ((longRefDate - lTicksLastDateFile) < lDiff)
+						{
+							oChoise = file;
+							lDiff = longRefDate - lTicksLastDateFile;
+						}
+					}
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return oChoise;
+	}
+	
+	public static File nearestHourSubFolder(String dir, Date oRefDate) {
+		
+		File oDir = new File(dir);
+		
+		if (!oDir.exists()) {
+			System.out.println("OMIRL.nearestHourSubFolder: folder does not exists " + dir);
+			return null;
+		}
+		
+		File[] aoFiles = oDir.listFiles(new FileFilter() {			
+			public boolean accept(File file) {
+				return !file.isFile();
+			}
+		});
+		
+		long liLastMod = Long.MIN_VALUE;
+		
+		File oChoise = null;
+		
 		for (File file : aoFiles) {
 			if (file.lastModified() > liLastMod) {
 				oChoise = file;

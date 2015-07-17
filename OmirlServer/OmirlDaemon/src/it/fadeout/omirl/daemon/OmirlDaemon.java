@@ -38,6 +38,7 @@ import it.fadeout.omirl.viewmodels.MapInfoViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableViewModel;
 import it.fadeout.omirl.viewmodels.ModelGallery;
+import it.fadeout.omirl.viewmodels.ModelImage;
 import it.fadeout.omirl.viewmodels.SectionViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableViewModel;
@@ -203,8 +204,8 @@ public class OmirlDaemon {
 		//maxTable();
 		//RefreshSectionsLayer();
 		//DailyTask();
-		RefreshGallery();
-		if (true) return;
+		//RefreshGallery();
+		//if (true) return;
 
 		InitSensorValueTables();
 
@@ -3539,6 +3540,7 @@ public class OmirlDaemon {
 				String sFileFilter = oVariable.getCodeNumber();
 				sFileFilter += "_";
 				sFileFilter += oGalleryInfo.getCodeModel();
+				sFileFilter += "_";
 				sFileFilter+=oVariable.getCodeVariable();
 
 				if (oVariable.isUseAt())
@@ -3565,6 +3567,29 @@ public class OmirlDaemon {
 				DateTime oDate = new DateTime(oActualDate.getYear(), oActualDate.getMonth()+1, oActualDate.getDate(),iHourFolder , 0);
 				oGalleryVM.setRefDateMin(oDate.toDate());
 				
+				
+
+				String sImagesPath = "img/gallery/" + oDateFormat.format(oActualDate);
+				
+				if (sHourFolder.isEmpty() == false)
+				{
+					sImagesPath+="/" + sHourFolder;
+				}
+				
+				for (File oImage : aoImages) {
+					ModelImage oImageVM = new ModelImage();
+					oImageVM.setDescription("");
+					oImageVM.setImageLink(sImagesPath+"/" + oImage.getName());
+					oGalleryVM.getImages().add(oImageVM);
+				}
+				
+				String sOutFileName = oGalleryInfo.getCodeModel()+oVariable.getCodeVariable()+oVariable.getCodeSubVariable()+".xml";
+				
+				try {
+					SerializationUtils.serializeObjectToXML(sFullDir+"/"+sOutFileName, oGalleryVM);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

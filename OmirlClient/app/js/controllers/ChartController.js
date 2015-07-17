@@ -557,7 +557,7 @@ var ChartController = (function() {
                             if (oSerie.data[iElement][1] != null) {
 
                                 //var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'windArrow'}};
-                                var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'url(/img/windarrows/' + oSerie.data[iElement][1] + '.png)'}};
+                                var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'url(img/windDirections/' + oSerie.data[iElement][1] + '.png)'}};
                                 oSerieCustomMarker.data.push(oData);
                             }
                         }
