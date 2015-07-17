@@ -1,8 +1,12 @@
 package it.fadeout.omirl;
 
+import it.fadeout.omirl.business.config.GalleryLinkConfig;
 import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
+import it.fadeout.omirl.business.config.TableLinkConfig;
+import it.fadeout.omirl.viewmodels.GalleryLink;
 import it.fadeout.omirl.viewmodels.ModelGallery;
+import it.fadeout.omirl.viewmodels.TableLink;
 
 import java.io.File;
 import java.text.ParseException;
@@ -116,5 +120,51 @@ public class GalleryService {
 		
 		// Return the list of sensors
 		return oGallery;
+	}
+	
+	@GET
+	@Path("/gallerylinks")
+	@Produces({"application/xml", "application/json", "text/xml"})	
+	public ArrayList<GalleryLink> getGalleryLinks(@HeaderParam("x-session-token") String sSessionId) {
+		
+		ArrayList<GalleryLink> aoRet = new ArrayList<>();
+		
+		try {
+			boolean bShowPrivate = false;
+			if (Omirl.getUserFromSession(sSessionId) != null) {
+				bShowPrivate = true;
+			}
+			
+			// Get Config
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				// Cast Config
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
+				
+				for (int iConfigured =0 ; iConfigured< oConfig.getGalleryLinks().size(); iConfigured++ )
+				{
+					GalleryLinkConfig oGalleryLink = oConfig.getGalleryLinks().get(iConfigured);
+					
+					boolean bAdd = false;
+					
+					if (bShowPrivate==true) bAdd = true;
+					else {
+						if (oGalleryLink.isPrivate() == false) bAdd = true;
+					}
+					
+					if (bAdd){
+						aoRet.add(oGalleryLink.getGalleryLink());
+					}
+				}
+			}
+			
+			
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
+		}
+		
+		return aoRet;
 	}
 }

@@ -2,6 +2,7 @@ package it.fadeout.omirl;
 
 import it.fadeout.omirl.business.OmirlUser;
 import it.fadeout.omirl.business.OpenSession;
+import it.fadeout.omirl.business.config.GalleryLinkConfig;
 import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.LegendConfig;
 import it.fadeout.omirl.business.config.LegendStepConfig;
@@ -229,7 +230,62 @@ public class Omirl extends Application {
 		oTable3.setImageLinkOff("img/tables/sintesi.png");
 		oTable3.setLocation("/summarytable");
 		oTable3.setPrivate(true);
-
+		
+		GalleryLinkConfig oGallery1 = new GalleryLinkConfig();
+		oGallery1.setActive(false);
+		oGallery1.setCode("bo10ar");
+		oGallery1.setDescription("Sintesi");
+		oGallery1.setImageLinkOff("img/gallery/sintesi.png");
+		oGallery1.setLocation("/summarytable");
+		oGallery1.setPrivate(true);
+		GalleryLinkConfig oGallery1_1 = new GalleryLinkConfig();
+		oGallery1_1.setActive(false);
+		oGallery1_1.setCode("GH_TCK_Europe");
+		oGallery1_1.setDescription("12h Total Precipitation");
+		oGallery1_1.setImageLinkOff("img/tables/sintesi.png");
+		oGallery1_1.setLocation("/summarytable");
+		oGallery1_1.setPrivate(true);
+		oGallery1_1.setCodeVariable("TPrec12");
+		oGallery1_1.setCodeParent(oGallery1.getCode());
+		GalleryLinkConfig oGallery1_2 = new GalleryLinkConfig();
+		oGallery1_2.setActive(false);
+		oGallery1_2.setCode("_Europe");
+		oGallery1_2.setDescription("Mean Sea Level Pressure");
+		oGallery1_2.setImageLinkOff("img/tables/sintesi.png");
+		oGallery1_2.setLocation("/summarytable");
+		oGallery1_2.setPrivate(true);
+		oGallery1_2.setCodeVariable("MSLP");
+		oGallery1_2.setCodeParent(oGallery1.getCode());
+		oGallery1.getSublevelGalleryLinkConfig().add(oGallery1_1);
+		oGallery1.getSublevelGalleryLinkConfig().add(oGallery1_2);
+		
+		GalleryLinkConfig oGallery2 = new GalleryLinkConfig();
+		oGallery2.setActive(false);
+		oGallery2.setCode("bo10ac");
+		oGallery2.setDescription("Sintesi");
+		oGallery2.setImageLinkOff("img/tables/sintesi.png");
+		oGallery2.setLocation("/summarytable");
+		oGallery2.setPrivate(true);
+		GalleryLinkConfig oGallery2_1 = new GalleryLinkConfig();
+		oGallery2_1.setActive(false);
+		oGallery2_1.setCode("Sintesi");
+		oGallery2_1.setDescription("Sintesi");
+		oGallery2_1.setImageLinkOff("img/tables/sintesi.png");
+		oGallery2_1.setLocation("/summarytable");
+		oGallery2_1.setPrivate(true);
+		oGallery2_1.setCodeVariable("TPrec12");
+		oGallery2_1.setCodeParent(oGallery2.getCode());
+		GalleryLinkConfig oGallery2_2 = new GalleryLinkConfig();
+		oGallery2_2.setActive(false);
+		oGallery2_2.setCode("Sintesi");
+		oGallery2_2.setDescription("Sintesi");
+		oGallery2_2.setImageLinkOff("img/tables/sintesi.png");
+		oGallery2_2.setLocation("/summarytable");
+		oGallery2_2.setPrivate(true);
+		oGallery2_2.setCodeVariable("MSLP");
+		oGallery2_2.setCodeParent(oGallery2.getCode());
+		oGallery2.getSublevelGalleryLinkConfig().add(oGallery2_1);
+		oGallery2.getSublevelGalleryLinkConfig().add(oGallery2_2);
 		
 		OmirlNavigationConfig oConfig = new OmirlNavigationConfig();
 		oConfig.setFilesBasePath("C:/temp/omirl/files");
@@ -242,6 +298,8 @@ public class Omirl extends Application {
 		oConfig.getTableLinks().add(oTable1);
 		oConfig.getTableLinks().add(oTable2);
 		oConfig.getTableLinks().add(oTable3);
+		oConfig.getGalleryLinks().add(oGallery1);
+		oConfig.getGalleryLinks().add(oGallery2);
 		
 		try {
 			serializeObjectToXML(sFilePath, oConfig);

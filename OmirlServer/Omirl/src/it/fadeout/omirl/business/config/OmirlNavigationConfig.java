@@ -14,7 +14,7 @@ public class OmirlNavigationConfig {
 	ArrayList<TableLinkConfig> dataTableLinks = new ArrayList<>();
 	ArrayList<TableLinkConfig> tableLinks = new ArrayList<>();
 	private ArrayList<LegendConfig> sensorLegends = new ArrayList<>();
-	
+	private ArrayList<GalleryLinkConfig> galleryLinks = new ArrayList<GalleryLinkConfig>();
 	
 	public String getFilesBasePath() {
 		return filesBasePath;
@@ -75,6 +75,13 @@ public class OmirlNavigationConfig {
 	}
 	public void setSensorLegends(ArrayList<LegendConfig> sensorLegends) {
 		this.sensorLegends = sensorLegends;
+	}
+	public ArrayList<GalleryLinkConfig> getGalleryLinks() {
+		
+		return galleryLinks;
+	}
+	public void setGalleryLinks(ArrayList<GalleryLinkConfig> galleryLinks) {
+		this.galleryLinks = galleryLinks;
 	}
 	
 }
