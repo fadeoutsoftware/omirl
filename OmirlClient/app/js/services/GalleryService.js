@@ -8,11 +8,19 @@ angular.module('omirl.galleryService', ['omirl.ConstantsService']).
         this.APIURL = oConstantsService.getAPIURL();
 
         this.m_oHttp = $http;
-        
+        this.m_oGalleryLinks = null;
+        var oScope = this;
 
         this.getData = function(oGalleryLink) {
             return this.m_oHttp.get(this.APIURL + '/gallery/' + oGalleryLink.codeModel + oGalleryLink.codeVariable + oGalleryLink.codeSubVariable);
         }
+
+        this.loadGalleryLink = function() {
+
+            return this.m_oHttp.get(this.APIURL + '/gallery/gallerylinks/');
+        };
+
+
 
         this.getDataDEBUG = function(oGalleryLink)
         {      

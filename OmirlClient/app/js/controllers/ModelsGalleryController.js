@@ -26,7 +26,10 @@ var ModelsGalleryController = (function() {
         $scope.isGalleryReady = false;
         $scope.m_bSideBarCollapsed = false;
 
-
+        //load gallery link
+        GalleryService.loadGalleryLink().success(function(data){
+            $scope.menuItemsList = data;
+        })
         
 
         //****************************************************************************************
@@ -159,6 +162,8 @@ var ModelsGalleryController = (function() {
         {
             
             var oController=this;
+
+/*
             //var param = "bo10arTPrec12GH_TCK_Europe";
             var oFakeLink = {
               codeModel: 'bo10ar',
@@ -210,6 +215,7 @@ var ModelsGalleryController = (function() {
                     $scope.$apply();
                 }
             }, $scope.m_iAutoplayDuration_ms);*/
+
         }
         
         

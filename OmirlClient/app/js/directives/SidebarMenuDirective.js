@@ -11,17 +11,20 @@ angular.module('omirl.sidebarMenuDirective', [])
     return {
         restrict    : 'E',
         templateUrl : "partials/SidebarMenuView.html",
-        controller  : "",
+        controller  : "ModelsGalleryController",
         replace     : true,
         scope       : {
             "id" : "@id",
             "menuTitle" : "@menuTitle",
-            "onMainItemClick" : "=onMainItemClick",
+            "onMainItemClick" : "=onMainItemClick"
         },
         link: function($scope, elem, attrs)
         {
             $scope.m_sLegendText = ""; //$scope.menuTitle;
-            
+
+            $scope.initGallery();
+
+/*
             $scope.menuItemsList = [
                 {
                     iconSrc : "img/wet.png",
@@ -42,6 +45,7 @@ angular.module('omirl.sidebarMenuDirective', [])
                     ]
                 }
             ];
+            */
             
             $scope.submenuItems = [];
             

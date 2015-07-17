@@ -13,7 +13,7 @@
                 ng-repeat="oItem in menuItemsList"
                 ng-class="{'map-firstlevel-icon-selected': isActive(oItem) == true}"
                 tooltip-popup-delay="500" tooltip="{{oItem.description}}">
-                <img class="img-map-firstlevel-icon" ng-src="{{oItem.iconSrc}}"
+                <img class="img-map-firstlevel-icon" ng-src="{{oItem.imageLinkOff}}"
                  ng-click="mainItemClick(oItem)"/>
             </li>
         </ul>
@@ -23,7 +23,7 @@
                 <li class='map-firstlevel-icon' 
                     ng-repeat="oItem in submenuItems"
                     tooltip-popup-delay="500" tooltip="{{oItem.description}}">
-                    <img class="img-map-firstlevel-icon" ng-src="{{oItem.iconSrc}}"
+                    <img class="img-map-firstlevel-icon" ng-src="{{oItem.imageLinkOff}}"
                      ng-click="submenuItemClick(oItem)"/>
                 </li>
             </ul>
