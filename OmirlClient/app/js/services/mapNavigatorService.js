@@ -4,13 +4,15 @@
 
 'use strict';
 angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
-    service('MapNavigatorService', ['$http',  'ConstantsService', function ($http, oConstantsService) {
+    service('MapNavigatorService', ['$http',  'ConstantsService', '$translate', function ($http, oConstantsService, $translate) {
 
         this.APIURL = oConstantsService.getAPIURL();
 
         this.m_oConstantsService = oConstantsService;
 
         this.m_oHttp = $http;
+
+        this.m_oTranslate = $translate;
 
         this.m_aoMapFirstLevels = [];
 
@@ -28,7 +30,10 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             this.m_oHttp.get(this.APIURL + '/mapnavigator/maps').success(function(data,status) {
                 oServiceVar.m_aoMapFirstLevels = data;
             }).error(function(data,status){
-                    alert('Error Contacting Omirl Server');
+                oServiceVar.m_oTranslate('ERRORCONTACTSERVER').then(function (error){
+                    alert(error);
+                })
+
             });
         }
 

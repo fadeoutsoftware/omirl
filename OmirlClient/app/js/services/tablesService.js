@@ -4,13 +4,13 @@
 
 'use strict';
 angular.module('omirl.TableService', ['omirl.ConstantsService']).
-    service('TableService', ['$http',  'ConstantsService', '$location', function ($http, oConstantsService, oLocation) {
+    service('TableService', ['$http',  'ConstantsService', '$location', '$translate', function ($http, oConstantsService, oLocation, $translate) {
         this.APIURL = oConstantsService.getAPIURL();
 
         this.m_oHttp = $http;
         this.m_oLocation = oLocation;
         this.m_bLinksFetched = false;
-
+        this.m_oTranslate = $translate;
         this.m_sTableLegendSelected = "";
         this.m_sDataTableLegendSelected = "";
 
@@ -69,14 +69,18 @@ angular.module('omirl.TableService', ['omirl.ConstantsService']).
                 this.m_oHttp.get(this.APIURL + '/tables/tablelinks').success(function(data,status) {
                     oService.m_aoTableLinks = data;
                 }).error(function(data,status){
-                    alert('Error Contacting Omirl Server');
+                    oService.m_oTranslate('ERRORCONTACTSERVER').then(function (error){
+                        alert(error);
+                    });
                 });
 
 
                 this.m_oHttp.get(this.APIURL + '/tables/datatablelinks').success(function(data,status) {
                     oService.m_aoDataTableLinks = data;
                 }).error(function(data,status){
-                    alert('Error Contacting Omirl Server');
+                    oService.m_oTranslate('ERRORCONTACTSERVER').then(function (error){
+                        alert(error);
+                    });
                 });
 
                 this.m_bLinksFetched = true;
@@ -101,7 +105,9 @@ angular.module('omirl.TableService', ['omirl.ConstantsService']).
                     }
 
                 }).error(function(data,status){
-                    alert('Error Contacting Omirl Server');
+                    oService.m_oTranslate('ERRORCONTACTSERVER').then(function (error){
+                        alert(error);
+                    });
                 });
 
 
@@ -116,7 +122,9 @@ angular.module('omirl.TableService', ['omirl.ConstantsService']).
                     }
 
                 }).error(function(data,status){
-                    alert('Error Contacting Omirl Server');
+                    oService.m_oTranslate('ERRORCONTACTSERVER').then(function (error){
+                        alert(error);
+                    });
                 });
 
                 this.m_bLinksFetched = true;

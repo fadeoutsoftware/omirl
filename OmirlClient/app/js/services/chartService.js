@@ -86,5 +86,6 @@ angular.module('omirl.chartService', ['omirl.ConstantsService']).
             return true;
         }
 
+
     }]);
 

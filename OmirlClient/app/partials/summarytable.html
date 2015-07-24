@@ -4,7 +4,7 @@
     <div class="Tabella_Stazioni">
 
         <div class="row">
-            <h1 class="medium">Tabella Sintesi</h1>
+            <h1 class="medium">{{'SUMMARY_TITOLO' | translate}}</h1>
         </div>
 
         <hr/>
@@ -16,19 +16,19 @@
                 <caption class="omirltbl"></caption>
                 <thead class="omirltbl">
                     <tr>
-                        <th scope="col" rowspan="2" style="width: 20%">Provincia</th>
-                        <th scope="col" colspan="4">Sintesi del {{m_oController.getDayString()}} - [Ore Locali]</th>
+                        <th scope="col" rowspan="2" style="width: 20%">{{'SUMMARY_PROVINCIA' | translate}}</th>
+                        <th scope="col" colspan="4">{{'SUMMARY_SINTESI1' | translate}} {{m_oController.getDayString()}} {{'SUMMARY_SINTESI2' | translate}}</th>
                     </tr>
                     <tr>
-                        <th scope="col" style="width: 15%">Min T (°C)</th>
-                        <th scope="col" style="width: 25%">Nella Stazione</th>
-                        <th scope="col" style="width: 15%">Max T (°C)</th>
-                        <th scope="col" style="width: 25%">Nella Stazione</th>
+                        <th scope="col" style="width: 15%">{{'SUMMARY_MINT' | translate}}</th>
+                        <th scope="col" style="width: 25%">{{'SUMMARY_STAZIONE' | translate}}</th>
+                        <th scope="col" style="width: 15%">{{'SUMMARY_MAXT' | translate}}</th>
+                        <th scope="col" style="width: 25%">{{'SUMMARY_STAZIONE' | translate}}</th>
                     </tr>
                 </thead>
                 <tbody class="omirltbl">
                 <tr ng-repeat="oDistrictRow in m_oController.getTemperatureDistrictSummary()"  ng-class="{odd: bHover}" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false">
-                    <th scope="row">{{oDistrictRow.description}}</th>
+                    <th scope="row">{{oDistrictRow.description | translate}}</th>
                     <td>{{oDistrictRow.min | number:1}} {{m_oController.getFormattedRefDate(oDistrictRow.refDateMin)}}</td>
                     <td>{{oDistrictRow.stationMin}}</td>
                     <td>{{oDistrictRow.max | number:1}} {{m_oController.getFormattedRefDate(oDistrictRow.refDateMax)}}</td>
@@ -42,19 +42,19 @@
             <table class="omirltbl" >
                 <thead class="omirltbl">
                 <tr>
-                    <th scope="col" rowspan="2" style="width: 20%">Area Allertamento</th>
-                    <th scope="col" colspan="4">Sintesi del {{m_oController.getDayString()}} - [Ore Locali]</th>
+                    <th scope="col" rowspan="2" style="width: 20%">{{'SUMMARY_ALLERTAMENTO' | translate}}</th>
+                    <th scope="col" colspan="4">{{'SUMMARY_SINTESI1' | translate}} {{m_oController.getDayString()}} {{'SUMMARY_SINTESI2' | translate}}</th>
                 </tr>
                 <tr>
-                    <th style="width: 15%">Min T (°C)</th>
-                    <th style="width: 25%">Nella Stazione</th>
-                    <th style="width: 15%">Max T (°C)</th>
-                    <th style="width: 25%">Nella Stazione</th>
+                    <th style="width: 15%">{{'SUMMARY_MINT' | translate}}</th>
+                    <th style="width: 25%">{{'SUMMARY_STAZIONE' | translate}}</th>
+                    <th style="width: 15%">{{'SUMMARY_MAXT' | translate}}</th>
+                    <th style="width: 25%">{{'SUMMARY_STAZIONE' | translate}}</th>
                 </tr>
                 </thead>
                 <tbody class="omirltbl">
                 <tr ng-repeat="oAlertRow in m_oController.getTemperatureAlertSummary()" ng-class="{odd: bHover}" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false">
-                    <th scope="row">{{oAlertRow.description}}</th>
+                    <th scope="row">{{oAlertRow.description | translate}}</th>
                     <td>{{oAlertRow.min  | number:1}} {{m_oController.getFormattedRefDate(oAlertRow.refDateMin)}}</td>
                     <td>{{oAlertRow.stationMin}}</td>
                     <td>{{oAlertRow.max  | number:1}} {{m_oController.getFormattedRefDate(oAlertRow.refDateMax)}}</td>
@@ -67,22 +67,22 @@
             <br/>
             <br/>
             <table class="omirltbl" >
-                <caption>Sintesi Vento del {{m_oController.getDayString()}}</caption>
+                <caption>{{'SUMMARY_SINTESI3' | translate}} {{m_oController.getDayString()}}</caption>
                 <thead class="omirltbl">
                     <tr>
-                        <th scope="col" rowspan="2" style="width: 20%">Zona</th>
-                        <th scope="col" colspan="4">Sintesi del {{m_oController.getDayString()}} - [Ore Locali]</th>
+                        <th scope="col" rowspan="2" style="width: 20%">{{'SUMMARY_ZONA' | translate}}</th>
+                        <th scope="col" colspan="4">{{'SUMMARY_SINTESI1' | translate}} {{m_oController.getDayString()}} {{'SUMMARY_SINTESI2' | translate}}</th>
                     </tr>
                     <tr>
-                        <th scope="col" style="width: 15%" >Max (km/h)</th>
-                        <th scope="col" style="width: 25%">Nella Stazione</th>
-                        <th scope="col" style="width: 15%">Raffica (km/h)</th>
-                        <th scope="col" style="width: 25%">Nella Stazione</th>
+                        <th scope="col" style="width: 15%" >{{'SUMMARY_MAXVENTO' | translate}}</th>
+                        <th scope="col" style="width: 25%">{{'SUMMARY_STAZIONE' | translate}}</th>
+                        <th scope="col" style="width: 15%">{{'SUMMARY_RAFFICA' | translate}}</th>
+                        <th scope="col" style="width: 25%">{{'SUMMARY_STAZIONE' | translate}}</th>
                     </tr>
                 </thead>
                 <tbody class="omirltbl">
                     <tr ng-repeat="oWindRow in m_oController.getMaxWindSummary()" ng-class="{odd: bHover}" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false">
-                        <th scope="row">{{oWindRow.description}}</th>
+                        <th scope="row">{{oWindRow.description | translate}}</th>
                         <td>{{oWindRow.max  | number:1}} {{m_oController.getFormattedRefDate(oWindRow.refDateWind)}}</td>
                         <td>{{oWindRow.stationMax}}</td>
                         <td>{{oWindRow.gust  | number:1}} {{m_oController.getFormattedRefDate(oWindRow.refDateGust)}}</td>

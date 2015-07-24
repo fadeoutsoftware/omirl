@@ -3,7 +3,7 @@
     <div class="container Tabella_Stazioni">
 
         <div class="row">
-            <h1 class="medium">Tabella Stazioni</h1>
+            <h1 class="medium">{{'STATION_TABLE' | translate}}</h1>
         </div>
 
         <hr/>
@@ -15,7 +15,7 @@
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-2 col-sm-offset-3 col-md-2 col-md-offset-4 col-lg-2 col-lg-offset-4">
-                                    <label for="stationType" class="control-label">Tipo Sensore</label>
+                                    <label for="stationType" class="control-label">{{'STATION_TIPOSENSORE' | translate}}</label>
                                 </div>
                                 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
                                     <select class="form-control" id="stationType" ng-change="m_oController.typeSelected()" ng-options="type.description for type in m_oController.m_aoTypes" ng-model = "m_oController.m_oSelectedType" ng-selected="m_oController.m_oSelectedType">
@@ -36,44 +36,44 @@
                     <div class="row" id="tablesSearchPanel">
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                             <div class="btn-group">
-                                <label >Nome o Codice</label>
-                                <input id="searchinput" type="search" class="form-control searchinput" placeholder="type something..."  ng-model="search.nameCode" ng-change="m_oController.NameChanged(search.nameCode)" typeahead="station.name for station in m_oController.getStationList() | filter:$viewValue">
+                                <label >{{'STATION_SEARCHNOME' | translate}}</label>
+                                <input id="searchinput" type="search" class="form-control searchinput" placeholder="{{'STATION_SEARCHNOMEPH' | translate}}"  ng-model="search.nameCode" ng-change="m_oController.NameChanged(search.nameCode)" typeahead="station.name for station in m_oController.getStationList() | filter:$viewValue">
                                 <span id="searchclear" class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelNameFilter()" ng-show="m_oController.m_bShowCancelNameFilter"></span>
                             </div>
 
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                             <div class="btn-group">
-                                <label>Provincia</label>
-                                <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.district" ng-change="m_oController.DistrictChanged(search.district)" typeahead="station.district for station in m_oController.getStationList() | filter:$viewValue">
+                                <label>{{'STATION_SEARCHPROVINCIA' | translate}}</label>
+                                <input type="search" class="form-control searchinput" placeholder="{{'STATION_SEARCHPROVINCIAPH' | translate}}" ng-model="search.district" ng-change="m_oController.DistrictChanged(search.district)" typeahead="station.district for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelDistrictFilter()" ng-show="m_oController.m_bShowCancelDistrictFilter"></span>
                             </div>
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                             <div class="btn-group">
-                                <label>Area</label>
-                                <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.area" ng-change="m_oController.AreaChanged(search.area)" typeahead="station.area for station in m_oController.getStationList() | filter:$viewValue">
+                                <label>{{'STATION_SEARCHAREA' | translate}}</label>
+                                <input type="search" class="form-control searchinput" placeholder="{{'STATION_SEARCHAREAPH' | translate}}" ng-model="search.area" ng-change="m_oController.AreaChanged(search.area)" typeahead="station.area for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelAreaFilter()" ng-show="m_oController.m_bShowCancelAreaFilter"></span>
                             </div>
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                             <div class="btn-group">
-                                <label >Bacino</label>
-                                <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.basin" ng-change="m_oController.BasinChanged(search.basin)" typeahead="station.basin for station in m_oController.getStationList() | filter:$viewValue">
+                                <label >{{'STATION_SEARCHBACINO' | translate}}</label>
+                                <input type="search" class="form-control searchinput" placeholder="{{'STATION_SEARCHBACINOPH' | translate}}" ng-model="search.basin" ng-change="m_oController.BasinChanged(search.basin)" typeahead="station.basin for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelBasinFilter()" ng-show="m_oController.m_bShowCancelBasinFilter"></span>
                             </div>
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                             <div class="btn-group">
-                                <label >Sotto Bacino</label>
-                                <input type="search" class="form-control searchinput" placeholder="type something..." ng-model="search.subBasin" ng-change="m_oController.SubBasinChanged(search.subBasin)" typeahead="station.subBasin for station in m_oController.getStationList() | filter:$viewValue">
+                                <label >{{'STATION_SEARCHSOTTOBACINO' | translate}}</label>
+                                <input type="search" class="form-control searchinput" placeholder="{{'STATION_SEARCHSOTTOBACINOPH' | translate}}" ng-model="search.subBasin" ng-change="m_oController.SubBasinChanged(search.subBasin)" typeahead="station.subBasin for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelSubBasinFilter()" ng-show="m_oController.m_bShowCancelSubBasinFilter"></span>
                             </div>
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                             <div class="btn-group">
-                                <label >Comune</label>
-                                <input type="search" class="form-control searchinput" placeholder="type something..."ng-model="search.municipality" ng-change="m_oController.MunicipalityChanged(search.municipality)" typeahead="station.municipality for station in m_oController.getStationList() | filter:$viewValue">
+                                <label >{{'STATION_SEARCHCOMUNE' | translate}}</label>
+                                <input type="search" class="form-control searchinput" placeholder="{{'STATION_SEARCHCOMUNEPH' | translate}}"ng-model="search.municipality" ng-change="m_oController.MunicipalityChanged(search.municipality)" typeahead="station.municipality for station in m_oController.getStationList() | filter:$viewValue">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelMunicipalityFilter()" ng-show="m_oController.m_bShowCancelMunicipalityFilter"></span>
                             </div>
                         </div>
@@ -85,12 +85,12 @@
                         <table class="omirltbl" style="margin-left: 0px; margin-right: 0px; width: 100%; cursor: pointer">
                             <thead class="omirltbl">
                                 <tr>
-                                    <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Nome</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Provincia</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Zona di Allerta</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Bacino</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'subBasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Sotto Bacino</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >Comune</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_NOME' | translate}}</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_PROVINCIA' | translate}}</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_ZONA' | translate}}</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_BACINO' | translate}}</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'subBasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_SOTTOBACINO' | translate}}</th>
+                                    <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_COMUNE' | translate}}</th>
                                 </tr>
                             </thead>
                             <tbody class="omirltbl">

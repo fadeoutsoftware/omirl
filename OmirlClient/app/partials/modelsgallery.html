@@ -42,7 +42,7 @@
         <div class='thumbnails-wrapper'>
             <ul class="nav">
                 <li ng-repeat="photo in photos" ng-class="{'active':isActive($index)}" ng-show="photo.visible">
-                    <img ng-src="{{photo.imageLink}}" alt="{{photo.description}}" title="{{photo.description}}" ng-click="showPhoto($index);"/>
+                    <img ng-src="{{photo.imageLink}}" alt="{{photo.description | translate}}" title="{{photo.description | translate}}" ng-click="showPhoto($index);"/>
                     <span>{{$index}}</span>
                 </li>
             </ul>

@@ -65,7 +65,7 @@ table { margin:auto; text-align: center;}
 .lead {font-size:1.1em; padding: 0; margin-top:-30px;}
 
 .map-accordion-content ul {list-style-type: none;}
-.map-accordion-content ul li {width: 32px;height: 32px; margin: 5px;}
+.map-accordion-content ul li {width: 30px;height: 30px; margin: 5px;}
 .map-accordion-content ul li:hover {}
 
 .panel-default { border:none; border-radius: 0!important; background-color: #fff!important; }
@@ -588,6 +588,7 @@ i.scroll:hover {
     color: #7fbbda;
     /*color: #147442;*/
     font-weight:bold;
+    word-wrap:break-word;
 }
 
 .map-text-legend-hover {
@@ -934,12 +935,12 @@ a:hover, a:focus {
 }
 
 .img-map-firstlevel-icon {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
 }
 
 .map-firstlevel-icon-selected {
-    border: 2px solid #000000;
+    border: 1px solid #000000;
     background: #7fbbda;
     -webkit-transition: all .3s;
     transition: all .3s;
@@ -947,7 +948,7 @@ a:hover, a:focus {
 
 
 .map-firstlevel-icon:hover {
-    border: 2px solid #000000;
+    border: 1px solid #000000;
     -webkit-transition: all .3s;
     transition: all .3s;
 }

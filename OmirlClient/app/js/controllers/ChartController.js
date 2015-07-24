@@ -4,7 +4,7 @@
 
 
 var ChartController = (function() {
-    function ChartController($scope, dialogService, oChartService, $timeout, oConstantsService, $log) {
+    function ChartController($scope, dialogService, oChartService, $timeout, oConstantsService, $log, $translate, oTranslateService) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oDialogService = dialogService;
@@ -13,6 +13,8 @@ var ChartController = (function() {
         this.m_aoOtherCharts = [];
         this.m_bLoading = true;
         this.m_oLog = $log;
+        this.m_oTranslate = $translate;
+        this.m_oTranslationService = oTranslateService;
         this.m_oDialogModel = this.m_oScope.model;
         this.m_sDialogTitle = "";
 
@@ -25,6 +27,13 @@ var ChartController = (function() {
         this.m_iWidth = 730;
 
         var oControllerVar = this;
+        this.m_sSubtitle = '';
+
+
+        oControllerVar.m_oTranslate('CHARTCONTROLLER_OPTIONSUBTITLE', {model: this.m_oScope.model.name, municipality: this.m_oScope.model.municipality}).then(function(text){
+            oControllerVar.m_sSubtitle = text;
+
+        });
 
         oControllerVar.LoadData();
 
@@ -44,6 +53,20 @@ var ChartController = (function() {
             Highcharts.VMLRenderer.prototype.symbols.cross = Highcharts.SVGRenderer.prototype.symbols.cross;
         }
 
+        //Translation
+        /*
+        this.DAEMON_PIOGGIAORAMYAXIS;
+        this.DAEMON_CUMULATAYAXIS;
+        oControllerVar.m_oTranslate('DAEMON_PIOGGIAORAMYAXIS').then(function (text) {
+            oControllerVar.DAEMON_PIOGGIAORAMYAXIS = text;
+        });
+
+        oControllerVar.m_oTranslate('DAEMON_CUMULATAYAXIS').then(function (text) {
+            oControllerVar.DAEMON_CUMULATAYAXIS = text;
+        });*/
+
+        this.m_oTranslationService.loadTranslationsChart();
+
     }
 
 
@@ -55,12 +78,18 @@ var ChartController = (function() {
         oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sSectionCode,this.m_sChartType).success(function(data,status) {
 
             if (!angular.isDefined(data)){
-                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sSectionCode);
+                oControllerVar.m_oTranslate('CHARTCONTROLLER_LOADDATA', {value: oControllerVar.m_sSectionCode}).then(function(text){
+                    alert(text);
+                });
+
                 oControllerVar.m_bLoading = false;
                 return;
             }
             if (data=="") {
-                alert('Impossibile caricare il grafico della stazione ' + oControllerVar.m_sSectionCode);
+
+                oControllerVar.m_oTranslate('CHARTCONTROLLER_LOADDATA', {value: oControllerVar.m_sSectionCode}).then(function(text){
+                    alert(text);
+                });
                 oControllerVar.m_bLoading = false;
                 return;
             }
@@ -101,8 +130,12 @@ var ChartController = (function() {
             oControllerVar.addSeriesToChart();
 
             oControllerVar.m_bLoading = false;
+
         }).error(function(data,status){
-            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+            oControllerVar.m_oTranslate('ERRORCONTACTSERVER').then(function(error){
+                oControllerVar.m_oLog.error(error);
+            });
+
         });
     }
 
@@ -162,7 +195,9 @@ var ChartController = (function() {
 
             oControllerVar.m_bLoading = false;
         }).error(function(data,status){
-            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+            oControllerVar.m_oTranslate('ERRORCONTACTSERVER').then(function(error){
+                oControllerVar.m_oLog.error(error);
+            });
         });
 
     }
@@ -207,6 +242,7 @@ var ChartController = (function() {
                 var bold = false;
 
                 var oElement = oChart.options.chart.renderTo;
+
                 // Add Columns settings
                 if (bIsStockChart) {
 
@@ -234,7 +270,7 @@ var ChartController = (function() {
                             enabled: false
                         },
                         subtitle:{
-                            text: this.m_oScope.model.name + " (Comune di " + this.m_oScope.model.municipality + ") - ARPAL CFMI-PC"
+                            text:  oControllerVar.m_sSubtitle
                         },
                         plotOptions: {
                             series: {
@@ -342,7 +378,7 @@ var ChartController = (function() {
                             text:''
                         },
                         subtitle:{
-                            text: this.m_oScope.model.name + " (Comune di " + this.m_oScope.model.municipality + ") - ARPAL CFMI-PC"
+                            text: oControllerVar.m_sSubtitle
                         },
                         plotOptions: {
                             column: {
@@ -387,8 +423,8 @@ var ChartController = (function() {
 
                     };
                 }
-
                 oChart.destroy();
+
 
                 // Create chart again
                 if (bIsStockChart) {
@@ -447,13 +483,16 @@ var ChartController = (function() {
                     }
 
 
+
+
                     // Set Main Axis Options
+                    //eval('oControllerVar.' + this.oChartVM.axisYTitle)
                     var oYAxisOptions = {
                         min: this.oChartVM.axisYMinValue,
                         max: this.oChartVM.axisYMaxValue,
                         tickInterval: this.oChartVM.axisYTickInterval,
                         title: {
-                            text: this.oChartVM.axisYTitle,
+                            text: oControllerVar.m_oTranslationService.getTranslation(this.oChartVM.axisYTitle) ,
                             rotation: iRotation,
                             margin: iMargin,
                             offset:40
@@ -486,7 +525,7 @@ var ChartController = (function() {
 
                         oChart.addAxis({
                             title: {
-                                text:oAdditionalAxes.axisYTitle,
+                                text: oControllerVar.m_oTranslationService.getTranslation(oAdditionalAxes.axisYTitle),
                                 rotation: 270,
                                 margin: 20
                             },
@@ -638,8 +677,6 @@ var ChartController = (function() {
 
             }
 
-
-
         }
     }
 
@@ -765,7 +802,10 @@ var ChartController = (function() {
         'ChartService',
         '$timeout',
         'ConstantsService',
-        '$log'
+        '$log',
+        '$translate',
+        'TranslateService'
+
     ];
     return ChartController;
 }) ();

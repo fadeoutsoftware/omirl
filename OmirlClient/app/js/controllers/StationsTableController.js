@@ -3,7 +3,7 @@
  */
 
 var StationsTableController = (function() {
-    function StationsTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService) {
+    function StationsTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, $translate) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -13,6 +13,7 @@ var StationsTableController = (function() {
         this.m_oChartService = oChartService;
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
+        this.m_oTranslateService = $translate;
         this.m_bDowloadEnabled = false;
 
         this.m_bShowCancelNameFilter = false;
@@ -109,7 +110,7 @@ var StationsTableController = (function() {
 
         var oControllerVar = this;
 
-        var sTitle ="";
+        //var sTitle ="";
 
         if (angular.isDefined(sMunicipality) == false) {
             sMunicipality = "";
@@ -117,7 +118,7 @@ var StationsTableController = (function() {
 
         if (sMunicipality == null) sMunicipality = "";
 
-        sTitle = sName + " (Comune di " + sMunicipality + ")";
+        //sTitle = sName + " (Comune di " + sMunicipality + ")";
 
         if (this.m_oDialogService.isExistingDialog(sStationCode)) {
             return;
@@ -133,21 +134,23 @@ var StationsTableController = (function() {
             "name": sName
         };
 
+        oControllerVar.m_oTranslateService('DIALOGTITLE', {name: sName, municipality: sMunicipality}).then(function(text) {
+            // jQuery UI dialog options
+            var options = {
+                autoOpen: false,
+                modal: false,
+                width: 'auto',
+                resizable: false,
+                close: function (event, ui) {
+                    // Remove the chart from the Chart Service
+                    oControllerVar.m_oChartService.removeChart(sStationCode);
+                },
+                title: text
+            };
 
-        // jQuery UI dialog options
-        var options = {
-            autoOpen: false,
-            modal: false,
-            width: 'auto',
-            resizable: false,
-            close: function(event, ui) {
-                // Remove the chart from the Chart Service
-                oControllerVar.m_oChartService.removeChart(sStationCode);
-            },
-            title: sTitle
-        };
+            oControllerVar.m_oDialogService.open(sStationCode,"stationsChart.html", model, options);
+        });
 
-        this.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
     }
 
     StationsTableController.prototype.CancelAllFilters = function() {
@@ -320,7 +323,8 @@ var StationsTableController = (function() {
         'dialogService',
         'ChartService',
         '$location',
-        'TableService'
+        'TableService',
+        '$translate'
     ];
 
     return StationsTableController;

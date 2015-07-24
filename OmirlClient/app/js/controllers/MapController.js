@@ -7,7 +7,7 @@
 
 var MapController = (function () {
 
-    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService, oHydroService, oMapLayerService) {
+    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService, oHydroService, oMapLayerService, $translate) {
         // Initialize Members
         this.m_oScope = $scope;
         this.m_oWindow = $window;
@@ -25,7 +25,7 @@ var MapController = (function () {
         this.m_oTableService = oTableService;
         this.m_oHydroService = oHydroService;
         this.m_oMapLayerService= oMapLayerService;
-
+        this.m_oTranslateService = $translate;
         // Flag to know if maps first level is shown
         this.m_bIsFirstLevel = true;
         // Flag to know if hydro first level is shown
@@ -705,7 +705,7 @@ var MapController = (function () {
                                 oControllerVar.m_oMapNavigatorService.getMapThirdLevel(oControllerVar.m_aoMapLinks[iCount]).success(function(data,status) {
                                     oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oControllerVar.m_aoMapLinks[iCount]);
                                 }).error(function(data,status){
-                                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                                    oControllerVar.m_oLog.error('Error contacting Omirl Server');
                                 });
 
                             }
@@ -719,7 +719,7 @@ var MapController = (function () {
 
                 }
             }).error(function(data,status){
-                oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                oControllerVar.m_oLog.error('Error contacting Omirl Server');
             });
 
         }
@@ -742,7 +742,7 @@ var MapController = (function () {
 
                         oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oMapLinkCopy);
                     }).error(function(data,status){
-                        oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                        oControllerVar.m_oLog.error('Error contacting Omirl Server');
                     });
 
                 }
@@ -1200,21 +1200,25 @@ var MapController = (function () {
                 "name": sName
             };
 
+        oControllerVar.m_oTranslateService('DIALOGTITLE', {name: oFeature.attributes.name, municipality: oFeature.attributes.municipality}).then(function(text){
+            // jQuery UI dialog options
+            var options = {
+                autoOpen: false,
+                modal: false,
+                width: 'auto',
+                resizable: false,
+                close: function(event, ui) {
+                    // Remove the chart from the Chart Service
+                    oControllerVar.m_oChartService.removeChart(sStationCode);
+                },
+                title: text
+            };
 
-        // jQuery UI dialog options
-        var options = {
-            autoOpen: false,
-            modal: false,
-            width: 'auto',
-            resizable: false,
-            close: function(event, ui) {
-                // Remove the chart from the Chart Service
-                oControllerVar.m_oChartService.removeChart(sStationCode);
-            },
-            title:  oFeature.attributes.name + " (Comune di " + oFeature.attributes.municipality + ")"
-        };
+            oControllerVar.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
 
-        this.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
+        });
+
+
     }
 
     MapController.prototype.compareStations = function(oFirst, oSecond) {
@@ -1399,7 +1403,7 @@ var MapController = (function () {
                 oServiceVar.m_oMapService.stationsPopupControllerAdded = true;
             }
         }).error(function(data,status){
-            oServiceVar.m_oLog.error('Error Contacting Omirl Server');
+            oServiceVar.m_oLog.error('Error contacting Omirl Server');
         });
     }
 
@@ -1681,7 +1685,7 @@ var MapController = (function () {
                     }
 
                 }).error(function(data,status){
-                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    oControllerVar.m_oLog.error('Error contacting Omirl Server');
                 });
             }
             else {
@@ -1730,7 +1734,7 @@ var MapController = (function () {
                         }
 
                     }).error(function(data,status){
-                        oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                        oControllerVar.m_oLog.error('Error contacting Omirl Server');
                     });
 
                 }
@@ -1775,7 +1779,7 @@ var MapController = (function () {
                     }
 
                 }).error(function(data,status){
-                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    oControllerVar.m_oLog.error('Error contacting Omirl Server');
                 });
             }
             else
@@ -1976,7 +1980,7 @@ var MapController = (function () {
                 oControllerVar.m_oMapService.sectionsPopupControllerAdded = true;
             }
         }).error(function(data,status){
-            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+            oControllerVar.m_oLog.error('Error contacting Omirl Server');
         });
 
     }
@@ -2207,7 +2211,7 @@ var MapController = (function () {
                     }
 
                 }).error(function(data,status){
-                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    oControllerVar.m_oLog.error('Error contacting Omirl Server');
                 });
             }
             else {
@@ -2256,7 +2260,7 @@ var MapController = (function () {
                         }
 
                     }).error(function(data,status){
-                        oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                        oControllerVar.m_oLog.error('Error contacting Omirl Server');
                     });
 
                 }
@@ -2301,7 +2305,7 @@ var MapController = (function () {
                     }
 
                 }).error(function(data,status){
-                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    oControllerVar.m_oLog.error('Error contacting Omirl Server');
                 });
             }
             else
@@ -2458,7 +2462,7 @@ var MapController = (function () {
                     }
 
                 }).error(function(data,status){
-                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    oControllerVar.m_oLog.error('Error contacting Omirl Server');
                 });
             }
             else {
@@ -2507,7 +2511,7 @@ var MapController = (function () {
                         }
 
                     }).error(function(data,status){
-                        oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                        oControllerVar.m_oLog.error('Error contacting Omirl Server');
                     });
 
                 }
@@ -2552,7 +2556,7 @@ var MapController = (function () {
                     }
 
                 }).error(function(data,status){
-                    oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+                    oControllerVar.m_oLog.error('Error contacting Omirl Server');
                 });
             }
             else
@@ -2647,7 +2651,8 @@ var MapController = (function () {
         '$location',
         'TableService',
         'HydroService',
-        'MapLayerService'
+        'MapLayerService',
+        '$translate'
     ];
 
     return MapController;

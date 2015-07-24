@@ -40,11 +40,24 @@ var omirlApp = angular.module('omirl', [
     
     'omirl.sidebarMenuDirective',
     'omirl.galleryService',
-    'angular-flexslider'
+    'angular-flexslider',
+    'pascalprecht.translate',
+    'omirl.translateService'
 ]);
 
-omirlApp.config(['$httpProvider', function($httpProvider) {
+omirlApp.config(['$httpProvider', '$translateProvider', function($httpProvider, $translateProvider) {
     $httpProvider.interceptors.push('sessionInjector');
+
+    //language configuration
+    $translateProvider.useStaticFilesLoader({
+        prefix: 'languages/',
+        suffix: '.json'
+    });
+
+
+    $translateProvider.preferredLanguage('it');
+    $translateProvider.useSanitizeValueStrategy('escaped');
+
 }]);
 
 omirlApp.config(function($routeProvider) {

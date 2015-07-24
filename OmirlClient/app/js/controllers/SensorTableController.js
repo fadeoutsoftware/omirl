@@ -3,7 +3,7 @@
  */
 
 var SensorTableController = (function() {
-    function SensorTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService) {
+    function SensorTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, $translate) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -13,6 +13,7 @@ var SensorTableController = (function() {
         this.m_oChartService = oChartService;
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
+        this.m_oTranslateService = $translate;
         this.m_bDowloadEnabled = false;
 
         this.m_bShowCancelNameFilter = false;
@@ -139,7 +140,7 @@ var SensorTableController = (function() {
 
         if (sMunicipality == null) sMunicipality = "";
 
-        sTitle = sName + " (Comune di " + sMunicipality + ")";
+        //sTitle = sName + " (Comune di " + sMunicipality + ")";
 
         if (this.m_oDialogService.isExistingDialog(sStationCode)) {
             return;
@@ -156,20 +157,23 @@ var SensorTableController = (function() {
         };
 
 
-        // jQuery UI dialog options
-        var options = {
-            autoOpen: false,
-            modal: false,
-            width: 'auto',
-            resizable: false,
-            close: function(event, ui) {
-                // Remove the chart from the Chart Service
-                oControllerVar.m_oChartService.removeChart(sStationCode);
-            },
-            title: sTitle
-        };
+        oControllerVar.m_oTranslateService('DIALOGTITLE', {name: sName, municipality: sMunicipality}).then(function(text){
+            // jQuery UI dialog options
+            var options = {
+                autoOpen: false,
+                modal: false,
+                width: 'auto',
+                resizable: false,
+                close: function(event, ui) {
+                    // Remove the chart from the Chart Service
+                    oControllerVar.m_oChartService.removeChart(sStationCode);
+                },
+                title: text
+            };
 
-        this.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
+            oControllerVar.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
+        });
+
     }
 
     SensorTableController.prototype.CancelAllFilters = function() {
@@ -380,7 +384,8 @@ var SensorTableController = (function() {
         'dialogService',
         'ChartService',
         '$location',
-        'TableService'
+        'TableService',
+        '$translate'
     ];
     return SensorTableController;
 }) ();

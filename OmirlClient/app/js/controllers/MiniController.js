@@ -3,7 +3,7 @@
  */
 
 var MiniController = (function() {
-    function MiniController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService) {
+    function MiniController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService, $translate) {
         this.m_oScope = $scope;
         this.m_oLocation  = $location;
         this.m_oConstantsService = oConstantsService;
@@ -25,7 +25,7 @@ var MiniController = (function() {
         this.m_oRoute = $route;
         this.m_oTemplateCache = $templateCache;
         this.m_oTableService = oTableService;
-
+        this.m_oTranslateService = $translate;
         this.m_sContainerStyle = "overflow: hidden;";
 
         oConstantsService.setIsMiniVersion(true);
@@ -145,7 +145,7 @@ var MiniController = (function() {
         }).error(function(data, status) {
             oController.m_bLoading =false;
             oController.m_oConstantsService.setUser(null);
-            oController.m_oLog.error("Error contacting Omirl Server");
+            oController.m_oLog.error('Error contacting Omirl Server');
         });
 
         this.credentials.userId = "";
@@ -167,7 +167,8 @@ var MiniController = (function() {
         '$log',
         '$route',
         '$templateCache',
-        'TableService'
+        'TableService',
+        '$translate'
     ];
 
     return MiniController;

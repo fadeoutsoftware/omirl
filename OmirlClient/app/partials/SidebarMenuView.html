@@ -1,7 +1,7 @@
 <div class="sidebar-menu">
     <div class="row">
         <div class="map-text-legend">
-            <div class="map-text-legend-selected">{{m_sLegendText}}
+            <div class="map-text-legend-selected">{{m_sParentText | translate}} {{m_sChildText != "" && m_sChildText != null ? "->" : ""}} {{m_sChildText != "" ? m_sChildText : "" | translate}}
             </div>
         </div>
     </div>
@@ -12,7 +12,7 @@
             <li class='map-firstlevel-icon' 
                 ng-repeat="oItem in menuItemsList"
                 ng-class="{'map-firstlevel-icon-selected': isActive(oItem) == true}"
-                tooltip-popup-delay="500" tooltip="{{oItem.description}}">
+                tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}">
                 <img class="img-map-firstlevel-icon" ng-src="{{oItem.imageLinkOff}}"
                  ng-click="mainItemClick(oItem)"/>
             </li>
@@ -23,7 +23,7 @@
                 <li class='map-firstlevel-icon'
                     ng-repeat="oItem in submenuItems"
                     ng-class="{'map-firstlevel-icon-selected': isSubActive(oItem) == true}"
-                    tooltip-popup-delay="500" tooltip="{{oItem.description}}">
+                    tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}">
                     <img class="img-map-firstlevel-icon" ng-src="{{oItem.imageLinkOff}}"
                      ng-click="submenuItemClick(oItem)"/>
                 </li>

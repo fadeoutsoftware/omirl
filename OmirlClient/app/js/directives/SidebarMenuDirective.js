@@ -23,7 +23,8 @@ angular.module('omirl.sidebarMenuDirective', [])
         },
         link: function($scope, elem, attrs)
         {
-            $scope.m_sLegendText = ""; //$scope.menuTitle;
+            $scope.m_sParentText = ""; //$scope.menuTitle;
+            $scope.m_sChildText = ""; //$scope.menuTitle;
             
             if( !$scope.submenuItemsListVarName )
                 $scope.submenuItemsListVarName = "submenuItems";
@@ -77,14 +78,18 @@ angular.module('omirl.sidebarMenuDirective', [])
                     $scope.m_bIsSubmenuVisible = false;
                     $scope.activeMenuItem = null;
                     
-                    $scope.m_sLegendText = "";
+                    $scope.m_sParentText = "";
+
+                    $scope.m_sChildText = "";
                 }
                 else
                 {
                     $scope.activeMenuItem = item;
                     $scope.m_bIsSubmenuVisible = true;
                     
-                    $scope.m_sLegendText = item.description;
+                    $scope.m_sParentText = item.description;
+
+                    $scope.m_sChildText = "";
                     
                     if( item[$scope.submenuItemsListVarName] )
                     {
@@ -109,13 +114,17 @@ angular.module('omirl.sidebarMenuDirective', [])
                 {
                     $scope.activeSubItem = null;
 
-                    $scope.m_sLegendText = $scope.m_sLegendText.split("->")[0];
+                    $scope.m_sParentText = $scope.m_sParentText;
+
+                    $scope.m_sChildText = "";
                 }
                 else
                 {
                     $scope.activeSubItem = item;
 
-                    $scope.m_sLegendText += "->" + item.description;
+                    $scope.m_sParentText = $scope.m_sParentText;
+
+                    $scope.m_sChildText = item.description;
 
                     if( typeof $scope.onSubItemClick == "function")
                     {

@@ -3,20 +3,21 @@
  */
 
 var TemplateController = (function() {
-    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService) {
+    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService, $translate, $interpolate, oTranslateService) {
         this.m_oScope = $scope;
         this.m_oLocation  = $location;
         this.m_oConstantsService = oConstantsService;
         this.m_oAuthService = oAuthService;
+        this.m_oTranslationService = oTranslateService;
         this.m_oScope.m_oController = this;
         this.m_bShowLogin = false;
         this.m_bShowLogout = false;
         this.credentials = {};
         this.credentials.userId = "";
         this.credentials.userPassword = "";
-        this.ReservedAreaTextConstant = "Area Riservata";
+        this.ReservedAreaTextConstant = "INDEX_AREARISERVATA";
         this.ReservedAreaText = this.ReservedAreaTextConstant;
-        this.m_sLoginMessageConstant = "Inserire le credenziali";
+        this.m_sLoginMessageConstant = "INDEX_CREDENZIALI";
         this.m_sLoginMessage = this.m_sLoginMessageConstant;
         this.m_bLoginError = false;
         this.m_bLoading = false;
@@ -25,12 +26,14 @@ var TemplateController = (function() {
         this.m_oRoute = $route;
         this.m_oTemplateCache = $templateCache;
         this.m_oTableService = oTableService;
-
+        this.m_oTranslateService = $translate;
+        this.m_oInterpolateService = $interpolate;
         this.m_sContainerStyle = "overflow: hidden;";
 
         $scope.$on('$locationChangeStart', function(event) {
             resizeMap();
         });
+
     }
 
     TemplateController.prototype.serviceIconClicked = function (sPath) {
@@ -74,7 +77,7 @@ var TemplateController = (function() {
     TemplateController.prototype.login = function() {
 
         this.m_bLoginError = false;
-        this.m_sLoginMessage = "Accesso in corso...";
+        this.m_sLoginMessage = "INDEX_LOGIN";
 
         this.m_bLoading = true;
 
@@ -89,7 +92,9 @@ var TemplateController = (function() {
 
             if (oController.m_oConstantsService.isUserLogged()) {
                 oController.credentials.userId = "";
-                oController.ReservedAreaText = "Benvenuto " + oController.m_oConstantsService.getUser().name;
+                oController.m_oTranslateService('INDEX_BENVENUTO', {nome: oController.m_oConstantsService.getUser().name}).then(function(text){
+                    oController.ReservedAreaText = text;
+                });
                 oController.m_bShowLogin = false;
                 oController.m_bShowLogout = true;
                 oController.m_bLoginError = false;
@@ -103,7 +108,7 @@ var TemplateController = (function() {
             else {
                 oController.m_bLoginError = true;
                 oController.ReservedAreaText = oController.ReservedAreaTextConstant;
-                oController.m_sLoginMessage = "Credenziali non corrette";
+                oController.m_sLoginMessage = "INDEX_LOGINCRNONCORR";
             }
 
             oController.m_oTableService.refreshTableLinks();
@@ -115,7 +120,7 @@ var TemplateController = (function() {
             oController.m_bLoginError = true;
             oController.m_oConstantsService.setUser(null);
             oController.ReservedAreaText = oController.ReservedAreaTextConstant;
-            oController.m_sLoginMessage = "Credenziali non corrette";
+            oController.m_sLoginMessage = "INDEX_LOGINCRNONCORR";
 
             oController.m_bLoading = false;
         });
@@ -143,7 +148,7 @@ var TemplateController = (function() {
         }).error(function(data, status) {
             oController.m_bLoading =false;
             oController.m_oConstantsService.setUser(null);
-            oController.m_oLog.error("Error contacting Omirl Server");
+            oController.m_oLog.error('Error contacting Omirl Server');
         });
 
         this.credentials.userId = "";
@@ -157,6 +162,11 @@ var TemplateController = (function() {
         this.m_bShowLogin = true;
     }
 
+    TemplateController.prototype.changeLanguage = function(language){
+        this.m_oTranslateService.use(language);
+
+    }
+
     TemplateController.$inject = [
         '$scope',
         '$location',
@@ -165,7 +175,10 @@ var TemplateController = (function() {
         '$log',
         '$route',
         '$templateCache',
-        'TableService'
+        'TableService',
+        '$translate',
+        '$interpolate',
+        'TranslateService'
     ];
 
     return TemplateController;

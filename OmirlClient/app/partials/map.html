@@ -30,7 +30,7 @@
 
             <div class="map-geo-search input-group">
                 <input type="search" class="map-geo-search-text form-control" ng-model="m_oController.m_sGeocodingQuery"
-                       placeholder="Cerca Localita'" ng-keypress="m_oController.geocodingEnterSearch($event)">
+                       placeholder="{{'MAP_PH_CERCA' | translate}}" ng-keypress="m_oController.geocodingEnterSearch($event)">
                 <span class="input-group-btn">
                     <a ng-click="m_oController.geocodingSearch()"><i
                             class="map-geo-search-button glyphicon glyphicon-search"></i></a>
@@ -54,23 +54,23 @@
                     <ul class="dropdown-menu" role="menu" aria-labelledby="statics">
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
-                               ng-click="m_oController.setBaseLayer('OSM')">OSM</a>
+                               ng-click="m_oController.setBaseLayer('OSM')">{{'MAP_OSM' | translate}}</a>
                         </li>
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
-                               ng-click="m_oController.setBaseLayer('Hybrid')">Google Hybrid</a>
+                               ng-click="m_oController.setBaseLayer('Hybrid')">{{'MAP_HYBRID' | translate}}</a>
                         </li>
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
-                               ng-click="m_oController.setBaseLayer('Streets')">Google Streets</a>
+                               ng-click="m_oController.setBaseLayer('Streets')">{{'MAP_STREET' | translate}}</a>
                         </li>
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
-                               ng-click="m_oController.setBaseLayer('Physical')">Google Physical</a>
+                               ng-click="m_oController.setBaseLayer('Physical')">{{'MAP_PHYSICAL' | translate}}</a>
                         </li>
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
-                               ng-click="m_oController.setBaseLayer('Satellite')">Google Satellite</a>
+                               ng-click="m_oController.setBaseLayer('Satellite')">{{'MAP_SATELLITE' | translate}}</a>
                         </li>
                     </ul>
                 </li>
@@ -79,13 +79,13 @@
                 <!--Layer statici -->
 
                 <li class="map-statics dropdown">
-                    <a id="statics" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Strati informativi"><i
+                    <a id="statics" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="{{'MAP_T_STRATIINFO' | translate}}"><i
                             class="icon icon-map-roads pull-left"></i></a>
                     <ul class="icons-dropdown-menu dropdown-menu" role="menu" aria-labelledby="basemaps">
                         <li role="presentation" ng-repeat="oStatic in m_oController.getStaticLinks()">
                             <a class="basemaps-dropdown-menu-item"
                                ng-class="{'basemaps-dropdown-menu-item-selected': oStatic.selected}" role="menuitem"
-                               ng-click="m_oController.staticLayerClicked(oStatic)">{{oStatic.description}}</a>
+                               ng-click="m_oController.staticLayerClicked(oStatic)">{{oStatic.description | translate}}</a>
                         </li>
                     </ul>
                 </li>
@@ -94,7 +94,7 @@
                 <!--zoom-->
 
                 <li class="map-reset-zoom">
-                    <a id="resetzoom" tooltip-popup-delay="500" tooltip="Reset Zoom"
+                    <a id="resetzoom" tooltip-popup-delay="500" tooltip="{{'MAP_T_RESETZOOM' | translate}}"
                        ng-click="m_oController.resetZoomClick()"><i class="fa fa-arrows-alt"></i></a>
                 </li>
 
@@ -124,7 +124,7 @@
                         <accordion-heading>
                             <div>
                                 <div class="icon icon-gauge pull-left"></div>
-                                <span class="map-accordion-title">Stazioni</span>
+                                <span class="map-accordion-title">{{'MAP_STAZIONI' | translate}}</span>
                                 <i class="pull-right glyphicon"
                                    ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                             </div>
@@ -133,7 +133,7 @@
                             <div class="row">
                                 <div class="map-text-legend">
 
-                                    <div class="map-text-legend-selected">{{m_oController.m_sSensorLegendSelected}}
+                                    <div class="map-text-legend-selected">{{m_oController.m_sSensorLegendSelected | translate}}
                                     </div>
 
                                 </div>
@@ -143,7 +143,7 @@
                                 <div ng-repeat="oSensor in m_oController.getSensorLinks()"
                                      class="col-md-1 col-xs-1 map-firstlevel-icon"
                                      ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}"
-                                     tooltip-popup-delay="500" tooltip="{{oSensor.description}}" ng-show="oSensor.isVisible">
+                                     tooltip-popup-delay="500" tooltip="{{oSensor.description | translate}}" ng-show="oSensor.isVisible">
                                     <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
                                     <img class="img-map-firstlevel-icon" ng-src="{{oSensor.imageLinkOff}}"
                                          ng-click="m_oController.sensorLinkClicked(oSensor)"/>
@@ -151,7 +151,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="Filtro di ricerca stazioni">
+                                <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="{{'MAP_T_RICERCASTAZIONI' | translate}}">
                                     <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
                                     <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/stationstable')"/>
                                 </div>
@@ -165,7 +165,7 @@
                     <accordion-group ng-class="{'map-accordion-open' : isopen}">
                         <accordion-heading>
                             <div class="icon icon-earth2 pull-left"></div>
-                            <span class="map-accordion-title">Mappe</span><i class="pull-right glyphicon"
+                            <span class="map-accordion-title">{{'MAP_MAPPE' | translate}}</span><i class="pull-right glyphicon"
                                                                              ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                         </accordion-heading>
                         <div class="map-accordion-content">
@@ -222,7 +222,7 @@
                     <accordion-group ng-class="{'map-accordion-open' : isopen}" ng-show="m_oController.m_bShowHydro">
                         <accordion-heading>
                             <div class="icon icon-chart-line pull-left"></div>
-                            <span class="map-accordion-title">Idro</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                            <span class="map-accordion-title">{{'MAP_IDRO' | translate}}</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                         </accordion-heading>
                         <div class="map-accordion-content">
                             <div class="row">
@@ -248,7 +248,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="Filtro di ricerca stazioni">
+                            <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="{{'MAP_T_RICERCASTAZIONI' | translate}}">
                                 <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
                                 <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/modelstable')"/>
                             </div>
@@ -264,7 +264,7 @@
                     <accordion-group ng-class="{'map-accordion-open' : isopen}" ng-show="m_oController.m_bShowRadar">
                         <accordion-heading>
                             <div class="icon icon-radar pull-left"></div>
-                            <span class="map-accordion-title">Radar</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                            <span class="map-accordion-title">{{'MAP_RADAR' | translate}}</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                         </accordion-heading>
                         <div class="map-accordion-content">
                             <div class="row">
@@ -300,7 +300,7 @@
                     <accordion-group ng-class="{'map-accordion-open' : isopen}" ng-show="m_oController.m_bShowSatellite">
                         <accordion-heading>
                             <div class="icon icon-antenna pull-left"></div>
-                            <span class="map-accordion-title">Satellite</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                            <span class="map-accordion-title">{{'MAP_SATELLITE' | translate}}</span><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                         </accordion-heading>
                         <div class="map-accordion-content">
                             <div class="row">
