@@ -1900,7 +1900,8 @@ public class OmirlDaemon {
 			AlertZoneSummaryInfo oZoneCSummary = new AlertZoneSummaryInfo();
 			oZoneCSummary.setDescription("C");
 
-			SummaryInfoEntity oCMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("B", oActualDate);
+			//SummaryInfoEntity oCMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("B", oActualDate);
+			SummaryInfoEntity oCMax = oStationDataRepository.getAlertZoneMaxTemperatureSummaryInfo("C", oActualDate);
 
 			if (oBMax!=null)
 			{
@@ -1915,7 +1916,8 @@ public class OmirlDaemon {
 				oZoneCSummary.setRefDateMax(null);				
 			}
 
-			SummaryInfoEntity oCMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("B", oActualDate);
+			//SummaryInfoEntity oCMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("B", oActualDate);
+			SummaryInfoEntity oCMin = oStationDataRepository.getAlertZoneMinTemperatureSummaryInfo("C", oActualDate);
 
 			if (oBMin!=null)
 			{
