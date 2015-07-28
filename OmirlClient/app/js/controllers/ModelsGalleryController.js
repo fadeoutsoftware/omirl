@@ -15,6 +15,7 @@ var ModelsGalleryController = (function() {
         $scope.m_iAutoplayDuration_ms = 1000;
         $scope.m_iMaxThumbsCount = 9; // MUST BE AN ODD NUMBER
         $scope.m_iThumbsOnSideCount = Math.floor( $scope.m_iMaxThumbsCount / 2 );
+        $scope.m_iGalleryTimeIntervalId;
         
         // initial image index
         $scope.m_iCurrentImageIndex = 0;
@@ -41,6 +42,14 @@ var ModelsGalleryController = (function() {
         }
         */
         // DEBUG (-)
+        
+        
+        //****************************************************************************************
+        //* Scope methods
+        //****************************************************************************************
+        $scope.$on('$locationChangeStart', function (event, next, current) {
+            $scope.clearAutoplayTimeInterval();
+        });
         
 
         //****************************************************************************************
@@ -74,6 +83,11 @@ var ModelsGalleryController = (function() {
             return $scope.m_bSideBarCollapsed;
         }
         
+        $scope.clearAutoplayTimeInterval = function()
+        {
+            if( $scope.m_iGalleryTimeIntervalId )
+                clearInterval($scope.m_iGalleryTimeIntervalId);
+        }
         
         $scope.stopAutoplay = function()
         {
@@ -168,6 +182,8 @@ var ModelsGalleryController = (function() {
                 }
             }
         }
+        
+        
 
         $scope.getGallery = function(oLink){
             GalleryService.getData(oLink.codeParent, oLink.codeVariable, oLink.code)
@@ -179,8 +195,10 @@ var ModelsGalleryController = (function() {
 
                     $scope.isGalleryReady = true;
 
-                    // Set autoplay
-                    setInterval(function(){
+                    //clear previous time interval if any
+                    $scope.clearAutoplayTimeInterval();
+                    // then set autoplay time interval
+                    $scope.m_iGalleryTimeIntervalId = setInterval(function(){
                         if( $scope.m_bIsAutoplayEnabled === true)
                         {
                             console.debug("HERE");
