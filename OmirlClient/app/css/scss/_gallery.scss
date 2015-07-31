@@ -22,6 +22,10 @@
     $thumbsBorderColor: #efefef;
     $thumbsBorderColorActive: $color_blue_active;
     
+    $mainImageW: 100%;
+    $mainImageH: 80%;
+    $mainImageLeftOffset: (100% - $mainImageH) / 2;
+    
     width: 1000px;
     height: 700px;
     margin: 20px auto;
@@ -162,9 +166,8 @@
         //border: 15px solid #FFFFFF;
         //border-radius: 5px;
         margin: 20px auto;
-        height: 100%;
-        //width: 800px;
-        width: 100%;
+        width: $mainImageW;
+        height: $mainImageH;
         position: relative;
         
         overflow: hidden;
@@ -182,11 +185,10 @@
         transform-style: preserve-3d;
     }
     .slide {
+        height: 100%;
         position: absolute;
         top: 0;
-        left: 0;
-        
-        height: 100%;
+        left: $mainImageLeftOffset;
     }
     .slide.ng-hide-add {
         opacity:1;

@@ -3,7 +3,7 @@
  */
 
 var ModelsGalleryController = (function() {
-    function ModelsGalleryController($scope, $http, GalleryService)
+    function ModelsGalleryController($scope, $http, ConstantsService, GalleryService)
     {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
@@ -11,11 +11,14 @@ var ModelsGalleryController = (function() {
         //****************************************************************************************
         //* Scope variables
         //****************************************************************************************
+        
         $scope.m_bIsAutoplayEnabled = false;
         $scope.m_iAutoplayDuration_ms = 1000;
         $scope.m_iMaxThumbsCount = 9; // MUST BE AN ODD NUMBER
         $scope.m_iThumbsOnSideCount = Math.floor( $scope.m_iMaxThumbsCount / 2 );
         $scope.m_iGalleryTimeIntervalId;
+        
+        $scope.m_sLoadingText = "";
         
         // initial image index
         $scope.m_iCurrentImageIndex = 0;
@@ -49,6 +52,7 @@ var ModelsGalleryController = (function() {
         //****************************************************************************************
         $scope.$on('$locationChangeStart', function (event, next, current) {
             $scope.clearAutoplayTimeInterval();
+            $scope.goToFirst();
         });
         
 
@@ -185,18 +189,33 @@ var ModelsGalleryController = (function() {
         
         
 
-        $scope.getGallery = function(oLink){
+        $scope.getGallery = function(oLink)
+        {
+            toggleSideBarClicked();
+            $scope.m_sLoadingText = "Loading...";
+            
             GalleryService.getData(oLink.codeParent, oLink.codeVariable, oLink.code)
                 .success(function(data, status, headers, config){
 
                     // Get photos and set gallery visible
                     $scope.photos = data.images;
+                    
+                    // DEBUG (+)
+//                    var sUriPrefix = ConstantsService.getAPIURL().replace("rest", "");
+//                    for(var key in $scope.photos)
+//                    {
+//                        
+//                        $scope.photos[key].imageLink = sUriPrefix + $scope.photos[key].imageLink;
+//                    }
+                    // DEBUG (+)
+                    
                     $scope.updateThumbsVisibility();
 
                     $scope.isGalleryReady = true;
 
-                    //clear previous time interval if any
+                    //clear previous time interval (if any) and set the 1st photo to be shown
                     $scope.clearAutoplayTimeInterval();
+                    $scope.goToFirst();
                     // then set autoplay time interval
                     $scope.m_iGalleryTimeIntervalId = setInterval(function(){
                         if( $scope.m_bIsAutoplayEnabled === true)
@@ -277,7 +296,7 @@ var ModelsGalleryController = (function() {
     }
 
     ModelsGalleryController.$inject = [
-        '$scope', '$http', 'GalleryService'
+        '$scope', '$http', 'ConstantsService', 'GalleryService'
     ];
     return ModelsGalleryController;
 }) ();
