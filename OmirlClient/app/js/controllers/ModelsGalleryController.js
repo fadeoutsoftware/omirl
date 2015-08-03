@@ -191,7 +191,6 @@ var ModelsGalleryController = (function() {
 
         $scope.getGallery = function(oLink)
         {
-            toggleSideBarClicked();
             $scope.m_sLoadingText = "Loading...";
             
             GalleryService.getData(oLink.codeParent, oLink.codeVariable, oLink.code)
