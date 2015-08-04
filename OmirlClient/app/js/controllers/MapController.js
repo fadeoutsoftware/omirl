@@ -1284,12 +1284,60 @@ var MapController = (function () {
                 var oStation = aoStations[iStations];
 
                 // Create the feature
+//                var oFeature = new OpenLayers.Feature.Vector(
+//                    
+//                    {description: oStation.description}
+//                    //,{externalGraphic: oStation.imgPath, graphicHeight: 32, graphicWidth: 32, graphicXOffset:0, graphicYOffset:0, title: oStation.name + " " + oStation.value }
+//                    //,{title: oStation.name + " " + oStation.value }
+//                );
+                //************************************************************
+                // To draw a circle
+                //************************************************************
+                var oMarkerIcon = new OpenLayers.Geometry.Point(oStation.lon, oStation.lat).transform(epsg4326, projectTo);
+                
+
+                //************************************************************
+                // To draw a X as poly (s = size of X)
+                //************************************************************
+                //  1) x, y+s
+                //  2) x-s, y+2s
+                //  3) x-2s, y+s
+                //  4) x-s, y
+                //  5) x-2s, y-s
+                //  6) x-s, y-2s
+                //  7) x, y-s
+                //  8) x+s, y-2s
+                //  9) x+2s, y-s
+                //  10) x+s, y
+                //  11) x+2s, y+s
+                //  12) x+s, y+2s
+//                var fSize = 0.004;
+//                var aoPoints = [
+//                    new OpenLayers.Geometry.Point(oStation.lon, oStation.lat + fSize),              // 1
+//                    new OpenLayers.Geometry.Point(oStation.lon - fSize, oStation.lat  + 2*fSize),
+//                    new OpenLayers.Geometry.Point(oStation.lon - 2*fSize, oStation.lat  + fSize),
+//                    new OpenLayers.Geometry.Point(oStation.lon - fSize, oStation.lat),              // 4
+//                    new OpenLayers.Geometry.Point(oStation.lon - 2*fSize, oStation.lat - fSize),
+//                    new OpenLayers.Geometry.Point(oStation.lon - fSize, oStation.lat - 2*fSize),
+//                    new OpenLayers.Geometry.Point(oStation.lon, oStation.lat - fSize),              // 7
+//                    new OpenLayers.Geometry.Point(oStation.lon + fSize, oStation.lat - 2*fSize),
+//                    new OpenLayers.Geometry.Point(oStation.lon + 2*fSize, oStation.lat - fSize),
+//                    new OpenLayers.Geometry.Point(oStation.lon + fSize, oStation.lat),              // 10
+//                    new OpenLayers.Geometry.Point(oStation.lon + 2*fSize, oStation.lat + fSize),
+//                    new OpenLayers.Geometry.Point(oStation.lon + fSize, oStation.lat + 2*fSize)
+//                ];
+//                var oRing = new OpenLayers.Geometry.LinearRing(aoPoints);
+//                var oMarkerIcon = new OpenLayers.Geometry.Polygon([oRing.transform(epsg4326, projectTo)]);
+                // ************************************************************
+                
+                
                 var oFeature = new OpenLayers.Feature.Vector(
-                    new OpenLayers.Geometry.Point(oStation.lon, oStation.lat).transform(epsg4326, projectTo),
+                    oMarkerIcon,
                     {description: oStation.description}
                     //,{externalGraphic: oStation.imgPath, graphicHeight: 32, graphicWidth: 32, graphicXOffset:0, graphicYOffset:0, title: oStation.name + " " + oStation.value }
                     //,{title: oStation.name + " " + oStation.value }
                 );
+        
 
                 // Get Increment by server
                 var iIncrement = oStation.increment;

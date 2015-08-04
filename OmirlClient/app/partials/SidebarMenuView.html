@@ -1,8 +1,11 @@
 <div class="sidebar-menu">
     <div class="row">
         <div class="map-text-legend">
+            <!--
             <div class="map-text-legend-selected">{{m_sParentText | translate}} {{m_sChildText != "" && m_sChildText != null ? "->" : ""}} {{m_sChildText != "" ? m_sChildText : "" | translate}}
             </div>
+            -->
+            <div class="map-text-legend-selected">{{m_sParentText | translate}}</div>
         </div>
     </div>
 
@@ -29,6 +32,8 @@
                 </li>
             </ul>
             <div class="clearfix"></div>
+            
+            <div class="map-text-legend-selected">{{m_sChildText != "" ? m_sChildText : "" | translate}}</div>
         </div>
         <!--
         <div ng-repeat="oTable in m_oController.m_oTableService.getTableLinks()"
