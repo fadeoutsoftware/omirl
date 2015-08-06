@@ -68,6 +68,7 @@ import org.jdom.input.SAXBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
+import org.joda.time.convert.IntervalConverter;
 
 public class OmirlDaemon {
 
@@ -691,10 +692,10 @@ public class OmirlDaemon {
 												GetWindDirectionSerie(aoWindPoints, oWindDirSerie, iMinuteTimeStep);
 											// name
 											oWindDirSerie.setName("Wind Direction");
-											
+
 											// Main Axis Reference
 											oWindDirSerie.setAxisId(0);
-											
+
 											// add to wind chart
 											oWindChart.getDataSeries().add(oWindDirSerie);
 										}
@@ -703,7 +704,7 @@ public class OmirlDaemon {
 										}
 
 									}
-									
+
 									serializeStationChart(oWindChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
 
 
@@ -999,7 +1000,7 @@ public class OmirlDaemon {
 		long lTimeStep = iMinuteTimeStep*60L*1000L;
 		long lNow = oNow.getMillis();
 		long lStart = oInputWindDir.get(0).getRefDate().getTime();
-		
+
 		for (long lTimeCycle = lStart; lTimeCycle<=lNow; lTimeCycle+=lTimeStep)
 		{
 			WindDataSeriePoint adPoint = new WindDataSeriePoint();
@@ -1027,39 +1028,46 @@ public class OmirlDaemon {
 
 	}
 
-	private double GetPrevalentWindDirectionAlgorithm(List<WindDataSeriePoint> oRefWindDirection)
+	private Double GetPrevalentWindDirectionAlgorithm(List<WindDataSeriePoint> oRefWindDirection)
 	{
-		int iNumCalma = 0;
-		double dDeg= 0;
-		double dMaxValue = -1;
-		int iFirstMaxSectorContainer = 0;
-		int iSecondMaxSectorContainer = 0;
-		//HashMap<Integer, ArrayList<WindDataSeriePoint>> oSectorMap = new HashMap<Integer, ArrayList<WindDataSeriePoint>>();
+		Double dNumCalma = 0.0;
+		Double dVar = 0.0;
+		Double dDeg= null;
+
+		HashMap<Integer, ArrayList<WindDataSeriePoint>> oSectorMap = new HashMap<Integer, ArrayList<WindDataSeriePoint>>();
+		HashMap<Integer, Double> oFilteredSectorMap = new HashMap<Integer, Double>();
+
+		//Init Sector and filtered Map
+		for (int iSector = 0; iSector < 18; iSector++)
+		{
+			oSectorMap.put(iSector, new ArrayList<WindDataSeriePoint>());
+			oFilteredSectorMap.put(iSector, 0.0);
+		}
+
 
 		for (WindDataSeriePoint windDataSeriePoint : oRefWindDirection) {
 
 			if (windDataSeriePoint.getWindSpeed() <= 0.5)
-				iNumCalma++;
+			{
+				dNumCalma++;
+				continue;
+			}
 
+			if (windDataSeriePoint.getWindDir() == 0)
+			{
+				dNumCalma++;
+				continue;
+			}
+
+			if (windDataSeriePoint.getWindDir() == -1)
+			{
+				dVar++;
+				continue;
+			}
+
+			//Not calm
 			int iSector = GetSector(windDataSeriePoint.getWindDir());
 
-			//Max value
-			if (windDataSeriePoint.getWindSpeed() > dMaxValue)
-			{
-				// mem sector with max value
-				iFirstMaxSectorContainer = iSector;
-				dMaxValue = windDataSeriePoint.getWindSpeed();
-			}
-			else if (windDataSeriePoint.getWindSpeed() == dMaxValue)
-			{
-				//Found another max
-				if (java.lang.Math.abs(iSector - iFirstMaxSectorContainer) == 1)
-				{
-					iSecondMaxSectorContainer = iSector;
-				}
-			}
-
-			/*
 			if (!oSectorMap.containsKey(iSector))
 			{
 				ArrayList<WindDataSeriePoint> oList = new ArrayList<WindDataSeriePoint>();
@@ -1070,35 +1078,102 @@ public class OmirlDaemon {
 			{
 				oSectorMap.get(iSector).add(windDataSeriePoint);
 			}
-			 */
 		}
 
-		if (iNumCalma > (oRefWindDirection.size() / 2))
-			return 0; //calma
+		//sector 0 is calm
+		oFilteredSectorMap.put(0, dNumCalma);
+		//sector 17 is variable
+		oFilteredSectorMap.put(17, dVar);
 
-		if (iNumCalma == (oRefWindDirection.size() / 2))
-			return -1; //variabile
+		//return calm
+		if (dNumCalma > oRefWindDirection.size() / 2)
+			return 0.0;
+
+		//return var
+		if (dVar == oRefWindDirection.size() / 2)
+			return -1.0;
 
 		//filter formula wmo
+		for (int iCountSector = 1; iCountSector < 17; iCountSector ++)
+		{
+			int iSectorIndex = iCountSector + 1;
+			int iSectorIndex1 = iSectorIndex + 1;
+			int iSectorIndex2 = iSectorIndex + 2;
+			int iSectorIndexm1 = iSectorIndex - 1;
+			int iSectorIndexm2 = iSectorIndex - 2;
+			//normalizzo gli indici
+			if (iSectorIndex1 == 17)
+				iSectorIndex1 = 16;
+			if (iSectorIndex1 == 18)
+				iSectorIndex1 = 1;
+			if (iSectorIndex1 == 19)
+				iSectorIndex1 = 2;
+
+			if (iSectorIndex2 == 17)
+				iSectorIndex2 = 16;
+			if (iSectorIndex2 == 18)
+				iSectorIndex2 = 1;
+			if (iSectorIndex2 == 19)
+				iSectorIndex2 = 2;
+
+			if (iSectorIndexm1 == 0)
+				iSectorIndexm1 = 15;
+			if (iSectorIndex1 == 1)
+				iSectorIndexm1 = 16;
+
+			if (iSectorIndex2 == 0)
+				iSectorIndex2 = 15;
+			if (iSectorIndex2 == 1)
+				iSectorIndex2 = 16;
+
+			Double dValue = (double) (((double)1/9)*(double)oSectorMap.get(iSectorIndexm2).size()) + 
+					(double) (((double)2/9)*(double)oSectorMap.get(iSectorIndexm1).size()) +
+					(double) (((double)3/9)*(double)oSectorMap.get(iSectorIndex).size()) + 
+					(double) (((double)2/9)*(double)oSectorMap.get(iSectorIndex1).size()) +
+					(double) (((double)1/9)*(double)oSectorMap.get(iSectorIndex2).size());
+
+			oFilteredSectorMap.put(iCountSector, dValue);
+		}
+
+		//Search max
+		Double dSectorpr = -1.0;
+		ArrayList<Integer> oMaxSectors = new ArrayList<Integer>();
+
+		for (int iSector= 0; iSector < 18; iSector++)
+		{
+			if (oFilteredSectorMap.get(iSector) > dSectorpr)
+			{
+				dSectorpr = oFilteredSectorMap.get(0);
+				if (oMaxSectors.size() == 1)
+					oMaxSectors.set(0, iSector);
+				else
+					oMaxSectors.add(iSector);
+			}
+			else if (oFilteredSectorMap.get(iSector) == dSectorpr)
+				oMaxSectors.add(iSector);
+		}
 
 
-		if (iFirstMaxSectorContainer  > 0 && iSecondMaxSectorContainer > 0)
+		//One max
+		if (oMaxSectors.size() == 1)
 		{
-			//two max
-			dDeg = (GetDeg(iFirstMaxSectorContainer) + GetDeg(iSecondMaxSectorContainer)) / 2;
-		}
-		else if (iFirstMaxSectorContainer  > 0)
-		{
-			//one max
-			dDeg = GetDeg(iFirstMaxSectorContainer);
-		}
-		else
-		{
-			// variabile
-			dDeg = -1;
+			dDeg = GetDeg(oMaxSectors.get(0));
+			return dDeg;
 		}
 
-		return dDeg;
+		//two max
+		if (oMaxSectors.size() == 2 && 
+				((oMaxSectors.get(1) == oMaxSectors.get(1) + 1 || (oMaxSectors.get(1) == 16 && oMaxSectors.get(1) == 1)) && 
+						oMaxSectors.get(0) != 0 && oMaxSectors.get(1) != 17))
+		{
+			dDeg = (GetDeg(oMaxSectors.get(0)) + GetDeg(oMaxSectors.get(1))) / 2;
+			return dDeg;
+		}
+
+		//più di due massimi o due massimi non confinanti
+		return -1.0;
+
+
 	}
 
 	private int GetSector(double dDirection)
@@ -1144,7 +1219,7 @@ public class OmirlDaemon {
 	{
 		switch (iSector) {
 		case 16:
-			return 0;
+			return 360;
 		case 15:
 			return 348.75 - 11.25;
 		case 14:
@@ -1175,6 +1250,8 @@ public class OmirlDaemon {
 			return 56.25 - 11.25;
 		case 1:
 			return 33.75 - 11.25;
+		case 0:
+			return 0;
 
 		default:
 			return -1;
@@ -3078,6 +3155,12 @@ public class OmirlDaemon {
 				oViewModel.setValue(oViewModel.getValue()*10.0);
 			}			
 		}
+		else if (sType == "boa")
+		{
+			for (SensorViewModel oViewModel : aoSensorList) {
+				oViewModel.setValue(oViewModel.getValue()/10.0);
+			}	
+		}
 	}
 
 
@@ -3568,25 +3651,25 @@ public class OmirlDaemon {
 				oGalleryVM.setSubVarialbe(oVariable.getSubVarialbe());
 				DateTime oDate = new DateTime(oActualDate.getYear(), oActualDate.getMonth()+1, oActualDate.getDate(),iHourFolder , 0);
 				oGalleryVM.setRefDateMin(oDate.toDate());
-				
-				
+
+
 
 				String sImagesPath = "img/gallery/" + oDateFormat.format(oActualDate);
-				
+
 				if (sHourFolder.isEmpty() == false)
 				{
 					sImagesPath+="/" + sHourFolder;
 				}
-				
+
 				for (File oImage : aoImages) {
 					ModelImage oImageVM = new ModelImage();
 					oImageVM.setDescription("");
 					oImageVM.setImageLink(sImagesPath+"/" + oImage.getName());
 					oGalleryVM.getImages().add(oImageVM);
 				}
-				
+
 				String sOutFileName = oGalleryInfo.getCodeModel()+oVariable.getCodeVariable()+oVariable.getCodeSubVariable()+".xml";
-				
+
 				try {
 					SerializationUtils.serializeObjectToXML(sFullDir+"/"+sOutFileName, oGalleryVM);
 				} catch (Exception e) {
