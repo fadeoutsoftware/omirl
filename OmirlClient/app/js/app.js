@@ -42,7 +42,8 @@ var omirlApp = angular.module('omirl', [
     'omirl.galleryService',
     'angular-flexslider',
     'pascalprecht.translate',
-    'omirl.translateService'
+    'omirl.translateService',
+    'omirl.elevateZoomDirective'
 ]);
 
 omirlApp.config(['$httpProvider', '$translateProvider', function($httpProvider, $translateProvider) {

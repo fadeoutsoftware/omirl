@@ -38,7 +38,7 @@ var MapController = (function () {
         // Text to be used on the hover for Map legend
         this.m_sMapLegendHover = "";
         // Text to set the selected Map layer
-        this.m_sMapLegendSelected = "Mappe";
+        this.m_sMapLegendSelected = "MAP_T_LEGENDSELECTED";
         // Text to set the selected Map third level
         this.m_sMapThirdLevelSelected = "";
         // Flag to show or not the Map third Level
@@ -291,6 +291,9 @@ var MapController = (function () {
                 if (oControllerVar.m_oSelectedSensorLink != null) {
                     oControllerVar.showStationsLayer(oControllerVar.m_oSelectedSensorLink);
                 }
+
+                if (oControllerVar.m_oConstantsService.isNowMode())
+                    oControllerVar.m_oReferenceDate = new Date();
             },
             this.m_oConstantsService.getRefreshRateMs());
 
@@ -660,7 +663,7 @@ var MapController = (function () {
         }
         else {
             // No is a Back Click
-            if (!this.m_bDynamicLayerActive) this.m_sMapLegendSelected = "Mappe";
+            if (!this.m_bDynamicLayerActive) this.m_sMapLegendSelected = "MAP_T_LEGENDSELECTED";
         }
 
         // Clear all selection flags
@@ -752,7 +755,7 @@ var MapController = (function () {
 
                 if (!bIsSelected) {
 
-                    this.setSelectedMapLinkOnScreen(this,oMapLink);
+                    //this.setSelectedMapLinkOnScreen(this,oMapLink);
                     this.selectedDynamicLayer(oMapLink, this.m_sMapThirdLevelSelectedModifier);
                 }
                 else {
@@ -842,6 +845,8 @@ var MapController = (function () {
 
         this.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
 
+            oController.setSelectedMapLinkOnScreen(oController,oMapLink);
+
             if (data.StringValue != null) {
                 // Create WMS Layer
                 var oLayer = new OpenLayers.Layer.WMS(oMapLink.description, oMapLink.layerWMS, {
@@ -861,10 +866,16 @@ var MapController = (function () {
                 oController.m_oLayerService.setDynamicLayer(oLayer);
                 oController.m_oMapService.map.addLayer(oLayer);
                 oController.m_oMapService.map.setLayerIndex(oLayer, oController.m_oLayerService.getBaseLayers().length);
+
             }
         }).error(function (data, status) {
-
+            oController.setSelectedMapLinkOnScreen(oController,oController.m_oSelectedMapLink);
+            oController.m_oTranslateService('ERRORCONTACTSERVER').then(function(error){
+                alert(error);
+            });
         });
+
+
 
     }
 
@@ -2153,8 +2164,9 @@ var MapController = (function () {
             },
             title:  oFeature.attributes.name + " - " + sBasin + "",
             position: {my: "left top", at: "left top"},
-            width: 660,
-            height: 495
+            width: 'auto',
+            height: 600,
+            dialogClass:'sectionChartDialog'
         };
 
         this.m_oDialogService.open(sSectionCode,"sectionChart.html", model, options)

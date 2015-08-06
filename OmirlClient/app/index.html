@@ -287,6 +287,7 @@
     <!--script src="js/directives/StockDirective.js"></script-->
     <script src="js/directives/ChartDirective.js"></script>
     <script src="js/directives/SidebarMenuDirective.js"></script>
+    <script src="js/directives/ElevateZoomDirective.js"></script>
     
     <!-- Omirl Services -->
     <script src="js/services/translateService.js"></script>
@@ -321,6 +322,7 @@
     <script src="js/app.js"></script>
     <script src="lib/angular-translate/angular-translate.min.js" type="text/javascript"></script>
     <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js" type="text/javascript"></script>
+    <script src="lib/elevatezoom-master/jquery.elevateZoom-3.0.8.min.js" type="text/javascript"></script>
 <!-- Custom JavaScript for the Side Menu and Smooth Scrolling -->
 <script>
     $("#menu-close").click(function(e) {
@@ -431,8 +433,8 @@ dialogCtrl controller in app.js.
         <div id="loading" class="loading" ng-show="m_oController.isLoadingVisibile()" ></div>
         <!--div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
         <!--div omirl-high-chart="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
-        <div>
-            <img src="{{m_oController.getImageLink()}}">
+        <div class="img-resize-ratio">
+            <img elevate-zoom ng-src="{{m_oController.getImageLink()}}" data-zoom-image="{{m_oController.getImageLink()}}">
         </div>
 
         <div ng-repeat="oOtherChart in m_oController.getOtherLinks()"
@@ -443,16 +445,18 @@ dialogCtrl controller in app.js.
                  ng-click="m_oController.otherLinkClicked(oOtherChart)"/>
         </div>
 
-        <!--div class="col-md-1 col-xs-1 map-firstlevel-icon"
-             tooltip-popup-delay="500" tooltip="Ingrandisci">
+        <!--
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" tooltip="{{'INDEX_T_INGRANDISCI' | translate}}">
             <img class="img-map-firstlevel-icon" src="img/zoom_in.png"
                  ng-click="m_oController.zoomIn()"/>
         </div>
 
         <div class="col-md-1 col-xs-1 map-firstlevel-icon"
-             tooltip-popup-delay="500" tooltip="Riduci">
+             tooltip-popup-delay="500" tooltip="{{'INDEX_T_RIDUCI' | translate}}">
             <img class="img-map-firstlevel-icon" src="img/zoom_out.png"
                  ng-click="m_oController.zoomOut()"/>
-        </div-->
+        </div>
+        -->
     </div>
 </script>

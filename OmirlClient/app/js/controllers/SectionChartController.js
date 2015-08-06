@@ -28,10 +28,13 @@ var SectionChartController = (function() {
         var oControllerVar = this;
 
         oControllerVar.LoadData();
+
     }
 
+
     SectionChartController.prototype.getImageLink = function() {
-        return this.m_sImageLink;
+        //return this.m_sImageLink;
+        return 'http://93.62.155.217:8080/Omirl/' + this.m_sImageLink;
     }
 
     SectionChartController.prototype.LoadData = function () {
@@ -131,7 +134,7 @@ var SectionChartController = (function() {
                     var oOtherChartLink = {};
                     oOtherChartLink.sensorType = sType;
 
-                    if (oControllerVar.m_sChartType == sType)
+                    if (oOtherLink.sensorType == sType)
                     {
                         oOtherChartLink.isActive = true;
                     }
@@ -157,23 +160,6 @@ var SectionChartController = (function() {
             oControllerVar.m_oLog.error('Error Contacting Omirl Server');
         });
 
-    }
-
-    SectionChartController.prototype.zoomIn = function() {
-        //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sSectionCode);
-        this.m_iHeight *= 1.1;
-        this.m_iWidth *= 1.1;
-        this.LoadData();
-        this.addSeriesToChart();
-    }
-
-    SectionChartController.prototype.zoomOut = function() {
-        //alert('out');
-
-        this.m_iHeight /= 1.1;
-        this.m_iWidth /= 1.1;
-        this.LoadData();
-        this.addSeriesToChart();
     }
 
     SectionChartController.prototype.getHeight = function() {

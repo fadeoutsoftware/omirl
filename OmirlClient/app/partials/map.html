@@ -41,7 +41,7 @@
             <ul class="map-weather-panel">
                 <li class="map-weather-panel-icon"
                     ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsWeatherActive}"
-                    tooltip-popup-delay="500" tooltip="Situazione Attuale del Tempo">
+                    tooltip-popup-delay="500" tooltip="{{'MAP_T_SITUAZIONETEMPO' | translate}}">
                     <img class="img-map-firstlevel-icon"
                          ng-src="{{m_oController.m_bIsWeatherActive == true && 'img/chetempofa_on3.png' || 'img/chetempofa.png'}}"
                          ng-click="m_oController.ToggleWeatherLayer()"/>
@@ -49,7 +49,7 @@
                 <!--sfondi-->
 
                 <li class="map-base-layer dropdown">
-                    <a id="basemaps" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="Sfondo"><i
+                    <a id="basemaps" data-toggle="dropdown" tooltip-popup-delay="500" tooltip="{{'MAP_T_SFONDO' | translate}}"><i
                             class="icon icon-earth2"></i></a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="statics">
                         <li role="presentation">
@@ -173,7 +173,7 @@
                                 <div class="map-text-legend">
 
 
-                                    <div class="map-text-legend-selected">{{m_oController.m_sMapLegendSelected}}</div>
+                                    <div class="map-text-legend-selected">{{m_oController.m_sMapLegendSelected | translate}}</div>
 
 
                                     <div class="map-text-legend-hover">{{m_oController.m_sMapLegendHover}}</div>
@@ -189,12 +189,12 @@
                             <ul class="row dropdown">
                                 <li ng-show="m_oController.m_bShowThirdLevel">
                                     <button type="button" class="btn btn-info dropdown-toggle map-third-level-link"
-                                            data-toggle="dropdown">{{m_oController.m_sMapThirdLevelSelected}}&nbsp;<span
+                                            data-toggle="dropdown">{{m_oController.m_sMapThirdLevelSelected | translate}}&nbsp;<span
                                             class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li ng-repeat="oThirdLevel in m_oController.getMapThirdLevels()"><a
-                                                ng-click="m_oController.mapThirdLevelClicked(oThirdLevel)">{{oThirdLevel.description}}</a>
+                                                ng-click="m_oController.mapThirdLevelClicked(oThirdLevel)">{{oThirdLevel.description | translate}}</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -205,7 +205,7 @@
                                 <div ng-repeat="oMapLink in m_oController.getMapLinks()"
                                      class="col-md-1 col-xs-1 map-firstlevel-icon"
                                      ng-class="{'map-firstlevel-icon-selected': oMapLink.selected}"
-                                     tooltip-popup-delay="500" tooltip="{{oMapLink.description}}"><img
+                                     tooltip-popup-delay="500" tooltip="{{oMapLink.description | translate}}"><img
                                         class="img-map-firstlevel-icon" src="{{oMapLink.link}}"
                                         ng-click="m_oController.mapLinkClicked(oMapLink)"/></div>
                             </div>
@@ -227,7 +227,7 @@
                         <div class="map-accordion-content">
                             <div class="row">
                                 <div class="map-text-legend">
-                                    <div class="map-text-legend-selected">{{m_oController.m_sHydroLegendSelected}}</div>
+                                    <div class="map-text-legend-selected">{{m_oController.m_sHydroLegendSelected | translate}}</div>
                                     <div class="map-text-legend-hover">{{m_oController.m_sHydroLegendHover}}</div>
                                 </div>
                                 <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
@@ -241,7 +241,7 @@
                                 <div ng-repeat="oHydroLink in m_oController.getHydroLinks()"
                                      class="col-md-1 col-xs-1 map-firstlevel-icon"
                                      ng-class="{'map-firstlevel-icon-selected': oHydroLink.selected}"
-                                     tooltip-popup-delay="500" tooltip="{{oHydroLink.description}}"><img
+                                     tooltip-popup-delay="500" tooltip="{{oHydroLink.description | translate}}"><img
                                         class="img-map-firstlevel-icon" src="{{oHydroLink.link}}"
                                         ng-click="m_oController.HydroLinkClicked(oHydroLink)"/></div>
                             </div>
@@ -269,7 +269,7 @@
                         <div class="map-accordion-content">
                             <div class="row">
                                 <div class="map-text-legend">
-                                    <div class="map-text-legend-selected">{{m_oController.m_sRadarLegendSelected}}</div>
+                                    <div class="map-text-legend-selected">{{m_oController.m_sRadarLegendSelected | translate}}</div>
                                     <div class="map-text-legend-hover">{{m_oController.m_sRadarLegendHover}}</div>
                                 </div>
                                 <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
@@ -283,7 +283,7 @@
                                 <div ng-repeat="oRadarLink in m_oController.getRadarLinks()"
                                      class="col-md-1 col-xs-1 map-firstlevel-icon"
                                      ng-class="{'map-firstlevel-icon-selected': oRadarLink.selected}"
-                                     tooltip-popup-delay="500" tooltip="{{oRadarLink.description}}"><img
+                                     tooltip-popup-delay="500" tooltip="{{oRadarLink.description | translate}}"><img
                                         class="img-map-firstlevel-icon" src="{{oRadarLink.link}}"
                                         ng-click="m_oController.RadarLinkClicked(oRadarLink)"/></div>
                             </div>
@@ -305,7 +305,7 @@
                         <div class="map-accordion-content">
                             <div class="row">
                                 <div class="map-text-legend">
-                                    <div class="map-text-legend-selected">{{m_oController.m_sSatelliteLegendSelected}}</div>
+                                    <div class="map-text-legend-selected">{{m_oController.m_sSatelliteLegendSelected | translate}}</div>
                                     <div class="map-text-legend-hover">{{m_oController.m_sSatelliteLegendHover}}</div>
                                 </div>
                                 <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
@@ -319,7 +319,7 @@
                                 <div ng-repeat="oSatelliteLink in m_oController.getSatelliteLinks()"
                                      class="col-md-1 col-xs-1 map-firstlevel-icon"
                                      ng-class="{'map-firstlevel-icon-selected': oSatelliteLink.selected}"
-                                     tooltip-popup-delay="500" tooltip="{{oSatelliteLink.description}}"><img
+                                     tooltip-popup-delay="500" tooltip="{{oSatelliteLink.description | translate}}"><img
                                         class="img-map-firstlevel-icon" src="{{oSatelliteLink.link}}"
                                         ng-click="m_oController.SatelliteLinkClicked(oSatelliteLink)"/></div>
                             </div>

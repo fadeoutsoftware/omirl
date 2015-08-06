@@ -50,6 +50,10 @@ angular.module('omirl.stationsService', ['omirl.ConstantsService']).
             return this.m_oHttp.get(this.APIURL + '/stations/'+oStationsLink.code);
         }
 
+        this.getStationsByCode = function(sCode) {
+            return this.m_oHttp.get(this.APIURL + '/stations/'+ sCode);
+        }
+
         this.getStationsOLD = function(oStationsLink) {
             var aoSensors = [
                 {"stationId": 1, "name":"Molino Branca","lat":44.049168,"lon":8.212778,"value":1,"refDate":"/Date(1391542388310)/","shortCode":"STNID","alt":"120m","otherHtml":"","imgPath":"img/marker.png"},

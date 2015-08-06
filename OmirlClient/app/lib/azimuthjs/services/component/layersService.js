@@ -382,6 +382,9 @@ angular.module('az.services').factory('az.services.layersService',function($root
                     strokeWidthFunction: function(feature) {
                         if (feature.attributes.sensorType == 'Vento') return 0;
 
+                        if (feature.attributes.sensorType == 'Sfloc')
+                            return 0;
+
                         if (feature.layer.map.zoom < 12)  return 2;
                         else return 12;
                     },
@@ -460,6 +463,9 @@ angular.module('az.services').factory('az.services.layersService',function($root
                     },
                     graphicNameFunction: function(feature) {
                         if (feature.attributes.sensorType == 'Vento') return null;
+
+                        if (feature.attributes.sensorType == 'Sfloc')
+                            return 'x';
 
                         if (feature.attributes.sensorType == 'Idro') {
                             if (feature.attributes.increment == 0) {

@@ -6,6 +6,12 @@
             <h1 class="medium">{{'MAXTABLE_TITOLO' | translate}}</h1>
         </div>
 
+        <br>
+
+        <div class="row">
+            <h3 class="small">{{'MAXTABLE_SUBTITOLO' | translate}}</h3>
+        </div>
+
         <hr/>
         <div class="container">
             <div class="panel panel-default">
@@ -89,7 +95,7 @@
                         <tbody class="omirltbl">
                         <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().districts | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
                             <td>{{oMaxRow.name}}</td>
-                            <td class="{{oMaxRow.m5BkColor}}"><b>{{oMaxRow.m5val}}</b>&nbsp;{{oMaxRow.m5}}</td>
+                            <td class="{{oMaxRow.m5BkColor}}" ><b>{{oMaxRow.m5val}}</b>&nbsp;{{oMaxRow.m5}}</td>
                             <td class="{{oMaxRow.m15BkColor}}"><b>{{oMaxRow.m15val}}</b>&nbsp;{{oMaxRow.m15}}</td>
                             <td class="{{oMaxRow.m30BkColor}}"><b>{{oMaxRow.m30val}}</b>&nbsp;{{oMaxRow.m30}}</td>
                             <td class="{{oMaxRow.h1BkColor}}"><b>{{oMaxRow.h1val}}</b>&nbsp;{{oMaxRow.h1}}</td>

@@ -5,9 +5,9 @@
 'use strict';
 angular.module('omirl.ConstantsService', []).
     service('ConstantsService', [function () {
-        this.APIURL = 'http://localhost:8080/Omirl/rest';
+        //this.APIURL = 'http://localhost:8080/Omirl/rest';
         //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        //this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
+        this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
 
         this.m_aoSensorLinks = [];
         this.m_aoHydroLinks = [];
@@ -24,6 +24,20 @@ angular.module('omirl.ConstantsService', []).
 
         this.m_sSensorLayerActive = null;
         this.m_bIsMiniVersion=false;
+
+
+        this.isNowMode = function() {
+            if (this.getReferenceDate() != null)
+            {
+                if (this.getReferenceDate() != "")
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
 
         this.setSensorLayerActive = function(oCode) {
             this.m_sSensorLayerActive = oCode;

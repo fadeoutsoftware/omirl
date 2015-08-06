@@ -95,7 +95,7 @@ var MaxTableController = (function() {
     }
 
     MaxTableController.prototype.exportCsv = function() {
-        window.open(this.m_oStationsService.exportCsvStationList(this.m_oSelectedAggregation.code), '_blank', '');
+        window.open(this.m_oTableService.exportCsvMax(), '_blank', '');
     }
 
 
@@ -133,6 +133,8 @@ var MaxTableController = (function() {
     MaxTableController.prototype.TrustDangerousSnippet = function(data) {
         return this.m_oSce.trustAsHtml(data);
     }
+
+
 
 
     MaxTableController.$inject = [

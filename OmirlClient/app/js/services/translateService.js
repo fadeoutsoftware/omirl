@@ -123,12 +123,14 @@ angular.module('omirl.translateService', []).
         }
 
         this.getTranslation = function(key){
-
-                 try {
+            try {
                 return eval('this.' + key);
             }
             catch(err) {
                 return key;
             }
-	}
+        }
+
+
     }]);
+
