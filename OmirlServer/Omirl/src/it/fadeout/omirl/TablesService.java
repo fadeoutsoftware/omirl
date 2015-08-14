@@ -10,21 +10,27 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import it.fadeout.omirl.business.DataChart;
 import it.fadeout.omirl.business.OmirlUser;
+import it.fadeout.omirl.business.StationAnag;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.TableLinkConfig;
+import it.fadeout.omirl.data.StationAnagRepository;
 import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableViewModel;
+import it.fadeout.omirl.viewmodels.MobileStation;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
 import it.fadeout.omirl.viewmodels.SensorValueRowViewModel;
 import it.fadeout.omirl.viewmodels.SensorValueTableViewModel;
+import it.fadeout.omirl.viewmodels.SensorViewModel;
 import it.fadeout.omirl.viewmodels.SummaryInfo;
 import it.fadeout.omirl.viewmodels.TableLink;
 
 import javax.servlet.ServletConfig;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -286,6 +292,55 @@ public class TablesService {
 
 		// Return the list of sensors
 		return oMaxTable;
+	}
+	
+	
+	/**
+	 * Get a list of stations near the device position
+	 * @param dLat
+	 * @param dLat
+	 * @return A list with all the station around the mobile device position
+	 */
+	@GET
+	@Path("/anag/{sCode}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	@Consumes({"application/xml", "application/json", "text/xml"})	
+	public SensorViewModel getStationsAnag(@HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate, @PathParam("sCode") String sCode)
+	{
+		SensorViewModel oViewModel = new SensorViewModel();
+		StationAnagRepository oRepo = new StationAnagRepository();
+		StationAnag oAnag = oRepo.selectByStationCode(sCode);
+		if (oAnag != null)
+		{
+			oViewModel.setMunicipality(oAnag.getMunicipality());
+			oViewModel.setName(oAnag.getName());
+			oViewModel.setShortCode(oAnag.getStation_code());
+		}
+		
+		return oViewModel;
+		
+		
+	}
+	
+	@GET
+	@Path("/anagByName/{sName}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	@Consumes({"application/xml", "application/json", "text/xml"})	
+	public SensorViewModel getStationsAnagByName(@HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate, @PathParam("sName") String sName)
+	{
+		SensorViewModel oViewModel = new SensorViewModel();
+		StationAnagRepository oRepo = new StationAnagRepository();
+		StationAnag oAnag = oRepo.selectByName(sName);
+		if (oAnag != null)
+		{
+			oViewModel.setMunicipality(oAnag.getMunicipality());
+			oViewModel.setName(oAnag.getName());
+			oViewModel.setShortCode(oAnag.getStation_code());
+		}
+		
+		return oViewModel;
+		
+		
 	}
 
 

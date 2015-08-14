@@ -67,7 +67,6 @@ public class Omirl extends Application {
 		// Read the configuration
 		ReadConfiguration(sConfigFilePath);
 		
-		
 		// Uncomment to write a test configuration!
 		//WriteTestConfiguration("C:\\temp\\OmirlTEST.xml");
 	}
