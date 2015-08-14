@@ -9,17 +9,13 @@
 
         <br>
 
-        <div class="row">
-            <h3 class="small">{{'SUMMARY_SUBTITOLO' | translate}}</h3>
-        </div>
-
         <hr/>
 
 
         <div class="row">
             <!--Panel content-->
             <table class="omirltbl" >
-                <caption class="omirltbl"></caption>
+                <caption>{{'SUMMARY_SUBTITOLO' | translate}}</caption>
                 <thead class="omirltbl">
                     <tr>
                         <th scope="col" rowspan="2" style="width: 20%">{{'SUMMARY_PROVINCIA' | translate}}</th>
@@ -36,9 +32,9 @@
                 <tr ng-repeat="oDistrictRow in m_oController.getTemperatureDistrictSummary()"  ng-class="{odd: bHover}" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false">
                     <th scope="row">{{oDistrictRow.description | translate}}</th>
                     <td>{{oDistrictRow.min | number:1}} {{m_oController.getFormattedRefDate(oDistrictRow.refDateMin)}}</td>
-                    <td>{{oDistrictRow.stationMin}}</td>
+                    <td ng-click="m_oController.stationClicked(oDistrictRow.stationMin, 'Temp')" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oDistrictRow.stationMin}}</td>
                     <td>{{oDistrictRow.max | number:1}} {{m_oController.getFormattedRefDate(oDistrictRow.refDateMax)}}</td>
-                    <td>{{oDistrictRow.stationMax}}</td>
+                    <td ng-click="m_oController.stationClicked(oDistrictRow.stationMax, 'Temp')" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oDistrictRow.stationMax}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -62,9 +58,9 @@
                 <tr ng-repeat="oAlertRow in m_oController.getTemperatureAlertSummary()" ng-class="{odd: bHover}" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false">
                     <th scope="row">{{oAlertRow.description | translate}}</th>
                     <td>{{oAlertRow.min  | number:1}} {{m_oController.getFormattedRefDate(oAlertRow.refDateMin)}}</td>
-                    <td>{{oAlertRow.stationMin}}</td>
+                    <td ng-click="m_oController.stationClicked(oAlertRow.stationMin, 'Temp')" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oAlertRow.stationMin}}</td>
                     <td>{{oAlertRow.max  | number:1}} {{m_oController.getFormattedRefDate(oAlertRow.refDateMax)}}</td>
-                    <td>{{oAlertRow.stationMax}}</td>
+                    <td ng-click="m_oController.stationClicked(oAlertRow.stationMax, 'Temp')" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oAlertRow.stationMax}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -90,9 +86,9 @@
                     <tr ng-repeat="oWindRow in m_oController.getMaxWindSummary()" ng-class="{odd: bHover}" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false">
                         <th scope="row">{{oWindRow.description | translate}}</th>
                         <td>{{oWindRow.max  | number:1}} {{m_oController.getFormattedRefDate(oWindRow.refDateWind)}}</td>
-                        <td>{{oWindRow.stationMax}}</td>
+                        <td ng-click="m_oController.stationClicked(oWindRow.stationMax, 'Vento')" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oWindRow.stationMax}}</td>
                         <td>{{oWindRow.gust  | number:1}} {{m_oController.getFormattedRefDate(oWindRow.refDateGust)}}</td>
-                        <td>{{oWindRow.stationGust}}</td>
+                        <td ng-click="m_oController.stationClicked(oWindRow.stationGust, 'Vento')" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oWindRow.stationGust}}</td>
                     </tr>
                 </tbody>
             </table>

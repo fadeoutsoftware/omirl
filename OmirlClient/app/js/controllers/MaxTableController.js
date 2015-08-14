@@ -3,7 +3,7 @@
  */
 
 var MaxTableController = (function() {
-    function MaxTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, oSce) {
+    function MaxTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, oSce, $translate) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -14,6 +14,7 @@ var MaxTableController = (function() {
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
         this.m_oSce = oSce;
+        this.m_oTranslateService = $translate;
         this.m_bDowloadEnabled = false;
 
         this.m_aoMaxTable = [];
@@ -134,7 +135,49 @@ var MaxTableController = (function() {
         return this.m_oSce.trustAsHtml(data);
     }
 
+    MaxTableController.prototype.stationClicked = function(sCode) {
 
+        var sStationCode = sCode;
+        var oControllerVar = this;
+        var sSensorType = 'Temp';
+        var sName = "";
+        var sMunicipality = "";
+        oControllerVar.m_oTableService.getStationAnag(sStationCode).success(function (data) {
+
+            if (angular.isDefined(data))
+            {
+                sMunicipality = data.municipality;
+                sName = data.name;
+            }
+
+            // The data for the dialog
+            var model = {
+                "stationCode": sStationCode,
+                "chartType": sSensorType,
+                "municipality": sMunicipality,
+                "name": sName
+            };
+
+            oControllerVar.m_oTranslateService('DIALOGTITLE', {name: sName, municipality: sMunicipality}).then(function (text) {
+                // jQuery UI dialog options
+                var options = {
+                    autoOpen: false,
+                    modal: false,
+                    width: 'auto',
+                    resizable: false,
+                    close: function (event, ui) {
+                        // Remove the chart from the Chart Service
+                        oControllerVar.m_oChartService.removeChart(sStationCode);
+                    },
+                    title: text
+                };
+
+                oControllerVar.m_oDialogService.open(sStationCode, "stationsChart.html", model, options);
+            });
+
+
+        });
+    };
 
 
     MaxTableController.$inject = [
@@ -146,7 +189,8 @@ var MaxTableController = (function() {
         'ChartService',
         '$location',
         'TableService',
-        '$sce'
+        '$sce',
+        '$translate'
     ];
     return MaxTableController;
 }) ();

@@ -264,4 +264,12 @@ angular.module('omirl.TableService', ['omirl.ConstantsService']).
             return sAPIURL + '/tables/exportmaxvalues/';
         }
 
+        this.getStationAnag = function(sCode) {
+            return this.m_oHttp.get(this.APIURL + '/tables/anag/'+ sCode);
+        }
+
+        this.getStationAnagByName = function(sName) {
+            return this.m_oHttp.get(this.APIURL + '/tables/anagByName/'+ sName);
+        }
+
     }]);

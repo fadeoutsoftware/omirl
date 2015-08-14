@@ -3,13 +3,15 @@
  */
 
 var SummaryTableController = (function() {
-    function SummaryTableController($scope, $log, $location, oConstantService, oTableService) {
+    function SummaryTableController($scope, $log, $location, oConstantService, oTableService, $translate, oDialogService) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oLog = $log;
         this.m_oLocation = $location;
         this.m_oConstantsService = oConstantService;
         this.m_oTableService = oTableService;
+        this.m_oTranslateService = $translate;
+        this.m_oDialogService = oDialogService;
 
         this.m_aoAlertReturn = [];
 
@@ -94,12 +96,59 @@ var SummaryTableController = (function() {
         return oDay+'/' + oMonth + '/' + oYear;
     }
 
+    SummaryTableController.prototype.stationClicked = function(sName, sSensorType) {
+
+        var sStationCode = "";
+        var oControllerVar = this;
+        var sSensorType = sSensorType;
+        var sName = sName;
+        var sMunicipality = "";
+        oControllerVar.m_oTableService.getStationAnagByName(sName).success(function (data) {
+
+            if (angular.isDefined(data))
+            {
+                sMunicipality = data.municipality;
+                sName = data.name;
+                sStationCode = data.shortCode
+            }
+
+            // The data for the dialog
+            var model = {
+                "stationCode": sStationCode,
+                "chartType": sSensorType,
+                "municipality": sMunicipality,
+                "name": sName
+            };
+
+            oControllerVar.m_oTranslateService('DIALOGTITLE', {name: sName, municipality: sMunicipality}).then(function (text) {
+                // jQuery UI dialog options
+                var options = {
+                    autoOpen: false,
+                    modal: false,
+                    width: 'auto',
+                    resizable: false,
+                    close: function (event, ui) {
+                        // Remove the chart from the Chart Service
+                        oControllerVar.m_oChartService.removeChart(sStationCode);
+                    },
+                    title: text
+                };
+
+                oControllerVar.m_oDialogService.open(sStationCode, "stationsChart.html", model, options);
+            });
+
+
+        });
+    };
+
     SummaryTableController.$inject = [
         '$scope',
         '$log',
         '$location',
         'ConstantsService',
-        'TableService'
+        'TableService',
+        '$translate',
+        'dialogService',
     ];
     return SummaryTableController;
 }) ();

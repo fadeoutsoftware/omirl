@@ -1346,3 +1346,8 @@ tfoot.omirltbl td {
 tbody.omirltbl tr.odd td {
     background:#bcd9e1;
 }
+
+tbody.omirltbl td.odd {
+    background:#bcd9e1;
+    cursor:pointer;
+}
