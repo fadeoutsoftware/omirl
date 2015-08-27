@@ -16,6 +16,7 @@ angular.module('omirl.elevateZoomDirective', []).
                     if (!attrs.zoomImage) return;
                     if (attrs.zoomImage.indexOf("nodata") > -1) return;
                     element.attr('data-zoom-image',attrs.zoomImage);
+                    $(element).data('zoom-image', attrs.zoomImage);
                     $(element).elevateZoom({
                         zoomType				: "inner",
                         cursor: "crosshair",
