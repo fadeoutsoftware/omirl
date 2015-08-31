@@ -596,7 +596,7 @@ var ChartController = (function() {
                             if (oSerie.data[iElement][1] != null) {
 
                                 //var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'windArrow'}};
-                                var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'url(img/windDirections/' + oSerie.data[iElement][1] + '.png)'}};
+                                var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'url(img/windDirections/' + oSerie.data[iElement][1] + '.png)'}, toolText: oSerie.data[iElement][1]};
                                 oSerieCustomMarker.data.push(oData);
                             }
                         }
@@ -604,6 +604,11 @@ var ChartController = (function() {
                         oSerie = oSerieCustomMarker;
                         //wind direction arrow
                         //oControllerVar.drawWindArrows(oChart, oSerie);
+
+                        oSerie.tooltip = {
+                            pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
+                            '<td style="text-align: right"><b>{point.toolText}</b></td></tr>'
+                        }
 
                         // I need at least two points
                         if (oSerie.data.length>1) {

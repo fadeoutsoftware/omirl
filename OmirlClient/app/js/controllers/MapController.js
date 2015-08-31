@@ -288,12 +288,18 @@ var MapController = (function () {
 
         // Add Auto Refresh Interval Callback
         this.m_oStopTimerPromise = this.m_oInterval(function() {
+                /*
                 if (oControllerVar.m_oSelectedSensorLink != null) {
                     oControllerVar.showStationsLayer(oControllerVar.m_oSelectedSensorLink);
                 }
+                */
 
                 if (oControllerVar.m_oConstantsService.isNowMode())
+                {
                     oControllerVar.m_oReferenceDate = new Date();
+                }
+
+                oControllerVar.refreshFullMap(oControllerVar);
             },
             this.m_oConstantsService.getRefreshRateMs());
 
@@ -843,11 +849,18 @@ var MapController = (function () {
             sLayerCode = asStrings[1];
         }
 
+        var sOldLayerIdentifier = "";
+
+        if (this.m_oLayerService.getDynamicLayer() != null)
+        {
+            sOldLayerIdentifier = this.m_oLayerService.getDynamicLayer().params.LAYERS;
+        }
+
         this.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
 
             oController.setSelectedMapLinkOnScreen(oController,oMapLink);
 
-            if (data.StringValue != null) {
+            if (data.StringValue != null && data.StringValue != sOldLayerIdentifier) {
                 // Create WMS Layer
                 var oLayer = new OpenLayers.Layer.WMS(oMapLink.description, oMapLink.layerWMS, {
                     layers: data.StringValue,
@@ -867,6 +880,18 @@ var MapController = (function () {
                 oController.m_oMapService.map.addLayer(oLayer);
                 oController.m_oMapService.map.setLayerIndex(oLayer, oController.m_oLayerService.getBaseLayers().length);
 
+            }
+            else if (data.StringValue == null)
+            {
+                // Remove last one
+                if (oController.m_oLayerService.getDynamicLayer() != null) {
+                    oController.m_oMapService.map.removeLayer(oController.m_oLayerService.getDynamicLayer());
+                    oController.m_oLayerService.setDynamicLayer(null);
+                }
+
+                oController.m_oTranslateService('MAP_NOT_AVAILABLE').then(function(msg){
+                    alert(msg);
+                });
             }
         }).error(function (data, status) {
             oController.setSelectedMapLinkOnScreen(oController,oController.m_oSelectedMapLink);
@@ -2694,6 +2719,40 @@ var MapController = (function () {
         this.m_oConstantsService.setReferenceDate(newDate);
         //console.log(newDate);
         //console.log(oldDate);
+    }
+
+
+    MapController.prototype.refreshFullMap = function (oController) {
+        // Selected Map Link
+        if (oController.m_oSelectedMapLink != null)
+        {
+            oController.selectedDynamicLayer(oController.m_oSelectedMapLink,oController.m_sHydroThirdLevelSelectedModifier);
+        }
+
+        // Selected Sensor Link
+        if (oController.m_oSelectedSensorLink != null)
+        {
+            oController.showStationsLayer(oController.m_oSelectedSensorLink);
+        }
+
+        // Selected Hydro Link
+        if (oController.m_oSelectedHydroLink != null)
+        {
+            oController.switchHydroLinkState(true, oController.m_oSelectedHydroLink);
+        }
+
+        // Selected Radar Link
+        if (oController.m_oSelectedRadarLink != null)
+        {
+            oController.switchRadarLinkState(true, oController.m_oSelectedRadarLink);
+        }
+
+        // Selected Satellite Link
+        if (oController.m_oSelectedSatelliteLink != null)
+        {
+            oController.switchSatelliteLinkState(true, oController.m_oSelectedSatelliteLink);
+        }
+
     }
 
     MapController.$inject = [

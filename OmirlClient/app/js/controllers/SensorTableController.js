@@ -371,7 +371,7 @@ var SensorTableController = (function() {
         var iMonth = oDate.getMonth() + 1;
 
         // Write reference date text
-        return "Valori misurati dalle 00:00 del " + oDate.getDate() + "/" + iMonth + "/" + oDate.getFullYear();
+        return "Valori misurati dalle 00:00 del " + oDate.getDate() + "/" + iMonth + "/" + oDate.getFullYear() + " ore locali";
 
     }
 
