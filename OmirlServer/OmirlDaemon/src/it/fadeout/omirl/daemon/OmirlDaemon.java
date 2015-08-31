@@ -68,7 +68,6 @@ import org.jdom.input.SAXBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
-import org.joda.time.convert.IntervalConverter;
 
 public class OmirlDaemon {
 
@@ -314,6 +313,7 @@ public class OmirlDaemon {
 
 						if (m_oConfig.isEnableCharts())
 						{
+							
 							try {
 
 								// --------------------------------------------------------RAIN CHART
@@ -804,7 +804,9 @@ public class OmirlDaemon {
 							catch(Exception oChartEx) {
 								oChartEx.printStackTrace();
 							}	
-
+							
+							
+							
 							try {
 
 								// --------------------------------------------------------PRESSIONE CHART
