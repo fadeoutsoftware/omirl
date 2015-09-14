@@ -139,7 +139,7 @@ var MaxTableController = (function() {
 
         var sStationCode = sCode;
         var oControllerVar = this;
-        var sSensorType = 'Temp';
+        var sSensorType = 'rain1h';
         var sName = "";
         var sMunicipality = "";
         oControllerVar.m_oTableService.getStationAnag(sStationCode).success(function (data) {

@@ -899,9 +899,86 @@ var MapController = (function () {
                 alert(error);
             });
         });
+    }
 
+    /**
+     * Function called when a Dynamic Layer is set
+     * @param oMapLink Link to the layer
+     * @param sModifier Modifier of the layer Id
+     */
+    MapController.prototype.selectedRadarSatDynamicLayer = function (oMapLink, sModifier) {
 
+        if (!angular.isDefined(sModifier)) {
+            sModifier = "none";
+        }
 
+        if (sModifier == "") {
+            sModifier = "none";
+        }
+
+        var oController = this;
+
+        var sLayerCode = oMapLink.linkCode;
+
+        if (oMapLink.linkCode.indexOf(":")>-1)
+        {
+            var asStrings = oMapLink.linkCode.split(":");
+            if (asStrings != null)
+            {
+                sLayerCode = asStrings[1];
+            }
+        }
+
+        var sOldLayerIdentifier = "";
+
+        if (this.m_oLayerService.getDynamicLayer() != null)
+        {
+            sOldLayerIdentifier = this.m_oLayerService.getDynamicLayer().params.LAYERS;
+        }
+
+        this.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
+
+            //oController.setSelectedMapLinkOnScreen(oController,oMapLink);
+
+            if (data.StringValue != null && data.StringValue != sOldLayerIdentifier) {
+                // Create WMS Layer
+                var oLayer = new OpenLayers.Layer.WMS(oMapLink.description, oMapLink.layerWMS, {
+                    layers: data.StringValue,
+                    transparent: "true",
+                    format: "image/png"
+                });
+                oLayer.isBaseLayer = false;
+
+                // Remove last one
+                if (oController.m_oLayerService.getDynamicLayer() != null) {
+                    oController.m_oMapService.map.removeLayer(oController.m_oLayerService.getDynamicLayer());
+                }
+
+                oLayer.setOpacity(0.6);
+                // Add the new layer to the map
+                oController.m_oLayerService.setDynamicLayer(oLayer);
+                oController.m_oMapService.map.addLayer(oLayer);
+                oController.m_oMapService.map.setLayerIndex(oLayer, oController.m_oLayerService.getBaseLayers().length);
+
+            }
+            else if (data.StringValue == null)
+            {
+                // Remove last one
+                if (oController.m_oLayerService.getDynamicLayer() != null) {
+                    oController.m_oMapService.map.removeLayer(oController.m_oLayerService.getDynamicLayer());
+                    oController.m_oLayerService.setDynamicLayer(null);
+                }
+
+                oController.m_oTranslateService('MAP_NOT_AVAILABLE').then(function(msg){
+                    alert(msg);
+                });
+            }
+        }).error(function (data, status) {
+            //oController.setSelectedMapLinkOnScreen(oController,oController.m_oSelectedMapLink);
+            oController.m_oTranslateService('ERRORCONTACTSERVER').then(function(error){
+                alert(error);
+            });
+        });
     }
 
     /**
@@ -2406,20 +2483,20 @@ var MapController = (function () {
         {
 
             this.setSelectedRadarLinkOnScreen(this,oRadarLink);
-            //this.selectedDynamicLayer(oRadarLink, this.m_sHydroThirdLevelSelectedModifier);
-            alert('attivo ' + oRadarLink.description);
+            this.selectedRadarSatDynamicLayer(oRadarLink, "none");
+            //alert('attivo ' + oRadarLink.description);
         }
         else
         {
 
             // Remove from the map
 
-            //if (this.m_oLayerService.getDynamicLayer() != null) {
-            //    this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
-            //    this.m_oLayerService.setDynamicLayer(null);
-            //}
+            if (this.m_oLayerService.getDynamicLayer() != null) {
+                this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+                this.m_oLayerService.setDynamicLayer(null);
+            }
 
-            alert('DISattivo ' + oRadarLink.description);
+            //alert('DISattivo ' + oRadarLink.description);
 
             this.m_sRadarLegendSelected = oRadarLink.parentDescription;
             this.m_bRadarLayerActive = false;
@@ -2662,20 +2739,20 @@ var MapController = (function () {
         {
 
             this.setSelectedSatelliteLinkOnScreen(this,oSatelliteLink);
-            //this.selectedDynamicLayer(oRadarLink, this.m_sHydroThirdLevelSelectedModifier);
-            alert('attivo ' + oSatelliteLink.description);
+            this.selectedRadarSatDynamicLayer(oSatelliteLink, "none");
+            //alert('attivo ' + oSatelliteLink.description);
         }
         else
         {
 
             // Remove from the map
 
-            //if (this.m_oLayerService.getDynamicLayer() != null) {
-            //    this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
-            //    this.m_oLayerService.setDynamicLayer(null);
-            //}
+            if (this.m_oLayerService.getDynamicLayer() != null) {
+                this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+                this.m_oLayerService.setDynamicLayer(null);
+            }
 
-            alert('DISattivo ' + oSatelliteLink.description);
+            //alert('DISattivo ' + oSatelliteLink.description);
 
             this.m_sSatelliteLegendSelected = oSatelliteLink.parentDescription;
             this.m_bSatelliteLayerActive = false;
