@@ -37,6 +37,8 @@ public class StationAnag {
 	Integer rain_30m_every;
 	@Column(name="rain_01h_every")
 	Integer rain_01h_every;
+	@Column(name="rain_01h_part_every")
+	Integer rain_01h_part_every;
 	@Column(name="rain_03h_every")
 	Integer rain_03h_every;
 	@Column(name="rain_06h_every")
@@ -329,5 +331,11 @@ public class StationAnag {
 	}
 	public void setMean_snow_depth_every(Integer mean_snow_depth_every) {
 		this.mean_snow_depth_every = mean_snow_depth_every;
+	}
+	public Integer getRain_01h_part_every() {
+		return rain_01h_part_every;
+	}
+	public void setRain_01h_part_every(Integer rain_01h_part_every) {
+		this.rain_01h_part_every = rain_01h_part_every;
 	}
 }

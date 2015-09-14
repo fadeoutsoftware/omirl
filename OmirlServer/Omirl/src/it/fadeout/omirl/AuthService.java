@@ -59,11 +59,11 @@ public class AuthService {
 			return oUserVM;
 		}
 		
+		System.out.println("AuthService.Login: requested access from " + oLoginInfo.getUserId());
+		
 		OmirlUserRepository oOmirlUserRepository = new OmirlUserRepository();
 		
 		boolean bLogged = oOmirlUserRepository.login(oLoginInfo.getUserId(), oLoginInfo.getUserPassword());
-		
-		
 		
 		if (bLogged)
 		{
@@ -95,7 +95,17 @@ public class AuthService {
 				oOpenSessionRepository.Save(oUserSession);
 				
 				oUserVM.setSessionId(sSessionId);
+				
+				System.out.println("AuthService.Login: access succeeded");
 			}
+			else
+			{
+				System.out.println("AuthService.Login: access failed");
+			}
+		}
+		else
+		{
+			System.out.println("AuthService.Login: access failed");
 		}
 		
 		return oUserVM;

@@ -196,9 +196,6 @@ public class OmirlDaemon {
 			return;
 		}
 
-
-
-
 		//TEST
 		//publishMaps();
 		//maxTable();
@@ -268,7 +265,9 @@ public class OmirlDaemon {
 					// For Each
 					for (StationAnag oStationAnag : m_aoAllStations) {
 
-						System.out.println("OmirlDaemon - Station: " + oStationAnag.getStation_code());
+						System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
+						
+						//if (oStationAnag.getStation_code().equals("CRETO")==false) continue;
 
 						ArrayList<String> asOtherLinks = new ArrayList<>();
 
@@ -2424,7 +2423,6 @@ public class OmirlDaemon {
 		DataSerie oDataSerie = new DataSerie();
 
 		if (aoInfo == null) {
-			// TODO
 			System.out.println("SaveStandardChart aoInfo is null");
 			return oDataChart;
 		}

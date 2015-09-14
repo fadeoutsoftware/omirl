@@ -86,8 +86,6 @@ public class ChartService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("ChartService.GetChart: Config Found");
-			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
 			
@@ -105,8 +103,6 @@ public class ChartService {
 			
 			sBasePath += "/charts";
 			
-			System.out.println("ChartService.GetChart: sBasePath = " + sBasePath);
-			
 			// Get The path of the right date
 			String sPath = Omirl.getSubPath(sBasePath, oDate);
 			
@@ -116,7 +112,7 @@ public class ChartService {
 				
 				System.out.println("ChartService.GetChart: searching path " + sPath);
 				
-				// Get The Last File: TODO: here use also the date and get the last before the date!!
+				// Get The Last File
 				File oLastFile = Omirl.lastFileModified(sPath, oDate);
 				
 				// Found?
@@ -131,7 +127,15 @@ public class ChartService {
 						e.printStackTrace();
 					}							
 				}
+				else
+				{
+					System.out.println("ChartService.GetChart: File Not Found with date " + oDate);
+				}
 			}
+		}
+		else
+		{
+			System.out.println("ChartService.GetChart: Config NOT Found");
 		}
 		
 		// Return the list of sensors
@@ -148,7 +152,7 @@ public class ChartService {
 	@Produces({"application/octet-stream"})
 	public Response ExportCsvChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
 		
-	  	System.out.println("ChartService.GetChart: Code = " + sCode + " Chart = " + sChart);
+	  	System.out.println("ChartService.ExportCsvChart: Code = " + sCode + " Chart = " + sChart);
 		
 		// Create return array List
 		DataChart oDataChart = null;
@@ -177,8 +181,6 @@ public class ChartService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("ChartService.GetChart: Config Found");
-			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
 			
@@ -187,7 +189,7 @@ public class ChartService {
 				
 				if (oLinkConfig.getCode().equals(sChart)) {
 					sChart = oLinkConfig.getColumnName();
-					System.out.println("ChartService.GetChart: Column Name = " +sChart);
+					System.out.println("ChartService.ExportCsvChart: Column Name = " +sChart);
 					break;
 				}
 			}
@@ -196,7 +198,7 @@ public class ChartService {
 			
 			sBasePath += "/charts";
 			
-			System.out.println("ChartService.GetChart: sBasePath = " + sBasePath);
+			//System.out.println("ChartService.ExportCsvChart: sBasePath = " + sBasePath);
 			
 			// Get The path of the right date
 			String sPath = Omirl.getSubPath(sBasePath, oDate);
@@ -205,15 +207,15 @@ public class ChartService {
 			
 			if (sPath != null) {
 				
-				System.out.println("ChartService.GetChart: searching path " + sPath);
+				System.out.println("ChartService.ExportCsvChart: searching path " + sPath);
 				
-				// Get The Last File: TODO: here use also the date and get the last before the date!!
+				// Get The Last File
 				File oLastFile = Omirl.lastFileModified(sPath, oDate);
 				
 				// Found?
 				if (oLastFile != null) {
 					
-					System.out.println("ChartService.GetChart: Opening File " + oLastFile.getAbsolutePath());
+					System.out.println("ChartService.ExportCsvChart: Opening File " + oLastFile.getAbsolutePath());
 					
 					try {
 						// Ok read sensors 
@@ -222,7 +224,15 @@ public class ChartService {
 						e.printStackTrace();
 					}							
 				}
+				else
+				{
+					System.out.println("ChartService.ExportCsvChart: File Not Found with date " + oDate);
+				}				
 			}
+		}
+		else
+		{
+			System.out.println("ChartService.ExportCsvChart: Config NOT Found");
 		}
 		
 		final DataChart oFinalDataChart = oDataChart;
@@ -340,8 +350,6 @@ public class ChartService {
 				
 				if (oConfObj != null)  {
 					
-					System.out.println("ChartService.GetSectionChart: Config Found");
-					
 					// Cast Config
 					OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 					
@@ -349,7 +357,7 @@ public class ChartService {
 					
 					sBasePath += "/sections/"+sModel;
 					
-					System.out.println("ChartService.GetSectionChart: sBasePath = " + sBasePath);
+					//System.out.println("ChartService.GetSectionChart: sBasePath = " + sBasePath);
 					
 					// Get The path of the right date
 					String sPath = Omirl.getSubPath(sBasePath, oDate);
@@ -359,6 +367,8 @@ public class ChartService {
 						String sSubPath = "";
 						
 						String sFeaturesPath = sPath + "/features";
+						
+						System.out.println("ChartService.GetSectionChart: Opening Path = " + sFeaturesPath);
 						
 						// Get The Last File
 						File oLastFile = Omirl.lastFileModified(sFeaturesPath, oDate);
@@ -380,6 +390,10 @@ public class ChartService {
 								e.printStackTrace();
 							}							
 						}
+						else
+						{
+							System.out.println("ChartService.GetSectionChart: File Not Found with date " + oDate);
+						}							
 
 						
 						String sFile = "";
@@ -448,7 +462,10 @@ public class ChartService {
 						
 					}
 				}
-				
+				else
+				{
+					System.out.println("ChartService.GetSectionChart: Config NOT Found");
+				}
 			}
 		}
 		catch(Exception oEx) {

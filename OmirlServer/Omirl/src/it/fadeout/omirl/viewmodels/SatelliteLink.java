@@ -19,6 +19,8 @@ public class SatelliteLink {
 	String parentLinkCode;
 	// Parent Code
 	String parentDescription;
+	// Layer WMS Address
+	String layerWMS;		
 	
 	public String getLinkCode() {
 		return linkCode;
@@ -73,5 +75,11 @@ public class SatelliteLink {
 	}
 	public void setHasChilds(boolean hasChilds) {
 		this.hasChilds = hasChilds;
+	}
+	public String getLayerWMS() {
+		return layerWMS;
+	}
+	public void setLayerWMS(String layerWMS) {
+		this.layerWMS = layerWMS;
 	}
 }

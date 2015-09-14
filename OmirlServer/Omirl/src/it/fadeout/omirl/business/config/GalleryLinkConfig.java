@@ -1,9 +1,8 @@
 package it.fadeout.omirl.business.config;
 
-import java.util.ArrayList;
-
 import it.fadeout.omirl.viewmodels.GalleryLink;
-import it.fadeout.omirl.viewmodels.TableLink;
+
+import java.util.ArrayList;
 
 public class GalleryLinkConfig {
 	String code;

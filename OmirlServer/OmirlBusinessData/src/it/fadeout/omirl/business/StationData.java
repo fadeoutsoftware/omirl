@@ -23,6 +23,8 @@ public class StationData {
 	Double rain_30m;
 	@Column(name="rain_01h")
 	Double rain_01h;
+	@Column(name="rain_01h_part")
+	Double rain_01h_part;
 	@Column(name="rain_03h")
 	Double rain_03h;
 	@Column(name="rain_06h")
@@ -306,5 +308,11 @@ public class StationData {
 	}
 	public void setTrend_creek_level(Integer trend_creek_level) {
 		this.trend_creek_level = trend_creek_level;
+	}
+	public Double getRain_01h_part() {
+		return rain_01h_part;
+	}
+	public void setRain_01h_part(Double rain_01h_part) {
+		this.rain_01h_part = rain_01h_part;
 	}
 }

@@ -82,8 +82,6 @@ public class StationsService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("StationsService.GetSensors: Config Found");
-			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 			
@@ -92,7 +90,7 @@ public class StationsService {
 				
 				if (oLinkConfig.getCode().equals(sCode)) {
 					
-					System.out.println("StationsService.GetSensors: Sensor Code Config Found");
+					//System.out.println("StationsService.GetSensors: Sensor Code Config Found");
 					
 					// Get The path of the right date
 					String sPath = Omirl.getSubPath(oLinkConfig.getFilePath(), oDate);
@@ -127,6 +125,10 @@ public class StationsService {
 				
 			}
 		}
+		else
+		{
+			System.out.println("StationsService.GetSensors: Config NOT Found");
+		}
 		
 		
 		// Return the list of sensors
@@ -145,7 +147,7 @@ public class StationsService {
 
 		if (oConfObj != null)  {
 			
-			System.out.println("StationsService.GetStationTypes: Config Found");
+			//System.out.println("StationsService.GetStationTypes: Config Found");
 			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -196,33 +198,11 @@ public class StationsService {
 				iStationsList.add( new MobileStation(stationAnag) );
 			}
 			
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}	
-		
-//		// Get Config
-//		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
-//		
-//		if (oConfObj != null)  {
-//			
-//			System.out.println("StationsService.GetStationsListTable: Config Found");
-//			
-//			// Cast Config
-//			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
-//			
-//			String sPath = oConfig.getFilesBasePath()+"/tables/list/";
-//			sPath+=sCode+".xml";
-//			
-//			System.out.println("StationsService.GetStationsListTable: Opening File " + sPath);
-//
-//			try {
-//				// Ok read sensors 
-//				oTable = (SensorListTableViewModel) Omirl.deserializeXMLToObject(sPath);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}							
-//		}
-		
+				
 		
 		// Return the list of stations
 		return iStationsList;
@@ -246,7 +226,7 @@ public class StationsService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("StationsService.GetStationsListTable: Config Found");
+			//System.out.println("StationsService.GetStationsListTable: Config Found");
 			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -290,7 +270,7 @@ public class StationsService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("StationsService.GetStationsListTable: Config Found");
+			//System.out.println("StationsService.GetStationsListTable: Config Found");
 			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -402,7 +382,7 @@ public class StationsService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("StationsService.GetSensorValuesTable: Config Found");
+			//System.out.println("StationsService.GetSensorValuesTable: Config Found");
 			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -481,7 +461,7 @@ public class StationsService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("StationsService.ExportSensorValuesTable: Config Found");
+			//System.out.println("StationsService.ExportSensorValuesTable: Config Found");
 			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;

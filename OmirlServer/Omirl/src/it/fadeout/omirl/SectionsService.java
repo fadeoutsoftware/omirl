@@ -2,9 +2,7 @@ package it.fadeout.omirl;
 
 import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
-import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.viewmodels.SectionViewModel;
-import it.fadeout.omirl.viewmodels.SensorViewModel;
 
 import java.io.File;
 import java.text.ParseException;
@@ -40,82 +38,86 @@ public class SectionsService {
 	public List<SectionViewModel> GetSection(@PathParam("sCode") String sCode, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
 		
 		System.out.println("SectionsService.GetSection: Code = " + sCode);
-		
 		// Create return array List
-		List<SectionViewModel> aoSections = new ArrayList<>();
-		// Date: will be received from client...
-		Date oDate = new Date();
+		List<SectionViewModel> aoSections = new ArrayList<>();		
 		
-		if (sRefDate!=null)
+		if (Omirl.getUserFromSession(sSessionId)!= null) 
 		{
-			if (sRefDate.equals("") == false) 
+			// Date: will be received from client...
+			Date oDate = new Date();
+			
+			if (sRefDate!=null)
 			{
-				// Try e catch per fare il parsing 
-				// se è valido sostituire oDate.
-				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
-				try {
-					
-					oDate = dtFormat.parse(sRefDate);
-					
-				} catch (ParseException e) {
-					e.printStackTrace();
+				if (sRefDate.equals("") == false) 
+				{
+					// Try e catch per fare il parsing 
+					// se è valido sostituire oDate.
+					SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
+					try {
+						
+						oDate = dtFormat.parse(sRefDate);
+						
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		}
-		
-		// Get Config
-		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
-		
-		if (oConfObj != null)  {
 			
-			System.out.println("SectionsService.GetSection: Config Found");
+			// Get Config
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
 			
-			// Cast Config
-			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
-			
-			// Find the right Sensor Link Configuration
-			for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
+			if (oConfObj != null)  {
 				
-				if (oLinkConfig.getLinkCode().equals(sCode)) {
+				// Cast Config
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				// Find the right Sensor Link Configuration
+				for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
 					
-					System.out.println("SectionsService.GetSection: Section Code Config Found");
-					
-					// Get The path of the right date
-					String sPath = Omirl.getSubPath(oLinkConfig.getFilePath(), oDate);
-					
-					if (sPath != null) {
+					if (oLinkConfig.getLinkCode().equals(sCode)) {
 						
-						sPath = sPath + "/features";
+						//System.out.println("SectionsService.GetSection: Section Code Config Found");
 						
-						System.out.println("SectionsService.GetSection: searching path " + sPath);
+						// Get The path of the right date
+						String sPath = Omirl.getSubPath(oLinkConfig.getFilePath(), oDate);
 						
-						// Get The Last File
-						File oLastFile = Omirl.lastFileModified(sPath, oDate);
-						
-						// Found?
-						if (oLastFile != null) {
+						if (sPath != null) {
 							
-							System.out.println("SectionsService.GetSection: Opening File " + oLastFile.getAbsolutePath());
-
-							try {
-								// Ok read sections 
-								aoSections = (List<SectionViewModel>) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
-							} catch (Exception e) {
-								e.printStackTrace();
-							}							
+							sPath = sPath + "/features";
+							
+							System.out.println("SectionsService.GetSection: searching path " + sPath);
+							
+							// Get The Last File
+							File oLastFile = Omirl.lastFileModified(sPath, oDate);
+							
+							// Found?
+							if (oLastFile != null) {
+								
+								System.out.println("SectionsService.GetSection: Opening File " + oLastFile.getAbsolutePath());
+	
+								try {
+									// Ok read sections 
+									aoSections = (List<SectionViewModel>) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}							
+							}
 						}
-					}
-					else {
-						System.out.println("SectionsService.GetSection: WARNING path is null");
+						else {
+							System.out.println("SectionsService.GetSection: WARNING path is null");
+						}
+						
+						// We are done
+						break;
 					}
 					
-					// We are done
-					break;
 				}
-				
+			}
+			else
+			{
+				System.out.println("SectionsService.GetSection: Config NOT Found");
 			}
 		}
-		
 		
 		// Return the list of sensors
 		return aoSections;

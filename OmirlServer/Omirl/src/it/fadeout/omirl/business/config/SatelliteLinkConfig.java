@@ -17,7 +17,9 @@ public class SatelliteLinkConfig {
 	String filePath;
 	// Link to the legend image path
 	String legendLink;
-	
+	// Link to the WMS server
+	String layerWMS;
+
 	ArrayList<SatelliteLinkConfig> children = new ArrayList<SatelliteLinkConfig>();
 	/*
 	String code;
@@ -78,6 +80,8 @@ public class SatelliteLinkConfig {
 		oLink.setLink(link);
 		oLink.setLinkCode(linkCode);
 		oLink.setSelected(false);
+		oLink.setLayerWMS(layerWMS);
+		
 		if (this.children == null) {
 			oLink.setHasChilds(false);
 		}
@@ -87,5 +91,11 @@ public class SatelliteLinkConfig {
 		}
 		
 		return oLink;
+	}
+	public String getLayerWMS() {
+		return layerWMS;
+	}
+	public void setLayerWMS(String layerWMS) {
+		this.layerWMS = layerWMS;
 	}
 }

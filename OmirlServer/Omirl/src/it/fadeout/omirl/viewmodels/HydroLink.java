@@ -1,8 +1,5 @@
 package it.fadeout.omirl.viewmodels;
 
-import it.fadeout.omirl.business.config.LegendStepConfig;
-
-import java.util.ArrayList;
 
 public class HydroLink {
 	// Unique link id

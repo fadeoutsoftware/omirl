@@ -1,5 +1,9 @@
 package it.fadeout.omirl;
 
+import it.fadeout.omirl.business.config.OmirlNavigationConfig;
+import it.fadeout.omirl.viewmodels.MapInfoViewModel;
+import it.fadeout.omirl.viewmodels.PrimitiveResult;
+
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,14 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import it.fadeout.omirl.business.config.HydroLinkConfig;
-import it.fadeout.omirl.business.config.OmirlNavigationConfig;
-import it.fadeout.omirl.viewmodels.MapInfoViewModel;
-import it.fadeout.omirl.viewmodels.PrimitiveResult;
-import it.fadeout.omirl.viewmodels.SectionViewModel;
-
 import javax.servlet.ServletConfig;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -79,8 +76,6 @@ public class MapService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("MapService.GetLayerId: Config Found");
-			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 			
@@ -107,7 +102,7 @@ public class MapService {
 					aoOutputInfo = (List<MapInfoViewModel>) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
 				} catch (Exception e) {
 					e.printStackTrace();
-				}
+				}	
 				
 				for (MapInfoViewModel oInfo : aoOutputInfo) {
 					if (oInfo.getCode().equals(sCode)) {
@@ -120,6 +115,10 @@ public class MapService {
 				}
 				
 			}
+		}
+		else
+		{
+			System.out.println("MapService.GetLayerId: Config NOT Found");
 		}
 		
 		return oResult;

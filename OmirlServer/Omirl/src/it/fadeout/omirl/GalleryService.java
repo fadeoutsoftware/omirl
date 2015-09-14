@@ -1,19 +1,15 @@
 package it.fadeout.omirl;
 
 import it.fadeout.omirl.business.config.GalleryLinkConfig;
-import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
-import it.fadeout.omirl.business.config.TableLinkConfig;
 import it.fadeout.omirl.viewmodels.GalleryLink;
 import it.fadeout.omirl.viewmodels.ModelGallery;
-import it.fadeout.omirl.viewmodels.TableLink;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.Consumes;
@@ -71,13 +67,11 @@ public class GalleryService {
 		
 		if (oConfObj != null)  {
 			
-			System.out.println("GalleryService.GetGallery: Config Found");
-			
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 			
 			
-			System.out.println("GalleryService.GetGallery: Section Code Config Found");
+			//System.out.println("GalleryService.GetGallery: Section Code Config Found");
 			
 			// Get The path of the right date
 			String sPath = Omirl.getSubPath(oConfig.getFilesBasePath()+"/gallery", oDate);
@@ -115,6 +109,10 @@ public class GalleryService {
 			else {
 				System.out.println("GalleryService.GetGallery: WARNING path is null");
 			}
+		}
+		else
+		{
+			System.out.println("GalleryService.GetGallery: Config NOT Found");
 		}
 		
 		

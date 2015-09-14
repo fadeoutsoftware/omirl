@@ -4,7 +4,6 @@ import it.fadeout.omirl.business.OmirlUser;
 import it.fadeout.omirl.business.OpenSession;
 import it.fadeout.omirl.business.config.GalleryLinkConfig;
 import it.fadeout.omirl.business.config.HydroLinkConfig;
-import it.fadeout.omirl.business.config.LegendConfig;
 import it.fadeout.omirl.business.config.LegendStepConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;

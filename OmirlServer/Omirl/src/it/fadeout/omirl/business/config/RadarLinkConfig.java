@@ -17,6 +17,8 @@ public class RadarLinkConfig {
 	String filePath;
 	// Link to the legend image path
 	String legendLink;
+	// Link to the WMS server
+	String layerWMS;
 	
 	ArrayList<RadarLinkConfig> children = new ArrayList<RadarLinkConfig>();
 	/*
@@ -78,6 +80,8 @@ public class RadarLinkConfig {
 		oLink.setLink(link);
 		oLink.setLinkCode(linkCode);
 		oLink.setSelected(false);
+		oLink.setLayerWMS(layerWMS);
+		
 		if (this.children == null) {
 			oLink.setHasChilds(false);
 		}
@@ -87,5 +91,11 @@ public class RadarLinkConfig {
 		}
 		
 		return oLink;
+	}
+	public String getLayerWMS() {
+		return layerWMS;
+	}
+	public void setLayerWMS(String layerWMS) {
+		this.layerWMS = layerWMS;
 	}
 }

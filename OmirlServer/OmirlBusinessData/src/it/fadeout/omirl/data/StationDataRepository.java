@@ -89,7 +89,7 @@ public class StationDataRepository extends Repository<StationData>{
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(DataSeriePoint.class);
 			oQuery.setParameter(0, oStartDate);
 			if (oQuery.list().size() > 0)
-				aoLastValues =  (List<DataSeriePoint>) oQuery.list();
+				aoLastValues =  (List<DataSeriePoint>) oQuery.list();			
 
 		}
 		catch(Throwable oEx) {
@@ -104,6 +104,57 @@ public class StationDataRepository extends Repository<StationData>{
 			}
 
 		}
+		
+		
+		oSession = null;
+		
+		if (sColumnName.contains("_part"))
+		{
+			
+			try {
+				oSession = HibernateUtils.getSessionFactory().openSession();
+
+				List<DataSeriePoint> aoVeryLastValues = null;
+				
+				String sQuery = "select reference_date, "+ sColumnName +" as value from station_data where station_code = '"+sStationCode+"' and "+sColumnName+" is not null and reference_date >= ? order by reference_date desc limit 1";
+
+				Query oQuery2 = oSession.createSQLQuery(sQuery).addEntity(DataSeriePoint.class);
+				oQuery2.setParameter(0, oStartDate);
+				
+				if (oQuery2.list().size() > 0)
+				{
+					aoVeryLastValues =  (List<DataSeriePoint>) oQuery2.list();
+					
+					if (aoVeryLastValues!=null)
+					{
+						if (aoVeryLastValues.size()>0)
+						{
+							int iOldLast = aoLastValues.size()-1;
+							
+							if (aoVeryLastValues.get(0).getRefDate().getHours() == aoLastValues.get(iOldLast).getRefDate().getHours())
+							{
+								aoLastValues.get(iOldLast).setVal(aoVeryLastValues.get(0).getVal());
+							}
+						}
+					}
+				}
+
+			}
+			catch(Throwable oEx) {
+				System.err.println(oEx.toString());
+				oEx.printStackTrace();
+			}
+			finally {
+				if (oSession!=null) {
+					oSession.flush();
+					oSession.clear();
+					oSession.close();
+				}
+
+			}
+		}
+
+		
 		return aoLastValues;		
 	}
 

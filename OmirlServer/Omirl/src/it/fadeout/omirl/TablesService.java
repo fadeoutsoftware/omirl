@@ -1,5 +1,16 @@
 package it.fadeout.omirl;
 
+import it.fadeout.omirl.business.StationAnag;
+import it.fadeout.omirl.business.config.OmirlNavigationConfig;
+import it.fadeout.omirl.business.config.TableLinkConfig;
+import it.fadeout.omirl.data.StationAnagRepository;
+import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
+import it.fadeout.omirl.viewmodels.MaxTableViewModel;
+import it.fadeout.omirl.viewmodels.PrimitiveResult;
+import it.fadeout.omirl.viewmodels.SensorViewModel;
+import it.fadeout.omirl.viewmodels.SummaryInfo;
+import it.fadeout.omirl.viewmodels.TableLink;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -10,24 +21,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import it.fadeout.omirl.business.DataChart;
-import it.fadeout.omirl.business.OmirlUser;
-import it.fadeout.omirl.business.StationAnag;
-import it.fadeout.omirl.business.config.OmirlNavigationConfig;
-import it.fadeout.omirl.business.config.SensorLinkConfig;
-import it.fadeout.omirl.business.config.TableLinkConfig;
-import it.fadeout.omirl.data.StationAnagRepository;
-import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
-import it.fadeout.omirl.viewmodels.MaxTableViewModel;
-import it.fadeout.omirl.viewmodels.MobileStation;
-import it.fadeout.omirl.viewmodels.PrimitiveResult;
-import it.fadeout.omirl.viewmodels.SensorValueRowViewModel;
-import it.fadeout.omirl.viewmodels.SensorValueTableViewModel;
-import it.fadeout.omirl.viewmodels.SensorViewModel;
-import it.fadeout.omirl.viewmodels.SummaryInfo;
-import it.fadeout.omirl.viewmodels.TableLink;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.Consumes;
@@ -328,14 +321,33 @@ public class TablesService {
 	@Consumes({"application/xml", "application/json", "text/xml"})	
 	public SensorViewModel getStationsAnagByName(@HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate, @PathParam("sName") String sName)
 	{
+		System.out.println("TableService.getStationsAnagByName: start");
+		
 		SensorViewModel oViewModel = new SensorViewModel();
-		StationAnagRepository oRepo = new StationAnagRepository();
-		StationAnag oAnag = oRepo.selectByName(sName);
-		if (oAnag != null)
+		
+		try
 		{
-			oViewModel.setMunicipality(oAnag.getMunicipality());
-			oViewModel.setName(oAnag.getName());
-			oViewModel.setShortCode(oAnag.getStation_code());
+			StationAnagRepository oRepo = new StationAnagRepository();
+			StationAnag oAnag = oRepo.selectByName(sName);
+			if (oAnag != null)
+			{
+				
+				oViewModel.setMunicipality(oAnag.getMunicipality());
+				oViewModel.setName(oAnag.getName());
+				oViewModel.setShortCode(oAnag.getStation_code());
+				
+				System.out.println("TableService.getStationsAnagByName: Name = " + sName + " Code = " + oAnag.getStation_code());
+			}
+			else
+			{
+				System.out.println("TableService.getStationsAnagByName: Name = " + sName + " Not Found");
+			}
+			
+		}
+		catch(Exception oEx)
+		{
+			System.out.println("TableService.getStationsAnagByName: Eccezione");
+			oEx.printStackTrace();
 		}
 		
 		return oViewModel;
