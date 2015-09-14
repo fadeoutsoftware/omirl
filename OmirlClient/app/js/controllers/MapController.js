@@ -2794,6 +2794,7 @@ var MapController = (function () {
     MapController.prototype.onTimeSet = function (newDate, oldDate) {
 
         this.m_oConstantsService.setReferenceDate(newDate);
+        this.refreshFullMap(this);
         //console.log(newDate);
         //console.log(oldDate);
     }
