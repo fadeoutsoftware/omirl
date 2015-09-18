@@ -433,9 +433,6 @@ public class ChartService {
 							else {
 								sRelativePath+="/"+sSubPath + "/" + sSection+".png";
 							}
-
-
-
 							// Save it
 							oDataChart.setsImageLink(sRelativePath);
 							// and log
