@@ -41,6 +41,10 @@
 			<param-name>ConfigFilePath</param-name>
 			<param-value>C:/temp/Omirl/OmirlConfig.xml</param-value>
 		</init-param>
+		<init-param>
+			<param-name>BackDaysSearch</param-name>
+			<param-value>2</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
