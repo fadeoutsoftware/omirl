@@ -424,7 +424,7 @@ public class TablesService {
 
 							if (sPath != null) {
 
-								sPath = sPath + "/features";
+								//sPath = sPath + "/features";
 
 								System.out.println("TablesService.GetSectionBasinsList: searching path " + sPath);
 
