@@ -1268,6 +1268,11 @@ a:hover, a:focus {
     background-color: green;
 }
 
+.models-table-yellow-cell {
+    background-color: yellow;
+}
+
+
 .models-table-red-cell {
     background-color: red;
 }
@@ -1286,6 +1291,16 @@ a:hover, a:focus {
 }
 .max-table-red-cell {
     background-color: red !important;
+}
+
+.link-text-decoration-none
+{
+    text-decoration: none;
+}
+
+.link-color-darkblue
+{
+    color: darkblue;
 }
 /*.table-export-button-panel:hover { font-size: 30px;}*/
 
