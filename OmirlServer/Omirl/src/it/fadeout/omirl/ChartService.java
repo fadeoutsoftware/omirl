@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +38,7 @@ import javax.ws.rs.core.StreamingOutput;
 public class ChartService {
 	@Context
 	ServletConfig m_oServletConfig;
-	
+
 	@GET
 	@Path("/test")
 	@Produces({"application/xml", "application/json", "text/xml"})
@@ -47,7 +48,7 @@ public class ChartService {
 		oTest.StringValue = "Omirl ChartService is Working";
 		return oTest;
 	}
-	
+
 	/**
 	 * Gets sensors data
 	 * @return
@@ -56,14 +57,14 @@ public class ChartService {
 	@Path("/{sCode}/{sChart}")
 	@Produces({"application/xml", "application/json", "text/xml"})
 	public DataChart GetChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
-		
+
 		System.out.println("ChartService.GetChart: Code = " + sCode + " Chart = " + sChart);
-		
+
 		// Create return array List
 		DataChart oDataChart = null;
 		// Date: will be received from client...
 		Date oDate = new Date();
-		
+
 		if (sRefDate!=null)
 		{
 			if (sRefDate.equals("") == false) 
@@ -72,54 +73,58 @@ public class ChartService {
 				// se è valido sostituire oDate.
 				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 				try {
-					
+
 					oDate = dtFormat.parse(sRefDate);
-					
+
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		// Get Config
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
-		
+
 		if (oConfObj != null)  {
-			
+
+			System.out.println("ChartService.GetChart: Config Found");
+
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
-			
+
 			// Find the right Sensor Link Configuration
 			for (SensorLinkConfig oLinkConfig : oConfig.getSensorLinks()) {
-				
+
 				if (oLinkConfig.getCode().equals(sChart)) {
 					sChart = oLinkConfig.getColumnName();
 					System.out.println("ChartService.GetChart: Column Name = " +sChart);
 					break;
 				}
 			}
-			
+
 			String sBasePath = oConfig.getFilesBasePath();
-			
+
 			sBasePath += "/charts";
-			
+
+			System.out.println("ChartService.GetChart: sBasePath = " + sBasePath);
+
 			// Get The path of the right date
 			String sPath = Omirl.getSubPath(sBasePath, oDate);
-			
+
 			sPath += "/" + sCode + "/" + sChart;
-			
+
 			if (sPath != null) {
-				
+
 				System.out.println("ChartService.GetChart: searching path " + sPath);
-				
+
 				// Get The Last File
 				File oLastFile = Omirl.lastFileModified(sPath, oDate);
-				
+
 				// Found?
 				if (oLastFile != null) {
-					
+
 					System.out.println("ChartService.GetChart: Opening File " + oLastFile.getAbsolutePath());
-					
+
 					try {
 						// Ok read sensors 
 						oDataChart = (DataChart) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
@@ -137,12 +142,12 @@ public class ChartService {
 		{
 			System.out.println("ChartService.GetChart: Config NOT Found");
 		}
-		
+
 		// Return the list of sensors
 		return oDataChart;
 	}	
-	
-	
+
+
 	/**
 	 * Gets sensors data
 	 * @return
@@ -151,14 +156,14 @@ public class ChartService {
 	@Path("/csv/{sCode}/{sChart}")
 	@Produces({"application/octet-stream"})
 	public Response ExportCsvChart(@PathParam("sCode") String sCode, @PathParam("sChart") String sChart, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
-		
-	  	System.out.println("ChartService.ExportCsvChart: Code = " + sCode + " Chart = " + sChart);
-		
+
+		System.out.println("ChartService.ExportCsvChart: Code = " + sCode + " Chart = " + sChart);
+
 		// Create return array List
 		DataChart oDataChart = null;
 		// Date: will be received from client...
 		Date oDate = new Date();
-		
+
 		if (sRefDate!=null)
 		{
 			if (sRefDate.equals("") == false) 
@@ -167,56 +172,58 @@ public class ChartService {
 				// se è valido sostituire oDate.
 				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 				try {
-					
+
 					oDate = dtFormat.parse(sRefDate);
-					
+
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		// Get Config
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
-		
+
 		if (oConfObj != null)  {
-			
+
+			System.out.println("ChartService.GetChart: Config Found");
+
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
-			
+
 			// Find the right Sensor Link Configuration
 			for (SensorLinkConfig oLinkConfig : oConfig.getSensorLinks()) {
-				
+
 				if (oLinkConfig.getCode().equals(sChart)) {
 					sChart = oLinkConfig.getColumnName();
 					System.out.println("ChartService.ExportCsvChart: Column Name = " +sChart);
 					break;
 				}
 			}
-			
+
 			String sBasePath = oConfig.getFilesBasePath();
-			
+
 			sBasePath += "/charts";
-			
+
 			//System.out.println("ChartService.ExportCsvChart: sBasePath = " + sBasePath);
-			
+
 			// Get The path of the right date
 			String sPath = Omirl.getSubPath(sBasePath, oDate);
-			
+
 			sPath += "/" + sCode + "/" + sChart;
-			
+
 			if (sPath != null) {
-				
+
 				System.out.println("ChartService.ExportCsvChart: searching path " + sPath);
-				
+
 				// Get The Last File
 				File oLastFile = Omirl.lastFileModified(sPath, oDate);
-				
+
 				// Found?
 				if (oLastFile != null) {
-					
+
 					System.out.println("ChartService.ExportCsvChart: Opening File " + oLastFile.getAbsolutePath());
-					
+
 					try {
 						// Ok read sensors 
 						oDataChart = (DataChart) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
@@ -234,79 +241,78 @@ public class ChartService {
 		{
 			System.out.println("ChartService.ExportCsvChart: Config NOT Found");
 		}
-		
 		final DataChart oFinalDataChart = oDataChart;
-		
-		StreamingOutput stream = new StreamingOutput() {
-			  @Override
-			  public void write(OutputStream os) throws IOException, WebApplicationException {
-				  
-				  DecimalFormat oDecimalFormat = new DecimalFormat("#.##");      
-				  
 
-				  DateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-			      Writer writer = new BufferedWriter(new OutputStreamWriter(os));
-			      
-			      if (oFinalDataChart.getDataSeries()!=null)
-			      {
-				      if (oFinalDataChart.getDataSeries().size()>0) 
-				      {
-				    	  DataSerie oDataSerie =oFinalDataChart.getDataSeries().get(0);
-				    	  
-				    	  if (oDataSerie.getData() != null) {
-				    		  for (int iRows=0; iRows<oDataSerie.getData().size(); iRows++) {
-				    			  Object [] adValues = oDataSerie.getData().get(iRows);
-				    			  
-				    			  Date oDate = new Date((long) adValues[0]); 
-				    			  
-				    			  writer.write("" + oFormat.format(oDate) + ";");
-				    			  
-				    			  for (int iDataSerie = 0; iDataSerie < oFinalDataChart.getDataSeries().size(); iDataSerie++) {
-				    				  DataSerie oActualSerie = oFinalDataChart.getDataSeries().get(iDataSerie);
-				    				  
-				    				  if (oActualSerie.getData() != null) 
-				    				  {
-				    					  if (iRows<oActualSerie.getData().size())
-				    					  { 
-				    						  Object [] adActualValues = oActualSerie.getData().get(iRows);
-				    						  
-				    						  if (adActualValues!= null){
-				    							  if (adActualValues[1]!=null)  {
-				    								  Double dValue = (Double) adActualValues[1];
-				    								  //String sValue = String.format("%2f",dValue);
-				    								  
-				    								  
-				    								  writer.write("" + Double.valueOf(oDecimalFormat.format(dValue)) + ";");
-				    							  }
-				    							  else {
-				    								  writer.write(";");
-				    							  }
-				    						  }
-			    							  else {
-			    								  writer.write(";");
-			    							  }				    						  
-				    					  }
-				    				  }
-				    				 
-				    			  }
-				    			  
-				    			  writer.write("\n");
-				    			  
-				    		  }
-				    	  }
-				      }
-			      }
-			      
-			      //writer.write("test");
-			      writer.flush();
-			      
-			  }
+		StreamingOutput stream = new StreamingOutput() {
+			@Override
+			public void write(OutputStream os) throws IOException, WebApplicationException {
+
+				DecimalFormat oDecimalFormat = new DecimalFormat("#.##");      
+
+
+				DateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+				Writer writer = new BufferedWriter(new OutputStreamWriter(os));
+
+				if (oFinalDataChart.getDataSeries()!=null)
+				{
+					if (oFinalDataChart.getDataSeries().size()>0) 
+					{
+						DataSerie oDataSerie =oFinalDataChart.getDataSeries().get(0);
+
+						if (oDataSerie.getData() != null) {
+							for (int iRows=0; iRows<oDataSerie.getData().size(); iRows++) {
+								Object [] adValues = oDataSerie.getData().get(iRows);
+
+								Date oDate = new Date((long) adValues[0]); 
+
+								writer.write("" + oFormat.format(oDate) + ";");
+
+								for (int iDataSerie = 0; iDataSerie < oFinalDataChart.getDataSeries().size(); iDataSerie++) {
+									DataSerie oActualSerie = oFinalDataChart.getDataSeries().get(iDataSerie);
+
+									if (oActualSerie.getData() != null) 
+									{
+										if (iRows<oActualSerie.getData().size())
+										{ 
+											Object [] adActualValues = oActualSerie.getData().get(iRows);
+
+											if (adActualValues!= null){
+												if (adActualValues[1]!=null)  {
+													Double dValue = (Double) adActualValues[1];
+													//String sValue = String.format("%2f",dValue);
+
+
+													writer.write("" + Double.valueOf(oDecimalFormat.format(dValue)) + ";");
+												}
+												else {
+													writer.write(";");
+												}
+											}
+											else {
+												writer.write(";");
+											}				    						  
+										}
+									}
+
+								}
+
+								writer.write("\n");
+
+							}
+						}
+					}
+				}
+
+				//writer.write("test");
+				writer.flush();
+
+			}
 		};
-		
-		
-	  	return Response.ok(stream).header("Content-Disposition", "attachment;filename="+sCode+sChart+".csv").build();
+
+
+		return Response.ok(stream).header("Content-Disposition", "attachment;filename="+sCode+sChart+".csv").build();
 	}
-	
+
 	/**
 	 * Gets sensors data
 	 * @return
@@ -315,10 +321,10 @@ public class ChartService {
 	@Path("/sections/{sSection}/{sModel}")
 	@Produces({"application/xml", "application/json", "text/xml"})
 	public SectionChartViewModel GetSectionChart(@PathParam("sSection") String sSection, @PathParam("sModel") String sModel, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
-		
-		
+
+
 		System.out.println("ChartService.GetSectionChart: Section = " + sSection + " Model = " + sModel);
-		
+
 		// Create return object
 		SectionChartViewModel oDataChart = null;
 
@@ -327,7 +333,7 @@ public class ChartService {
 			if (Omirl.getUserFromSession(sSessionId)!=null) {
 				// Date: will be received from client...
 				Date oDate = new Date();
-				
+
 				if (sRefDate!=null)
 				{
 					if (sRefDate.equals("") == false) 
@@ -336,45 +342,46 @@ public class ChartService {
 						// se è valido sostituire oDate.
 						SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 						try {
-							
+
 							oDate = dtFormat.parse(sRefDate);
-							
+
 						} catch (ParseException e) {
 							e.printStackTrace();
 						}
 					}
 				}
-				
+
 				// Get Config
 				Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
-				
+
 				if (oConfObj != null)  {
-					
+					System.out.println("ChartService.GetSectionChart: Config Found");
+
 					// Cast Config
 					OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
-					
+
 					String sBasePath = oConfig.getFilesBasePath();
-					
+
 					sBasePath += "/sections/"+sModel;
-					
+
 					//System.out.println("ChartService.GetSectionChart: sBasePath = " + sBasePath);
-					
+
 					// Get The path of the right date
 					String sPath = Omirl.getSubPath(sBasePath, oDate);
-					
+
 					if (sPath != null) {
-						
+
 						String sSubPath = "";
-						
+
 						String sFeaturesPath = sPath + "/features";
-						
+
 						System.out.println("ChartService.GetSectionChart: Opening Path = " + sFeaturesPath);
-						
+
 						// Get The Last File
 						File oLastFile = Omirl.lastFileModified(sFeaturesPath, oDate);
 
 						if (oLastFile != null) {
-							
+
 							System.out.println("SectionsService.GetSectionChart: Opening Sections File " + oLastFile.getAbsolutePath());
 
 							try {
@@ -395,40 +402,40 @@ public class ChartService {
 							System.out.println("ChartService.GetSectionChart: File Not Found with date " + oDate);
 						}							
 
-						
+
 						String sFile = "";
-						
+
 						if (sSubPath.equals("")){
 							sFile = sPath+"/"+sSection+".png";
 						}
 						else {
 							sFile = sPath+"/"+sSubPath + "/" + sSection+".png";
 						}
-						
+
 						System.out.println("ChartService.GetSectionChart: searching file " + sFile);
-						
+
 						// Check if the file exists
 						File oChartFile = new File(sFile);
-						
+
 						// Found?					
 						if (oChartFile.exists()) {
-							
+
 							// Create return object
 							oDataChart = new SectionChartViewModel();
-							
+
 							// Compose the img relative path
 							String sRelativePath = Omirl.getSubPathWithoutCheck("img/sections/" + sModel, oDate);
-							
-							
+
+
 							if (sSubPath.equals("")){
 								sRelativePath+="/"+sSection+".png";
 							}
 							else {
 								sRelativePath+="/"+sSubPath + "/" + sSection+".png";
 							}
-							
-							
-							
+
+
+
 							// Save it
 							oDataChart.setsImageLink(sRelativePath);
 							// and log
@@ -436,7 +443,7 @@ public class ChartService {
 
 							// Find the config object
 							HydroLinkConfig oSelectedHydroConfig = null;
-							
+
 							for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
 								if (oHydroConfig.getLinkCode().equals(sModel)) {
 									// This is my model
@@ -448,18 +455,111 @@ public class ChartService {
 							// Find related models in the same section
 							if (oSelectedHydroConfig!=null) {
 								for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
-									
+
 									if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
 										oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
 									}
 								}								
 							}
-							
+
 						}
 						else {
+
+							Integer oDays = 0;
+
+							//Search back
+							oDays = Integer.parseInt(m_oServletConfig.getInitParameter("BackDaysSearch"));
+							if (oDays != null)
+							{
+								for(int iDay = 1; iDay < oDays; iDay ++)
+								{
+									oDate = new Date( oDate.getTime() - iDay * 24 * 3600 * 1000);
+									// Get The Last File
+									oLastFile = Omirl.lastFileModified(sFeaturesPath, oDate);
+									if (oLastFile != null) {
+
+										System.out.println("SectionsService.GetSectionChart: Opening Sections File " + oLastFile.getAbsolutePath());
+
+										try {
+											// Ok read sections 
+											List<SectionViewModel> aoSections = (List<SectionViewModel>) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+											if (aoSections !=null) {
+												if (aoSections.size()>0) {
+													sSubPath = aoSections.get(0).getSubFolder();
+													System.out.println("SectionsService.GetSectionChart: SubPath found " + sSubPath);
+												}
+											}
+										} catch (Exception e) {
+											e.printStackTrace();
+										}							
+									}
+
+									String sBackFile = "";
+
+									if (sSubPath.equals("")){
+										sBackFile = sPath+"/"+sSection+".png";
+									}
+									else {
+										sBackFile = sPath+"/"+sSubPath + "/" + sSection+".png";
+									}
+
+									System.out.println("ChartService.GetSectionChart: searching file " + sBackFile);
+
+									// Check if the file exists
+									File oBackChartFile = new File(sFile);
+
+									// Found?					
+									if (oBackChartFile.exists()) {
+
+										// Create return object
+										oDataChart = new SectionChartViewModel();
+
+										// Compose the img relative path
+										String sRelativePath = Omirl.getSubPathWithoutCheck("img/sections/" + sModel, oDate);
+
+
+										if (sSubPath.equals("")){
+											sRelativePath+="/"+sSection+".png";
+										}
+										else {
+											sRelativePath+="/"+sSubPath + "/" + sSection+".png";
+										}
+
+
+
+										// Save it
+										oDataChart.setsImageLink(sRelativePath);
+										// and log
+										System.out.println("ChartService.GetSectionChart: return path " + sRelativePath);
+
+										// Find the config object
+										HydroLinkConfig oSelectedHydroConfig = null;
+
+										for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
+											if (oHydroConfig.getLinkCode().equals(sModel)) {
+												// This is my model
+												oSelectedHydroConfig=oHydroConfig;
+												break;
+											}
+										}
+
+										// Find related models in the same section
+										if (oSelectedHydroConfig!=null) {
+											for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
+
+												if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
+													oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
+												}
+											}								
+										}
+										//Chart Found - break;
+										break;
+									}
+								}
+							}
 							System.out.println("ChartService.GetSectionChart: cannot find file " + sFile);
 						}
-						
+
 					}
 				}
 				else
@@ -472,10 +572,10 @@ public class ChartService {
 			oEx.printStackTrace();
 		}
 
-				
+
 		// Return the list of sensors
 		return oDataChart;
 	}	
-	
+
 
 }

@@ -4,6 +4,8 @@ import it.fadeout.omirl.business.OmirlUser;
 import it.fadeout.omirl.business.OpenSession;
 import it.fadeout.omirl.business.config.GalleryLinkConfig;
 import it.fadeout.omirl.business.config.HydroLinkConfig;
+import it.fadeout.omirl.business.config.HydroModelLinkConfig;
+import it.fadeout.omirl.business.config.LegendConfig;
 import it.fadeout.omirl.business.config.LegendStepConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
@@ -39,6 +41,7 @@ public class Omirl extends Application {
 	
 	public static String s_sDateHeaderFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXX";
 
+	public static String s_sDateQueryParam = "dd/MM/yyyy HH:mm";
 	
 	@Override
     public Set<Class<?>> getClasses() {
@@ -285,6 +288,13 @@ public class Omirl extends Application {
 		oGallery2.getSublevelGalleryLinkConfig().add(oGallery2_1);
 		oGallery2.getSublevelGalleryLinkConfig().add(oGallery2_2);
 		
+		
+		HydroModelLinkConfig oModelChild = new HydroModelLinkConfig();  
+		oModelChild.setDescription("Rainfarmbo10ar+06");
+		oModelChild.setIconLink("/img/tables/sintesi.png");
+		oModelChild.setLinkCode("Rainfarmbo10ar+06");
+		oModelChild.setIsDefault(true);
+		
 		OmirlNavigationConfig oConfig = new OmirlNavigationConfig();
 		oConfig.setFilesBasePath("C:/temp/omirl/files");
 		oConfig.getMapLinks().add(oMapLink);
@@ -298,6 +308,8 @@ public class Omirl extends Application {
 		oConfig.getTableLinks().add(oTable3);
 		oConfig.getGalleryLinks().add(oGallery1);
 		oConfig.getGalleryLinks().add(oGallery2);
+		oConfig.getHydroModelLinks().add(oModelChild);
+		
 		
 		try {
 			serializeObjectToXML(sFilePath, oConfig);
