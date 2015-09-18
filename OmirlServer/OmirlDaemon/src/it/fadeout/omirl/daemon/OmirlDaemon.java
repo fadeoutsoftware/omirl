@@ -8,12 +8,16 @@ import it.fadeout.omirl.business.CreekThreshold;
 import it.fadeout.omirl.business.DataChart;
 import it.fadeout.omirl.business.DataSerie;
 import it.fadeout.omirl.business.DataSeriePoint;
+import it.fadeout.omirl.business.HydroModelTables;
 import it.fadeout.omirl.business.MapInfo;
 import it.fadeout.omirl.business.MaxTableInfo;
 import it.fadeout.omirl.business.MaxTableRow;
 import it.fadeout.omirl.business.ModelGalleryInfo;
 import it.fadeout.omirl.business.ModelImageInfo;
+import it.fadeout.omirl.business.ModelTable;
 import it.fadeout.omirl.business.SectionAnag;
+import it.fadeout.omirl.business.SectionBasins;
+import it.fadeout.omirl.business.SectionBasinsCodes;
 import it.fadeout.omirl.business.SectionLayerInfo;
 import it.fadeout.omirl.business.SensorLastData;
 import it.fadeout.omirl.business.Sfloc;
@@ -26,6 +30,7 @@ import it.fadeout.omirl.daemon.geoserver.GeoServerDataManager2;
 import it.fadeout.omirl.data.CreekThresholdRepository;
 import it.fadeout.omirl.data.HibernateUtils;
 import it.fadeout.omirl.data.OpenSessionRepository;
+import it.fadeout.omirl.data.Repository;
 import it.fadeout.omirl.data.SavedPeriodRepository;
 import it.fadeout.omirl.data.SectionAnagRepository;
 import it.fadeout.omirl.data.SflocRepository;
@@ -39,6 +44,8 @@ import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableViewModel;
 import it.fadeout.omirl.viewmodels.ModelGallery;
 import it.fadeout.omirl.viewmodels.ModelImage;
+import it.fadeout.omirl.viewmodels.SectionBasinsCodesViewModel;
+import it.fadeout.omirl.viewmodels.SectionBasinsViewModel;
 import it.fadeout.omirl.viewmodels.SectionViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;
 import it.fadeout.omirl.viewmodels.SensorListTableViewModel;
@@ -203,6 +210,7 @@ public class OmirlDaemon {
 		//DailyTask();
 		//RefreshGallery();
 		//if (true) return;
+		//RefreshHydroModel();
 
 		InitSensorValueTables();
 
@@ -718,7 +726,7 @@ public class OmirlDaemon {
 										ChartInfo oGustInfo = aoInfo.get(1);
 
 										DataSerie oGustSerie = new DataSerie();
-										// Get Data from the Db: for rain1h only hourly rate
+										// Get Data from the Db: for 2 days
 										List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), oGustInfo.getColumnName(), oStartDate);
 
 										int iMinuteTimeStep = GetMinutesStep(oGustInfo.getColumnName(),oStationAnag);
@@ -739,6 +747,32 @@ public class OmirlDaemon {
 
 										// Add serie to the chart
 										oWind2Chart.getDataSeries().add(oGustSerie);
+										
+										//-------------------------WIND DIRECTION 2 GG
+										try
+										{
+											DataSerie oWind2DirSerie = new DataSerie();
+											// get points
+											List<WindDataSeriePoint> aoWindPoints = oStationDataRepository.getWindDataSerie(oStationAnag.getStation_code(), oStartDate);
+
+											// set minute step
+											iMinuteTimeStep = 60;
+
+											// Convert points to Data Serie
+											if (aoWindPoints != null && aoWindPoints.size() > 0)
+												GetWindDirectionSerie(aoWindPoints, oWind2DirSerie, iMinuteTimeStep);
+											// name
+											oWind2DirSerie.setName("Wind Direction");
+
+											// Main Axis Reference
+											oWind2DirSerie.setAxisId(0);
+
+											// add to wind chart
+											oWind2Chart.getDataSeries().add(oWind2DirSerie);
+										}
+										catch(Exception oChartEx) {
+											oChartEx.printStackTrace();
+										}
 									}
 
 									serializeStationChart(oWind2Chart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
@@ -965,6 +999,9 @@ public class OmirlDaemon {
 
 					System.out.println("OmirlDaemon - Gallery");
 					if (m_oConfig.isEnableGallery()) RefreshGallery();
+					
+					System.out.println("OmirlDaemon - HydroModel");
+					if (m_oConfig.isEnableHydroModel()) RefreshHydroModel();
 
 					//Delete old session
 					System.out.println("OmirlDaemon - Clearing Sessions");
@@ -1002,16 +1039,17 @@ public class OmirlDaemon {
 		long lNow = oNow.getMillis();
 		long lStart = oInputWindDir.get(0).getRefDate().getTime();
 
+		int iCycleCount = 0;
 		for (long lTimeCycle = lStart; lTimeCycle<=lNow; lTimeCycle+=lTimeStep)
 		{
 			WindDataSeriePoint adPoint = new WindDataSeriePoint();
 			adPoint.setWindSpeed(0);
 			adPoint.setRefDate(new Date(lStart));
-
+			long lNextStep = lTimeCycle+lTimeStep;
 			List<WindDataSeriePoint> oRefWindDirections = new ArrayList<WindDataSeriePoint>();
 			for (WindDataSeriePoint windDataSeriePoint : oInputWindDir) {
 
-				if (windDataSeriePoint.getRefDate().getTime() <= (lTimeCycle+lTimeStep) && windDataSeriePoint.getRefDate().getTime() >= lTimeCycle) {
+				if (windDataSeriePoint.getRefDate().getTime() <= lNextStep && windDataSeriePoint.getRefDate().getTime() >= lTimeCycle) {
 					oRefWindDirections.add(windDataSeriePoint);
 				}
 
@@ -1019,9 +1057,10 @@ public class OmirlDaemon {
 
 			adPoint.setWindDir(GetPrevalentWindDirectionAlgorithm(oRefWindDirections));
 
-			lStart = lTimeCycle+=lTimeStep;
+			lStart = lNextStep;
 			oOutputWindDir.add(adPoint);
 
+			iCycleCount++;
 		}
 
 		// convert to data serie
@@ -1031,6 +1070,8 @@ public class OmirlDaemon {
 
 	private Double GetPrevalentWindDirectionAlgorithm(List<WindDataSeriePoint> oRefWindDirection)
 	{
+		if (oRefWindDirection.size() == 0)
+			return -1.0;
 		Double dNumCalma = 0.0;
 		Double dVar = 0.0;
 		Double dDeg= null;
@@ -2608,6 +2649,33 @@ public class OmirlDaemon {
 		}
 
 	}
+	
+	public void RefreshHydroModel() {
+		try{
+
+			System.out.println("OmirlDaemon - Refresh Hydro Model");
+
+			HydroModelTables aoHydro = m_oConfig.getHydroModelTables();
+
+			//load all section basins
+			Repository<SectionBasins> oSectionBasinsRepository = new Repository<SectionBasins>();
+			List<SectionBasins> aoSectionsBasins = oSectionBasinsRepository.SelectAll(SectionBasins.class);
+			
+			for (ModelTable oModelTable : aoHydro.getModelsTable()) {
+
+				System.out.println("OmirlDaemon - Model Name" + oModelTable.getModelName() + " Code: " + oModelTable.getModelCode() );
+
+				SerializeHydroModel(oModelTable.getModelName(), oModelTable.getModelCode(), oModelTable.getHasSubFolders(), aoSectionsBasins);
+			}
+		}
+		catch(Exception oEx)
+		{
+			System.out.println("OmirlDaemon - Refresh Sections Layer Exception");
+			oEx.toString();
+		}
+
+	}
+
 
 	/**
 	 * Refresh station anag tables
@@ -3215,7 +3283,54 @@ public class OmirlDaemon {
 		return aoRetDictionary;
 	}
 
+	public String getSectionName(String sFullPath, String sCode) {
+		String sSectionName = null;
 
+		try {
+
+			File oXmlConfig = new File((String) sFullPath+"/legend.xml");
+
+			if (oXmlConfig.exists()) {
+
+				try {
+					SAXBuilder oBuilder = new SAXBuilder();
+					Document oDocument = oBuilder.build(oXmlConfig);
+
+					Element oRoot = oDocument.getRootElement();
+
+					if (oRoot != null) {
+						List<Element> aoMarkers = (List<Element>) oRoot.getChildren("marker");
+
+						if (aoMarkers != null) {
+							for (Element oMarker : aoMarkers) {
+								if (oMarker.getAttribute("code").getValue().equals(sCode))
+								{
+									sSectionName = oMarker.getAttribute("name").getValue();
+								}
+							}
+						}
+					}
+
+				} catch (IOException oEx) {
+					System.out.println("getSectionName: " + oEx.getMessage());
+				} 
+				catch (JDOMException oEx) {
+					System.out.println("getSectionName: " + oEx.getMessage());
+				} 
+				catch (NumberFormatException oEx) {
+					System.out.println("getSectionName: " + oEx.getMessage());
+				} 
+				catch (Throwable oEx) {
+					System.out.println("getSectionName: " + oEx.getMessage());
+				}
+			}			
+		}
+		catch(Exception oEx) {
+			oEx.toString();
+		}
+
+		return sSectionName;
+	}
 
 
 	public void SerializeSectionsLayer(String sModelName, String sModelCode, String sFlagColumn, Boolean bHasSubFolders) {
@@ -3279,6 +3394,9 @@ public class OmirlDaemon {
 						if (aoSectionsMap.containsKey(oSectionViewModel.getCode())) {
 							oSectionViewModel.setColor(aoSectionsMap.get(oSectionViewModel.getCode()));
 						}
+						else
+							//Colore grigio
+							oSectionViewModel.setColor(-1);
 
 						aoSectionsViewModel.add(oSectionViewModel);
 					}
@@ -3309,7 +3427,111 @@ public class OmirlDaemon {
 		catch(Exception oEx) {
 			oEx.printStackTrace();
 		}
+	}
+	
+	public void SerializeHydroModel(String sModelName, String sModelCode, Boolean bHasSubFolders, List<SectionBasins> aoSectionsBasins) {
+
+		List<SectionBasinsViewModel> aoSectionBasinsViewModel = new ArrayList<>();
+
+		try {
+
+			String sSubFolderVM = "";
+
+			if (aoSectionsBasins != null) {
+
+				// Read Legend xml file
+				Date oDate = new Date();
+
+				String sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
+
+				if (bHasSubFolders)
+				{
+					File oParentFolder = new File(sFullPath);
+
+					String [] asSubFolders = oParentFolder.list();
+
+					long lTimestamp = 0;
+					String sNewFullPath = sFullPath;
+
+					if (asSubFolders!=null)
+					{
+						for (String sSubFolder : asSubFolders) {
+							File oTempFile = new File(sFullPath+"/"+sSubFolder);
+							if (oTempFile.isDirectory())
+							{
+								if (oTempFile.getName().contains("features")) continue;
+
+								if (oTempFile.lastModified()>lTimestamp)
+								{
+									lTimestamp = oTempFile.lastModified();
+									sNewFullPath = sFullPath+"/"+sSubFolder;
+									sSubFolderVM = sSubFolder;
+								}
+							}
+						}
+					}
+
+					sFullPath = sNewFullPath;
+				}
+
+				HashMap<String, Integer> aoSectionsMap = ReadSectionsLegend(sFullPath);
+
+
+				for (SectionBasins oSectionBasins : aoSectionsBasins) {
+					try {
+						SectionBasinsViewModel oSectionBasinsViewModel = new SectionBasinsViewModel();
+						oSectionBasinsViewModel.setBasinName(oSectionBasins.getName());
+						oSectionBasinsViewModel.setOrderNumber(oSectionBasins.getOrdernumber());
+						for (SectionBasinsCodes oCode : oSectionBasins.getSectionBasinsCodes()) {
+							try{
+								//new model
+								SectionBasinsCodesViewModel oCodeViewModel = new SectionBasinsCodesViewModel(); 
+								//get dictionary alert by station
+								if (aoSectionsMap.containsKey(oCode.getSectioncode()))
+								{
+									oCodeViewModel.setColor(aoSectionsMap.get(oCode.getSectioncode()));
+								}
+								oCodeViewModel.setSectionCode(oCode.getSectioncode());
+								oCodeViewModel.setSectionName(getSectionName(sFullPath, oCode.getSectioncode()));
+								oCodeViewModel.setOrderNumber(oCode.getOrdernumber());
+								
+								oSectionBasinsViewModel.getSectionBasinsCodes().add(oCodeViewModel);
+							}
+							catch(Exception oInnerEx) {
+								oInnerEx.printStackTrace();
+							}
+						}
+						aoSectionBasinsViewModel.add(oSectionBasinsViewModel);			
+					}
+					catch(Exception oInnerEx) {
+						oInnerEx.printStackTrace();
+					}
+				}
+
+				sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
+
+				if (sFullPath != null)  {
+
+					sFullPath = sFullPath+"/features";
+					File oFile = new File(sFullPath);
+					oFile.mkdirs();
+					oFile.setWritable(true, false);
+					oFile.setReadable(true, false);
+
+					String sFileName = sModelCode+m_oDateFormat.format(oDate)+".xml"; 
+					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoSectionBasinsViewModel);
+				}
+			}
+			else {
+				System.out.println("OmirlDaemon ");
+				System.out.println("OmirlDaemon - There was an error reading sections ");
+			}							
+		}
+		catch(Exception oEx) {
+			oEx.printStackTrace();
+		}
 	}	
+
 
 
 
@@ -4356,7 +4578,17 @@ public class OmirlDaemon {
 		oGalleryInfo.getVariables().add(oImageInfo);
 
 		oConfig.getModelsGallery().add(oGalleryInfo);
-
+		
+		//HydroModelTables
+		ModelTable oModelTable = new ModelTable();
+		oModelTable.setHasSubFolders(true);
+		oModelTable.setModelCode("CODE 1");
+		ModelTable oModelTable1 = new ModelTable();
+		oModelTable1.setHasSubFolders(false);
+		oModelTable1.setModelCode("CODE 2");
+		oConfig.getHydroModelTables().getModelsTable().add(oModelTable);
+		oConfig.getHydroModelTables().getModelsTable().add(oModelTable1);
+		
 		try {
 			SerializationUtils.serializeObjectToXML("C:\\temp\\Omirl\\OmirlDaemonConfigSAMPLE.xml", oConfig);
 		} catch (Exception e) {

@@ -2,6 +2,7 @@ package it.fadeout.omirl.daemon;
 
 import it.fadeout.omirl.business.AnagTableInfo;
 import it.fadeout.omirl.business.ChartInfo;
+import it.fadeout.omirl.business.HydroModelTables;
 import it.fadeout.omirl.business.MapInfo;
 import it.fadeout.omirl.business.MaxTableInfo;
 import it.fadeout.omirl.business.ModelGalleryInfo;
@@ -33,6 +34,8 @@ public class OmirlDaemonConfiguration {
 	
 	ArrayList<ModelGalleryInfo> modelsGallery = new ArrayList<ModelGalleryInfo>();
 	
+	private HydroModelTables HydroModelTables = new HydroModelTables();
+	
 	boolean enableCharts;
 	boolean enableSensorLast;
 	boolean enableWebcam;
@@ -47,6 +50,7 @@ public class OmirlDaemonConfiguration {
 	boolean enableSectionsLayer;
 	boolean enableDailyTask;
 	boolean enableMaxTable;
+	private boolean enableHydroModel;
 	
 	MaxTableInfo alertMaxTable;
 	MaxTableInfo districtMaxTable;
@@ -314,5 +318,21 @@ public class OmirlDaemonConfiguration {
 
 	public void setEnableGallery(boolean enableGallery) {
 		this.enableGallery = enableGallery;
+	}
+
+	public HydroModelTables getHydroModelTables() {
+		return HydroModelTables;
+	}
+
+	public void setHydroModelTables(HydroModelTables hydroModelTables) {
+		HydroModelTables = hydroModelTables;
+	}
+
+	public boolean isEnableHydroModel() {
+		return enableHydroModel;
+	}
+
+	public void setEnableHydroModel(boolean enableHydroModel) {
+		this.enableHydroModel = enableHydroModel;
 	}	
 }
