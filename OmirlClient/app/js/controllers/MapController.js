@@ -2060,7 +2060,7 @@ var MapController = (function () {
                     //,{title: oStation.name + " " + oStation.value }
                 );
 
-                if (angular.isUndefined(oSection.color)) oSection.color=0;
+                if (angular.isUndefined(oSection.color)) oSection.color=-1;
 
                 // Set attributes of the Feature
                 oFeature.attributes = {
@@ -2127,8 +2127,10 @@ var MapController = (function () {
                     callbacks: {
                         // Click
                         click: function(feature) {
-                            // Show chart
-                            oMapController.showSectionChart(feature);
+                            if (feature.attributes.color != -1) {
+                                // Show chart
+                                oMapController.showSectionChart(feature);
+                            }
                         }
                     }
                 });

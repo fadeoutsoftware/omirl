@@ -3,10 +3,11 @@
  */
 
 var ModelsGalleryController = (function() {
-    function ModelsGalleryController($scope, $http, ConstantsService, GalleryService)
+    function ModelsGalleryController($scope, $http, ConstantsService, GalleryService, $translate)
     {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
+        this.m_oTranslateService = $translate;
         
         //****************************************************************************************
         //* Scope variables
@@ -17,8 +18,11 @@ var ModelsGalleryController = (function() {
         $scope.m_iMaxThumbsCount = 9; // MUST BE AN ODD NUMBER
         $scope.m_iThumbsOnSideCount = Math.floor( $scope.m_iMaxThumbsCount / 2 );
         $scope.m_iGalleryTimeIntervalId;
-        
-        $scope.m_sLoadingText = "";
+
+        this.m_oTranslateService('MODELGALLERY_NOIMAGE').then(function(msg){
+            $scope.m_sLoadingText = msg;
+        });
+
         
         // initial image index
         $scope.m_iCurrentImageIndex = 0;
@@ -186,12 +190,22 @@ var ModelsGalleryController = (function() {
                 }
             }
         }
-        
-        
+
+        $scope.resetGallery = function(oLink)
+        {
+            $scope.m_oController.m_oTranslateService('MODELGALLERY_NOIMAGE').then(function(msg){
+                $scope.m_sLoadingText = msg;
+            });
+
+            $scope.isGalleryReady = false;
+        }
 
         $scope.getGallery = function(oLink)
         {
-            $scope.m_sLoadingText = "Loading...";
+            $scope.m_oController.m_oTranslateService('MODELGALLERY_LOADING').then(function(msg){
+                $scope.m_sLoadingText = msg;
+            });
+
             
             GalleryService.getData(oLink.codeParent, oLink.codeVariable, oLink.code)
                 .success(function(data, status, headers, config){
@@ -295,7 +309,7 @@ var ModelsGalleryController = (function() {
     }
 
     ModelsGalleryController.$inject = [
-        '$scope', '$http', 'ConstantsService', 'GalleryService'
+        '$scope', '$http', 'ConstantsService', 'GalleryService', '$translate'
     ];
     return ModelsGalleryController;
 }) ();

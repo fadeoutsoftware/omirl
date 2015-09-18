@@ -12,7 +12,7 @@
                 <div class="panel-heading-models">
                     <!--Panel heading-->
                     <div class="row">
-                        <div class="col-md-1 col-xs-1">
+                        <div class="col-lg-3 col-md-3 col-xs-3">
                             <h4 style="color: rgb(51, 51, 51)">{{m_oController.getModelName()}}</h4>
                         </div>
 
@@ -20,7 +20,7 @@
                              class="col-md-1 col-xs-1 map-firstlevel-icon"
                              ng-class="{'map-firstlevel-icon-selected': oModel.isActive}"
                              tooltip-popup-delay="500" tooltip="{{oModel.description | translate}}">
-                            <img class="img-map-firstlevel-icon" ng-src="{{oModel.imageLinkOff}}"
+                            <img class="img-map-firstlevel-icon" ng-src="{{oModel.iconLink}}"
                                  ng-click="m_oController.modelLinkClicked(oModel)"/>
                         </div>
 
@@ -64,13 +64,14 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="oModel in m_oController.getModelRows() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
-                            <td>{{oModel.Basin}}</td>
-                            <td class="{{oModel.Section1BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section1Code, oModel.Basin)">{{oModel.Section1}}</td>
+                            <td>{{oModel.basinName}}</td>
+                            <td ng-class="{ 'models-table-green-cell' : oCode.color == 0, 'models-table-yellow-cell' : oCode.color == 1, 'models-table-red-cell' : oCode.color == 2  }" ng-repeat="oCode in oModel.sectionBasinsCodes | orderBy: m_oController.m_sOrderBy:false" ><a href="" class="link-text-decoration-none link-color-darkblue" ng-click="m_oController.sectionClicked(oCode.sectionCode, oModel.basinName, oCode.sectionName)">{{oCode.sectionName}}</a></td>
+                            <!--td class="{{oModel.Section1BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section1Code, oModel.Basin)">{{oModel.Section1}}</td>
                             <td class="{{oModel.Section2BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section2Code, oModel.Basin)">{{oModel.Section2}}</td>
                             <td class="{{oModel.Section3BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section3Code, oModel.Basin)">{{oModel.Section3}}</td>
                             <td class="{{oModel.Section4BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section4Code, oModel.Basin)">{{oModel.Section4}}</td>
                             <td class="{{oModel.Section5BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section5Code, oModel.Basin)">{{oModel.Section5}}</td>
-                            <td class="{{oModel.Section6BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section6Code, oModel.Basin)">{{oModel.Section6}}</td>
+                            <td class="{{oModel.Section6BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section6Code, oModel.Basin)">{{oModel.Section6}}</td-->
                         </tr>
                         </tbody>
                     </table>

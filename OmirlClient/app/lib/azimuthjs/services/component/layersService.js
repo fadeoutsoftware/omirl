@@ -564,6 +564,9 @@ angular.module('az.services').factory('az.services.layersService',function($root
                     },
                     colorFunction: function(feature) {
                         try {
+                            //color grey, station not present or enabled
+                            if (feature.attributes.color == -1)
+                                return "#808080";
                             var oColor = oService.m_aoHydroSensorLayerColorRanges[feature.attributes.color];
                             return oColor.clr;
                         }

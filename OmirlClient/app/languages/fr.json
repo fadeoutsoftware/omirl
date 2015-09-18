@@ -105,7 +105,7 @@
     "SETTING_ZOOM": "Zoom fr",
     "SETTING_LAYERSTAZIONI": "Layer Stazioni fr",
     "SETTING_LAYERSTATICI": "Layer Statici fr",
-    "SETTING_BOTTONESALVA": "&nbsp;Salva fr",
+    "SETTING_BOTTONESALVA": "Salva fr",
     "STATION_TABLE": "Tabella Stazioni fr",
     "STATION_TIPOSENSORE": "Tipo Sensore fr",
     "STATION_SEARCHNOME": "Nome o Codice fr",
@@ -282,5 +282,7 @@
     "TLC_BOLAMHMA850ITALY" : "HMA @ 850 fr",
     "TLC_MOLOCHHMA700NITALY" : "HMA @ 700 fr",
     "TLC_MOLOCHHMA850NITALY" : "HMA @ 850 fr",
-    "TLC_MOLOCHTPREC3NITALY" : "T Prec 3 fr"
+    "TLC_MOLOCHTPREC3NITALY" : "T Prec 3 fr",
+    "MODELGALLERY_NOIMAGE" : "Selezionare nel menù a sinistra un modello ed una variabile",
+    "MODELGALLERY_LOADING" : "Loading"
 }

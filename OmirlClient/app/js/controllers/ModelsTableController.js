@@ -26,14 +26,71 @@ var ModelsTableController = (function() {
         this.m_bSideBarCollapsed = true;
 
         this.m_bReverseOrder = false;
-        this.m_sOrderBy = "name";
+        this.m_sOrderBy = "orderNumber";
 
 
         var oControllerVar = this;
 
         this.m_sModelName = "Modello";
+        this.m_sModelCode;
 
-        this.m_aoModelLinks = this.m_oHydroService.getModelLinks();
+        this.m_oHydroService.getModelLinks().success(function (data) {
+            oControllerVar.m_aoModelLinks = data;
+
+            //set default selected clicked
+            angular.forEach(oControllerVar.m_aoModelLinks, function(value, key) {
+                if (value.isDefault == true) {
+                    value.isActive = value.isDefault;
+                    oControllerVar.m_sModelName = value.description;
+                    oControllerVar.m_sModelCode = value.code;
+                    oControllerVar.m_oHydroService.getModelTable(value.code).success(function(data){
+                        oControllerVar.m_aoModelRows = data;
+                    });
+                }
+            });
+
+        });
+
+        this.showSectionChart = function(sStationCode, sBasinCode, sName){
+            var oControllerVar = this;
+            var sSectionCode = sStationCode;
+            var sBasin = sBasinCode;
+            var sName = sName;
+
+            if (this.m_oDialogService.isExistingDialog(sSectionCode)) {
+                return;
+            }
+
+            var sModel = oControllerVar.m_sModelCode;
+
+
+            // The data for the dialog
+            var model = {
+                "sectionCode": sSectionCode,
+                "chartType": sModel,
+                "basin": sBasin,
+                "name": sName
+            };
+
+
+            // jQuery UI dialog options
+            var options = {
+                autoOpen: false,
+                modal: false,
+                resizable: false,
+                close: function(event, ui) {
+                    // Remove the chart from the Chart Service
+                    oControllerVar.m_oChartService.removeChart(sSectionCode);
+                },
+                title:  sName + " - " + sBasin + "",
+                position: {my: "left top", at: "left top"},
+                width: 'auto',
+                height: 600,
+                dialogClass:'sectionChartDialog'
+            };
+
+            this.m_oDialogService.open(sSectionCode,"sectionChart.html", model, options)
+        };
 
     }
 
@@ -70,8 +127,11 @@ var ModelsTableController = (function() {
 
         oModel.isActive = true;
         oControllerVar.m_sModelName = oModel.description;
+        oControllerVar.m_sModelCode = oModel.code;
+        this.m_oHydroService.getModelTable(oModel.code).success(function(data){
+            oControllerVar.m_aoModelRows = data;
+        });
 
-        this.m_aoModelRows = this.m_oHydroService.getModelTable(oModel.code);
     }
 
     ModelsTableController.prototype.getModelName = function() {
@@ -87,12 +147,15 @@ var ModelsTableController = (function() {
         window.open(this.m_oStationsService.exportCsvStationList(this.m_oSelectedType.code), '_blank', '');
     }
 
-    ModelsTableController.prototype.sectionClicked = function(sSectionCode, sBasin) {
+    ModelsTableController.prototype.sectionClicked = function(sSectionCode, sBasin, sName, sLinkCode) {
 
         if (angular.isDefined(sSectionCode) == false) {
             return
         }
-        alert('Show ' + sSectionCode);
+
+        this.showSectionChart(sSectionCode, sBasin, sName);
+
+        //alert('Show ' + sSectionCode);
     }
 
     ModelsTableController.prototype.BasinChanged = function(sBasinFilter)

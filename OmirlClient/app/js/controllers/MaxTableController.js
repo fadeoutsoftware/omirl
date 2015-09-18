@@ -96,7 +96,8 @@ var MaxTableController = (function() {
     }
 
     MaxTableController.prototype.exportCsv = function() {
-        window.open(this.m_oTableService.exportCsvMax(), '_blank', '');
+        var sRefDate = this.m_oConstantsService.getReferenceDate();
+        window.open(this.m_oTableService.exportCsvMax(sRefDate), '_blank', '');
     }
 
 

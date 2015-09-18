@@ -19,7 +19,8 @@ angular.module('omirl.sidebarMenuDirective', [])
             "onMainItemClick" : "=onMainItemClick",
             "onSubItemClick" : "=onSubItemClick",
             "menuItemsList" : "=menuLinkItems",
-            "submenuItemsListVarName" : "@submenuListVarName"
+            "submenuItemsListVarName" : "@submenuListVarName",
+            "onSubItemUnclick" : "=onSubItemUnclick"
         },
         link: function($scope, elem, attrs)
         {
@@ -117,6 +118,11 @@ angular.module('omirl.sidebarMenuDirective', [])
                     $scope.m_sParentText = $scope.m_sParentText;
 
                     $scope.m_sChildText = "";
+
+                    if( typeof $scope.onSubItemUnclick == "function")
+                    {
+                        $scope.onSubItemUnclick(item);
+                    }
                 }
                 else
                 {

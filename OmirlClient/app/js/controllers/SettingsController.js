@@ -463,6 +463,7 @@ var SettingsController = (function() {
             this.m_oContstantsService.setReferenceDate(oDate);
         }
 
+        this.onSettingsChanged();
     }
 
     SettingsController.prototype.pad = function (number, length){
@@ -506,6 +507,8 @@ var SettingsController = (function() {
             {
                 this.m_oContstantsService.setReferenceDate(oDate);
             }
+
+            this.onSettingsChanged();
         } catch (err) {
             alert("Errore! Verificare la data inserita.");
         }

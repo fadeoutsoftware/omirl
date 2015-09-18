@@ -259,9 +259,10 @@ angular.module('omirl.TableService', ['omirl.ConstantsService']).
             return this.m_oHttp.get(this.APIURL + '/tables/max');
         }
 
-        this.exportCsvMax = function() {
+        this.exportCsvMax = function(sRefDate) {
             var sAPIURL = this.APIURL;
-            return sAPIURL + '/tables/exportmaxvalues/';
+
+            return sAPIURL + '/tables/exportmaxvalues?sRefDate=' + sRefDate;
         }
 
         this.getStationAnag = function(sCode) {

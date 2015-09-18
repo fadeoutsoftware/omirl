@@ -156,11 +156,14 @@ angular.module('omirl.HydroService', ['omirl.ConstantsService']).
         ];
 
         this.getModelLinks = function() {
-            return this.m_aoModelLinks;
+            //return this.m_aoModelLinks;
+            return this.m_oHttp.get(this.APIURL + '/tables/hydromodellist');
+
         }
 
         this.getModelTable = function(sModelCode) {
-            return this.m_aoModelTable;
+            //return this.m_aoModelTable;
+            return this.m_oHttp.get(this.APIURL + '/tables/sectionbasinlist/' + sModelCode);
         }
 
 
