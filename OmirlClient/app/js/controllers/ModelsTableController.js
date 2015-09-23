@@ -92,6 +92,19 @@ var ModelsTableController = (function() {
             this.m_oDialogService.open(sSectionCode,"sectionChart.html", model, options)
         };
 
+        $scope.searchSection = function (oCode) {
+            if ($scope.searchSection.sectionName === undefined || $scope.searchSection.sectionName.length === 0) {
+                return true;
+            }
+
+            var found = false;
+            if (oCode.sectionName.indexOf($scope.searchSection.sectionName) > -1) {
+                found = true;
+            }
+
+            return found;
+        };
+
     }
 
     ModelsTableController.prototype.getModelLinks = function () {
@@ -166,7 +179,7 @@ var ModelsTableController = (function() {
 
     ModelsTableController.prototype.CancelBasinFilter = function()
     {
-        this.m_oScope.search.Basin="";
+        this.m_oScope.search.basinName="";
         this.m_bShowCancelBasinFilter = false;
     }
 
@@ -179,9 +192,12 @@ var ModelsTableController = (function() {
 
     ModelsTableController.prototype.CancelSectionFilter = function()
     {
-        this.m_oScope.search.Section1 ="";
+        this.m_oScope.searchSection.sectionName ="";
         this.m_bShowCancelSectionFilter = false;
     }
+
+
+
 
 
 

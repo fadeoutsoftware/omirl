@@ -38,7 +38,7 @@
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
                             <div class="btn-group">
                                 <label >{{'MODELSTABLE_BACINO' | translate}}</label>
-                                <input id="searchinput" type="search" class="form-control searchinput" placeholder="{{'MODELSTABLE_SEARCHBACINO' | translate}}"  ng-model="search.Basin" ng-change="m_oController.BasinChanged(search.Basin)" >
+                                <input id="searchinput" type="search" class="form-control searchinput" placeholder="{{'MODELSTABLE_SEARCHBACINO' | translate}}"  ng-model="search.basinName" ng-change="m_oController.BasinChanged(search.basinName)" >
                                 <span id="searchclear" class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelBasinFilter()" ng-show="m_oController.m_bShowCancelBasinFilter"></span>
                             </div>
 
@@ -46,7 +46,7 @@
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                             <div class="btn-group">
                                 <label>{{'MODELSTABLE_SEZIONE' | translate}}</label>
-                                <input type="search" class="form-control searchinput" placeholder="{{'MODELSTABLE_SEARCHSEZIONE' | translate}}" ng-model="search.Section1" ng-change="m_oController.DistrictChanged(search.Section1)">
+                                <input type="search" class="form-control searchinput" placeholder="{{'MODELSTABLE_SEARCHSEZIONE' | translate}}" ng-model="searchSection.sectionName" ng-change="m_oController.SectionChanged(searchSection.sectionName)">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelSectionFilter()" ng-show="m_oController.m_bShowCancelSectionFilter"></span>
                             </div>
                         </div>
@@ -64,8 +64,8 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="oModel in m_oController.getModelRows() | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder | filter:search">
-                            <td>{{oModel.basinName}}</td>
-                            <td ng-class="{ 'models-table-green-cell' : oCode.color == 0, 'models-table-yellow-cell' : oCode.color == 1, 'models-table-red-cell' : oCode.color == 2  }" ng-repeat="oCode in oModel.sectionBasinsCodes | orderBy: m_oController.m_sOrderBy:false" ><a href="" class="link-text-decoration-none link-color-darkblue" ng-click="m_oController.sectionClicked(oCode.sectionCode, oModel.basinName, oCode.sectionName)">{{oCode.sectionName}}</a></td>
+                            <td class="col-md-3">{{oModel.basinName}}</td>
+                            <td ng-class="{ 'models-table-green-cell' : oCode.color == 0, 'models-table-yellow-cell' : oCode.color == 1, 'models-table-red-cell' : oCode.color == 2  }" ng-repeat="oCode in oModel.sectionBasinsCodes | orderBy: m_oController.m_sOrderBy:false | filter:searchSection" ><a href="" class="link-text-decoration-none link-color-darkblue" ng-click="m_oController.sectionClicked(oCode.sectionCode, oModel.basinName, oCode.sectionName)">{{oCode.sectionName}}</a></td>
                             <!--td class="{{oModel.Section1BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section1Code, oModel.Basin)">{{oModel.Section1}}</td>
                             <td class="{{oModel.Section2BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section2Code, oModel.Basin)">{{oModel.Section2}}</td>
                             <td class="{{oModel.Section3BgColor}}" ng-click="m_oController.sectionClicked(oModel.Section3Code, oModel.Basin)">{{oModel.Section3}}</td>

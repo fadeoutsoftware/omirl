@@ -22,8 +22,8 @@ var SectionChartController = (function() {
         this.m_sChartType = this.m_oScope.model.chartType;
         this.m_sSubFolder = this.m_oScope.model.subFolder;
 
-        this.m_iHeight = 490;
-        this.m_iWidth = 730;
+        this.m_iHeight = 600;
+        this.m_iWidth = 750;
 
         var oControllerVar = this;
 
@@ -172,6 +172,28 @@ var SectionChartController = (function() {
 
     SectionChartController.prototype.getWidth = function() {
         return this.m_iWidth.toString() + "px";
+    }
+
+    SectionChartController.prototype.zoomIn = function() {
+        var oDialog = this.m_oDialogService.getExistingDialog(this.m_sSectionCode);
+        if (angular.isDefined(oDialog)) {
+            this.m_iHeight *= 1.1;
+            this.m_iWidth *= 1.1;
+            oDialog.ref.dialog("option", "height", this.m_iHeight);
+            oDialog.ref.dialog("option", "width", this.m_iWidth);
+
+        }
+    }
+
+    SectionChartController.prototype.zoomOut = function() {
+        var oDialog = this.m_oDialogService.getExistingDialog(this.m_sSectionCode);
+        if (angular.isDefined(oDialog)) {
+            this.m_iHeight /= 1.1;
+            this.m_iWidth /= 1.1;
+            oDialog.ref.dialog("option", "height", this.m_iHeight);
+            oDialog.ref.dialog("option", "width", this.m_iWidth);
+
+        }
     }
 
 

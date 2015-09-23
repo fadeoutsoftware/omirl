@@ -2127,10 +2127,10 @@ var MapController = (function () {
                     callbacks: {
                         // Click
                         click: function(feature) {
-                            if (feature.attributes.color != -1) {
+                            //if (feature.attributes.color != -1) {
                                 // Show chart
                                 oMapController.showSectionChart(feature);
-                            }
+                            //}
                         }
                     }
                 });
