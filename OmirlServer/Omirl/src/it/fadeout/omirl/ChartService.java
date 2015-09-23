@@ -368,7 +368,7 @@ public class ChartService {
 
 					// Get The path of the right date
 					String sPath = Omirl.getSubPath(sBasePath, oDate);
-
+					
 					if (sPath != null) {
 
 						String sSubPath = "";
@@ -468,9 +468,9 @@ public class ChartService {
 							oDays = Integer.parseInt(m_oServletConfig.getInitParameter("BackDaysSearch"));
 							if (oDays != null)
 							{
-								for(int iDay = 1; iDay < oDays; iDay ++)
+								for(int iDay = 1; iDay <= oDays; iDay ++)
 								{
-									oDate = new Date( oDate.getTime() - iDay * 24 * 3600 * 1000);
+									oDate = new Date( oDate.getTime() - 24 * 3600 * 1000);
 									// Get The Last File
 									oLastFile = Omirl.lastFileModified(sFeaturesPath, oDate);
 									if (oLastFile != null) {
@@ -503,7 +503,7 @@ public class ChartService {
 									System.out.println("ChartService.GetSectionChart: searching file " + sBackFile);
 
 									// Check if the file exists
-									File oBackChartFile = new File(sFile);
+									File oBackChartFile = new File(sBackFile);
 
 									// Found?					
 									if (oBackChartFile.exists()) {
