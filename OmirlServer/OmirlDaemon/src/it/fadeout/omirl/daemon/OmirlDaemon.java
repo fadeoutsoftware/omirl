@@ -2512,15 +2512,15 @@ public class OmirlDaemon {
 			for (int iPoints = 0; iPoints<aoPoints.size(); iPoints++) {
 				if (aoPoints.get(iPoints)!=null) {
 					// Is over the top?
-					if (aoPoints.get(iPoints).getVal()>dYMax)
+					if (aoPoints.get(iPoints).getVal()*aoInfo.get(0).getConversionFactor()>dYMax)
 					{
 						// Take the new Max
-						dYMax = aoPoints.get(iPoints).getVal();
+						dYMax = aoPoints.get(iPoints).getVal()*aoInfo.get(0).getConversionFactor();
 					}
 
-					if (aoPoints.get(iPoints).getVal()<dYMin)
+					if (aoPoints.get(iPoints).getVal()*aoInfo.get(0).getConversionFactor()<dYMin)
 					{
-						dYMin = aoPoints.get(iPoints).getVal();
+						dYMin = aoPoints.get(iPoints).getVal()*aoInfo.get(0).getConversionFactor();
 					}
 				}
 			}
@@ -2653,7 +2653,7 @@ public class OmirlDaemon {
 	public void RefreshHydroModel() {
 		try{
 
-			System.out.println("OmirlDaemon - Refresh Hydro Model");
+			System.out.println("OmirlDaemon - Refresh Hydro Model Table");
 
 			HydroModelTables aoHydro = m_oConfig.getHydroModelTables();
 
@@ -2663,14 +2663,14 @@ public class OmirlDaemon {
 			
 			for (ModelTable oModelTable : aoHydro.getModelsTable()) {
 
-				System.out.println("OmirlDaemon - Model Name" + oModelTable.getModelName() + " Code: " + oModelTable.getModelCode() );
+				System.out.println("OmirlDaemon - Hydro Model Table - Name" + oModelTable.getModelName() + " Code: " + oModelTable.getModelCode() );
 
 				SerializeHydroModel(oModelTable.getModelName(), oModelTable.getModelCode(), oModelTable.getHasSubFolders(), aoSectionsBasins);
 			}
 		}
 		catch(Exception oEx)
 		{
-			System.out.println("OmirlDaemon - Refresh Sections Layer Exception");
+			System.out.println("OmirlDaemon - Refresh Hydro Model Table Exception");
 			oEx.toString();
 		}
 
@@ -3432,6 +3432,8 @@ public class OmirlDaemon {
 	public void SerializeHydroModel(String sModelName, String sModelCode, Boolean bHasSubFolders, List<SectionBasins> aoSectionsBasins) {
 
 		List<SectionBasinsViewModel> aoSectionBasinsViewModel = new ArrayList<>();
+		
+		//System.out.println("SerializeHydroModel COMINCIO ");
 
 		try {
 
@@ -3443,6 +3445,8 @@ public class OmirlDaemon {
 				Date oDate = new Date();
 
 				String sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
+				
+				//System.out.println("SerializeHydroModel FULL 1 " + sFullPath);
 
 				if (bHasSubFolders)
 				{
@@ -3473,9 +3477,12 @@ public class OmirlDaemon {
 
 					sFullPath = sNewFullPath;
 				}
+				
+				//System.out.println("SerializeHydroModel FULL 2 " + sFullPath);
 
 				HashMap<String, Integer> aoSectionsMap = ReadSectionsLegend(sFullPath);
 
+				//System.out.println("SerializeHydroModel aoSectionsMap " + aoSectionsMap.size());
 
 				for (SectionBasins oSectionBasins : aoSectionsBasins) {
 					try {
@@ -3508,18 +3515,23 @@ public class OmirlDaemon {
 					}
 				}
 
-				sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
+				sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/tables/hydro/" + sModelCode,oDate);
+				
+				//System.out.println("SerializeHydroModel sFullPath 3 " + sFullPath);
 
 				if (sFullPath != null)  {
 
-					sFullPath = sFullPath+"/features";
+					//sFullPath = sFullPath+"/features";
 					File oFile = new File(sFullPath);
 					oFile.mkdirs();
 					oFile.setWritable(true, false);
 					oFile.setReadable(true, false);
 
-					String sFileName = sModelCode+m_oDateFormat.format(oDate)+".xml"; 
+					String sFileName = sModelCode+m_oDateFormat.format(oDate)+".xml";
+					
+					//System.out.println("SerializeHydroModel sFileName  " + sFileName);
 					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoSectionBasinsViewModel);
+					//System.out.println("SAVED");
 				}
 			}
 			else {
