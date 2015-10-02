@@ -166,6 +166,11 @@ angular.module('omirl.HydroService', ['omirl.ConstantsService']).
             return this.m_oHttp.get(this.APIURL + '/tables/sectionbasinlist/' + sModelCode);
         }
 
+        this.exportCSVModelHydro = function(sModelCode, sRefDate) {
+            //return this.m_aoModelTable;
+            return this.APIURL + '/tables/exportmodel/' + sModelCode + '/?sRefDate=' + sRefDate;
+        }
+
 
         this.getSections = function(oSectionLink) {
             return this.m_oHttp.get(this.APIURL + '/sections/'+oSectionLink.linkCode);

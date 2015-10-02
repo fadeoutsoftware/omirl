@@ -23,10 +23,6 @@
                             <img class="img-map-firstlevel-icon" ng-src="{{oModel.iconLink}}"
                                  ng-click="m_oController.modelLinkClicked(oModel)"/>
                         </div>
-
-                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 table-export-button-panel">
-                            <i class="fa fa-download" ng-show="m_oController.m_bDowloadEnabled" ng-click="m_oController.exportCsv()"></i>
-                        </div>
                     </div>
                 </div>
                 <div class="panel-footer">
@@ -49,6 +45,9 @@
                                 <input type="search" class="form-control searchinput" placeholder="{{'MODELSTABLE_SEARCHSEZIONE' | translate}}" ng-model="searchSection.sectionName" ng-change="m_oController.SectionChanged(searchSection.sectionName)">
                                 <span class="searchclear glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelSectionFilter()" ng-show="m_oController.m_bShowCancelSectionFilter"></span>
                             </div>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 table-export-button-panel">
+                            <i class="fa fa-download" ng-show="m_oController.m_bDowloadEnabled" ng-click="m_oController.exportCsv()"></i>
                         </div>
                     </div>
 

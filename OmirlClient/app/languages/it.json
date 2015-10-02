@@ -46,6 +46,8 @@
     "MAP_IDRO": "Idro",
     "MAP_RADAR": "Radar",
     "MAP_SATELLITE": "Satellite",
+    "MAP_LEGENDTOOLTIP":"Legenda",
+    "MAP_IDROLEGENDTOOLTIP":"Legenda Idro",
     "MAP_PH_CERCA": "Cerca localita'",
     "MAP_T_SFONDO": "Sfondo",
     "MAP_T_SITUAZIONETEMPO": "Situazione Attuale del Tempo",

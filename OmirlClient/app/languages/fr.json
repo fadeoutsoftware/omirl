@@ -46,6 +46,8 @@
     "MAP_IDRO": "Idro fr",
     "MAP_RADAR": "Radar fr",
     "MAP_SATELLITE": "Satellite fr",
+    "MAP_LEGENDTOOLTIP":"Legenda fr",
+    "MAP_IDROLEGENDTOOLTIP":"Legenda Idro fr",
     "MAP_PH_CERCA": "Cerca località fr",
     "MAP_T_SFONDO": "Sfondo fr",
     "MAP_T_SITUAZIONETEMPO": "Situazione Attuale del Tempo fr",

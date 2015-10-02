@@ -100,6 +100,7 @@ table { margin:auto; text-align: center;}
 
 #omirl-collapsable-panels {
     padding: 20px;
+
 }
 
 #omirl-collapsable-panels .panel-heading,
@@ -1369,3 +1370,19 @@ tbody.omirltbl td.odd {
     background:#bcd9e1;
     cursor:pointer;
 }
+
+/*-----Evidenzia la data e ora di riferimento----*/
+.div-time-clock
+{
+    padding: 10px 0px 0px 20px;
+    margin-bottom: -20px;
+}
+.i-time-clock-now
+{
+    color: green;
+}
+.i-time-clock-past
+{
+    color: #ffff00;
+}
+/*-----------------------------------------------*/

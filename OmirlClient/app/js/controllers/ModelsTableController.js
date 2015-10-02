@@ -14,7 +14,7 @@ var ModelsTableController = (function() {
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
         this.m_oHydroService = oHydroService;
-        this.m_bDowloadEnabled = false;
+        this.m_bDowloadEnabled = true;
 
         this.m_bShowCancelBasinFilter = false;
         this.m_bShowCancelSectionFilter = false;
@@ -157,7 +157,8 @@ var ModelsTableController = (function() {
 
 
     ModelsTableController.prototype.exportCsv = function() {
-        window.open(this.m_oStationsService.exportCsvStationList(this.m_oSelectedType.code), '_blank', '');
+        var sRefDate = this.m_oConstantsService.getReferenceDate();
+        window.open(this.m_oHydroService.exportCSVModelHydro(this.m_sModelCode, sRefDate), '_blank', '');
     }
 
     ModelsTableController.prototype.sectionClicked = function(sSectionCode, sBasin, sName, sLinkCode) {

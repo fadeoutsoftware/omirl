@@ -107,16 +107,28 @@
             </ul>
             <br/>
 
+            <div class="div-time-clock">
+                <span>
+                    <a href="#">
+                        <i class="fa fa-backward fa-1x i-time-clock-past" ng-show="!m_oController.m_bNowMode" ng-click="m_oController.setNow()">Past</i>
+                        <i class="fa fa-play fa-1x i-time-clock-now" ng-show="m_oController.m_bNowMode">Now</i>
+                    </a>
+                </span>
+            </div>
             <div id="omirl-collapsable-panels">
                 <div class="dropdown">
                     <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
-                        <div class="input-group"><input type="text" class="form-control" data-ng-model="m_oController.m_oReferenceDate"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <div class="input-group"><input type="text" class="form-control" data-ng-model="m_oController.m_oReferenceDate">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
                         </div>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <datetimepicker data-ng-model="m_oController.m_oReferenceDate" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="m_oController.onTimeSet(newDate, oldDate)"/>
                     </ul>
                 </div>
+
             </div>
 
             <div id="omirl-collapsable-panels">
@@ -196,7 +208,7 @@
                                     <div class="map-text-legend-selected">{{m_oController.m_sMapLegendSelected | translate}}</div>
 
 
-                                    <div class="map-text-legend-hover">{{m_oController.m_sMapLegendHover}}</div>
+                                    <div class="map-text-legend-hover">{{m_oController.m_sMapLegendHover | translate}}</div>
 
                                 </div>
                                 <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
@@ -249,7 +261,7 @@
                             <div class="row">
                                 <div class="map-text-legend">
                                     <div class="map-text-legend-selected">{{m_oController.m_sHydroLegendSelected | translate}}</div>
-                                    <div class="map-text-legend-hover">{{m_oController.m_sHydroLegendHover}}</div>
+                                    <div class="map-text-legend-hover">{{m_oController.m_sHydroLegendHover | translate}}</div>
                                 </div>
                                 <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
                                     <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsHydroFirstLevel"
@@ -291,7 +303,7 @@
                             <div class="row">
                                 <div class="map-text-legend">
                                     <div class="map-text-legend-selected">{{m_oController.m_sRadarLegendSelected | translate}}</div>
-                                    <div class="map-text-legend-hover">{{m_oController.m_sRadarLegendHover}}</div>
+                                    <div class="map-text-legend-hover">{{m_oController.m_sRadarLegendHover | translate}}</div>
                                 </div>
                                 <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
                                     <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsRadarFirstLevel"
@@ -327,7 +339,7 @@
                             <div class="row">
                                 <div class="map-text-legend">
                                     <div class="map-text-legend-selected">{{m_oController.m_sSatelliteLegendSelected | translate}}</div>
-                                    <div class="map-text-legend-hover">{{m_oController.m_sSatelliteLegendHover}}</div>
+                                    <div class="map-text-legend-hover">{{m_oController.m_sSatelliteLegendHover | translate}}</div>
                                 </div>
                                 <div class="map-back-icon hi-icon-effect-1 hi-icon-effect-1a">
                                     <i class="fa fa-arrow-circle-o-left" ng-show="!m_oController.m_bIsSatelliteFirstLevel"
@@ -358,7 +370,7 @@
     <div class="map-legend">
         <div class="row">
             <div class="map-legend-map" ng-show="m_oController.m_bDynamicLayerActive" >
-                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sMapLegendTooltip}}" ng-click="m_oController.mapLegendClicked()">
+                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sMapLegendTooltip | translate}}" ng-click="m_oController.mapLegendClicked()">
                     <ul>
                         <li>
                             <img class="map-legend-icon" src="{{m_oController.m_sMapLegendIconPath}}" >
@@ -367,16 +379,22 @@
                             <img class="map-legend-image" src="{{m_oController.m_sMapLegendPath}}"
                                  ng-show="m_oController.m_bShowMapLegendImage">
                         </li>
+                        <li>
+                            <i> {{m_oController.m_oSelectedDateTimeInfo}}</i>
+                        </li>
                     </ul>
                 </a>
             </div>
 
             <div class="map-legend-stations" ng-show="m_oController.m_bSensorLayerActive">
-                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip}}"  ng-click="m_oController.sensorsLegendClicked()">
+                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip | translate}}"  ng-click="m_oController.sensorsLegendClicked()">
                     <ul>
                         <li><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" style="height: 35px; vertical-align: super;"></li>
                         <li><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}"
                                  ng-show="m_oController.m_bShowSensorsLegendImage"></li>
+                        <li>
+                            <i> {{m_oController.m_oSelectedDateTimeInfo}}</i>
+                        </li>
                     </ul>
                 </a>
             </div>

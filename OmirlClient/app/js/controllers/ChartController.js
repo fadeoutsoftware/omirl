@@ -25,6 +25,8 @@ var ChartController = (function() {
 
         this.m_iHeight = 490;
         this.m_iWidth = 730;
+        this.m_iResolution;
+        this.m_oWindDirections = [];
 
         var oControllerVar = this;
         this.m_sSubtitle = '';
@@ -590,25 +592,28 @@ var ChartController = (function() {
                         oSerieCustomMarker.name = 'Wind Direction';
                         oSerieCustomMarker.axisId = oSerie.axisId;
                         oSerieCustomMarker.type = "scatter";
+                        oControllerVar.m_oWindDirections = [];
                         for(var iElement = 0; iElement< oSerie.data.length; iElement++)
                         {
                             // if direction not null
                             if (oSerie.data[iElement][1] != null) {
 
                                 //var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'windArrow'}};
-                                var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'url(img/windDirections/' + oSerie.data[iElement][1] + '.png)'}, toolText: oSerie.data[iElement][1]};
+                                var oData = {x: oSerie.data[iElement][0], y:-10, marker:{symbol: 'url(img/windDirections/' + oSerie.data[iElement][1] + '.png)'}, toolText: oSerie.data[iElement][1]};
                                 oSerieCustomMarker.data.push(oData);
                             }
+                            oControllerVar.m_oWindDirections.push(oSerie.data[iElement][1]);
+
                         }
                         // replace data serie
                         oSerie = oSerieCustomMarker;
                         //wind direction arrow
-                        //oControllerVar.drawWindArrows(oChart, oSerie);
 
                         oSerie.tooltip = {
                             pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
                             '<td style="text-align: right"><b>{point.toolText}</b></td></tr>'
                         }
+
 
                         // I need at least two points
                         if (oSerie.data.length>1) {
@@ -616,7 +621,9 @@ var ChartController = (function() {
                             var oSecondToLastElement = oSerie.data[oSerie.data.length - 2];
                             var oLastElement = oSerie.data[oSerie.data.length - 1];
                             // Obtain time step
-                            var iTimeStart = oLastElement[0] - 3*60*60*24*1000;
+                            var iTimeStart = oSerie.data[0][0];
+                            //set resolution
+                            oControllerVar.m_iResolution = oLastElement[0] - oSecondToLastElement[0];
 
                             if (oSerie.data[0][0]<iTimeStart)  {
                                 oChart.xAxis[0].zoom(iTimeStart,oLastElement[0]);
@@ -625,6 +632,8 @@ var ChartController = (function() {
                                 }
                             }
                         }
+
+
 
                     }
 
@@ -677,47 +686,24 @@ var ChartController = (function() {
                     }
 
                     oChart.addSeries(oSerie);
+
                 });
 
-
+                //oControllerVar.drawWindArrows(oChart);
+                //oControllerVar.drawBlocksForWindArrows(oChart);
             }
 
         }
     }
 
-    ChartController.prototype.zoomIn = function() {
-        //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sSectionCode);
-        this.m_iHeight *= 1.1;
-        this.m_iWidth *= 1.1;
-        this.LoadData();
-        this.addSeriesToChart();
-    }
 
-    ChartController.prototype.zoomOut = function() {
-        //alert('out');
-
-        this.m_iHeight /= 1.1;
-        this.m_iWidth /= 1.1;
-        this.LoadData();
-        this.addSeriesToChart();
-    }
-
-    ChartController.prototype.getHeight = function() {
-        return this.m_iHeight.toString() + "px";
-    }
-
-    ChartController.prototype.getMinWidth = function() {
-        return "310px";
-    }
-
-    ChartController.prototype.getWidth = function() {
-        return this.m_iWidth.toString() + "px";
-    }
-
+    /**
+     * Create wind speed symbols for the Beaufort wind scale. The symbols are rotated
+     * around the zero centerpoint.
+     */
     ChartController.prototype.windArrow = function (name) {
         var level,
             path;
-
 
         // The stem and the arrow head
         path = [
@@ -764,42 +750,122 @@ var ChartController = (function() {
         return path;
     };
 
-    ChartController.prototype.drawWindArrows = function (chart, serie) {
+    ChartController.prototype.drawWindArrows = function (chart) {
         var meteogram = this;
 
-        $.each(chart.series[0].data, function (i, point) {
-            var sprite, arrow, x, y;
+        $.each(chart.series, function (index, serie) {
+            if (serie.name == 'Wind Direction')
+            {
+                $.each(serie.data, function (i, point) {
+                    var sprite, arrow, x, y;
 
+                    if (meteogram.m_iResolution > 36e5 || i % 2 === 0) {
 
-            for (var iArrowCount = 0; iArrowCount < serie.data.length; iArrowCount++) {
-                if (point.x == serie.data[iArrowCount][0]) {
-
-                    var deg = serie.data[iArrowCount][1];
-                    if (deg != null) {
                         // Draw the wind arrows
                         x = point.plotX + chart.plotLeft + 7;
-                        y = 255;
+                        y = 440;
+                        //if (meteogram.windSpeedNames[i] === 'Calm') {
+                        //    arrow = chart.renderer.circle(x, y, 10).attr({
+                        //        fill: 'none'
+                        //    });
+                        //} else {
 
-                        arrow = chart.renderer.path(
-                            meteogram.windArrow("Light air")
-                        ).attr({
-                                rotation: parseInt(deg, 10),
-                                translateX: x, // rotation center
-                                translateY: y // rotation center
-                            });
+                        if (meteogram.m_oWindDirections[i] != null) {
 
-                        arrow.attr({
-                            stroke: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
-                            'stroke-width': 1.5,
-                            zIndex: 5
-                        })
-                            .add();
+                            arrow = chart.renderer.path(
+                                meteogram.windArrow('Light air')
+                            ).attr({
+                                    rotation: parseInt(meteogram.m_oWindDirections[i], 10),
+                                    translateX: x, // rotation center
+                                    translateY: y // rotation center
+                                });
+                            //}
+                            arrow.attr({
+                                stroke: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                'stroke-width': 1.5,
+                                zIndex: 5
+                            })
+                                .add();
+                        }
+
                     }
-
-                }
+                });
             }
         });
+
     };
+
+    /**
+     * Draw blocks around wind arrows, below the plot area
+     */
+    ChartController.prototype.drawBlocksForWindArrows = function (chart) {
+        var xAxis = chart.xAxis[0],
+            x,
+            pos,
+            max,
+            isLong,
+            isLast,
+            i;
+
+        var oController = this;
+
+        for (pos = xAxis.min, max = xAxis.max, i = 0; pos <= max + 36e5; pos += 36e5, i += 1) {
+
+            // Get the X position
+            isLast = pos === max + 36e5;
+            x = Math.round(xAxis.toPixels(pos)) + (isLast ? 0.5 : -0.5);
+
+            // Draw the vertical dividers and ticks
+            if (oController.m_iResolution > 36e5) {
+                isLong = pos % oController.m_iResolution === 0;
+            } else {
+                isLong = i % 2 === 0;
+            }
+            chart.renderer.path(['M', x, chart.plotTop + chart.plotHeight + (isLong ? 0 : 28),
+                'L', x, chart.plotTop + chart.plotHeight + 32, 'Z'])
+                .attr({
+                    'stroke': chart.options.chart.plotBorderColor,
+                    'stroke-width': 1
+                })
+                .add();
+        }
+    };
+
+    /**
+     * Get the title based on the XML data
+     */
+    ChartController.prototype.getTitle = function () {
+        return 'Meteogram for ' + this.xml.location.name + ', ' + this.xml.location.country;
+    };
+
+    ChartController.prototype.zoomIn = function() {
+        //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sSectionCode);
+        this.m_iHeight *= 1.1;
+        this.m_iWidth *= 1.1;
+        this.LoadData();
+        this.addSeriesToChart();
+    }
+
+    ChartController.prototype.zoomOut = function() {
+        //alert('out');
+
+        this.m_iHeight /= 1.1;
+        this.m_iWidth /= 1.1;
+        this.LoadData();
+        this.addSeriesToChart();
+    }
+
+    ChartController.prototype.getHeight = function() {
+        return this.m_iHeight.toString() + "px";
+    }
+
+    ChartController.prototype.getMinWidth = function() {
+        return "310px";
+    }
+
+    ChartController.prototype.getWidth = function() {
+        return this.m_iWidth.toString() + "px";
+    }
 
     ChartController.$inject = [
         '$scope',

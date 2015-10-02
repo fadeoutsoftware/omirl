@@ -45,6 +45,7 @@ var MapController = (function () {
         
         
 
+        var oControllerVar = this;
 
         // Used in HTML
 
@@ -74,8 +75,11 @@ var MapController = (function () {
         this.m_sMapLegendTooltip = "Legenda Idro";
         // Path of the hydro legend icon image
         this.m_sMapLegendIconPath = "";
-       
-
+        //Legend prefix
+        this.m_sLegendPrefix = "";
+        this.m_oTranslateService('MAP_LEGENDTOOLTIP').then(function(text){
+            oControllerVar.m_sLegendPrefix = text;
+        });
 
 
         // Selected Map Link
@@ -128,6 +132,8 @@ var MapController = (function () {
         // Hydro Third Levels Array
         this.m_aoHydroThirdLevels = [];
 
+        //date and time of selected feature
+        this.m_oSelectedDateTimeInfo = "";
 
         this.m_aoSatelliteLinks = [];
         this.m_aoRadarLinks = [];
@@ -228,8 +234,6 @@ var MapController = (function () {
         if ($("#omirlMap") != null) {
             $("#omirlMap").height(mapHeight);
         }
-
-        var oControllerVar = this;
 
 
         // Get Reference Date e Now Mode
@@ -819,7 +823,11 @@ var MapController = (function () {
         oMapLink.selected = true;
         // Layer Click
         oControllerVar.m_sMapLegendIconPath = oMapLink.link;
-        oControllerVar.m_sMapLegendTooltip = "Legenda " + oMapLink.description;
+        this.m_oTranslateService(oMapLink.description).then(function(text){
+            oControllerVar.m_sMapLegendTooltip = m_sLegendPrefix + " " + text;
+
+        });
+
         oControllerVar.m_sMapLegendSelected = oMapLink.description;
         oControllerVar.m_bDynamicLayerActive = true;
         oControllerVar.m_sMapLegendPath = oMapLink.legendLink;
@@ -1074,6 +1082,8 @@ var MapController = (function () {
      */
     MapController.prototype.sensorLinkClicked = function (oSensorLink) {
 
+        var oController = this;
+
         // Check if the sensor link is active
         if (!oSensorLink.isActive){
             // Set the textual description
@@ -1094,7 +1104,9 @@ var MapController = (function () {
             this.m_bSensorLayerActive = true;
             this.m_sSensorsLegendPath = oSensorLink.legendLink;
             this.m_sSensorsLegendIconPath = oSensorLink.imageLinkOff;
-            this.m_sSensorLegendTooltip = "Legenda " + oSensorLink.description;
+            this.m_oTranslateService(oSensorLink.description).then(function(text){
+                oController.m_sSensorLegendTooltip = oController.m_sLegendPrefix + " " + text;
+            });
             this.m_oSelectedSensorLink = oSensorLink;
 
             this.m_oConstantsService.setSensorLayerActive(oSensorLink.code);
@@ -1404,6 +1416,13 @@ var MapController = (function () {
         this.m_oStationsService.getStations(oSensorLink).success(function(data,status) {
 
             var aoStations = data;
+
+            //update date time info
+            oServiceVar.m_oSelectedDateTimeInfo = "";
+            if (aoStations != null && aoStations.length > 0)
+            {
+                oServiceVar.m_oSelectedDateTimeInfo = aoStations[0].updateDateTime;
+            }
 
             try{
 
@@ -2170,10 +2189,10 @@ var MapController = (function () {
                     callbacks: {
                         // Click
                         click: function(feature) {
-                            //if (feature.attributes.color != -1) {
+                            if (feature.attributes.color != -1) {
                                 // Show chart
                                 oMapController.showSectionChart(feature);
-                            //}
+                            }
                         }
                     }
                 });
@@ -2196,6 +2215,9 @@ var MapController = (function () {
      * Hide sections layer
      */
     MapController.prototype.hideSectionLayer = function(oHydroLink) {
+
+        var oController = this;
+
         try{
             // remove the Sections Layer from the map
             this.m_oMapService.map.removeLayer(this.m_oLayerService.getSectionsLayer());
@@ -2219,7 +2241,18 @@ var MapController = (function () {
 
         this.m_bHydroLayerActive = false;
         this.m_sHydroLegendPath = "";
-        this.m_sHydroLegendTooltip = "Legenda Idro";
+        if (angular.isDefined(oHydroLink)) {
+            this.m_oTranslateService(oHydroLink.description).then(function (text) {
+                oController.m_sHydroLegendTooltip = oController.m_sLegendPrefix + " " + text;
+            });
+        }
+        else
+        {
+            this.m_oTranslateService('MAP_IDROLEGENDTOOLTIP').then(function (text) {
+                oController.m_sHydroLegendTooltip = text;
+            });
+        }
+        //this.m_sHydroLegendTooltip = "Legenda Idro";
         this.m_sHydroLegendIconPath = "";
 
         this.m_oSelectedHydroLink = null;
@@ -2235,7 +2268,10 @@ var MapController = (function () {
         oHydroLink.selected = true;
         // Layer Click
         oControllerVar.m_sHydroLegendIconPath = oHydroLink.link;
-        oControllerVar.m_sHydroLegendTooltip = "Legenda " + oHydroLink.description;
+        this.m_oTranslateService(oHydroLink.description).then(function(text){
+            oControllerVar.m_sHydroLegendTooltip = oControllerVar.m_sLegendPrefix + " " + text;
+        });
+        //oControllerVar.m_sHydroLegendTooltip = "Legenda " + oHydroLink.description;
         oControllerVar.m_sHydroLegendSelected = oHydroLink.description;
         oControllerVar.m_bHydroLayerActive = true;
         oControllerVar.m_sHydroLegendPath = oHydroLink.legendLink;
@@ -2563,7 +2599,10 @@ var MapController = (function () {
         oRadarLink.selected = true;
         // Layer Click
         oControllerVar.m_sRadarLegendIconPath = oRadarLink.link;
-        oControllerVar.m_sRadarLegendTooltip = "Legenda " + oRadarLink.description;
+        this.m_oTranslateService(oRadarLink.description).then(function(text){
+            oControllerVar.m_sRadarLegendTooltip = oControllerVar.m_sLegendPrefix + " " + text;
+        });
+        //oControllerVar.m_sRadarLegendTooltip = "Legenda " + oRadarLink.description;
         oControllerVar.m_sRadarLegendSelected = oRadarLink.description;
         oControllerVar.m_bRadarLayerActive = true;
         oControllerVar.m_sRadarLegendPath = oRadarLink.legendLink;
@@ -2819,7 +2858,10 @@ var MapController = (function () {
         oSatelliteLink.selected = true;
         // Layer Click
         oControllerVar.m_sSatelliteLegendIconPath = oSatelliteLink.link;
-        oControllerVar.m_sSatelliteLegendTooltip = "Legenda " + oSatelliteLink.description;
+        this.m_oTranslateService(oSatelliteLink.description).then(function(text){
+            oControllerVar.m_sSatelliteLegendTooltip = oControllerVar.m_sLegendPrefix + " " + text;
+        });
+        //oControllerVar.m_sSatelliteLegendTooltip = "Legenda " + oSatelliteLink.description;
         oControllerVar.m_sSatelliteLegendSelected = oSatelliteLink.description;
         oControllerVar.m_bSatelliteLayerActive = true;
         oControllerVar.m_sSatelliteLegendPath = oSatelliteLink.legendLink;
@@ -2840,6 +2882,7 @@ var MapController = (function () {
 
         this.m_oConstantsService.setReferenceDate(newDate);
         this.refreshFullMap(this);
+        this.m_bNowMode = false;
         //console.log(newDate);
         //console.log(oldDate);
     }
@@ -2876,6 +2919,13 @@ var MapController = (function () {
             oController.switchSatelliteLinkState(true, oController.m_oSelectedSatelliteLink);
         }
 
+    }
+
+    MapController.prototype.setNow = function () {
+
+        this.m_oConstantsService.setReferenceDate("");
+        this.refreshFullMap(this);
+        this.m_bNowMode = true;
     }
 
     MapController.$inject = [
