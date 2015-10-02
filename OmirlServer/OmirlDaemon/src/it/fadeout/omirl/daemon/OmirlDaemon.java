@@ -195,7 +195,7 @@ public class OmirlDaemon {
 
 		Boolean bReturn = true;
 		long lNow = new Date().getTime();
-		if (lReferenceDate == -1)
+		if (lReferenceDate <= 0)
 			return bReturn;
 
 		if (aoChartInfo != null)
