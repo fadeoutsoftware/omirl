@@ -1,0 +1,104 @@
+<div class="sidebar-menu" ng-init="initMenuLinks()">
+    <div class="row">
+        <div class="map-text-legend">
+            <!--
+            <div class="map-text-legend-selected">{{m_sParentText | translate}} {{m_sChildText != "" && m_sChildText != null ? "->" : ""}} {{m_sChildText != "" ? m_sChildText : "" | translate}}
+            </div>
+            -->
+            <div class="map-text-legend-selected">{{m_sParentText | translate}}</div>
+        </div>
+    </div>
+
+    <div class="row">
+        
+        
+        <div ng-repeat="oRow in firstLevelMenuRows">
+            <!-- Show this if the row contains menu link -->
+            <ul ng-if="oRow.isMenuLinkContainer() == true"
+                class="menu-items-wrapper" 
+                >
+                <li class='map-firstlevel-icon' 
+                    ng-repeat="oItem in oRow.getMenuLinks()"
+                    ng-class="{'map-firstlevel-icon-selected': isActive(oItem) == true, 'last-of-row' : isLastLinkOfRow(oRow, oItem) == true}"
+                    tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}"
+                >
+                    <img class="img-map-firstlevel-icon" 
+                         ng-src="{{oItem.link}}"
+                         ng-click="mainItemClick(oItem, oRow.getRowIdToOpen())"
+                         />
+                    <div class="sublevel-border-overlay" ng-show="isActive(oItem) == true"></div>
+                </li>
+            </ul>
+            <div ng-if="oRow.isMenuLinkContainer() == true" class="clearfix"></div>
+            
+            <!-- Show this if the row is the second level container-->
+            <div ng-if="oRow.isSecondLevelWrapper() == true"
+                 class="clearfix second-level-menu-wrapper"
+                 ng-hide="isSecondLevelRowOpen(oRow.getSecondLevelId()) == false"
+                >
+                <div ng-show="menuItemsByLevel[MENU_LEVEL_2].length == 0"><i class="fa fa-refresh fa-spin"></i></div>
+                <div class="menu-third-level-dropdown" ng-show="isThirdLevelVisible == true">
+                    <select name="repeatSelect" id="repeatSelect" ng-model="thirdLevelComboBox.selection">
+                        <option ng-repeat="option in thirdLevelComboBox.options" 
+                                value="{{option.description}}"
+                                ng-selected="isSelected(option)"
+                                >{{option.description | translate}}</option>
+                      </select>
+                    
+                </div>
+                <div ng-hide="menuItemsByLevel[MENU_LEVEL_2].length == 0">
+                    <ul class="menu-items-wrapper">
+                        <li class='map-firstlevel-icon'
+                            ng-repeat="oItem in menuItemsByLevel[MENU_LEVEL_2]"
+                            ng-class="{'map-firstlevel-icon-selected': isSubActive(oItem) == true}"
+                            tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}">
+                            <img class="img-map-firstlevel-icon" ng-src="{{oItem.link}}"
+                             ng-click="submenuItemClick(oItem)"/>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+
+                    <div class="map-text-legend-selected second-level">{{m_sChildText != "" ? m_sChildText : "" | translate}}</div>
+                </div>
+                
+            </div>
+        </div>
+        <!--
+        <ul class="menu-items-wrapper">
+            <li class='map-firstlevel-icon' 
+                ng-repeat="oItem in getFirstLevelMenuRows()"
+                ng-class="{'map-firstlevel-icon-selected': isActive(oItem.getMenuLink()) == true}"
+                tooltip-popup-delay="500" tooltip="{{oItem.getMenuLink().description | translate}}"
+            >
+                <img class="img-map-firstlevel-icon" 
+                     ng-src="{{oItem.getMenuLink().link}}"
+                     ng-click="mainItemClick(oItem)"
+                     />
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+        <div class='submenu' ng-show="m_bIsSubmenuVisible == true">
+            <ul class="menu-items-wrapper">
+                <li class='map-firstlevel-icon'
+                    ng-repeat="oItem in menuItemsByLevel[1]"
+                    ng-class="{'map-firstlevel-icon-selected': isSubActive(oItem) == true}"
+                    tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}">
+                    <img class="img-map-firstlevel-icon" ng-src="{{oItem.link}}"
+                     ng-click="submenuItemClick(oItem)"/>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+            
+            <div class="map-text-legend-selected">{{m_sChildText != "" ? m_sChildText : "" | translate}}</div>
+        </div>
+        <!--
+        <div ng-repeat="oTable in m_oController.m_oTableService.getTableLinks()"
+             class="col-md-1 col-xs-1 map-firstlevel-icon"
+             ng-class="{'map-firstlevel-icon-selected': oTable.isActive}"
+             tooltip-popup-delay="500" tooltip="{{oTable.description}}">
+            <img class="img-map-firstlevel-icon" ng-src="{{oTable.imageLinkOff}}"
+                 ng-click="m_oController.m_oTableService.tableLinkClicked(oTable)"/>
+        </div>
+        -->
+    </div>
+</div>

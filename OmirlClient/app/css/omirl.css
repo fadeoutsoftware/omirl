@@ -830,13 +830,16 @@ i.scroll:hover {
 /*.dropdown {position: inherit;}*/
 /*.dropdown .open {position: absolute;}*/
 
+
+
+
+/*
 .map-legend ul{
     position:fixed;
     bottom:0px;
 
 }
-
-
+*/
 [class*="map-legend-"] li {display: -webkit-box; list-style: none;float: left;}
 
 [class*="map-legend-"] li:first-child {width:50px; height:60 }

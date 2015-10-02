@@ -26,7 +26,6 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             var oServiceVar = this;
 
             oServiceVar.m_aoMapFirstLevels = [];
-
             this.m_oHttp.get(this.APIURL + '/mapnavigator/maps').success(function(data,status) {
                 oServiceVar.m_aoMapFirstLevels = data;
             }).error(function(data,status){

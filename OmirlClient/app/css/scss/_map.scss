@@ -1,0 +1,36 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 25-set-2015, 17.20.26
+    Author     : d.fiori
+*/
+
+$color-map-title-bg: #7fbbda;
+$color-map-title-text: whitesmoke;
+
+.map{
+    position: relative;
+    
+    .map-title{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        height: 40px;
+        z-index: 1000;
+        background-color: $color-map-title-bg;
+        text-align: center;
+        color: $color-map-title-text;
+        font-size: 2rem;
+        line-height: 3.5rem;
+    }
+    
+    .map-legend{
+        position: absolute;
+        bottom: 40px;
+        left: 200px;
+    }
+}

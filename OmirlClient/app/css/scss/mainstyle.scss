@@ -9,6 +9,7 @@ $color_omirl_blue: #7fbbda;
 @import "mixins";
 @import "gallery";
 @import "sidebar_menu";
+@import "map";
 
 
 .no-text-select{ @include noselect;}

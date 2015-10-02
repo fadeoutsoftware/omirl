@@ -2,11 +2,16 @@
 
     <div class="row">
         <div class="map-panel col-md-10 col-xs-9" id="omirlMap" ol-map zoom="9" center="8.60,44.20"
-             controls="zoom,navigation,attribution,mousePosition"></div>
+            controls="zoom,navigation,attribution,mousePosition">
+            <div class="map-title">
+                Lorem ipsum dolor sit amet consectetur adipiscing elit
+            </div>
+        </div>
         <!--<div class="map-controls-panel" >
         <!--        col-md-10 col-xs-9          -->
 
         <nav class="map-controls-panel col-md-2 col-xs-3" id="mapNavigation">
+            
             <!--      col-xs-6 col-md-2       -->
 
             <!--<div class="map-geo-search grid row ">
@@ -170,6 +175,21 @@
                         </accordion-heading>
                         <div class="map-accordion-content">
                             <div class="row">
+                                <sidebar-menu-legacy
+                                    controller="m_oController"
+                                    menu-legend-selected="m_oController.m_sMapLegendSelected"
+                                    menu-legend-hover="m_oController.m_sMapLegendHover"
+                                    is-first-level="m_oController.m_bIsFirstLevel"
+                                    on-menu-item-click="m_oController.mapLinkClicked"
+                                    menu-items-list="m_oController.m_aoMapLinks"
+                                    get-menu-items-method="m_oController.getMapLinks"
+                                    third-level-menu-items="m_oController.m_aoThirdLevels"
+                                    third-level-menu-selected-item="m_oController.m_sMapThirdLevelSelected"
+                                    third-level-menu-click="m_oController.mapThirdLevelClicked"
+                                >        
+                                </sidebar-menu-legacy>
+                            </div>  
+                                <!--
                                 <div class="map-text-legend">
 
 
@@ -209,6 +229,7 @@
                                         class="img-map-firstlevel-icon" src="{{oMapLink.link}}"
                                         ng-click="m_oController.mapLinkClicked(oMapLink)"/></div>
                             </div>
+                                -->
                         </div>
                     </accordion-group>
 

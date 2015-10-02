@@ -157,15 +157,67 @@ and open the template in the editor.
     Created on : 30-giu-2015, 17.14.31
     Author     : d.fiori
 */
+.sidebar-menu .map-text-legend-selected {
+  height: 2rem; }
+  .sidebar-menu .map-text-legend-selected.second-level {
+    height: auto; }
 .sidebar-menu ul.menu-items-wrapper {
   margin: 0px;
   padding: 0px; }
   .sidebar-menu ul.menu-items-wrapper li {
     float: left;
     box-sizing: content-box;
-    padding: 2px; }
+    padding: 2px;
+    position: relative;
+    overflow: visible; }
+    .sidebar-menu ul.menu-items-wrapper li.last-of-row {
+      clear: right; }
+    .sidebar-menu ul.menu-items-wrapper li .sublevel-border-overlay {
+      left: -4px;
+      height: 8px;
+      background-color: #fff;
+      position: absolute;
+      z-index: 100;
+      bottom: -10px;
+      right: -4px; }
 .sidebar-menu .submenu {
   margin-left: 15px; }
+.sidebar-menu .second-level-menu-wrapper {
+  border: 1px solid #000;
+  padding: 6px; }
+.sidebar-menu .menu-third-level-dropdown {
+  margin: 10px 0px; }
+  .sidebar-menu .menu-third-level-dropdown select {
+    height: 3rem;
+    width: 100%; }
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 25-set-2015, 17.20.26
+    Author     : d.fiori
+*/
+.map {
+  position: relative; }
+  .map .map-title {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 40px;
+    z-index: 1000;
+    background-color: #7fbbda;
+    text-align: center;
+    color: whitesmoke;
+    font-size: 2rem;
+    line-height: 3.5rem; }
+  .map .map-legend {
+    position: absolute;
+    bottom: 40px;
+    left: 200px; }
 
 .no-text-select {
   -webkit-touch-callout: none;

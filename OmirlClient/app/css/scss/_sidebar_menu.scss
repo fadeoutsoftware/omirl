@@ -9,6 +9,14 @@ and open the template in the editor.
 */
 
 .sidebar-menu{
+    .map-text-legend-selected{
+        height: 2rem;
+        
+        &.second-level{
+            height: auto;
+        }
+    }
+    
     ul.menu-items-wrapper{
         margin: 0px;
         padding: 0px;
@@ -17,10 +25,44 @@ and open the template in the editor.
             float:left;
             box-sizing: content-box;
             padding: 2px;
+            
+            position: relative;
+            overflow: visible;
+            
+            &.last-of-row{
+                clear: right;
+            }
+            
+            .sublevel-border-overlay{
+                left: -4px;
+                height: 8px;
+                background-color: #fff;
+                position: absolute;
+                z-index: 100;
+                bottom: -10px;
+                right: -4px;
+            }
         }
     }
     
     .submenu{
         margin-left: 15px;
     }
+    
+    
+    .second-level-menu-wrapper{
+        //margin-left: 15px;
+        border: 1px solid #000;
+        //border-top: 0px;
+        padding: 6px;
+    }
+    
+    .menu-third-level-dropdown{
+        margin: 10px 0px;
+        select{
+            height: 3rem;
+            width: 100%;
+        }
+    }
 }
+

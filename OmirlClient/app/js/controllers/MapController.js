@@ -31,6 +31,19 @@ var MapController = (function () {
         // Flag to know if hydro first level is shown
         this.m_bIsHydroFirstLevel = true;
         this.m_iHydroLevel = 1;
+        
+        
+        //**********************************************************************
+        //* Variables listeners
+        //**********************************************************************
+        // Listeners to watch "menu 1st level links"
+        $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getMapFirstLevels(); }, function(newValue){
+            console.debug("[MapController] m_oController.m_oMapNavigatorService.getMapFirstLevels", newValue);
+            $scope.m_oController.m_aoMapLinks = $scope.m_oController.m_oMapNavigatorService.getMapFirstLevels();            
+        });
+        //**********************************************************************
+        
+        
 
 
         // Used in HTML
@@ -61,6 +74,7 @@ var MapController = (function () {
         this.m_sMapLegendTooltip = "Legenda Idro";
         // Path of the hydro legend icon image
         this.m_sMapLegendIconPath = "";
+       
 
 
 
@@ -490,6 +504,13 @@ var MapController = (function () {
         });
     }
 
+
+    MapController.prototype.getMapTitle = function()
+    {    
+        return this.m_sMapLegendSelected
+    }
+
+
     /**
      * Method that fires initMap Event when all needed data are received
      * @param oMapController
@@ -648,14 +669,18 @@ var MapController = (function () {
      * Click on a Icon of the navigator
      * @param oMapLink Map link or null for back
      */
-    MapController.prototype.mapLinkClicked = function (oMapLink) {
+    MapController.prototype.mapLinkClicked = function (oMapLink, oController)
+    {
+        console.debug("Clic on:", oMapLink, " - is 1st level:", oController.m_bIsFirstLevel)
+        if( !oController )
+            oController = this;
 
         // Map Link = null stands for back: impossible to have back on first level
-        if (this.m_bIsFirstLevel && oMapLink == null) return;
+        if (oController.m_bIsFirstLevel && oMapLink == null) return;
 
         // Clear member variables
-        this.m_bShowThirdLevel = false;
-        this.m_aoThirdLevels = [];
+        oController.m_bShowThirdLevel = false;
+        oController.m_aoThirdLevels = [];
 
         // var to know if this is the selected entry
         var bIsSelected = false;
@@ -663,36 +688,37 @@ var MapController = (function () {
         // Is this a Map Link Click?
         if (oMapLink != null) {
             // Write on screen the Selected Layer description
-            if (!this.m_bDynamicLayerActive && this.m_bIsFirstLevel) this.m_sMapLegendSelected = oMapLink.description;
+            if (!oController.m_bDynamicLayerActive && oController.m_bIsFirstLevel) oController.m_sMapLegendSelected = oMapLink.description;
             // Remember if it was selected or not
             bIsSelected = oMapLink.selected;
         }
         else {
             // No is a Back Click
-            if (!this.m_bDynamicLayerActive) this.m_sMapLegendSelected = "MAP_T_LEGENDSELECTED";
+            if (!oController.m_bDynamicLayerActive) oController.m_sMapLegendSelected = "MAP_T_LEGENDSELECTED";
         }
 
         // Clear all selection flags
-        this.m_aoMapLinks.forEach(function(oEntry) {
-            oEntry.selected = false;
-        });
+//        oController.m_aoMapLinks.forEach(function(oEntry) {
+//            oEntry.selected = false;
+//        });
 
 
         // We are in the first level?
-        if (this.m_bIsFirstLevel) {
+        if (oController.m_bIsFirstLevel) {
 
             // Remember we are in second level
-            this.m_bIsFirstLevel = false;
+            oController.m_bIsFirstLevel = false;
 
             // Clear variables and remember the Controller ref
-            var oControllerVar = this;
+            var oControllerVar = oController;
             oControllerVar.m_aoMapLinks = [];
 
             // Get second level from server
-            this.m_oMapNavigatorService.getMapSecondLevels(oMapLink.linkId).success(function(data,status) {
+            oController.m_oMapNavigatorService.getMapSecondLevels(oMapLink.linkId).success(function(data,status) {
 
                 // Second Level Icons
                 oControllerVar.m_aoMapLinks = data;
+                //oControllerVar.m_oScope.$apply();
 
                 // Is there any Map selected?
                 if (oControllerVar.m_oSelectedMapLink != null) {
@@ -736,18 +762,18 @@ var MapController = (function () {
             // We are in second level
             if (oMapLink == null) {
                 // Back: get first levels
-                this.m_aoMapLinks = this.m_oMapNavigatorService.getMapFirstLevels();
-                this.m_bIsFirstLevel = true;
+                oController.m_aoMapLinks = oController.m_oMapNavigatorService.getMapFirstLevels();
+                oController.m_bIsFirstLevel = true;
             }
             else {
                 // Switch to show or not third level
                 if (oMapLink.hasThirdLevel) {
 
                     var oMapLinkCopy = oMapLink;
-                    var oControllerVar = this;
+                    var oControllerVar = oController;
 
                     // Get third levels from the service
-                    this.m_oMapNavigatorService.getMapThirdLevel(oMapLink).success(function(data,status) {
+                    oControllerVar.m_oMapNavigatorService.getMapThirdLevel(oMapLink).success(function(data,status) {
 
                         oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oMapLinkCopy);
                     }).error(function(data,status){
@@ -756,28 +782,28 @@ var MapController = (function () {
 
                 }
                 else {
-                    this.m_sMapThirdLevelSelectedModifier = "";
+                    oController.m_sMapThirdLevelSelectedModifier = "";
                 }
 
                 if (!bIsSelected) {
 
-                    //this.setSelectedMapLinkOnScreen(this,oMapLink);
-                    this.selectedDynamicLayer(oMapLink, this.m_sMapThirdLevelSelectedModifier);
+                    //oController.setSelectedMapLinkOnScreen(this,oMapLink);
+                    oController.selectedDynamicLayer(oMapLink, oController.m_sMapThirdLevelSelectedModifier, oController);
                 }
                 else {
                     // Remove from the map
-                    if (this.m_oLayerService.getDynamicLayer() != null) {
-                        this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
-                        this.m_oLayerService.setDynamicLayer(null);
+                    if (oController.m_oLayerService.getDynamicLayer() != null) {
+                        oController.m_oMapService.map.removeLayer(oController.m_oLayerService.getDynamicLayer());
+                        oController.m_oLayerService.setDynamicLayer(null);
                     }
-                    this.m_sMapLegendSelected = "";
-                    this.m_bShowThirdLevel = false;
-                    this.m_bDynamicLayerActive = false;
-                    this.m_sMapLegendPath = "";
-                    this.m_sMapLegendTooltip = "Legenda Mappa";
-                    this.m_sMapLegendIconPath = "";
+                    oController.m_sMapLegendSelected = "";
+                    oController.m_bShowThirdLevel = false;
+                    oController.m_bDynamicLayerActive = false;
+                    oController.m_sMapLegendPath = "";
+                    oController.m_sMapLegendTooltip = "Legenda Mappa";
+                    oController.m_sMapLegendIconPath = "";
 
-                    this.m_oSelectedMapLink = null;
+                    oController.m_oSelectedMapLink = null;
                 }
             }
         }
@@ -830,7 +856,10 @@ var MapController = (function () {
      * @param oMapLink Link to the layer
      * @param sModifier Modifier of the layer Id
      */
-    MapController.prototype.selectedDynamicLayer = function (oMapLink, sModifier) {
+    MapController.prototype.selectedDynamicLayer = function (oMapLink, sModifier, oController)
+    {
+        if( !oController )
+            oController = this;
 
         if (!angular.isDefined(sModifier)) {
             sModifier = "none";
@@ -851,12 +880,12 @@ var MapController = (function () {
 
         var sOldLayerIdentifier = "";
 
-        if (this.m_oLayerService.getDynamicLayer() != null)
+        if (oController.m_oLayerService.getDynamicLayer() != null)
         {
-            sOldLayerIdentifier = this.m_oLayerService.getDynamicLayer().params.LAYERS;
+            sOldLayerIdentifier = oController.m_oLayerService.getDynamicLayer().params.LAYERS;
         }
 
-        this.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
+        oController.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
 
             oController.setSelectedMapLinkOnScreen(oController,oMapLink);
 
@@ -931,12 +960,12 @@ var MapController = (function () {
 
         var sOldLayerIdentifier = "";
 
-        if (this.m_oLayerService.getDynamicLayer() != null)
+        if (oController.m_oLayerService.getDynamicLayer() != null)
         {
-            sOldLayerIdentifier = this.m_oLayerService.getDynamicLayer().params.LAYERS;
+            sOldLayerIdentifier = oController.m_oLayerService.getDynamicLayer().params.LAYERS;
         }
 
-        this.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
+        oController.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
 
             //oController.setSelectedMapLinkOnScreen(oController,oMapLink);
 
@@ -985,23 +1014,37 @@ var MapController = (function () {
      * Function called when a third level element is clicked
      * @param oThirdLevel
      */
-    MapController.prototype.mapThirdLevelClicked = function (oThirdLevel) {
+    MapController.prototype.mapThirdLevelClicked = function (oThirdLevel, oController)
+    {
+        if( !oController )
+            oController = this;
+        
         // Save actual description
-        this.m_sMapThirdLevelSelected = oThirdLevel.description;
+        oController.m_sMapThirdLevelSelected = oThirdLevel.description;
         // Save actual modifier
-        this.m_sMapThirdLevelSelectedModifier = oThirdLevel.layerIDModifier;
+        oController.m_sMapThirdLevelSelectedModifier = oThirdLevel.layerIDModifier;
         // Show the layer
-        this.selectedDynamicLayer(oThirdLevel.mapItem, oThirdLevel.layerIDModifier);
+        oController.selectedDynamicLayer(oThirdLevel.mapItem, oThirdLevel.layerIDModifier, oController);
     }
 
-    MapController.prototype.getMapLinks = function () {
-
-        if (this.m_bIsFirstLevel) {
-            this.m_aoMapLinks = this.m_oMapNavigatorService.getMapFirstLevels();
+    MapController.prototype.getMapLinks = function (oController) {
+        
+        if( !oController)
+            oController = this;
+            
+        if (oController.m_bIsFirstLevel) {
+            oController.m_aoMapLinks = oController.m_oMapNavigatorService.getMapFirstLevels();
         }
-
-        return this.m_aoMapLinks;
+        return oController.m_aoMapLinks;
     }
+    
+//    MapController.prototype.getMapLinksForDirective = function ()
+//    {        
+//        if ($scope.m_oController.m_bIsFirstLevel == true) {
+//            this.m_aoMapLinks = this.m_oMapNavigatorService.getMapFirstLevels();
+//        }
+//        return this.m_aoMapLinks;
+//    }
 
     MapController.prototype.getMapThirdLevels = function() {
         return this.m_aoThirdLevels;
