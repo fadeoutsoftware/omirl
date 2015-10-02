@@ -26,8 +26,11 @@ import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableViewModel;
 import it.fadeout.omirl.viewmodels.MobileStation;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
+import it.fadeout.omirl.viewmodels.SectionBasinsCodesViewModel;
 import it.fadeout.omirl.viewmodels.SectionBasinsViewModel;
 import it.fadeout.omirl.viewmodels.SectionViewModel;
+import it.fadeout.omirl.viewmodels.SensorListTableRowViewModel;
+import it.fadeout.omirl.viewmodels.SensorListTableViewModel;
 import it.fadeout.omirl.viewmodels.SensorValueRowViewModel;
 import it.fadeout.omirl.viewmodels.SensorValueTableViewModel;
 import it.fadeout.omirl.viewmodels.SensorViewModel;
@@ -496,11 +499,11 @@ public class TablesService {
 	@Path("/exportmaxvalues")
 	@Produces({"application/octet-stream"})
 	public Response ExportSensorValuesTable(@QueryParam("sRefDate") String sRefDate) {
-		
+
 		return ExportValue(sRefDate);
-		
+
 	}
-	
+
 
 	private Response ExportValue(String sRefDate)
 	{
@@ -674,5 +677,142 @@ public class TablesService {
 
 		return Response.ok(stream).header("Content-Disposition", "attachment;filename=Max_Values.csv").build();
 	}
+
+
+	/**
+	 * Gets sensors data
+	 * @return
+	 */
+	@GET
+	@Path("/exportmodel/{sCode}")
+	@Produces({"application/octet-stream"})
+	public Response ExportModelHydro(@PathParam("sCode") String sCode, @QueryParam("sRefDate") String sRefDate) {
+
+		System.out.println("StaionsService.ExportStationsListTable: Code = " + sCode);
+
+		//Load model list
+		List<SectionBasinsViewModel> aoSections = new ArrayList<SectionBasinsViewModel>();
+		StreamingOutput stream = null;
+		try {			
+
+			// Get Config
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			if (oConfObj != null)  {
+
+				// Cast Config
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+
+				ArrayList<HydroModelLinkConfig> oHydroModelList = oConfig.getHydroModelLinks();
+
+				for (HydroModelLinkConfig hydroModelLinkConfig : oHydroModelList) {
+					if (hydroModelLinkConfig.getLinkCode().equals(sCode))
+					{
+						// Date: will be received from client...
+						Date oDate = new Date();
+
+						if (sRefDate!=null)
+						{
+							if (sRefDate.equals("") == false) 
+							{
+								// Try e catch per fare il parsing 
+								// se è valido sostituire oDate.
+								SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
+								try {
+
+									oDate = dtFormat.parse(sRefDate);
+
+								} catch (ParseException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+
+						// Find the right Sensor Link Configuration
+						for (HydroModelLinkConfig oLinkConfig : oConfig.getHydroModelLinks()) {
+
+							if (oLinkConfig.getLinkCode().equals(sCode)) {
+
+								System.out.println("SectionsService.GetSection: Section Code Config Found");
+
+								// Get The path of the right date
+								String sPath = Omirl.getSubPath(oLinkConfig.getFilePath(), oDate);
+
+								if (sPath != null) {
+
+									//sPath = sPath + "/features";
+
+									System.out.println("TablesService.GetSectionBasinsList: searching path " + sPath);
+
+									// Get The Last File
+									File oLastFile = Omirl.lastFileModified(sPath, oDate);
+
+									// Found?
+									if (oLastFile != null) {
+
+										System.out.println("SectionsService.GetSection: Opening File " + oLastFile.getAbsolutePath());
+
+										try {
+											// Ok read sections 
+											aoSections = (List<SectionBasinsViewModel>) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+
+											final List<SectionBasinsViewModel> oEndList =aoSections; 
+											if (oEndList != null)
+											{
+												stream = new StreamingOutput() {
+													@Override
+													public void write(OutputStream os) throws IOException, WebApplicationException {
+														Writer writer = new BufferedWriter(new OutputStreamWriter(os));
+
+														writer.write("Basin;Section;\n");
+
+
+														for (int iTableRows=0; iTableRows<oEndList.size(); iTableRows++) {
+
+															if (oEndList.size() > 0)
+																writer.write(oEndList.get(iTableRows).getBasinName()+";");
+
+															List<SectionBasinsCodesViewModel> oColumns = oEndList.get(iTableRows).getSectionBasinsCodes();
+															for (int iColumn=0; iColumn<oColumns.size(); iColumn++) {
+
+																writer.write(oColumns.get(iColumn).getSectionName()+";");
+															}
+
+															writer.write("\n");
+															//writer.write("test");
+														}
+
+														writer.flush();
+													};
+
+												};
+
+											}
+
+										} catch (Exception e) {
+											e.printStackTrace();
+										}							
+									}
+								}
+								else {
+									System.out.println("SectionsService.GetSection: WARNING path is null");
+								}
+
+								// We are done
+								break;
+							}
+						}
+					}
+
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return Response.ok(stream).header("Content-Disposition", "attachment;filename="+sCode+"_List.csv").build();
+	}	
+
+
 
 }

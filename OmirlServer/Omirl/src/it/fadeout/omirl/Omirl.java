@@ -374,7 +374,7 @@ public class Omirl extends Application {
 		String sFullDir = sBasePath + "/" + oDateFormat.format(oDate);
 				
 		return sFullDir;
-	}	
+	}
 	
 	public static File lastFileModified(String dir, Date oRefDate) {
 		File oDir = new File(dir);
