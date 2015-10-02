@@ -5,6 +5,7 @@ public class SectionLayerInfo {
 	String modelCode;
 	String flagColumn;
 	Boolean hasSubFolders=false;
+	private Boolean disableOnMap=false;
 	
 	public String getModelName() {
 		return modelName;
@@ -29,6 +30,12 @@ public class SectionLayerInfo {
 	}
 	public void setHasSubFolders(Boolean hasSubFolders) {
 		this.hasSubFolders = hasSubFolders;
+	}
+	public Boolean getDisableOnMap() {
+		return disableOnMap;
+	}
+	public void setDisableOnMap(Boolean disableOnMap) {
+		this.disableOnMap = disableOnMap;
 	}
 
 }

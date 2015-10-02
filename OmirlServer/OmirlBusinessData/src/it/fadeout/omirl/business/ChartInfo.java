@@ -19,6 +19,8 @@ public class ChartInfo {
 	String dashStyle;
 	int lineWidth = 2;
 	String color;
+	//Refresh in minutes
+	int refreshTime;
 	
 	public String getName() {
 		return name;
@@ -122,5 +124,11 @@ public class ChartInfo {
 	}
 	public void setColor(String color) {
 		this.color = color;
+	}
+	public int getRefreshTime() {
+		return refreshTime;
+	}
+	public void setRefreshTime(int refreshTime) {
+		this.refreshTime = refreshTime;
 	}
 }

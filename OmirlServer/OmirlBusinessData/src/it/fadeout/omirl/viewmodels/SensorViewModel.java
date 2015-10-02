@@ -3,6 +3,8 @@ package it.fadeout.omirl.viewmodels;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 public class SensorViewModel {
 	int stationId;
 	String name;
@@ -16,6 +18,8 @@ public class SensorViewModel {
 	int alt;
 	String otherHtml;
 	String imgPath;
+	@Transient
+	String updateDateTime;
 	
 	public int getStationId() {
 		return stationId;
@@ -89,6 +93,12 @@ public class SensorViewModel {
 	}
 	public void setMunicipality(String municipality) {
 		this.municipality = municipality;
+	}
+	public String getUpdateDateTime() {
+		return updateDateTime;
+	}
+	public void setUpdateDateTime(String updateDateTime) {
+		this.updateDateTime = updateDateTime;
 	}
 	
 }
