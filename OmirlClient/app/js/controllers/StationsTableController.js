@@ -41,7 +41,7 @@ var StationsTableController = (function() {
         var oControllerVar = this;
 
         refreshStationData = function() {
-            this.m_oStationsService.getStationsTypes().success(function (data, status) {
+                oControllerVar.m_oStationsService.getStationsTypes().success(function (data, status) {
 
                 for (var iTypes = 0; iTypes < data.length; iTypes++) {
                     if (data[iTypes].code == "Pluvio") {
