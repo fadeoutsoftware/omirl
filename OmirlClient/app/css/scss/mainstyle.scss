@@ -9,6 +9,7 @@ $color_omirl_blue: #7fbbda;
 @import "mixins";
 @import "gallery";
 @import "sidebar_menu";
+@import "tables";
 @import "map";
 
 
@@ -22,4 +23,44 @@ $color_omirl_blue: #7fbbda;
 
 .side-bar-toggle{
     &:hover{ cursor: pointer;}
+}
+
+ul.sidebar-nav{
+    li{
+        a{
+            &:hover{ cursor: pointer;}
+        }
+    }
+}
+
+.date-selector-container{
+    $color-date-selector-bg-past: #ffbc6c;
+    //$color-date-selector-bg-past: #ffcc8f;
+    $color-date-selector-back-to-now-text: #367ba0;
+    
+    padding-top: 5px;
+    
+
+    .date-selector{
+        border-radius: 5px;
+        padding: 3px;
+        //padding-top: 30px;
+        
+        .mode-info{
+            padding: 4px 4px;
+            
+            .back-to-now{
+                &:hover{
+                    cursor: pointer;
+                    color: $color-date-selector-back-to-now-text;
+                    
+                    .fa-caret-right{visibility: visible;}
+                }
+                
+                .fa-caret-right{visibility: hidden;}
+            }
+        }
+
+        &.past{background-color: $color-date-selector-bg-past;}
+    }
 }

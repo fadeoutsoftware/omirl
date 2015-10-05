@@ -1,0 +1,13 @@
+/* 
+    Created on : 5-ott-2015, 14.21.55
+    Author     : Daniele Fiori
+*/
+
+
+.scrollable-table-container{
+    height: 80vh;
+    overflow: {x: hidden; y: scroll;}
+    
+    &.sensors{ height: 60vh; }
+    &.maxtable{ height: 72vh; }
+}

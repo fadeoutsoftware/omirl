@@ -191,6 +191,19 @@ and open the template in the editor.
     height: 3rem;
     width: 100%; }
 
+/* 
+    Created on : 5-ott-2015, 14.21.55
+    Author     : Daniele Fiori
+*/
+.scrollable-table-container {
+  height: 80vh;
+  overflow-x: hidden;
+  overflow-y: scroll; }
+  .scrollable-table-container.sensors {
+    height: 60vh; }
+  .scrollable-table-container.maxtable {
+    height: 72vh; }
+
 /*
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
@@ -234,5 +247,25 @@ and open the template in the editor.
 
 .side-bar-toggle:hover {
   cursor: pointer; }
+
+ul.sidebar-nav li a:hover {
+  cursor: pointer; }
+
+.date-selector-container {
+  padding-top: 5px; }
+  .date-selector-container .date-selector {
+    border-radius: 5px;
+    padding: 3px; }
+    .date-selector-container .date-selector .mode-info {
+      padding: 4px 4px; }
+      .date-selector-container .date-selector .mode-info .back-to-now:hover {
+        cursor: pointer;
+        color: #367ba0; }
+        .date-selector-container .date-selector .mode-info .back-to-now:hover .fa-caret-right {
+          visibility: visible; }
+      .date-selector-container .date-selector .mode-info .back-to-now .fa-caret-right {
+        visibility: hidden; }
+    .date-selector-container .date-selector.past {
+      background-color: #ffbc6c; }
 
 /*# sourceMappingURL=mainstyle.css.map */

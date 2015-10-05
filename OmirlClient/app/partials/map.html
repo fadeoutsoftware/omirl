@@ -107,6 +107,7 @@
             </ul>
             <br/>
 
+            <!--
             <div class="div-time-clock">
                 <span>
                     <a href="#">
@@ -115,8 +116,17 @@
                     </a>
                 </span>
             </div>
-            <div id="omirl-collapsable-panels">
-                <div class="dropdown">
+            -->
+            <div id="omirl-collapsable-panels" class="date-selector-container">
+                <div class="dropdown date-selector" ng-class="{'past' : m_oController.m_bNowMode == false}">
+                    <div class="mode-info">
+                        <span ng-show="m_oController.m_bNowMode == true">In tempo reale</span>
+                        <span ng-show="m_oController.m_bNowMode == false"
+                              class='back-to-now' 
+                              ng-click="m_oController.setNow()">
+                            <i class="fa fa-clock-o"></i> Torna in tempo reale <i class="fa fa-caret-right"></i>
+                        </span>
+                    </div>
                     <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
                         <div class="input-group"><input type="text" class="form-control" data-ng-model="m_oController.m_oReferenceDate">
                             <span class="input-group-addon">
