@@ -219,6 +219,12 @@ public class TablesService {
 					try {
 						// Ok read sensors 
 						oSummaryInfo = (SummaryInfo) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+						if (oSummaryInfo != null)
+						{
+							Date oLastDate = new Date(oLastFile.lastModified()); 
+							SimpleDateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+							oSummaryInfo.setUpdateDateTime(oFormat.format(oLastDate));
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}							
