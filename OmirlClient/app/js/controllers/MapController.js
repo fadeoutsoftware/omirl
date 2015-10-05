@@ -702,9 +702,9 @@ var MapController = (function () {
         }
 
         // Clear all selection flags
-//        oController.m_aoMapLinks.forEach(function(oEntry) {
-//            oEntry.selected = false;
-//        });
+        oController.m_aoMapLinks.forEach(function(oEntry) {
+            oEntry.selected = false;
+        });
 
 
         // We are in the first level?
@@ -779,6 +779,8 @@ var MapController = (function () {
                         var oMapLinkCopy = oMapLink;
                         var oControllerVar = oController;
 
+                        oControllerVar.m_aoThirdLevels = [];
+
                         // Get third levels from the service
                         oControllerVar.m_oMapNavigatorService.getMapThirdLevel(oMapLink).success(function(data,status) {
 
@@ -794,9 +796,11 @@ var MapController = (function () {
                 }
 
                 if (!bIsSelected) {
-
-                    //oController.setSelectedMapLinkOnScreen(this,oMapLink);
-                    //oController.selectedDynamicLayer(oMapLink, oController.m_sMapThirdLevelSelectedModifier, oController);
+                    if (!oMapLink.hasThirdLevel)
+                    {
+                        oController.setSelectedMapLinkOnScreen(this,oMapLink);
+                        oController.selectedDynamicLayer(oMapLink, oController.m_sMapThirdLevelSelectedModifier, oController);
+                    }
                 }
                 else {
                     // Remove from the map
@@ -870,8 +874,6 @@ var MapController = (function () {
      */
     MapController.prototype.selectedDynamicLayer = function (oMapLink, sModifier, oController)
     {
-        debugger;
-        
         if( !oController )
             oController = this;
 
@@ -1038,7 +1040,6 @@ var MapController = (function () {
         // Save actual modifier
         oController.m_sMapThirdLevelSelectedModifier = oThirdLevel.layerIDModifier;
         // Show the layer
-        debugger;
         oController.selectedDynamicLayer(oThirdLevel.mapItem, oThirdLevel.layerIDModifier, oController);
     }
 

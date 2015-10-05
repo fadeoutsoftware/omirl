@@ -126,6 +126,7 @@ angular.module('omirl.sidebarMenuDirective', [])
                 }
                 else
                 {
+                    $scope.resetThirdLevel();
                     $scope.activeSubItem = item;
 
                     $scope.m_sParentText = $scope.m_sParentText;
@@ -451,6 +452,7 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 console.debug("submenuItemClick:", item);
                 
                 $scope.isFirstLevel = false;
+                $scope.controller.m_bIsFirstLevel = false;
 
                 if( $scope.isSubActive(item) == true)
                 {
@@ -464,6 +466,8 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 }
                 else
                 {
+                    $scope.resetThirdLevel();
+
                     $scope.activeSubItem = item;
 
                     $scope.m_sParentText = $scope.m_sParentText;

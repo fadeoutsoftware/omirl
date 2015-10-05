@@ -20,8 +20,7 @@
                 <li class='map-firstlevel-icon' 
                     ng-repeat="oItem in oRow.getMenuLinks()"
                     ng-class="{'map-firstlevel-icon-selected': isActive(oItem) == true, 'last-of-row' : isLastLinkOfRow(oRow, oItem) == true}"
-                    tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}"
-                >
+                    tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}" >
                     <img class="img-map-firstlevel-icon" 
                          ng-src="{{oItem.link}}"
                          ng-click="mainItemClick(oItem, oRow.getRowIdToOpen())"
@@ -32,10 +31,7 @@
             <div ng-if="oRow.isMenuLinkContainer() == true" class="clearfix"></div>
             
             <!-- Show this if the row is the second level container-->
-            <div ng-if="oRow.isSecondLevelWrapper() == true"
-                 class="clearfix second-level-menu-wrapper"
-                 ng-hide="isSecondLevelRowOpen(oRow.getSecondLevelId()) == false"
-                >
+            <div ng-if="oRow.isSecondLevelWrapper() == true"  class="clearfix second-level-menu-wrapper"  ng-hide="isSecondLevelRowOpen(oRow.getSecondLevelId()) == false" >
                 <div ng-show="menuItemsByLevel[MENU_LEVEL_2].length == 0"><i class="fa fa-refresh fa-spin"></i></div>
                 <div class="menu-third-level-dropdown" ng-show="isThirdLevelVisible == true">
                     <select name="repeatSelect" id="repeatSelect" ng-model="thirdLevelComboBox.selection">
