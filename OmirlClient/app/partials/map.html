@@ -4,7 +4,7 @@
         <div class="map-panel col-md-10 col-xs-9" id="omirlMap" ol-map zoom="9" center="8.60,44.20"
             controls="zoom,navigation,attribution,mousePosition">
             <div class="map-title">
-                Lorem ipsum dolor sit amet consectetur adipiscing elit
+                {{m_oController.m_oSelectedDateTimeInfo}}
             </div>
         </div>
         <!--<div class="map-controls-panel" >
@@ -120,11 +120,11 @@
             <div id="omirl-collapsable-panels" class="date-selector-container">
                 <div class="dropdown date-selector" ng-class="{'past' : m_oController.m_bNowMode == false}">
                     <div class="mode-info">
-                        <span ng-show="m_oController.m_bNowMode == true">In tempo reale</span>
+                        <span ng-show="m_oController.m_bNowMode == true">{{'MAP_TIMENOW' | translate}}</span>
                         <span ng-show="m_oController.m_bNowMode == false"
                               class='back-to-now' 
                               ng-click="m_oController.setNow()">
-                            <i class="fa fa-clock-o"></i> Torna in tempo reale <i class="fa fa-caret-right"></i>
+                            <i class="fa fa-clock-o"></i> {{'MAP_TIMEPAST' | translate}} <i class="fa fa-caret-right"></i>
                         </span>
                     </div>
                     <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
@@ -389,9 +389,6 @@
                             <img class="map-legend-image" src="{{m_oController.m_sMapLegendPath}}"
                                  ng-show="m_oController.m_bShowMapLegendImage">
                         </li>
-                        <li>
-                            <i> {{m_oController.m_oSelectedDateTimeInfo}}</i>
-                        </li>
                     </ul>
                 </a>
             </div>
@@ -402,9 +399,6 @@
                         <li><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" style="height: 35px; vertical-align: super;"></li>
                         <li><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}"
                                  ng-show="m_oController.m_bShowSensorsLegendImage"></li>
-                        <li>
-                            <i> {{m_oController.m_oSelectedDateTimeInfo}}</i>
-                        </li>
                     </ul>
                 </a>
             </div>

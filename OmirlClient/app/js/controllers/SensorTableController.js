@@ -3,7 +3,7 @@
  */
 
 var SensorTableController = (function() {
-    function SensorTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, $translate) {
+    function SensorTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, $translate, $interval) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -14,6 +14,7 @@ var SensorTableController = (function() {
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
         this.m_oTranslateService = $translate;
+        this.m_oInterval = $interval;
         this.m_bDowloadEnabled = false;
 
         this.m_bShowCancelNameFilter = false;
@@ -41,25 +42,62 @@ var SensorTableController = (function() {
 
         var oControllerVar = this;
 
-        this.m_oStationsService.getStationsTypes().success(function (data, status) {
+        refreshSensorTable = function() {
+            oControllerVar.m_oStationsService.getStationsTypes().success(function (data, status) {
 
-            for (var iTypes = 0; iTypes<data.length; iTypes ++) {
-                if (data[iTypes].code == "Pluvio") {
-                    oControllerVar.m_oSelectedType = data[iTypes];
-                    break;
+                for (var iTypes = 0; iTypes < data.length; iTypes++) {
+                    if (data[iTypes].code == "Pluvio") {
+                        oControllerVar.m_oSelectedType = data[iTypes];
+                        break;
+                    }
                 }
-            }
 
-            oControllerVar.m_aoTypes = data;
+                oControllerVar.m_aoTypes = data;
 
 
-            oControllerVar.typeSelected();
+                oControllerVar.typeSelected();
 
-        }).error(function (data, status) {
-            oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
-        });
+            }).error(function (data, status) {
+                oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
+            });
+        };
+
+        if (this.m_oConstantsService.isNowMode()) {
+            oControllerVar.m_oReferenceDate = new Date();
+            oControllerVar.m_bNowMode = true;
+        }
+        else {
+            oControllerVar.m_oReferenceDate = oControllerVar.m_oConstantsService.getReferenceDate();
+            oControllerVar.m_bNowMode = false;
+        }
+
+        // Add Auto Refresh Interval Callback
+        this.m_oStopTimerPromise = this.m_oInterval(function () {
+
+                if (oControllerVar.m_oConstantsService.isNowMode()) {
+                    oControllerVar.m_oReferenceDate = new Date();
+                    oControllerVar.m_bNowMode = true;
+                }
+
+            },
+            this.m_oConstantsService.getRefreshRateMs());
 
     }
+
+    SensorTableController.prototype.onTimeSet = function (newDate, oldDate) {
+
+        this.m_oConstantsService.setReferenceDate(newDate);
+        refreshSensorTable();
+        this.m_bNowMode = false;
+    };
+
+    SensorTableController.prototype.setNow = function () {
+
+        this.m_oConstantsService.setReferenceDate(new Date());
+        refreshSensorTable();
+        this.m_bNowMode = true;
+        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+    };
 
     SensorTableController.prototype.getStationList = function (sPath) {
 
@@ -385,7 +423,8 @@ var SensorTableController = (function() {
         'ChartService',
         '$location',
         'TableService',
-        '$translate'
+        '$translate',
+        '$interval'
     ];
     return SensorTableController;
 }) ();

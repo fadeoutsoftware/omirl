@@ -138,7 +138,7 @@
                         <div class="form-group">
                             <label for="stationLayer" class="col-sm-2 col-md-2 control-label">{{'SETTING_LAYERSTAZIONI' | translate}}</label>
                             <div class="col-sm-10 col-md-10">
-                                <select class="form-control" id="stationLayer" ng-options="sensor.description for sensor in m_oController.m_aoSensorsLinks" ng-model = "m_oController.m_oSelectedSensorLink">
+                                <select class="form-control" id="stationLayer" ng-options="sensor.description | translate for sensor in m_oController.m_aoSensorsLinks" ng-model = "m_oController.m_oSelectedSensorLink">
                                 </select>
                             </div>
                         </div>
@@ -152,7 +152,7 @@
                         <div class="form-group">
                             <label for="staticLayers" class="col-sm-2 col-md-2 control-label">{{'SETTING_LAYERSTATICI' | translate}}</label>
                             <div class="col-sm-10 col-md-10">
-                                <select multiple class="form-control" id="staticLayers" ng-options="layer.description for layer in m_oController.m_aoStaticLinks" ng-model="m_oController.m_oSelectedStaticLayer">
+                                <select multiple class="form-control" id="staticLayers" ng-options="layer.description | translate for layer in m_oController.m_aoStaticLinks" ng-model="m_oController.m_oSelectedStaticLayer">
                                 </select>
                             </div>
                         </div>

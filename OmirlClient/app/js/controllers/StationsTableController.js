@@ -3,7 +3,7 @@
  */
 
 var StationsTableController = (function() {
-    function StationsTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, $translate) {
+    function StationsTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, $translate, $interval) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -14,6 +14,7 @@ var StationsTableController = (function() {
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
         this.m_oTranslateService = $translate;
+        this.m_oInterval = $interval;
         this.m_bDowloadEnabled = false;
 
         this.m_bShowCancelNameFilter = false;
@@ -39,36 +40,76 @@ var StationsTableController = (function() {
 
         var oControllerVar = this;
 
-        this.m_oStationsService.getStationsTypes().success(function (data, status) {
+        refreshStationData = function() {
+            this.m_oStationsService.getStationsTypes().success(function (data, status) {
 
-            for (var iTypes = 0; iTypes<data.length; iTypes ++) {
-                if (data[iTypes].code == "Pluvio") {
-                    oControllerVar.m_oSelectedType = data[iTypes];
-                    break;
+                for (var iTypes = 0; iTypes < data.length; iTypes++) {
+                    if (data[iTypes].code == "Pluvio") {
+                        oControllerVar.m_oSelectedType = data[iTypes];
+                        break;
+                    }
                 }
-            }
 
-            oControllerVar.m_aoTypes = data;
+                oControllerVar.m_aoTypes = data;
 
-            /*
-            // QUESTO CHIUDE LA BARRA DI NAVIGAZIONE VOLENDO
-            var oElement = angular.element("#mapNavigation");
+                /*
+                 // QUESTO CHIUDE LA BARRA DI NAVIGAZIONE VOLENDO
+                 var oElement = angular.element("#mapNavigation");
 
-            if (oElement != null) {
-                if (oElement.length>0) {
-                    var iWidth = oElement[0].clientWidth;
-                    oElement[0].style.left = "-" + iWidth + "px";
+                 if (oElement != null) {
+                 if (oElement.length>0) {
+                 var iWidth = oElement[0].clientWidth;
+                 oElement[0].style.left = "-" + iWidth + "px";
+                 }
+                 }
+                 */
+
+                oControllerVar.typeSelected();
+
+            }).error(function (data, status) {
+                oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
+            });
+        };
+
+        refreshStationData();
+
+        if (this.m_oConstantsService.isNowMode()) {
+            oControllerVar.m_oReferenceDate = new Date();
+            oControllerVar.m_bNowMode = true;
+        }
+        else {
+            oControllerVar.m_oReferenceDate = oControllerVar.m_oConstantsService.getReferenceDate();
+            oControllerVar.m_bNowMode = false;
+        }
+
+        // Add Auto Refresh Interval Callback
+        this.m_oStopTimerPromise = this.m_oInterval(function () {
+
+                if (oControllerVar.m_oConstantsService.isNowMode()) {
+                    oControllerVar.m_oReferenceDate = new Date();
+                    oControllerVar.m_bNowMode = true;
                 }
-            }
-            */
 
-            oControllerVar.typeSelected();
-
-        }).error(function (data, status) {
-            oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
-        });
+            },
+            this.m_oConstantsService.getRefreshRateMs());
 
     }
+
+    StationsTableController.prototype.onTimeSet = function (newDate, oldDate) {
+
+        this.m_oConstantsService.setReferenceDate(newDate);
+        refreshStationData();
+        this.m_bNowMode = false;
+
+    };
+
+    StationsTableController.prototype.setNow = function () {
+
+        this.m_oConstantsService.setReferenceDate(new Date());
+        refreshStationData();
+        this.m_bNowMode = true;
+        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+    };
 
     StationsTableController.prototype.getStationList = function (sPath) {
 
@@ -324,7 +365,8 @@ var StationsTableController = (function() {
         'ChartService',
         '$location',
         'TableService',
-        '$translate'
+        '$translate',
+        '$interval'
     ];
 
     return StationsTableController;

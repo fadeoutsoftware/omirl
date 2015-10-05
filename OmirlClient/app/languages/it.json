@@ -57,6 +57,8 @@
     "MAP_T_LEGEND": "{{value}}",
     "MAP_T_LEGENDSELECTED": "Mappe",
     "MAP_NOT_AVAILABLE": "Layer non disponibile",
+    "MAP_TIMEPAST":"Torna in tempo reale",
+    "MAP_TIMENOW":"In tempo reale",
     "MAXTABLE_TITOLO":"Tabella Massimi Puntuali",
     "MAXTABLE_SUBTITOLO":"Dati di precipitazione - Ore locali",
     "MAXTABLE_ZONEALL":"Zone Allerta",

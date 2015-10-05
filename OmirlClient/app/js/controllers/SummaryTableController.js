@@ -3,7 +3,7 @@
  */
 
 var SummaryTableController = (function() {
-    function SummaryTableController($scope, $log, $location, oConstantService, oTableService, $translate, oDialogService) {
+    function SummaryTableController($scope, $log, $location, oConstantService, oTableService, $translate, oDialogService, oChartService, $interval) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oLog = $log;
@@ -12,23 +12,51 @@ var SummaryTableController = (function() {
         this.m_oTableService = oTableService;
         this.m_oTranslateService = $translate;
         this.m_oDialogService = oDialogService;
-
+        this.m_oChartService = oChartService;
+        this.m_oInterval = $interval;
         this.m_aoAlertReturn = [];
 
         this.m_aoDistrictReturn = [];
 
         this.m_aoWindReturn = [];
 
+        this.m_oLastDateRef = "";
+
         var oControllerVar = this;
 
-        this.m_oTableService.getSummaryTable().success(function(data,status) {
-            oControllerVar.m_aoAlertReturn = data.alertInfo;
-            oControllerVar.m_aoDistrictReturn = data.districtInfo;
-            oControllerVar.m_aoWindReturn = data.windInfo;
+        refreshSummary = function() {
+            oControllerVar.m_oTableService.getSummaryTable().success(function (data, status) {
+                oControllerVar.m_aoAlertReturn = data.alertInfo;
+                oControllerVar.m_aoDistrictReturn = data.districtInfo;
+                oControllerVar.m_aoWindReturn = data.windInfo;
+                oControllerVar.m_oLastDateRef = data.updateDateTime;
 
-        }).error(function(data,status){
-            oControllerVar.m_oLog.error('Error Contacting Omirl Server');
-        });
+            }).error(function (data, status) {
+                oControllerVar.m_oLog.error('Error Contacting Omirl Server');
+            });
+        };
+
+        refreshSummary();
+
+        if (this.m_oConstantsService.isNowMode()) {
+            oControllerVar.m_oReferenceDate = new Date();
+            oControllerVar.m_bNowMode = true;
+        }
+        else {
+            oControllerVar.m_oReferenceDate = oControllerVar.m_oConstantsService.getReferenceDate();
+            oControllerVar.m_bNowMode = false;
+        }
+
+        // Add Auto Refresh Interval Callback
+        this.m_oStopTimerPromise = this.m_oInterval(function () {
+
+                if (oControllerVar.m_oConstantsService.isNowMode()) {
+                    oControllerVar.m_oReferenceDate = new Date();
+                    oControllerVar.m_bNowMode = true;
+                }
+
+            },
+            this.m_oConstantsService.getRefreshRateMs());
     }
 
     SummaryTableController.prototype.linkClicked = function (sPath) {
@@ -88,12 +116,7 @@ var SummaryTableController = (function() {
 
     SummaryTableController.prototype.getDayString = function () {
 
-        var oFormatDate = new Date();
-        var oDay = oFormatDate.getDate();
-        var oMonth = oFormatDate.getMonth()+1;
-        var oYear = oFormatDate.getFullYear();
-
-        return oDay+'/' + oMonth + '/' + oYear;
+        return this.m_oScope.m_oController.m_oLastDateRef;
     }
 
     SummaryTableController.prototype.stationClicked = function(sName, sSensorType) {
@@ -141,6 +164,21 @@ var SummaryTableController = (function() {
         });
     };
 
+    SummaryTableController.prototype.onTimeSet = function (newDate, oldDate) {
+
+        this.m_oConstantsService.setReferenceDate(newDate);
+        refreshSummary();
+        this.m_bNowMode = false;
+    };
+
+    SummaryTableController.prototype.setNow = function () {
+
+        this.m_oConstantsService.setReferenceDate(new Date());
+        refreshSummary();
+        this.m_bNowMode = true;
+        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+    };
+
     SummaryTableController.$inject = [
         '$scope',
         '$log',
@@ -149,6 +187,8 @@ var SummaryTableController = (function() {
         'TableService',
         '$translate',
         'dialogService',
+        'ChartService',
+        '$interval'
     ];
     return SummaryTableController;
 }) ();

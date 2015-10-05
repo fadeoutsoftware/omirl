@@ -7,21 +7,23 @@ var TablesController = (function() {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oLocation = $location;
-        this.m_sTableLegendSelected = "";
-    }
 
-    TablesController.$inject = [
-        '$scope'
-    ];
+        this.m_sTableLegendSelected = "";
+
+
+    }
 
 
     TablesController.prototype.linkClicked = function (sPath) {
         this.m_oLocation.path(sPath);
     }
 
+
     TablesController.$inject = [
         '$scope',
-        '$location'
+        '$location',
+        'ConstantsService'
+
     ];
 
     return TablesController;

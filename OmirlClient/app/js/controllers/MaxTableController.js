@@ -3,7 +3,7 @@
  */
 
 var MaxTableController = (function() {
-    function MaxTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, oSce, $translate) {
+    function MaxTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, oSce, $translate, $interval) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -13,6 +13,7 @@ var MaxTableController = (function() {
         this.m_oChartService = oChartService;
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
+        this.m_oInterval = $interval;
         this.m_oSce = oSce;
         this.m_oTranslateService = $translate;
         this.m_bDowloadEnabled = false;
@@ -26,8 +27,31 @@ var MaxTableController = (function() {
         this.m_bReverseOrder = false;
         this.m_sOrderBy = "name";
 
+        this.m_oUpdateDateTime = "";
 
         var oControllerVar = this;
+
+        if (this.m_oConstantsService.isNowMode()) {
+            oControllerVar.m_oReferenceDate = new Date();
+            oControllerVar.m_bNowMode = true;
+        }
+        else {
+            oControllerVar.m_oReferenceDate = oControllerVar.m_oConstantsService.getReferenceDate();
+            oControllerVar.m_bNowMode = false;
+        }
+
+        // Add Auto Refresh Interval Callback
+        this.m_oStopTimerPromise = this.m_oInterval(function () {
+
+                if (oControllerVar.m_oConstantsService.isNowMode()) {
+                    oControllerVar.m_oReferenceDate = new Date();
+                    oControllerVar.m_bNowMode = true;
+                }
+
+            },
+            this.m_oConstantsService.getRefreshRateMs());
+
+
 /*
         this.m_oStationsService.getAggregationsTypes().success(function (data, status) {
 
@@ -79,6 +103,22 @@ var MaxTableController = (function() {
         oControllerVar.aggregationSelected();
     }
 
+    MaxTableController.prototype.onTimeSet = function (newDate, oldDate) {
+
+        this.m_oConstantsService.setReferenceDate(newDate);
+        this.aggregationSelected();
+        this.m_bNowMode = false;
+    };
+
+    MaxTableController.prototype.setNow = function () {
+
+        this.m_oConstantsService.setReferenceDate(new Date());
+        this.aggregationSelected();
+        this.m_bNowMode = true;
+        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+    };
+
+
     MaxTableController.prototype.getMaxTableList = function (sPath) {
 
         return this.m_aoMaxTable;
@@ -90,6 +130,7 @@ var MaxTableController = (function() {
          this.m_oTableService.getMaxStationsTable().success(function (data, status) {
              oControllerVar.m_aoMaxTable = data;
              oControllerVar.m_bDowloadEnabled = true;
+             oControllerVar.m_oUpdateDateTime = data.updateDateTime;
          }).error(function (data, status) {
             oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
          });
@@ -191,7 +232,8 @@ var MaxTableController = (function() {
         '$location',
         'TableService',
         '$sce',
-        '$translate'
+        '$translate',
+        '$interval'
     ];
     return MaxTableController;
 }) ();
