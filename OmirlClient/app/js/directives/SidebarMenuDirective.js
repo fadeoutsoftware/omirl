@@ -224,7 +224,8 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             
             $scope.$watch(function(){ return $scope.thirdLevelComboBox.selection;}, function(newValue){
                 $scope.thirdLevelMenuSelection = $scope.thirdLevelComboBox.selection;
-               
+                
+                
                 if(newValue && $scope.thirdLevelMenuClick && typeof $scope.thirdLevelMenuClick == "function" )
                 {
                     var oItem;
@@ -236,8 +237,8 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                             break;
                         }
                     }
-                   $scope.thirdLevelMenuClick(oItem, $scope.controller);
-               }
+                    $scope.thirdLevelMenuClick(oItem, $scope.controller);
+                }
                
             });
             
@@ -440,6 +441,8 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 {
                     //$scope.hasMenuItemBeenUpdated = false;
                     $scope.onMenutItemClick(oMenuLink, $scope.controller);
+                    
+                    //oMenuLink.selected = $scope.isSubActive(oMenuLink);
                 }
             }
             
@@ -476,6 +479,8 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 if( typeof $scope.onMenutItemClick == "function")
                 {
                     $scope.onMenutItemClick(item, $scope.controller);
+                    
+                    item.selected = $scope.isSubActive(item);
                 }
             }
             

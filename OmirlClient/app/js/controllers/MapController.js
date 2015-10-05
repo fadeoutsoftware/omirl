@@ -771,18 +771,22 @@ var MapController = (function () {
             }
             else {
                 // Switch to show or not third level
-                if (oMapLink.hasThirdLevel) {
+                if (oMapLink.hasThirdLevel )
+                {
+                    if ( bIsSelected == false )
+                    {
+                        // Load third level only if the 2nd level item is not selected
+                        var oMapLinkCopy = oMapLink;
+                        var oControllerVar = oController;
 
-                    var oMapLinkCopy = oMapLink;
-                    var oControllerVar = oController;
+                        // Get third levels from the service
+                        oControllerVar.m_oMapNavigatorService.getMapThirdLevel(oMapLink).success(function(data,status) {
 
-                    // Get third levels from the service
-                    oControllerVar.m_oMapNavigatorService.getMapThirdLevel(oMapLink).success(function(data,status) {
-
-                        oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oMapLinkCopy);
-                    }).error(function(data,status){
-                        oControllerVar.m_oLog.error('Error contacting Omirl Server');
-                    });
+                            oControllerVar.gotMapThirdLevelFromServer(data, status,oControllerVar,oMapLinkCopy);
+                        }).error(function(data,status){
+                            oControllerVar.m_oLog.error('Error contacting Omirl Server');
+                        });
+                    }
 
                 }
                 else {
@@ -792,7 +796,7 @@ var MapController = (function () {
                 if (!bIsSelected) {
 
                     //oController.setSelectedMapLinkOnScreen(this,oMapLink);
-                    oController.selectedDynamicLayer(oMapLink, oController.m_sMapThirdLevelSelectedModifier, oController);
+                    //oController.selectedDynamicLayer(oMapLink, oController.m_sMapThirdLevelSelectedModifier, oController);
                 }
                 else {
                     // Remove from the map
@@ -866,6 +870,8 @@ var MapController = (function () {
      */
     MapController.prototype.selectedDynamicLayer = function (oMapLink, sModifier, oController)
     {
+        debugger;
+        
         if( !oController )
             oController = this;
 
@@ -1032,6 +1038,7 @@ var MapController = (function () {
         // Save actual modifier
         oController.m_sMapThirdLevelSelectedModifier = oThirdLevel.layerIDModifier;
         // Show the layer
+        debugger;
         oController.selectedDynamicLayer(oThirdLevel.mapItem, oThirdLevel.layerIDModifier, oController);
     }
 
