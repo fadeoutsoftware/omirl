@@ -124,95 +124,6 @@ public class OmirlDaemon {
 		oDaemon.OmirlDaemonCycle(args[0]);
 	}	
 
-	/**
-	 * Gets the name of value column from minutes resolution
-	 * @param iResolution
-	 * @return
-	 */
-	public String getRainColumnNameFromNative(int iResolution) {
-		String sReturn = "";
-		switch (iResolution) {
-		case 5:
-			sReturn = "rain_05m";
-			break;
-		case 10:
-			sReturn = "rain_10m";
-			break;
-		case 15:
-			sReturn = "rain_15m";
-			break;
-		case 30:
-			sReturn = "rain_30m";
-			break;			
-		}
-
-		return sReturn;
-	}
-
-	/**
-	 * Finds Chart Info Object in the array stored in the configuration starting by relative column name
-	 * @param sSensorColumn
-	 * @return
-	 */
-	public List<ChartInfo> getChartInfoFromSensorColumn(String sSensorColumn) {
-		ArrayList<ChartInfo> aoInfo = new ArrayList<>();
-
-		for (int iChartsInfo = 0; iChartsInfo<m_oConfig.getChartsInfo().size(); iChartsInfo++) {
-			ChartInfo oInfo = m_oConfig.getChartsInfo().get(iChartsInfo);
-			if (oInfo.getColumnName().equals(sSensorColumn)) {
-				aoInfo.add(oInfo);
-			}
-		}
-
-		return aoInfo;
-	}	
-
-	/**
-	 * Finds Chart Info Object in the array stored in the configuration starting by relative Sensor Code
-	 * @param sSensorCode
-	 * @return
-	 */
-	public List<ChartInfo> getChartInfoFromSensorCode(String sSensorCode) {
-		ArrayList<ChartInfo> aoInfo = new ArrayList<>();
-
-		for (int iChartsInfo = 0; iChartsInfo<m_oConfig.getChartsInfo().size(); iChartsInfo++) {
-			ChartInfo oInfo = m_oConfig.getChartsInfo().get(iChartsInfo);
-			if (oInfo.getSensorType().equals(sSensorCode)) {
-				aoInfo.add(oInfo);
-			}
-		}
-
-		return aoInfo;
-	}
-
-	/**
-	 * Indicates if it's necessary refresh chart data
-	 * @param aoChartInfo
-	 * @param lReferenceDate
-	 * @return
-	 */
-	public Boolean RefreshChart(List<ChartInfo> aoChartInfo, long lReferenceDate) {
-
-		Boolean bReturn = true;
-		long lNow = new Date().getTime();
-		if (lReferenceDate <= 0)
-			return bReturn;
-
-		if (aoChartInfo != null)
-		{
-			if (aoChartInfo.size() > 0)
-			{
-				ChartInfo oInfo = aoChartInfo.get(0);
-				//Convert time in minutes
-				long lRefreshMilliseconds = oInfo.getRefreshTime() * 60 * 1000;
-				if ((lNow - lReferenceDate) > lRefreshMilliseconds)
-					bReturn = false;
-			}
-		}
-
-		return bReturn;
-	}
-
 
 	/**
 	 * Main Omirl Daemon Cycle
@@ -235,7 +146,7 @@ public class OmirlDaemon {
 
 		//TEST
 		//publishMaps();
-		//maxTable();
+		maxTable();
 		//RefreshSectionsLayer();
 		//DailyTask();
 		//RefreshGallery();
@@ -249,6 +160,7 @@ public class OmirlDaemon {
 		Date oLastDate = null;
 
 		long lReferenceDate = -1; 
+		lReferenceDate = new Date().getTime();
 
 		try {
 
@@ -307,10 +219,11 @@ public class OmirlDaemon {
 
 						System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 
-						//if (oStationAnag.getStation_code().equals("CRETO")==false) continue;
+						//if (oStationAnag.getStation_code().equals("GEPVA")==false) continue;
 
 						ArrayList<String> asOtherLinks = new ArrayList<>();
 
+						
 						// Find other sensors links
 						if (oStationAnag.getRain_01h_every() != null) {
 
@@ -352,7 +265,7 @@ public class OmirlDaemon {
 
 						if (m_oConfig.isEnableCharts())
 						{
-
+							
 							try {
 
 								// --------------------------------------------------------RAIN CHART
@@ -712,6 +625,13 @@ public class OmirlDaemon {
 
 										// Initialize Start Date
 										oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
+										oStartDate.setMinutes(0);
+										oStartDate.setSeconds(0);
+										
+										Calendar oCalendar = Calendar.getInstance(); // creates calendar
+										oCalendar.setTime(oStartDate); // sets calendar time/date
+										oCalendar.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
+										oStartDate = oCalendar.getTime(); // returns new date object, one hour in the future
 
 										DataChart oWindChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate,false,false);
 
@@ -1120,6 +1040,94 @@ public class OmirlDaemon {
 			HibernateUtils.shutdown();
 		}		
 	}
+	
+	/**
+	 * Gets the name of value column from minutes resolution
+	 * @param iResolution
+	 * @return
+	 */
+	public String getRainColumnNameFromNative(int iResolution) {
+		String sReturn = "";
+		switch (iResolution) {
+		case 5:
+			sReturn = "rain_05m";
+			break;
+		case 10:
+			sReturn = "rain_10m";
+			break;
+		case 15:
+			sReturn = "rain_15m";
+			break;
+		case 30:
+			sReturn = "rain_30m";
+			break;			
+		}
+
+		return sReturn;
+	}
+
+	/**
+	 * Finds Chart Info Object in the array stored in the configuration starting by relative column name
+	 * @param sSensorColumn
+	 * @return
+	 */
+	public List<ChartInfo> getChartInfoFromSensorColumn(String sSensorColumn) {
+		ArrayList<ChartInfo> aoInfo = new ArrayList<>();
+
+		for (int iChartsInfo = 0; iChartsInfo<m_oConfig.getChartsInfo().size(); iChartsInfo++) {
+			ChartInfo oInfo = m_oConfig.getChartsInfo().get(iChartsInfo);
+			if (oInfo.getColumnName().equals(sSensorColumn)) {
+				aoInfo.add(oInfo);
+			}
+		}
+
+		return aoInfo;
+	}	
+
+	/**
+	 * Finds Chart Info Object in the array stored in the configuration starting by relative Sensor Code
+	 * @param sSensorCode
+	 * @return
+	 */
+	public List<ChartInfo> getChartInfoFromSensorCode(String sSensorCode) {
+		ArrayList<ChartInfo> aoInfo = new ArrayList<>();
+
+		for (int iChartsInfo = 0; iChartsInfo<m_oConfig.getChartsInfo().size(); iChartsInfo++) {
+			ChartInfo oInfo = m_oConfig.getChartsInfo().get(iChartsInfo);
+			if (oInfo.getSensorType().equals(sSensorCode)) {
+				aoInfo.add(oInfo);
+			}
+		}
+
+		return aoInfo;
+	}
+
+	/**
+	 * Indicates if it's necessary refresh chart data
+	 * @param aoChartInfo
+	 * @param lReferenceDate
+	 * @return
+	 */
+	public Boolean RefreshChart(List<ChartInfo> aoChartInfo, long lReferenceDate) {
+
+		Boolean bReturn = false;
+		long lNow = new Date().getTime();
+		if (lReferenceDate <= 0) return true;
+
+		if (aoChartInfo != null)
+		{
+			if (aoChartInfo.size() > 0)
+			{
+				ChartInfo oInfo = aoChartInfo.get(0);
+				//Convert time in minutes
+				long lRefreshMilliseconds = oInfo.getRefreshTime() * 60 * 1000;
+				if ((lNow - lReferenceDate) > lRefreshMilliseconds) bReturn = true;
+			}
+		}
+
+		return bReturn;
+	}
+
 
 	private void GetWindDirectionSerie(List<WindDataSeriePoint> oInputWindDir, DataSerie oSerie, int iMinuteTimeStep)
 	{
@@ -1127,7 +1135,11 @@ public class OmirlDaemon {
 		DateTime oNow = new DateTime();
 		long lTimeStep = iMinuteTimeStep*60L*1000L;
 		long lNow = oNow.getMillis();
-		long lStart = oInputWindDir.get(0).getRefDate().getTime();
+		Date oStartDate = new Date( oInputWindDir.get(0).getRefDate().getTime());
+		oStartDate.setMinutes(0);
+		oStartDate.setSeconds(0);
+		
+		long lStart = oStartDate.getTime();
 
 		int iCycleCount = 0;
 		for (long lTimeCycle = lStart; lTimeCycle<=lNow; lTimeCycle+=lTimeStep)
@@ -1139,10 +1151,11 @@ public class OmirlDaemon {
 			List<WindDataSeriePoint> oRefWindDirections = new ArrayList<WindDataSeriePoint>();
 			for (WindDataSeriePoint windDataSeriePoint : oInputWindDir) {
 
-				if (windDataSeriePoint.getRefDate().getTime() <= lNextStep && windDataSeriePoint.getRefDate().getTime() >= lTimeCycle) {
+				if (windDataSeriePoint.getRefDate().getTime() < lNextStep && windDataSeriePoint.getRefDate().getTime() >= lTimeCycle) {
 					oRefWindDirections.add(windDataSeriePoint);
 				}
-
+				
+				if (windDataSeriePoint.getRefDate().getTime() > lNextStep) break;
 			}
 
 			adPoint.setWindDir(GetPrevalentWindDirectionAlgorithm(oRefWindDirections));
@@ -1230,41 +1243,13 @@ public class OmirlDaemon {
 		//filter formula wmo
 		for (int iCountSector = 1; iCountSector < 17; iCountSector ++)
 		{
-			int iSectorIndex = iCountSector + 1;
-			int iSectorIndex1 = iSectorIndex + 1;
-			int iSectorIndex2 = iSectorIndex + 2;
-			int iSectorIndexm1 = iSectorIndex - 1;
-			int iSectorIndexm2 = iSectorIndex - 2;
-			//normalizzo gli indici
-			if (iSectorIndex1 == 17)
-				iSectorIndex1 = 16;
-			if (iSectorIndex1 == 18)
-				iSectorIndex1 = 1;
-			if (iSectorIndex1 == 19)
-				iSectorIndex1 = 2;
+			int iSectorIndex = iCountSector + 1;	
 
-			if (iSectorIndex2 == 17)
-				iSectorIndex2 = 16;
-			if (iSectorIndex2 == 18)
-				iSectorIndex2 = 1;
-			if (iSectorIndex2 == 19)
-				iSectorIndex2 = 2;
-
-			if (iSectorIndexm1 == 0)
-				iSectorIndexm1 = 15;
-			if (iSectorIndex1 == 1)
-				iSectorIndexm1 = 16;
-
-			if (iSectorIndex2 == 0)
-				iSectorIndex2 = 15;
-			if (iSectorIndex2 == 1)
-				iSectorIndex2 = 16;
-
-			Double dValue = (double) (((double)1/9)*(double)oSectorMap.get(iSectorIndexm2).size()) + 
-					(double) (((double)2/9)*(double)oSectorMap.get(iSectorIndexm1).size()) +
-					(double) (((double)3/9)*(double)oSectorMap.get(iSectorIndex).size()) + 
-					(double) (((double)2/9)*(double)oSectorMap.get(iSectorIndex1).size()) +
-					(double) (((double)1/9)*(double)oSectorMap.get(iSectorIndex2).size());
+			Double dValue = (double) (((double)1/9)*(double)oSectorMap.get(GetWmoModifiedIndex(iSectorIndex-2)).size()) + 
+					(double) (((double)2/9)*(double)oSectorMap.get(GetWmoModifiedIndex(iSectorIndex-1)).size()) +
+					(double) (((double)3/9)*(double)oSectorMap.get(GetWmoModifiedIndex(iSectorIndex)).size()) + 
+					(double) (((double)2/9)*(double)oSectorMap.get(GetWmoModifiedIndex(iSectorIndex+1)).size()) +
+					(double) (((double)1/9)*(double)oSectorMap.get(GetWmoModifiedIndex(iSectorIndex+2)).size());
 
 			oFilteredSectorMap.put(iCountSector, dValue);
 		}
@@ -1277,7 +1262,7 @@ public class OmirlDaemon {
 		{
 			if (oFilteredSectorMap.get(iSector) > dSectorpr)
 			{
-				dSectorpr = oFilteredSectorMap.get(0);
+				dSectorpr = oFilteredSectorMap.get(iSector);
 				if (oMaxSectors.size() == 1)
 					oMaxSectors.set(0, iSector);
 				else
@@ -1314,7 +1299,7 @@ public class OmirlDaemon {
 	{
 		List<Integer> oReturnList = new ArrayList<Integer>();
 		
-		if (dDirection <= 11.25 && dDirection >= 348.75)
+		if (dDirection <= 11.25 || dDirection >= 348.75)
 			oReturnList.add(16);
 		if (dDirection >= 11.25 && dDirection <= 33.75)
 			oReturnList.add(1);
@@ -1351,6 +1336,78 @@ public class OmirlDaemon {
 
 	}
 
+	private int GetWmoModifiedIndex(int iOriginalIndex)
+	{
+		int iReturnIndex = iOriginalIndex;
+		
+		switch (iOriginalIndex) {
+		case 0:
+			iReturnIndex = 15;
+			break;
+		case 1:
+			iReturnIndex = 16;
+			break;
+		case 2:
+			iReturnIndex = 1;
+			break;
+		case 3:
+			iReturnIndex = 2;
+			break;
+		case 4:
+			iReturnIndex = 3;
+			break;
+		case 5:
+			iReturnIndex = 4;
+			break;
+		case 6:
+			iReturnIndex = 5;
+			break;
+		case 7:
+			iReturnIndex = 6;
+			break;
+		case 8:
+			iReturnIndex = 7;
+			break;
+		case 9:
+			iReturnIndex = 8;
+			break;
+		case 10:
+			iReturnIndex = 9;
+			break;
+		case 11:
+			iReturnIndex = 10;
+			break;
+		case 12:
+			iReturnIndex = 11;
+			break;
+		case 13:
+			iReturnIndex = 12;
+			break;
+		case 14:
+			iReturnIndex = 13;
+			break;
+		case 15:
+			iReturnIndex = 14;
+			break;
+		case 16:
+			iReturnIndex = 15;
+			break;
+		case 17:
+			iReturnIndex = 16;
+			break;
+		case 18:
+			iReturnIndex = 1;
+			break;
+		case 19:
+			iReturnIndex = 2;
+			break;
+		default:
+			break;
+		}
+		
+		return iReturnIndex;
+	}
+	
 	private double GetDeg(int iSector)
 	{
 		switch (iSector) {
