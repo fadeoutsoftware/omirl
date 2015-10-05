@@ -2930,10 +2930,10 @@ var MapController = (function () {
 
     MapController.prototype.setNow = function () {
 
-        this.m_oConstantsService.setReferenceDate(new Date());
+        this.m_oConstantsService.setReferenceDate("");
         this.refreshFullMap(this);
         this.m_bNowMode = true;
-        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+        this.m_oReferenceDate = new Date();
     }
 
     MapController.$inject = [

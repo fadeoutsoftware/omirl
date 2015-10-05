@@ -93,10 +93,10 @@ var SensorTableController = (function() {
 
     SensorTableController.prototype.setNow = function () {
 
-        this.m_oConstantsService.setReferenceDate(new Date());
+        this.m_oConstantsService.setReferenceDate("");
         refreshSensorTable();
         this.m_bNowMode = true;
-        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+        this.m_oReferenceDate = new Date();
     };
 
     SensorTableController.prototype.getStationList = function (sPath) {

@@ -105,10 +105,10 @@ var StationsTableController = (function() {
 
     StationsTableController.prototype.setNow = function () {
 
-        this.m_oConstantsService.setReferenceDate(new Date());
+        this.m_oConstantsService.setReferenceDate("");
         refreshStationData();
         this.m_bNowMode = true;
-        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+        this.m_oReferenceDate = new Date();
     };
 
     StationsTableController.prototype.getStationList = function (sPath) {

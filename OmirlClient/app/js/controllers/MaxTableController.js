@@ -112,10 +112,10 @@ var MaxTableController = (function() {
 
     MaxTableController.prototype.setNow = function () {
 
-        this.m_oConstantsService.setReferenceDate(new Date());
+        this.m_oConstantsService.setReferenceDate("");
         this.aggregationSelected();
         this.m_bNowMode = true;
-        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+        this.m_oReferenceDate = new Date();
     };
 
 

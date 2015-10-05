@@ -173,10 +173,10 @@ var SummaryTableController = (function() {
 
     SummaryTableController.prototype.setNow = function () {
 
-        this.m_oConstantsService.setReferenceDate(new Date());
+        this.m_oConstantsService.setReferenceDate("");
         refreshSummary();
         this.m_bNowMode = true;
-        this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+        this.m_oReferenceDate = new Date();
     };
 
     SummaryTableController.$inject = [
