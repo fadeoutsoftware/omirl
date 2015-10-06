@@ -675,7 +675,7 @@ var MapController = (function () {
      */
     MapController.prototype.mapLinkClicked = function (oMapLink, oController)
     {
-        console.debug("Clic on:", oMapLink, " - is 1st level:", oController.m_bIsFirstLevel)
+        //console.debug("Clic on:", oMapLink, " - is 1st level:", oController.m_bIsFirstLevel)
         if( !oController )
             oController = this;
 
@@ -832,7 +832,7 @@ var MapController = (function () {
         // Layer Click
         oControllerVar.m_sMapLegendIconPath = oMapLink.link;
         this.m_oTranslateService(oMapLink.description).then(function(text){
-            oControllerVar.m_sMapLegendTooltip = m_sLegendPrefix + " " + text;
+            oControllerVar.m_sMapLegendTooltip = oControllerVar.m_sLegendPrefix + " " + text;
 
         });
 
