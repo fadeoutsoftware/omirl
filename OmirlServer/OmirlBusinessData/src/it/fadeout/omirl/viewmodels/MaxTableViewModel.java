@@ -3,12 +3,18 @@ package it.fadeout.omirl.viewmodels;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 public class MaxTableViewModel {
 	Date generationDate;
 	
 	ArrayList<MaxTableRowViewModel> alertZones = new ArrayList<>();
 
 	ArrayList<MaxTableRowViewModel> districts = new ArrayList<>();
+	
+	@Transient
+	private
+	String updateDateTime;
 
 	public Date getGenerationDate() {
 		return generationDate;
@@ -32,5 +38,13 @@ public class MaxTableViewModel {
 
 	public void setDistricts(ArrayList<MaxTableRowViewModel> districts) {
 		this.districts = districts;
+	}
+
+	public String getUpdateDateTime() {
+		return updateDateTime;
+	}
+
+	public void setUpdateDateTime(String updateDateTime) {
+		this.updateDateTime = updateDateTime;
 	}
 }

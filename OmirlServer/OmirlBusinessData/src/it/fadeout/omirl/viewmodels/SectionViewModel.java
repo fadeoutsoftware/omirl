@@ -27,6 +27,9 @@ public class SectionViewModel {
 	Date refDate;
 	double value;
 	
+	private
+	String updateDateTime;
+	
 	public String getCode() {
 		return code;
 	}
@@ -134,6 +137,12 @@ public class SectionViewModel {
 	}
 	public void setSubFolder(String subFolder) {
 		this.subFolder = subFolder;
+	}
+	public String getUpdateDateTime() {
+		return updateDateTime;
+	}
+	public void setUpdateDateTime(String updateDateTime) {
+		this.updateDateTime = updateDateTime;
 	}
 
 }
