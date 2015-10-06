@@ -29,7 +29,14 @@ var SummaryTableController = (function() {
                 oControllerVar.m_aoAlertReturn = data.alertInfo;
                 oControllerVar.m_aoDistrictReturn = data.districtInfo;
                 oControllerVar.m_aoWindReturn = data.windInfo;
-                oControllerVar.m_oLastDateRef = data.updateDateTime;
+                //ref date
+                var oDate = new Date(data.updateDateTime + " UTC");
+                oControllerVar.m_oTranslateService('SUMMARY_SUBTITOLO', {data: oDate.toString()}).then(function(msg){
+                    oControllerVar.m_oLastDateRef = msg;
+                });
+                oControllerVar.m_oTranslateService('SUMMARY_SINTESI3', {data: oDate.toString()}).then(function(msg){
+                    oControllerVar.m_oLastDateRefVento = msg;
+                });
 
             }).error(function (data, status) {
                 oControllerVar.m_oLog.error('Error Contacting Omirl Server');

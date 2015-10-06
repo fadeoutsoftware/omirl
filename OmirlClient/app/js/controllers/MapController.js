@@ -874,6 +874,7 @@ var MapController = (function () {
      */
     MapController.prototype.selectedDynamicLayer = function (oMapLink, sModifier, oController)
     {
+
         if( !oController )
             oController = this;
 
@@ -886,6 +887,9 @@ var MapController = (function () {
         }
 
         var oController = this;
+
+        //reset date time
+        oController.m_oSelectedDateTimeInfo = "";
 
         var sLayerCode = oMapLink.layerID;
         var asStrings = oMapLink.layerID.split(":");
@@ -905,10 +909,10 @@ var MapController = (function () {
 
             oController.setSelectedMapLinkOnScreen(oController,oMapLink);
 
-            if (data.StringValue != null && data.StringValue != sOldLayerIdentifier) {
+            if (data.layerId != null && data.layerId != sOldLayerIdentifier) {
                 // Create WMS Layer
                 var oLayer = new OpenLayers.Layer.WMS(oMapLink.description, oMapLink.layerWMS, {
-                    layers: data.StringValue,
+                    layers: data.layerId,
                     transparent: "true",
                     format: "image/png"
                 });
@@ -925,8 +929,14 @@ var MapController = (function () {
                 oController.m_oMapService.map.addLayer(oLayer);
                 oController.m_oMapService.map.setLayerIndex(oLayer, oController.m_oLayerService.getBaseLayers().length);
 
+                //set date time
+                var oDate = new Date(data.updateDateTime + " UTC");
+                oController.m_oTranslateService('MAP_DATEINFO', {data: oDate.toString()}).then(function(msg){
+                    oController.m_oSelectedDateTimeInfo = msg;
+                });
+
             }
-            else if (data.StringValue == null)
+            else if (data.layerId == null)
             {
                 // Remove last one
                 if (oController.m_oLayerService.getDynamicLayer() != null) {
@@ -963,6 +973,9 @@ var MapController = (function () {
 
         var oController = this;
 
+        //reset date time
+        oController.m_oSelectedDateTimeInfo = "";
+
         var sLayerCode = oMapLink.linkCode;
 
         if (oMapLink.linkCode.indexOf(":")>-1)
@@ -985,10 +998,10 @@ var MapController = (function () {
 
             //oController.setSelectedMapLinkOnScreen(oController,oMapLink);
 
-            if (data.StringValue != null && data.StringValue != sOldLayerIdentifier) {
+            if (data.layerId != null && data.layerId != sOldLayerIdentifier) {
                 // Create WMS Layer
                 var oLayer = new OpenLayers.Layer.WMS(oMapLink.description, oMapLink.layerWMS, {
-                    layers: data.StringValue,
+                    layers: data.layerId,
                     transparent: "true",
                     format: "image/png"
                 });
@@ -1005,8 +1018,14 @@ var MapController = (function () {
                 oController.m_oMapService.map.addLayer(oLayer);
                 oController.m_oMapService.map.setLayerIndex(oLayer, oController.m_oLayerService.getBaseLayers().length);
 
+                //set date time
+                var oDate = new Date(data.updateDateTime + " UTC");
+                oController.m_oTranslateService('MAP_DATEINFO', {data: oDate.toString()}).then(function(msg){
+                    oController.m_oSelectedDateTimeInfo = msg;
+                });
+
             }
-            else if (data.StringValue == null)
+            else if (data.layerId == null)
             {
                 // Remove last one
                 if (oController.m_oLayerService.getDynamicLayer() != null) {
@@ -1429,7 +1448,10 @@ var MapController = (function () {
             oServiceVar.m_oSelectedDateTimeInfo = "";
             if (aoStations != null && aoStations.length > 0)
             {
-                oServiceVar.m_oSelectedDateTimeInfo = aoStations[0].updateDateTime;
+                var oDate = new Date(aoStations[0].updateDateTime + " UTC");
+                oServiceVar.m_oTranslateService('MAP_DATEINFO', {data: oDate.toString()}).then(function(msg){
+                    oServiceVar.m_oSelectedDateTimeInfo = msg;
+                });
             }
 
             try{
@@ -2088,10 +2110,20 @@ var MapController = (function () {
 
         var oControllerVar = this;
 
+        // RESET DATE INFO
+        oControllerVar.m_oSelectedDateTimeInfo = "";
         // Obtain Stations Values from the server
         this.m_oHydroService.getSections(oSectionLink).success(function(data,status) {
 
             var aoSections = data;
+
+            if (data != null) {
+                //SET DATE INFO
+                var oDate = new Date(data.updateDateTime + " UTC");
+                oControllerVar.m_oTranslateService('MAP_DATEINFO', {data: oDate.toString()}).then(function(msg){
+                    oControllerVar.m_oSelectedDateTimeInfo = msg;
+                });
+            }
 
             try{
 
@@ -2568,6 +2600,7 @@ var MapController = (function () {
 
 
     MapController.prototype.switchRadarLinkState = function(bIsSelected, oRadarLink) {
+
         if (!bIsSelected)
         {
 

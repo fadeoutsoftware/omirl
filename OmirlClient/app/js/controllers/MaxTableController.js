@@ -130,7 +130,12 @@ var MaxTableController = (function() {
          this.m_oTableService.getMaxStationsTable().success(function (data, status) {
              oControllerVar.m_aoMaxTable = data;
              oControllerVar.m_bDowloadEnabled = true;
-             oControllerVar.m_oUpdateDateTime = data.updateDateTime;
+
+             var oDate = new Date(data.updateDateTime + " UTC");
+             oControllerVar.m_oTranslateService('MAXTABLE_SUBTITOLO', {data: oDate.toString()}).then(function(msg){
+                 oControllerVar.m_oUpdateDateInfo = msg;
+             });
+
          }).error(function (data, status) {
             oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
          });

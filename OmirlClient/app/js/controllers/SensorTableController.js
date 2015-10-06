@@ -37,6 +37,9 @@ var SensorTableController = (function() {
         this.m_sPULISCIFILTRI = "Pulisci Filtri";
         this.m_sFilterLabel = this.m_sFILTRICOLONNE;
 
+        //DATE INFO
+        this.m_oUpdateDateInfo = "";
+
         // Decimals to show on the table
         this.m_iDecimalCount = 1;
 
@@ -54,13 +57,14 @@ var SensorTableController = (function() {
 
                 oControllerVar.m_aoTypes = data;
 
-
                 oControllerVar.typeSelected();
 
             }).error(function (data, status) {
                 oControllerVar.m_oLog.error('Error Loading Sensors Items to add to the Menu');
             });
         };
+
+        refreshSensorTable();
 
         if (this.m_oConstantsService.isNowMode()) {
             oControllerVar.m_oReferenceDate = new Date();
@@ -119,6 +123,14 @@ var SensorTableController = (function() {
         this.m_oStationsService.getSensorsTable(this.m_oSelectedType.code).success(function (data, status) {
             oControllerVar.m_aoStations = data.tableRows;
             var aoStations = oControllerVar.m_aoStations;
+
+            oControllerVar.m_oUpdateDateInfo = "";
+            if (data != null) {
+                if (data.updateDateTime != null) {
+                    var oDate = new Date(data.updateDateTime + " UTC");
+                    oControllerVar.setFormattedReferenceDate(oDate);
+                }
+            }
 
             var oSensorLink =oControllerVar.m_oConstantsService.getSensorLinkByType(oControllerVar.m_oSelectedType.code);
 
@@ -395,8 +407,9 @@ var SensorTableController = (function() {
         this.m_oLocation.path(sPath);
     }
 
+    SensorTableController.prototype.setFormattedReferenceDate = function(dateInfo){
+        var oController = this;
 
-    SensorTableController.prototype.getFormattedReferenceDate = function() {
         var oDate = this.m_oConstantsService.getReferenceDate();
 
         if (oDate==null) {
@@ -408,10 +421,17 @@ var SensorTableController = (function() {
 
         var iMonth = oDate.getMonth() + 1;
 
-        // Write reference date text
-        return "Valori misurati dalle 00:00 del " + oDate.getDate() + "/" + iMonth + "/" + oDate.getFullYear() + " ore locali";
+        this.m_oTranslateService('SENSOTABLE_DATEINFO', {day: oDate.getDate(), month:iMonth, year:oDate.getFullYear(), data: dateInfo.toString()}).then(function(msg){
+            oController.m_oUpdateDateInfo = msg;
+        });
+    };
 
-    }
+    SensorTableController.prototype.getFormattedReferenceDate = function() {
+
+        // Write reference date text
+        return this.m_oUpdateDateInfo;
+
+    };
 
 
     SensorTableController.$inject = [
