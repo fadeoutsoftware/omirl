@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import it.fadeout.omirl.business.DataChart;
 import it.fadeout.omirl.business.OmirlUser;
@@ -222,7 +223,8 @@ public class TablesService {
 						if (oSummaryInfo != null)
 						{
 							Date oLastDate = new Date(oLastFile.lastModified()); 
-							SimpleDateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+							SimpleDateFormat oFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+							oFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 							oSummaryInfo.setUpdateDateTime(oFormat.format(oLastDate));
 						}
 					} catch (Exception e) {
@@ -299,6 +301,13 @@ public class TablesService {
 					try {
 						// Ok read sensors 
 						oMaxTable = (MaxTableViewModel) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+						if (oMaxTable != null)
+						{
+							Date oLastDate = new Date(oLastFile.lastModified()); 
+							SimpleDateFormat oFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+							oFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+							oMaxTable.setUpdateDateTime(oFormat.format(oLastDate));
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}							

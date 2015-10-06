@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.Consumes;
@@ -98,6 +99,13 @@ public class SectionsService {
 								try {
 									// Ok read sections 
 									aoSections = (List<SectionViewModel>) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+									if (aoSections.size() > 0)
+									{
+										Date oLastDate = new Date(oLastFile.lastModified()); 
+										SimpleDateFormat oFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+										oFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+										aoSections.get(0).setUpdateDateTime(oFormat.format(oLastDate));
+									}
 								} catch (Exception e) {
 									e.printStackTrace();
 								}							

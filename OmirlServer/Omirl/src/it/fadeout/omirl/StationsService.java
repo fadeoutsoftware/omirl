@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.print.attribute.standard.DateTimeAtCompleted;
 import javax.servlet.ServletConfig;
@@ -115,7 +116,8 @@ public class StationsService {
 								if (aoSensors.size() > 0)
 								{
 									Date oLastDate = new Date(oLastFile.lastModified()); 
-									SimpleDateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+									SimpleDateFormat oFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+									oFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 									aoSensors.get(0).setUpdateDateTime(oFormat.format(oLastDate));
 								}
 							} catch (Exception e) {
@@ -415,6 +417,13 @@ public class StationsService {
 					try {
 						// Ok read sensors 
 						oTable = (SensorValueTableViewModel) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+						if (oTable != null)
+						{
+							Date oLastDate = new Date(oLastFile.lastModified()); 
+							SimpleDateFormat oFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+							oFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+							oTable.setUpdateDateTime(oFormat.format(oLastDate));
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

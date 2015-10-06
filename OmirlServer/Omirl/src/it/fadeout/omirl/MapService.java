@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
@@ -46,8 +47,8 @@ public class MapService {
 	@GET
 	@Path("/layer/{sCode}/{sModifier}")
 	@Produces({"application/xml", "application/json", "text/xml"})
-	public PrimitiveResult GetLayerId(@PathParam("sCode") String sCode, @PathParam("sModifier") String sModifier, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
-		PrimitiveResult oResult = new PrimitiveResult();
+	public MapInfoViewModel GetLayerId(@PathParam("sCode") String sCode, @PathParam("sModifier") String sModifier, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
+		MapInfoViewModel oResult = new MapInfoViewModel();
 		
 		System.out.println("MapService.GetLayerId: Code = " + sCode);
 
@@ -106,9 +107,13 @@ public class MapService {
 				
 				for (MapInfoViewModel oInfo : aoOutputInfo) {
 					if (oInfo.getCode().equals(sCode)) {
-						oResult.StringValue = oInfo.getLayerId();
-						
-						System.out.println("MapService.GetLayerId: Layer ID Found " + oResult.StringValue);
+						oResult = oInfo;
+						//set ref date
+						Date oLastDate = new Date(oLastFile.lastModified()); 
+						SimpleDateFormat oFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+						oFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+						oInfo.setUpdateDateTime(oFormat.format(oLastDate));
+						System.out.println("MapService.GetLayerId: Layer ID Found " + oResult.getLayerId());
 						
 						break;
 					}
