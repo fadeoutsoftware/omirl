@@ -60,6 +60,8 @@
     "MAP_TIMEPAST":"Torna in tempo reale",
     "MAP_TIMENOW":"In tempo reale",
     "MAP_DATEINFO": "Aggiornato il {{data}} Ore locali",
+    "MAP_STATIONDATEINFO":"Sensori aggiornati il {{data}} Ore locali",
+    "MAP_LAYERDATEINFO":"Mappa aggiornata il {{data}} Ore locali",
     "MAXTABLE_TITOLO":"Tabella Massimi Puntuali",
     "MAXTABLE_SUBTITOLO":"Dati di precipitazione - Aggiornato il {{data}} Ore locali",
     "MAXTABLE_ZONEALL":"Zone Allerta",

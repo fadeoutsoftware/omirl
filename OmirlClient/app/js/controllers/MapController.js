@@ -133,7 +133,11 @@ var MapController = (function () {
         this.m_aoHydroThirdLevels = [];
 
         //date and time of selected feature
-        this.m_oSelectedDateTimeInfo = "";
+        this.m_oSelectedSensorDateTimeInfo = "";
+        this.m_oSelectedSensorDateTimeIcon = "";
+        this.m_oSelectedMapDateTimeInfo = "";
+        this.m_oSelectedMapDateTimeIcon = "";
+
 
         this.m_aoSatelliteLinks = [];
         this.m_aoRadarLinks = [];
@@ -807,6 +811,9 @@ var MapController = (function () {
                     if (oController.m_oLayerService.getDynamicLayer() != null) {
                         oController.m_oMapService.map.removeLayer(oController.m_oLayerService.getDynamicLayer());
                         oController.m_oLayerService.setDynamicLayer(null);
+
+                        oController.m_oSelectedMapDateTimeIcon = "";
+                        oController.m_oSelectedMapDateTimeInfo = "";
                     }
                     oController.m_sMapLegendSelected = "";
                     oController.m_bShowThirdLevel = false;
@@ -889,7 +896,8 @@ var MapController = (function () {
         var oController = this;
 
         //reset date time
-        oController.m_oSelectedDateTimeInfo = "";
+        oController.m_oSelectedMapDateTimeInfo = "";
+        oController.m_oSelectedMapDateTimeIcon = "";
 
         var sLayerCode = oMapLink.layerID;
         var asStrings = oMapLink.layerID.split(":");
@@ -931,8 +939,9 @@ var MapController = (function () {
 
                 //set date time
                 var oDate = new Date(data.updateDateTime + " UTC");
-                oController.m_oTranslateService('MAP_DATEINFO', {data: oDate.toString()}).then(function(msg){
-                    oController.m_oSelectedDateTimeInfo = msg;
+                oController.m_oTranslateService('MAP_LAYERDATEINFO', {data: oDate.toString()}).then(function(msg){
+                    oController.m_oSelectedMapDateTimeInfo = msg;
+                    oController.m_oSelectedMapDateTimeIcon = oMapLink.link;
                 });
 
             }
@@ -974,7 +983,8 @@ var MapController = (function () {
         var oController = this;
 
         //reset date time
-        oController.m_oSelectedDateTimeInfo = "";
+        oController.m_oSelectedMapDateTimeIcon = "";
+        oController.m_oSelectedMapDateTimeInfo = "";
 
         var sLayerCode = oMapLink.linkCode;
 
@@ -1020,8 +1030,9 @@ var MapController = (function () {
 
                 //set date time
                 var oDate = new Date(data.updateDateTime + " UTC");
-                oController.m_oTranslateService('MAP_DATEINFO', {data: oDate.toString()}).then(function(msg){
-                    oController.m_oSelectedDateTimeInfo = msg;
+                oController.m_oTranslateService('MAP_LAYERDATEINFO', {data: oDate.toString()}).then(function(msg){
+                    oController.m_oSelectedMapDateTimeInfo = msg;
+                    oController.m_oSelectedMapDateTimeIcon = oMapLink.link;
                 });
 
             }
@@ -1171,6 +1182,9 @@ var MapController = (function () {
         this.m_sSensorLegendTooltip = "";
 
         this.m_oSelectedSensorLink = null;
+
+        this.m_oSelectedSensorDateTimeIcon = "";
+        this.m_oSelectedSensorDateTimeInfo = "";
 
     }
 
@@ -1445,12 +1459,14 @@ var MapController = (function () {
             var aoStations = data;
 
             //update date time info
-            oServiceVar.m_oSelectedDateTimeInfo = "";
+            oServiceVar.m_oSelectedSensorDateTimeInfo = "";
+            oServiceVar.m_oSelectedSensorDateTimeIcon = "";
             if (aoStations != null && aoStations.length > 0)
             {
                 var oDate = new Date(aoStations[0].updateDateTime + " UTC");
-                oServiceVar.m_oTranslateService('MAP_DATEINFO', {data: oDate.toString()}).then(function(msg){
-                    oServiceVar.m_oSelectedDateTimeInfo = msg;
+                oServiceVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function(msg){
+                    oServiceVar.m_oSelectedSensorDateTimeInfo = msg;
+                    oServiceVar.m_oSelectedSensorDateTimeIcon = oSensorLink.imageLinkOff;
                 });
             }
 
@@ -2111,7 +2127,8 @@ var MapController = (function () {
         var oControllerVar = this;
 
         // RESET DATE INFO
-        oControllerVar.m_oSelectedDateTimeInfo = "";
+        oControllerVar.m_oSelectedSensorDateTimeInfo = "";
+        oControllerVar.m_oSelectedSensorDateTimeIcon = "";
         // Obtain Stations Values from the server
         this.m_oHydroService.getSections(oSectionLink).success(function(data,status) {
 
@@ -2120,8 +2137,9 @@ var MapController = (function () {
             if (data != null) {
                 //SET DATE INFO
                 var oDate = new Date(data.updateDateTime + " UTC");
-                oControllerVar.m_oTranslateService('MAP_DATEINFO', {data: oDate.toString()}).then(function(msg){
-                    oControllerVar.m_oSelectedDateTimeInfo = msg;
+                oControllerVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function(msg){
+                    oControllerVar.m_oSelectedSensorDateTimeInfo = msg;
+                    oControllerVar.m_oSelectedSensorDateTimeIcon = oSectionLink.imageLinkOff;
                 });
             }
 
@@ -2296,6 +2314,9 @@ var MapController = (function () {
         this.m_sHydroLegendIconPath = "";
 
         this.m_oSelectedHydroLink = null;
+
+        this.m_oSelectedMapDateTimeIcon = "";
+        this.m_oSelectedMapDateTimeInfo = "";
     }
 
     /**
@@ -2627,6 +2648,9 @@ var MapController = (function () {
             this.m_sRadarLegendIconPath = "";
 
             this.m_oSelectedRadarLink = null;
+
+            this.m_oSelectedMapDateTimeInfo = "";
+            this.m_oSelectedMapDateTimeIcon = "";
         }
     }
 

@@ -4,8 +4,20 @@
         <div class="map-panel col-md-10 col-xs-9" id="omirlMap" ol-map zoom="9" center="8.60,44.20"
             controls="zoom,navigation,attribution,mousePosition">
             <div class="map-title">
-                {{m_oController.m_oSelectedDateTimeInfo}}
+                <div class="sensor-icon">
+                    <img src="{{m_oController.m_oSelectedSensorDateTimeIcon}}">
+                </div >
+                <div class="sensor-title">
+                    {{m_oController.m_oSelectedSensorDateTimeInfo}}
+                </div>
+                <div class="layer-icon">
+                    <img src="{{m_oController.m_oSelectedMapDateTimeIcon}}">
+                </div>
+                <div class="layer-title">
+                    {{m_oController.m_oSelectedMapDateTimeInfo}}
+                </div>
             </div>
+
         </div>
         <!--<div class="map-controls-panel" >
         <!--        col-md-10 col-xs-9          -->

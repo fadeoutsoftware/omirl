@@ -31,6 +31,7 @@ var ChartController = (function() {
         var oControllerVar = this;
         this.m_sSubtitle = '';
 
+        //zoom level
 
         oControllerVar.m_oTranslate('CHARTCONTROLLER_OPTIONSUBTITLE', {model: this.m_oScope.model.name, municipality: this.m_oScope.model.municipality}).then(function(text){
             oControllerVar.m_sSubtitle = text;
