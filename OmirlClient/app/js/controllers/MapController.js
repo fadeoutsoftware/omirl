@@ -969,13 +969,6 @@ var MapController = (function () {
                 oController.m_oMapService.map.addLayer(oLayer);
                 oController.m_oMapService.map.setLayerIndex(oLayer, oController.m_oLayerService.getBaseLayers().length);
 
-                //set date time
-                var oDate = new Date(data.updateDateTime + " UTC");
-                oController.m_oTranslateService('MAP_LAYERDATEINFO', {data: oDate.toString()}).then(function(msg){
-                    oController.m_oSelectedMapDateTimeInfo = msg;
-                    oController.m_oSelectedMapDateTimeIcon = oMapLink.link;
-                });
-
             }
             else if (data.layerId == null)
             {
@@ -989,6 +982,13 @@ var MapController = (function () {
                     alert(msg);
                 });
             }
+
+            //set date time
+            var oDate = new Date(data.updateDateTime + " UTC");
+            oController.m_oTranslateService('MAP_LAYERDATEINFO', {data: oDate.toString()}).then(function(msg){
+                oController.m_oSelectedMapDateTimeInfo = msg;
+                oController.m_oSelectedMapDateTimeIcon = oMapLink.link;
+            });
         }).error(function (data, status) {
             oController.setSelectedMapLinkOnScreen(oController,oController.m_oSelectedMapLink);
             oController.m_oTranslateService('ERRORCONTACTSERVER').then(function(error){

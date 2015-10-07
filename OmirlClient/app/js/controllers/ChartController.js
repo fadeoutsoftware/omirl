@@ -375,6 +375,13 @@ var ChartController = (function() {
                                     else
                                         return '<b>' + Highcharts.dateFormat('%d %b', this.value) + '</b>';
                                 }
+                            },
+                            events: {
+                                setExtremes: function (e) {
+
+                                    oControllerVar.onZoom(e, oControllerVar);
+
+                                }
                             }
                         },
                         title:{
@@ -589,19 +596,27 @@ var ChartController = (function() {
                     if (oSerie.name=="Wind Direction") {
 
                         var oSerieCustomMarker = new Highcharts.Series();
+                        var oLegendMarker = new Object();
+                        oLegendMarker.symbol = new Object();
+                        oLegendMarker.symbol = 'url(img/windDirections/90.png)';
                         oSerieCustomMarker.data = new Array();
                         oSerieCustomMarker.name = 'Wind Direction';
                         oSerieCustomMarker.axisId = oSerie.axisId;
                         oSerieCustomMarker.type = "scatter";
+                        oSerieCustomMarker.marker = oLegendMarker;
+
+
                         oControllerVar.m_oWindDirections = [];
                         for(var iElement = 0; iElement< oSerie.data.length; iElement++)
                         {
-                            // if direction not null
-                            if (oSerie.data[iElement][1] != null) {
+                            if (iElement % 2 == 0) {
+                                // if direction not null
+                                if (oSerie.data[iElement][1] != null) {
 
-                                //var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'windArrow'}};
-                                var oData = {x: oSerie.data[iElement][0], y:-10, marker:{symbol: 'url(img/windDirections/' + oSerie.data[iElement][1] + '.png)'}, toolText: oSerie.data[iElement][1]};
-                                oSerieCustomMarker.data.push(oData);
+                                    //var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'windArrow'}};
+                                    var oData = {x: oSerie.data[iElement][0], y: -10, marker: {symbol: 'url(img/windDirections/' + oSerie.data[iElement][1] + '.png)'}, toolText: oSerie.data[iElement][1]};
+                                    oSerieCustomMarker.data.push(oData);
+                                }
                             }
                             oControllerVar.m_oWindDirections.push(oSerie.data[iElement][1]);
 
@@ -696,6 +711,51 @@ var ChartController = (function() {
 
         }
     }
+
+    ChartController.prototype.onZoom = function (e, oControllerVar) {
+
+        var oController = this;
+        if (oControllerVar != null)
+            oController = oControllerVar;
+
+        var resetZoom = false;
+        if (e.min == null || e.max == null)
+            resetZoom = true;
+
+        var chart = e.delegateTarget.chart;
+
+        //zoom selected
+        for (var iElement = 0; iElement < chart.series.length; iElement++) {
+            if (chart.series[iElement].name == "Wind Direction") {
+                //clear all data
+                chart.series[iElement].remove();
+                var oWindDirSerie = new Highcharts.Series();
+                for (var i = 0; i < oController.oChartVM.dataSeries.length; i++) {
+                    // if direction not null
+                    if (oController.oChartVM.dataSeries[i].name == "Wind Direction") {
+                        var oWindSerie = oController.oChartVM.dataSeries[i];
+                        var oLegendMarker = new Object();
+                        oLegendMarker.symbol = new Object();
+                        oLegendMarker.symbol = 'url(img/windDirections/90.png)';
+                        oWindDirSerie.data = new Array();
+                        oWindDirSerie.name = 'Wind Direction';
+                        oWindDirSerie.axisId = oWindSerie.axisId;
+                        oWindDirSerie.type = "scatter";
+                        oWindDirSerie.marker = oLegendMarker;
+                        for (var s = 0; s < oWindSerie.data.length; s++) {
+                            var oData;
+                            if (resetZoom && s % 2 == 0 || !resetZoom)
+                                oData = {x: oWindSerie.data[s][0], y: -10, marker: {symbol: 'url(img/windDirections/' + oWindSerie.data[s][1] + '.png)'}, toolText: oWindSerie.data[s][1]};
+
+                            oWindDirSerie.data.push(oData);
+                        }
+
+                    }
+                }
+                chart.addSeries(oWindDirSerie);
+            }
+        }
+    };
 
 
     /**
