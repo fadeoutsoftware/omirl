@@ -8,24 +8,45 @@ and open the template in the editor.
     Author     : d.fiori
 */
 
-$color-map-title-bg: #7fbbda;
-$color-map-title-text: whitesmoke;
 
 .map{
     position: relative;
     
     .map-title{
+        
+        $height: 40px;
+        $iconsSize: 24px;
+        
         position: absolute;
         top: 0px;
         left: 0px;
         right: 0px;
-        height: 40px;
+        height: $height;
         z-index: 1000;
         background-color: $color-map-title-bg;
         text-align: center;
         color: $color-map-title-text;
-        font-size: 2rem;
+        font-size: 1.9rem;
         line-height: 3.5rem;
+        
+        
+        .sensor-icon, 
+        .layer-icon{
+            img{
+                height: $iconsSize;
+                width: $iconsSize;
+                margin-right: 6px;
+            }
+        }
+
+        .sensor-title,
+        .layer-title{
+            padding-top: 1px;
+        }
+
+        .title-separator{
+            padding: 0px 12px;
+        }
     }
     
     .map-legend{

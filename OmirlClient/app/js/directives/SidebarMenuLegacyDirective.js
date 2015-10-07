@@ -19,13 +19,15 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
         replace     : true,
         scope       : {
             "id" : "@id",
+            "onInit" : "=onInit",
             "controller" : "=controller",
             "menuLegendSelected" : "=menuLegendSelected",
             "menuLegendHover" : "=menuLegendHover",
             "isFirstLevel" : "=isFirstLevel",
             "onMenutItemClick" : "=onMenuItemClick",
-            "menuItemsList" : "=menuItemsList",
-            "getMenuItems" : "=getMenuItemsMethod",
+            "firstLevelMenuItemsList" : "=firstLevelMenuItems",
+            "secondLevelMenuItemsList" : "=secondLevelMenuItems",
+            //"getMenuItems" : "=getMenuItemsMethod",
             "thirdLevelMenuItems" : "=thirdLevelMenuItems",
             "thirdLevelMenuSelection" : "=thirdLevelMenuSelectedItem",
             "thirdLevelMenuClick" : "=thirdLevelMenuClick"
@@ -35,6 +37,9 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             $scope.MENU_LEVEL_1 = 0;
             $scope.MENU_LEVEL_2 = 1;
             $scope.MENU_LEVEL_3 = 2;
+            
+
+            
             
             $scope.m_sParentText = ""; //$scope.menuTitle;
             $scope.m_sChildText = ""; //$scope.menuTitle;
@@ -76,10 +81,15 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             //****************************************************************************************
             //* Directive listeners
             //****************************************************************************************
-            $scope.$watch("menuItemsList", function(newValue){               
+            $scope.$watch("firstLevelMenuItemsList", function(newValue){               
                $scope.updateMapLinks();
                $scope.hasMenuItemBeenUpdated = true;
             });
+            $scope.$watch("secondLevelMenuItemsList", function(newValue){               
+               $scope.updateMapLinks();
+               $scope.hasMenuItemBeenUpdated = true;
+            });
+            
             
             $scope.$watch("thirdLevelMenuItems", function(newValue){               
                $scope.updateMapLinks();
@@ -87,23 +97,7 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             });
             
             $scope.$watch(function(){ return $scope.thirdLevelComboBox.selection;}, function(newValue){
-                $scope.thirdLevelMenuSelection = $scope.thirdLevelComboBox.selection;
-                
-                
-                if(newValue && $scope.thirdLevelMenuClick && typeof $scope.thirdLevelMenuClick == "function" )
-                {
-                    var oItem;
-                    for(var key in $scope.thirdLevelComboBox.options)
-                    {
-                        if( $scope.thirdLevelComboBox.options[key].description == $scope.thirdLevelComboBox.selection)
-                        {
-                            oItem = $scope.thirdLevelComboBox.options[key];
-                            break;
-                        }
-                    }
-                    $scope.thirdLevelMenuClick(oItem, $scope.controller);
-                }
-               
+                $scope.onThirdLevelSelection(newValue);
             });
             
             $scope.$watch("thirdLevelMenuSelection", function(newValue){
@@ -118,6 +112,35 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             //****************************************************************************************
             //* Directive scope methods
             //****************************************************************************************
+            
+            
+            $scope.getMenuLinkIcon = function(oMenuLink)
+            {
+                if( oMenuLink.link )
+                    return oMenuLink.link;
+                else if( oMenuLink.imageLinkOff )
+                    return oMenuLink.imageLinkOff;
+            }
+            
+            $scope.hasSubLevel = function(oMenuLink)
+            {
+                if( oMenuLink && oMenuLink.hasSubLevel == true )
+                {
+                    return true;
+                }
+                return false;
+            }
+            
+            
+            $scope.initialize = function()
+            {
+                if( $scope.onInit && typeof $scope.onInit == "function")
+                {
+                    $scope.onInit();
+                }
+                
+                //$scope.initMenuLinks();
+            }
             
             $scope.resetThirdLevel = function(bIsVisible)
             {
@@ -217,28 +240,25 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             }
             
             
-            $scope.initMenuLinks = function()
-            {
-                if( $scope.getMenuItems && typeof $scope.getMenuItems == "function")
-                    $scope.getMenuItems();
-            }
+//            $scope.initMenuLinks = function()
+//            {
+////                if( $scope.getMenuItems && typeof $scope.getMenuItems == "function")
+////                    $scope.getMenuItems();
+//            }
             
             $scope.updateMapLinks = function()
             {
                 $scope.hasMenuItemBeenUpdated = false;
                 if( $scope.menuLevelToUpdate == $scope.MENU_LEVEL_1)
                 {
-                    $scope.menuItemsByLevel[$scope.MENU_LEVEL_1] = $scope.menuItemsList;
-                    //$scope.menuItemsByLevel[0].push( {});
-                    
-                    $scope.updateFirstLevelMenuRows();
-                    
+                    $scope.menuItemsByLevel[$scope.MENU_LEVEL_1] = $scope.firstLevelMenuItemsList;                    
+                    $scope.updateFirstLevelMenuRows();                    
                     $scope.m_sParentText = $scope.menuLegendSelected;
                     
                 }
                 else if( $scope.menuLevelToUpdate == $scope.MENU_LEVEL_2)
                 {
-                    $scope.menuItemsByLevel[$scope.MENU_LEVEL_2] = $scope.menuItemsList;
+                    $scope.menuItemsByLevel[$scope.MENU_LEVEL_2] = $scope.secondLevelMenuItemsList;
                     $scope.m_sChildText = $scope.menuLegendSelected;
                 }
                 else if( $scope.menuLevelToUpdate == $scope.MENU_LEVEL_3)
@@ -249,23 +269,35 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             }
             
             
+            $scope.isTheSameMenuLink = function(oMenuLink_1, oMenuLink_2)
+            {
+                if( oMenuLink_1 && oMenuLink_2)
+                {
+                    if( oMenuLink_1.linkId && oMenuLink_2.linkId)
+                        return oMenuLink_1.linkId == oMenuLink_2.linkId;
+                    else if( oMenuLink_1.description && oMenuLink_2.description)
+                        return oMenuLink_1.description == oMenuLink_2.description;
+                }
+                else 
+                    return false;
+            }
+            
             $scope.isActive = function(menuItem)
             {
-                if( $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_1] && menuItem)
-                    return ($scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_1].linkId == menuItem.linkId);
-                else
-                    return false;
+                return $scope.isTheSameMenuLink( $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_1], menuItem);
             }
 
             $scope.isSubActive = function(menuItem)
             {
-                if( $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2] && menuItem)
-                    return ($scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2].linkId == menuItem.linkId);
-                else
-                    return false
+                return $scope.isTheSameMenuLink( $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2], menuItem );
             }
             
-            
+            /**
+             * Handle the click on a '1st level' menu link
+             * @param {type} oMenuLink - The menu link user has clicked on
+             * @param {type} iSecondLevelRowIdToOpen - The row ID of the sub-level container which will be opened
+             * @return {undefined} Void
+             */
             $scope.mainItemClick = function(oMenuLink, iSecondLevelRowIdToOpen)
             {
                 console.debug("mainItemClick:", oMenuLink);
@@ -286,11 +318,15 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 }
                 else
                 {
-                    // Item not selected
-                    $scope.secondLevelMenuOpened = iSecondLevelRowIdToOpen;
-                    //$scope.activeMenuItem = oMenuLink;
+                    // *** Item not selected ***
+                    
+                    // Open the 2nd level box only if the item has a 2nd level
+                    if( $scope.hasSubLevel(oMenuLink) )
+                        $scope.secondLevelMenuOpened = iSecondLevelRowIdToOpen;
+                    
                     $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_1] = oMenuLink;
-                    $scope.m_bIsSubmenuVisible = true;
+                    
+                    //$scope.m_bIsSubmenuVisible = $scope.hasSubLevel(oMenuLink);
                     
                     $scope.m_sParentText = oMenuLink.description;
                     $scope.m_sChildText = "";
@@ -318,14 +354,19 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 }
             }
             
-            $scope.submenuItemClick = function(item)
+            /**
+             * Handle the click on a '2nd level' menu link
+             * @param {type} oMenuLink - The menu link user has clicked on
+             * @return {undefined} Void
+             */
+            $scope.submenuItemClick = function(oMenuLink)
             {
-                console.debug("submenuItemClick:", item);
+                console.debug("submenuItemClick:", oMenuLink);
                 
                 $scope.isFirstLevel = false;
                 $scope.controller.m_bIsFirstLevel = false;
 
-                if( $scope.isSubActive(item) == true)
+                if( $scope.isSubActive(oMenuLink) == true)
                 {
                     //$scope.activeSubItem = null;
                     $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2] = null;
@@ -341,13 +382,13 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                     $scope.resetThirdLevel();
 
                     //$scope.activeSubItem = item;
-                    $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2] = item;
+                    $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2] = oMenuLink;
 
                     $scope.m_sParentText = $scope.m_sParentText;
 
-                    $scope.m_sChildText = item.description;
+                    $scope.m_sChildText = oMenuLink.description;
 
-                    $scope.isThirdLevelVisible = item.hasThirdLevel;
+                    $scope.isThirdLevelVisible = oMenuLink.hasThirdLevel;
                 }
                 
                 $scope.menuLevelToUpdate = $scope.MENU_LEVEL_3;
@@ -355,9 +396,35 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 // Execute the external 'on click' method 
                 if( typeof $scope.onMenutItemClick == "function")
                 {
-                    $scope.onMenutItemClick(item, $scope.controller);
+                    $scope.onMenutItemClick(oMenuLink, $scope.controller);
                     
-                    item.selected = $scope.isSubActive(item);
+                    oMenuLink.selected = $scope.isSubActive(oMenuLink);
+                }
+            }
+            
+            
+            /**
+             * Handle the selection of a '3rd level' menu link (they are in a 'select' box)
+             * @param {type} oSelectedItem - The selected item
+             * @return {undefined} Void
+             */
+            $scope.onThirdLevelSelection = function(oSelectedItem)
+            {
+                //$scope.thirdLevelMenuSelection = $scope.thirdLevelComboBox.selection;
+                $scope.thirdLevelMenuSelection = oSelectedItem;
+
+                if(oSelectedItem && $scope.thirdLevelMenuClick && typeof $scope.thirdLevelMenuClick == "function" )
+                {
+                    var oItem;
+                    for(var key in $scope.thirdLevelComboBox.options)
+                    {
+                        if( $scope.thirdLevelComboBox.options[key].description == $scope.thirdLevelComboBox.selection)
+                        {
+                            oItem = $scope.thirdLevelComboBox.options[key];
+                            break;
+                        }
+                    }
+                    $scope.thirdLevelMenuClick(oItem, $scope.controller);
                 }
             }
             

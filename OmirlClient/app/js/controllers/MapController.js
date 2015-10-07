@@ -34,6 +34,11 @@ var MapController = (function () {
         
         
         //**********************************************************************
+        //* Variable used with the menu directive
+        //**********************************************************************
+        this.m_aoSensorsLinksForDirective = null;
+        
+        //**********************************************************************
         //* Variables listeners
         //**********************************************************************
         // Listeners to watch "menu 1st level links"
@@ -41,6 +46,7 @@ var MapController = (function () {
             console.debug("[MapController] m_oController.m_oMapNavigatorService.getMapFirstLevels", newValue);
             $scope.m_oController.m_aoMapLinks = $scope.m_oController.m_oMapNavigatorService.getMapFirstLevels();            
         });
+
         //**********************************************************************
         
         
@@ -275,14 +281,28 @@ var MapController = (function () {
 
             // Clear old result
             oControllerVar.m_oConstantsService.clearSensorLinks();
+            
+            //******************************************************************
+            // Add the flag to indicate the menu link item level and 
+            // if the menu link has a sub-level.
+            // or not. These parametere should come from server but, at the
+            // moment, are initialized here
+            for(var key in data)
+            {
+                data[key].hasSubLevel = false;
+                data[key].myLevel = 1;
+            }
+            //******************************************************************
 
             // Remember links
             for (var iElement = 0; iElement < data.length; iElement++) {
                 oControllerVar.m_aoSensorsLinks.push(data[iElement]);
                 oControllerVar.m_oConstantsService.pushToSensorLinks(data[iElement]);
             }
-
             oControllerVar.m_bStationsReceived = true;
+            
+            oControllerVar.m_aoSensorsLinksForDirective = oControllerVar.m_aoSensorsLinks;
+            
             // Ok we can init the map
             oControllerVar.FireInitEvent(oControllerVar);
 
@@ -724,6 +744,18 @@ var MapController = (function () {
             // Get second level from server
             oController.m_oMapNavigatorService.getMapSecondLevels(oMapLink.linkId).success(function(data,status) {
 
+                //******************************************************************
+                // Add the flag to indicate the menu link item level and 
+                // if the menu link has a sub-level.
+                // or not. These parametere should come from server but, at the
+                // moment, are initialized here
+                for(var key in data)
+                {
+                    data[key].hasSubLevel = false;
+                    data[key].myLevel = 1;
+                }
+                //******************************************************************
+                
                 // Second Level Icons
                 oControllerVar.m_aoMapLinks = data;
                 //oControllerVar.m_oScope.$apply();
@@ -1118,39 +1150,40 @@ var MapController = (function () {
      * Function called when a sensor type is clicked
      * @param oSensorLink
      */
-    MapController.prototype.sensorLinkClicked = function (oSensorLink) {
-
-        var oController = this;
+    MapController.prototype.sensorLinkClicked = function (oSensorLink, oController)
+    {
+        if( !oController )
+            oController = this;
 
         // Check if the sensor link is active
         if (!oSensorLink.isActive){
             // Set the textual description
-            this.m_sSensorLegendSelected = oSensorLink.description;
+            oController.m_sSensorLegendSelected = oSensorLink.description;
 
             // Reset all actives flag
-            this.m_aoSensorsLinks.forEach(function(oEntry) {
+            oController.m_aoSensorsLinks.forEach(function(oEntry) {
                 oEntry.isActive = false;
             });
 
             // Set this as the active one
             oSensorLink.isActive = true;
 
-            this.hideSectionLayer();
+            oController.hideSectionLayer();
 
             // Set
-            this.showStationsLayer(oSensorLink);
-            this.m_bSensorLayerActive = true;
-            this.m_sSensorsLegendPath = oSensorLink.legendLink;
-            this.m_sSensorsLegendIconPath = oSensorLink.imageLinkOff;
-            this.m_oTranslateService(oSensorLink.description).then(function(text){
+            oController.showStationsLayer(oSensorLink);
+            oController.m_bSensorLayerActive = true;
+            oController.m_sSensorsLegendPath = oSensorLink.legendLink;
+            oController.m_sSensorsLegendIconPath = oSensorLink.imageLinkOff;
+            oController.m_oTranslateService(oSensorLink.description).then(function(text){
                 oController.m_sSensorLegendTooltip = oController.m_sLegendPrefix + " " + text;
             });
-            this.m_oSelectedSensorLink = oSensorLink;
+            oController.m_oSelectedSensorLink = oSensorLink;
 
-            this.m_oConstantsService.setSensorLayerActive(oSensorLink.code);
+            oController.m_oConstantsService.setSensorLayerActive(oSensorLink.code);
         }
         else {
-            this.hideSensorLayer();
+            oController.hideSensorLayer();
         }
     }
 
@@ -1878,59 +1911,74 @@ var MapController = (function () {
      * @param oHydroLink
      * @constructor
      */
-    MapController.prototype.HydroLinkClicked = function(oHydroLink)
+    MapController.prototype.HydroLinkClicked = function(oHydroLink, oController)
     {
+        if( !oController )
+            oController = this;
+        
         // Hydro Link = null stands for back: impossible to have back on first level
-        if (this.m_bIsHydroFirstLevel && oHydroLink == null) return;
+        if (oController.m_bIsHydroFirstLevel && oHydroLink == null) return;
 
         // var to know if this is the selected entry
         var bIsSelected = false;
 
         // Remember Controller ref
-        var oControllerVar = this;
+        var oControllerVar = oController;
 
         // Is this a Map Link Click?
         if (oHydroLink != null) {
             // Write on screen the Selected Layer description
-            if (!this.m_bHydroLayerActive)
+            if (!oController.m_bHydroLayerActive)
             {
-                this.m_sHydroLastLegendSelected = this.m_sHydroLegendSelected;
-                this.m_sHydroLegendSelected = oHydroLink.description;
+                oController.m_sHydroLastLegendSelected = oController.m_sHydroLegendSelected;
+                oController.m_sHydroLegendSelected = oHydroLink.description;
             }
             // Remember if it was selected or not
             bIsSelected = oHydroLink.selected;
         }
         else {
-            if (!this.m_bHydroLayerActive) {
-                if (this.m_iHydroLevel == 2) {
-                    this.m_sHydroLegendSelected = "Modelli";
+            if (!oController.m_bHydroLayerActive) {
+                if (oController.m_iHydroLevel == 2) {
+                    oController.m_sHydroLegendSelected = "Modelli";
                 }
                 else {
-                    this.m_sHydroLegendSelected = this.m_sHydroLastLegendSelected;
+                    oController.m_sHydroLegendSelected = oController.m_sHydroLastLegendSelected;
                 }
             }
         }
 
         // Clear all selection flags
-        this.m_aoHydroLinks.forEach(function(oEntry) {
+        oController.m_aoHydroLinks.forEach(function(oEntry) {
             oEntry.selected = false;
         });
 
         // We are in the first level?
-        if (this.m_bIsHydroFirstLevel) {
+        if (oController.m_bIsHydroFirstLevel) {
 
             if (oHydroLink.hasChilds) {
                 // Remember we are in second level
-                this.m_bIsHydroFirstLevel = false;
+                oController.m_bIsHydroFirstLevel = false;
 
-                this.m_iHydroLevel = 2;
+                oController.m_iHydroLevel = 2;
 
                 // Clear variables
                 oControllerVar.m_aoHydroLinks = [];
 
                 // Get second level from server
-                this.m_oMapNavigatorService.getHydroSecondLevels(oHydroLink.linkCode).success(function(data,status) {
+                oController.m_oMapNavigatorService.getHydroSecondLevels(oHydroLink.linkCode).success(function(data,status) {
 
+                    //******************************************************************
+                    // Add the flag to indicate the menu link item level and 
+                    // if the menu link has a sub-level.
+                    // or not. These parametere should come from server but, at the
+                    // moment, are initialized here
+                    for(var key in data)
+                    {
+                        data[key].hasSubLevel = true;
+                        data[key].myLevel = 2;
+                    }
+                    //******************************************************************
+                    
                     // Second Level Icons
                     oControllerVar.m_aoHydroLinks = data;
 
@@ -1958,27 +2006,27 @@ var MapController = (function () {
                 });
             }
             else {
-                this.switchHydroLinkState(bIsSelected, oHydroLink);
+                oController.switchHydroLinkState(bIsSelected, oHydroLink);
             }
         }
-        else if (this.m_iHydroLevel==2) {
+        else if (oController.m_iHydroLevel==2) {
             // We are in second level
             if (oHydroLink == null) {
                 // Back: get first levels
-                this.m_aoHydroLinks = this.m_oMapNavigatorService.getHydroFirstLevels();
-                this.m_bIsHydroFirstLevel = true;
-                this.m_iHydroLevel= 1;
+                oController.m_aoHydroLinks = oController.m_oMapNavigatorService.getHydroFirstLevels();
+                oController.m_bIsHydroFirstLevel = true;
+                oController.m_iHydroLevel= 1;
             }
             else {
                 // Switch to show or not third level
                 if (oHydroLink.hasThirdLevel) {
-                    this.m_iHydroLevel= 3;
+                    oController.m_iHydroLevel= 3;
 
                     var oHydroLinkCopy = oHydroLink;
                     var oControllerVar = this;
 
                     // Get third levels from the service
-                    this.m_oMapNavigatorService.getHydroThirdLevel(oHydroLink.linkCode).success(function(data,status) {
+                    oController.m_oMapNavigatorService.getHydroThirdLevel(oHydroLink.linkCode).success(function(data,status) {
 
                         // Third Level Icons
                         oControllerVar.m_aoHydroLinks = data;
@@ -2008,17 +2056,17 @@ var MapController = (function () {
 
                 }
                 else {
-                    this.switchHydroLinkState(bIsSelected, oHydroLink);
+                    oController.switchHydroLinkState(bIsSelected, oHydroLink);
                 }
             }
         }
-        else if (this.m_iHydroLevel==3)
+        else if (oController.m_iHydroLevel==3)
         {
             // We are in third level
             if (oHydroLink == null)
             {
                 // Back: get second levels
-                this.m_oMapNavigatorService.getHydroSecondLevels(this.m_aoHydroLinks[0].parentLinkCode).success(function(data,status) {
+                oController.m_oMapNavigatorService.getHydroSecondLevels(oController.m_aoHydroLinks[0].parentLinkCode).success(function(data,status) {
 
                     // Second Level Icons
                     oControllerVar.m_aoHydroLinks = data;
@@ -2053,7 +2101,7 @@ var MapController = (function () {
             }
             else
             {
-                this.switchHydroLinkState(bIsSelected, oHydroLink);
+                oController.switchHydroLinkState(bIsSelected, oHydroLink);
             }
         }
     }
@@ -2439,59 +2487,74 @@ var MapController = (function () {
      * @param oRadarLink
      * @constructor
      */
-    MapController.prototype.RadarLinkClicked = function(oRadarLink)
+    MapController.prototype.RadarLinkClicked = function(oRadarLink, oController)
     {
+        if( !oController )
+            oController = this;        
+        
         // Hydro Link = null stands for back: impossible to have back on first level
-        if (this.m_bIsRadarFirstLevel && oRadarLink == null) return;
+        if (oController.m_bIsRadarFirstLevel && oRadarLink == null) return;
 
         // var to know if this is the selected entry
         var bIsSelected = false;
 
         // Remember Controller ref
-        var oControllerVar = this;
+        var oControllerVar = oController;
 
         // Is this a Map Link Click?
         if (oRadarLink != null) {
             // Write on screen the Selected Layer description
-            if (!this.m_bRadarLayerActive)
+            if (!oController.m_bRadarLayerActive)
             {
-                this.m_sRadarLastLegendSelected = this.m_sRadarLegendSelected;
-                this.m_sRadarLegendSelected = oRadarLink.description;
+                oController.m_sRadarLastLegendSelected = oController.m_sRadarLegendSelected;
+                oController.m_sRadarLegendSelected = oRadarLink.description;
             }
             // Remember if it was selected or not
             bIsSelected = oRadarLink.selected;
         }
         else {
-            if (!this.m_bRadarLayerActive) {
-                if (this.m_iRadarLevel == 2) {
-                    this.m_sRadarLegendSelected = "";
+            if (!oController.m_bRadarLayerActive) {
+                if (oController.m_iRadarLevel == 2) {
+                    oController.m_sRadarLegendSelected = "";
                 }
                 else {
-                    this.m_sRadarLegendSelected = this.m_sRadarLastLegendSelected;
+                    oController.m_sRadarLegendSelected = oController.m_sRadarLastLegendSelected;
                 }
             }
         }
 
         // Clear all selection flags
-        this.m_aoRadarLinks.forEach(function(oEntry) {
+        oController.m_aoRadarLinks.forEach(function(oEntry) {
             oEntry.selected = false;
         });
 
         // We are in the first level?
-        if (this.m_bIsRadarFirstLevel) {
+        if (oController.m_bIsRadarFirstLevel) {
 
             if (oRadarLink.hasChilds) {
                 // Remember we are in second level
-                this.m_bIsRadarFirstLevel = false;
+                oController.m_bIsRadarFirstLevel = false;
 
-                this.m_iRadarLevel = 2;
+                oController.m_iRadarLevel = 2;
 
                 // Clear variables
                 oControllerVar.m_aoRadarLinks = [];
 
                 // Get second level from server
-                this.m_oMapNavigatorService.getRadarSecondLevels(oRadarLink.linkCode).success(function(data,status) {
-
+                oController.m_oMapNavigatorService.getRadarSecondLevels(oRadarLink.linkCode).success(function(data,status) {
+                    
+                    //******************************************************************
+                    // Add the flag to indicate the menu link item level and 
+                    // if the menu link has a sub-level.
+                    // or not. These parametere should come from server but, at the
+                    // moment, are initialized here
+                    for(var key in data)
+                    {
+                        data[key].hasSubLevel = data[key].hasChilds;
+                        data[key].myLevel = 2;
+                    }
+                    //******************************************************************
+                    
                     // Second Level Icons
                     oControllerVar.m_aoRadarLinks = data;
 
@@ -2519,28 +2582,40 @@ var MapController = (function () {
                 });
             }
             else {
-                this.switchRadarLinkState(bIsSelected, oRadarLink);
+                oController.switchRadarLinkState(bIsSelected, oRadarLink);
             }
         }
-        else if (this.m_iRadarLevel==2) {
+        else if (oController.m_iRadarLevel==2) {
             // We are in second level
             if (oRadarLink == null) {
                 // Back: get first levels
-                this.m_aoRadarLinks = this.m_oMapNavigatorService.getRadarFirstLevels();
-                this.m_bIsRadarFirstLevel = true;
-                this.m_iRadarLevel = 1;
+                oController.m_aoRadarLinks = oController.m_oMapNavigatorService.getRadarFirstLevels();
+                oController.m_bIsRadarFirstLevel = true;
+                oController.m_iRadarLevel = 1;
             }
             else {
                 // Switch to show or not third level
                 if (oRadarLink.hasThirdLevel) {
-                    this.m_iRadarLevel= 3;
+                    oController.m_iRadarLevel= 3;
 
                     var oRadarLinkCopy = oRadarLink;
                     var oControllerVar = this;
 
                     // Get third levels from the service
-                    this.m_oMapNavigatorService.getRadarThirdLevel(oRadarLink.linkCode).success(function(data,status) {
+                    oController.m_oMapNavigatorService.getRadarThirdLevel(oRadarLink.linkCode).success(function(data,status) {
 
+                        //******************************************************************
+                        // Add the flag to indicate the menu link item level and 
+                        // if the menu link has a sub-level.
+                        // or not. These parametere should come from server but, at the
+                        // moment, are initialized here
+                        for(var key in data)
+                        {
+                            data[key].hasSubLevel = data[key].hasChilds;
+                            data[key].myLevel = 3;
+                        }
+                        //******************************************************************
+                        //
                         // Third Level Icons
                         oControllerVar.m_aoRadarLinks = data;
 
@@ -2569,17 +2644,17 @@ var MapController = (function () {
 
                 }
                 else {
-                    this.switchRadarLinkState(bIsSelected, oRadarLink);
+                    oController.switchRadarLinkState(bIsSelected, oRadarLink);
                 }
             }
         }
-        else if (this.m_iRadarLevel==3)
+        else if (oController.m_iRadarLevel==3)
         {
             // We are in third level
             if (oRadarLink == null)
             {
                 // Back: get second levels
-                this.m_oMapNavigatorService.getRadarSecondLevels(this.m_aoRadarLinks[0].parentLinkCode).success(function(data,status) {
+                oController.m_oMapNavigatorService.getRadarSecondLevels(oController.m_aoRadarLinks[0].parentLinkCode).success(function(data,status) {
 
                     // Second Level Icons
                     oControllerVar.m_aoRadarLinks = data;
@@ -2614,7 +2689,7 @@ var MapController = (function () {
             }
             else
             {
-                this.switchRadarLinkState(bIsSelected, oRadarLink);
+                oController.switchRadarLinkState(bIsSelected, oRadarLink);
             }
         }
     }
@@ -2697,59 +2772,75 @@ var MapController = (function () {
      * @param oSatelliteLink
      * @constructor
      */
-    MapController.prototype.SatelliteLinkClicked = function(oSatelliteLink)
+    MapController.prototype.SatelliteLinkClicked = function(oSatelliteLink, oController)
     {
+        if( !oController )
+            oController = oController;
+            
         // Hydro Link = null stands for back: impossible to have back on first level
-        if (this.m_bIsSatelliteFirstLevel && oSatelliteLink == null) return;
+        if (oController.m_bIsSatelliteFirstLevel && oSatelliteLink == null) return;
 
         // var to know if this is the selected entry
         var bIsSelected = false;
 
         // Remember Controller ref
-        var oControllerVar = this;
+        var oControllerVar = oController;
 
         // Is this a Map Link Click?
         if (oSatelliteLink != null) {
             // Write on screen the Selected Layer description
-            if (!this.m_bSatelliteLayerActive)
+            if (!oController.m_bSatelliteLayerActive)
             {
-                this.m_sSatelliteLastLegendSelected = this.m_sSatelliteLegendSelected;
-                this.m_sSatelliteLegendSelected = oSatelliteLink.description;
+                oController.m_sSatelliteLastLegendSelected = oController.m_sSatelliteLegendSelected;
+                oController.m_sSatelliteLegendSelected = oSatelliteLink.description;
             }
             // Remember if it was selected or not
             bIsSelected = oSatelliteLink.selected;
         }
         else {
-            if (!this.m_bSatelliteLayerActive) {
-                if (this.m_iSatelliteLevel == 2) {
-                    this.m_sSatelliteLegendSelected = "";
+            if (!oController.m_bSatelliteLayerActive) {
+                if (oController.m_iSatelliteLevel == 2) {
+                    oController.m_sSatelliteLegendSelected = "";
                 }
                 else {
-                    this.m_sSatelliteLegendSelected = this.m_sSatelliteLastLegendSelected;
+                    oController.m_sSatelliteLegendSelected = oController.m_sSatelliteLastLegendSelected;
                 }
             }
         }
 
         // Clear all selection flags
-        this.m_aoSatelliteLinks.forEach(function(oEntry) {
+        oController.m_aoSatelliteLinks.forEach(function(oEntry) {
             oEntry.selected = false;
         });
 
         // We are in the first level?
-        if (this.m_bIsSatelliteFirstLevel) {
+        if (oController.m_bIsSatelliteFirstLevel) {
 
             if (oSatelliteLink.hasChilds) {
                 // Remember we are in second level
-                this.m_bIsSatelliteFirstLevel = false;
+                oController.m_bIsSatelliteFirstLevel = false;
 
-                this.m_iSatelliteLevel = 2;
+                oController.m_iSatelliteLevel = 2;
 
                 // Clear variables
                 oControllerVar.m_aoSatelliteLinks = [];
 
                 // Get second level from server
-                this.m_oMapNavigatorService.getSatelliteSecondLevels(oSatelliteLink.linkCode).success(function(data,status) {
+                oController.m_oMapNavigatorService.getSatelliteSecondLevels(oSatelliteLink.linkCode).success(function(data,status) {
 
+                    //******************************************************************
+                    // Add the flag to indicate the menu link item level and 
+                    // if the menu link has a sub-level.
+                    // or not. These parametere should come from server but, at the
+                    // moment, are initialized here
+                    for(var key in data)
+                    {
+                        debugger;
+                        data[key].hasSubLevel = data[key].hasChilds;
+                        data[key].myLevel = 1;
+                    }
+                    //******************************************************************
+                    
                     // Second Level Icons
                     oControllerVar.m_aoSatelliteLinks = data;
 
@@ -2777,28 +2868,41 @@ var MapController = (function () {
                 });
             }
             else {
-                this.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
+                oController.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
             }
         }
-        else if (this.m_iSatelliteLevel==2) {
+        else if (oController.m_iSatelliteLevel==2) {
             // We are in second level
             if (oSatelliteLink == null) {
                 // Back: get first levels
-                this.m_aoSatelliteLinks = this.m_oMapNavigatorService.getSatelliteFirstLevels();
-                this.m_bIsSatelliteFirstLevel = true;
-                this.m_iSatelliteLevel = 1;
+                oController.m_aoSatelliteLinks = oController.m_oMapNavigatorService.getSatelliteFirstLevels();
+                oController.m_bIsSatelliteFirstLevel = true;
+                oController.m_iSatelliteLevel = 1;
             }
             else {
                 // Switch to show or not third level
                 if (oSatelliteLink.hasThirdLevel) {
-                    this.m_iSatelliteLevel= 3;
+                    oController.m_iSatelliteLevel= 3;
 
                     var oSatelliteLinkCopy = oSatelliteLink;
-                    var oControllerVar = this;
+                    var oControllerVar = oController;
 
                     // Get third levels from the service
-                    this.m_oMapNavigatorService.getSatelliteThirdLevel(oSatelliteLink.linkCode).success(function(data,status) {
+                    oController.m_oMapNavigatorService.getSatelliteThirdLevel(oSatelliteLink.linkCode).success(function(data,status) {
 
+                        //******************************************************************
+                        // Add the flag to indicate the menu link item level and 
+                        // if the menu link has a sub-level.
+                        // or not. These parametere should come from server but, at the
+                        // moment, are initialized here
+                        for(var key in data)
+                        {
+                            debugger;
+                            data[key].hasSubLevel = data[key].hasChilds;
+                            data[key].myLevel = 1;
+                        }
+                        //******************************************************************
+                        
                         // Third Level Icons
                         oControllerVar.m_aoSatelliteLinks = data;
 
@@ -2827,17 +2931,17 @@ var MapController = (function () {
 
                 }
                 else {
-                    this.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
+                    oController.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
                 }
             }
         }
-        else if (this.m_iSatelliteLevel==3)
+        else if (oController.m_iSatelliteLevel==3)
         {
             // We are in third level
             if (oSatelliteLink == null)
             {
                 // Back: get second levels
-                this.m_oMapNavigatorService.getSatelliteSecondLevels(this.m_aoSatelliteLinks[0].parentLinkCode).success(function(data,status) {
+                oController.m_oMapNavigatorService.getSatelliteSecondLevels(oController.m_aoSatelliteLinks[0].parentLinkCode).success(function(data,status) {
 
                     // Second Level Icons
                     oControllerVar.m_aoSatelliteLinks = data;
@@ -2872,7 +2976,7 @@ var MapController = (function () {
             }
             else
             {
-                this.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
+                oController.switchSatelliteLinkState(bIsSelected, oSatelliteLink);
             }
         }
     }

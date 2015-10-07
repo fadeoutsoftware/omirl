@@ -7,6 +7,8 @@ $color_blue_active: #428bca;
 $color_omirl_blue: #7fbbda;
 
 @import "mixins";
+@import "theme";
+
 @import "gallery";
 @import "sidebar_menu";
 @import "tables";
@@ -33,6 +35,19 @@ ul.sidebar-nav{
     }
 }
 
+
+
+/**
+ * Styles to override login panel styles
+ */
+.login-panel{
+    padding: 12px !important;
+}
+
+
+/**
+ * Styles for 'date selector' and 'now' box
+ */
 .date-selector-container{
     $color-date-selector-bg-past: #ffbc6c;
     //$color-date-selector-bg-past: #ffcc8f;

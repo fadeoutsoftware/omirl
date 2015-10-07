@@ -26,9 +26,25 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             var oServiceVar = this;
 
             oServiceVar.m_aoMapFirstLevels = [];
-            this.m_oHttp.get(this.APIURL + '/mapnavigator/maps').success(function(data,status) {
+            this.m_oHttp.get(this.APIURL + '/mapnavigator/maps')
+            .success(function(data,status)
+            {
+                //******************************************************************
+                // Add the flag to indicate the menu link item level and 
+                // if the menu link has a sub-level.
+                // or not. These parametere should come from server but, at the
+                // moment, are initialized here
+                for(var key in data)
+                {
+                    data[key].hasSubLevel = true;
+                    data[key].myLevel = 1;
+                }
+                //******************************************************************
+                
                 oServiceVar.m_aoMapFirstLevels = data;
-            }).error(function(data,status){
+            })
+            .error(function(data,status)
+            {
                 oServiceVar.m_oTranslate('ERRORCONTACTSERVER').then(function (error){
                     alert(error);
                 })
@@ -77,6 +93,20 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             oControllerVar.m_aoHydroFirstLevels = [];
 
             this.m_oHttp.get(this.APIURL + '/mapnavigator/hydro').success(function(data,status) {
+                
+                //******************************************************************
+                // Add the flag to indicate the menu link item level and 
+                // if the menu link has a sub-level.
+                // or not. These parametere should come from server but, at the
+                // moment, are initialized here
+                for(var key in data)
+                {
+                    data[key].hasSubLevel = data[key].hasChilds;
+                    data[key].myLevel = 1;
+                }
+                //******************************************************************
+                
+                
                 oControllerVar.m_aoHydroFirstLevels = data;
 
                 // Remember links
@@ -110,6 +140,18 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             oServiceVar.m_aoRadarFirstLevels = [];
 
             this.m_oHttp.get(this.APIURL + '/mapnavigator/radar').success(function(data,status) {
+                //******************************************************************
+                // Add the flag to indicate the menu link item level and 
+                // if the menu link has a sub-level.
+                // or not. These parametere should come from server but, at the
+                // moment, are initialized here
+                for(var key in data)
+                {
+                    data[key].hasSubLevel = data[key].hasChilds;
+                    data[key].myLevel = 1;
+                }
+                //******************************************************************
+                
                 oServiceVar.m_aoRadarFirstLevels = data;
             }).error(function(data,status){
                 alert('Error Contacting Omirl Server');
@@ -136,6 +178,19 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             oServiceVar.m_aoSatelliteFirstLevels = [];
 
             this.m_oHttp.get(this.APIURL + '/mapnavigator/satellite').success(function(data,status) {
+                
+                //******************************************************************
+                // Add the flag to indicate the menu link item level and 
+                // if the menu link has a sub-level.
+                // or not. These parametere should come from server but, at the
+                // moment, are initialized here
+                for(var key in data)
+                {
+                    data[key].hasSubLevel = data[key].hasChilds;
+                    data[key].myLevel = 1;
+                }
+                //******************************************************************
+                
                 oServiceVar.m_aoSatelliteFirstLevels = data;
             }).error(function(data,status){
                 alert('Error Contacting Omirl Server');

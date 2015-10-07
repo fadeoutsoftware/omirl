@@ -11,6 +11,15 @@ and open the template in the editor.
     Created on : 30-giu-2015, 11.11.59
     Author     : d.fiori
 */
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 7-ott-2015, 12.22.22
+    Author     : d.fiori
+*/
 /* 
     Created on : 29-giu-2015, 17.30.25
     Author     : d.fiori
@@ -158,9 +167,13 @@ and open the template in the editor.
     Author     : d.fiori
 */
 .sidebar-menu .map-text-legend-selected {
-  height: 2rem; }
+  height: 3.4rem;
+  font-size: 1.3rem;
+  color: #367BA0; }
   .sidebar-menu .map-text-legend-selected.second-level {
     height: auto; }
+.sidebar-menu li.map-firstlevel-icon:hover {
+  cursor: pointer; }
 .sidebar-menu ul.menu-items-wrapper {
   margin: 0px;
   padding: 0px; }
@@ -225,8 +238,18 @@ and open the template in the editor.
     background-color: #7fbbda;
     text-align: center;
     color: whitesmoke;
-    font-size: 2rem;
+    font-size: 1.9rem;
     line-height: 3.5rem; }
+    .map .map-title .sensor-icon img,
+    .map .map-title .layer-icon img {
+      height: 24px;
+      width: 24px;
+      margin-right: 6px; }
+    .map .map-title .sensor-title,
+    .map .map-title .layer-title {
+      padding-top: 1px; }
+    .map .map-title .title-separator {
+      padding: 0px 12px; }
   .map .map-legend {
     position: absolute;
     bottom: 40px;
@@ -251,6 +274,15 @@ and open the template in the editor.
 ul.sidebar-nav li a:hover {
   cursor: pointer; }
 
+/**
+ * Styles to override login panel styles
+ */
+.login-panel {
+  padding: 12px !important; }
+
+/**
+ * Styles for 'date selector' and 'now' box
+ */
 .date-selector-container {
   padding-top: 5px; }
   .date-selector-container .date-selector {

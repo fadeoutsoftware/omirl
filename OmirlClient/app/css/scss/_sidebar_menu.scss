@@ -10,11 +10,19 @@ and open the template in the editor.
 
 .sidebar-menu{
     .map-text-legend-selected{
-        height: 2rem;
+        //min-height: 2rem;
+        height: 3.4rem;
+        font-size: 1.3rem;
+        color: $color-sidebarmenu-legend-selected-text;
         
         &.second-level{
             height: auto;
         }
+    }
+    
+    
+    li.map-firstlevel-icon{    
+        &:hover{ cursor: pointer; }
     }
     
     ul.menu-items-wrapper{

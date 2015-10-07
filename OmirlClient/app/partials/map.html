@@ -4,11 +4,23 @@
         <div class="map-panel col-md-10 col-xs-9" id="omirlMap" ol-map zoom="9" center="8.60,44.20"
             controls="zoom,navigation,attribution,mousePosition">
             <div class="map-title">
+                <table>
+                    <tr>
+                        <td class="sensor-icon"><img src="{{m_oController.m_oSelectedSensorDateTimeIcon}}"
+                                 ng-hide="!m_oController.m_oSelectedSensorDateTimeIcon"/></td>
+                        <td class="sensor-title">{{m_oController.m_oSelectedSensorDateTimeInfo}}</td>
+                        <td class="title-separator" ng-hide="!m_oController.m_oSelectedSensorDateTimeInfo || !m_oController.m_oSelectedMapDateTimeInfo">-</td>
+                        <td class="layer-icon"><img src="{{m_oController.m_oSelectedMapDateTimeIcon}}"
+                                                    ng-hide="!m_oController.m_oSelectedMapDateTimeIcon"/></td>
+                        <td class="layer-title">{{m_oController.m_oSelectedMapDateTimeInfo}}</td>
+                    </tr>
+                </table>
+                <!--
                 <div class="sensor-icon">
                     <img src="{{m_oController.m_oSelectedSensorDateTimeIcon}}">
                 </div >
                 <div class="sensor-title">
-                    {{m_oController.m_oSelectedSensorDateTimeInfo}}
+                    
                 </div>
                 <div class="layer-icon">
                     <img src="{{m_oController.m_oSelectedMapDateTimeIcon}}">
@@ -16,6 +28,7 @@
                 <div class="layer-title">
                     {{m_oController.m_oSelectedMapDateTimeInfo}}
                 </div>
+                -->
             </div>
 
         </div>
@@ -170,6 +183,22 @@
                         </accordion-heading>
                         <div class="map-accordion-content">
                             <div class="row">
+                                <sidebar-menu-legacy
+                                    on-init="null"
+                                    controller="m_oController"
+                                    menu-legend-selected="m_oController.m_sSensorLegendSelected"
+                                    menu-legend-hover="m_oController.m_sMapLegendHover"
+                                    is-first-level="m_oController.m_bIsFirstLevel"
+                                    on-menu-item-click="m_oController.sensorLinkClicked"
+                                    first-level-menu-items="m_oController.m_aoSensorsLinksForDirective"
+                                    second-level-menu-items="m_oController.m_aoSensorsLinksForDirective"
+                                    third-level-menu-items="null"
+                                    third-level-menu-selected-item="null"
+                                    third-level-menu-click="null"
+                                >        
+                                </sidebar-menu-legacy>
+                                
+                                <!--
                                 <div class="map-text-legend">
 
                                     <div class="map-text-legend-selected">{{m_oController.m_sSensorLegendSelected | translate}}
@@ -183,7 +212,6 @@
                                      class="col-md-1 col-xs-1 map-firstlevel-icon"
                                      ng-class="{'map-firstlevel-icon-selected': oSensor.isActive}"
                                      tooltip-popup-delay="500" tooltip="{{oSensor.description | translate}}" ng-show="oSensor.isVisible">
-                                    <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
                                     <img class="img-map-firstlevel-icon" ng-src="{{oSensor.imageLinkOff}}"
                                          ng-click="m_oController.sensorLinkClicked(oSensor)"/>
                                 </div>
@@ -191,9 +219,9 @@
 
                             <div class="row">
                                 <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="{{'MAP_T_RICERCASTAZIONI' | translate}}">
-                                    <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
                                     <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/stationstable')"/>
                                 </div>
+                                -->
                             </div>
                         </div>
                     </accordion-group>
@@ -215,13 +243,14 @@
                                     menu-legend-hover="m_oController.m_sMapLegendHover"
                                     is-first-level="m_oController.m_bIsFirstLevel"
                                     on-menu-item-click="m_oController.mapLinkClicked"
-                                    menu-items-list="m_oController.m_aoMapLinks"
-                                    get-menu-items-method="m_oController.getMapLinks"
+                                    first-level-menu-items="m_oController.m_aoMapLinks"
+                                    second-level-menu-items="m_oController.m_aoMapLinks"
                                     third-level-menu-items="m_oController.m_aoThirdLevels"
                                     third-level-menu-selected-item="m_oController.m_sMapThirdLevelSelected"
                                     third-level-menu-click="m_oController.mapThirdLevelClicked"
                                 >        
                                 </sidebar-menu-legacy>
+                                
                             </div>  
                                 <!--
                                 <div class="map-text-legend">
@@ -281,6 +310,22 @@
                         </accordion-heading>
                         <div class="map-accordion-content">
                             <div class="row">
+                                <sidebar-menu-legacy
+                                    on-init="null"
+                                    controller="m_oController"
+                                    menu-legend-selected="m_oController.m_sHydroLegendSelected"
+                                    menu-legend-hover="m_oController.m_sHydroLegendHover"
+                                    is-first-level="m_oController.m_bIsHydroFirstLevel"
+                                    on-menu-item-click="m_oController.HydroLinkClicked"
+                                    first-level-menu-items="m_oController.getHydroLinks()"
+                                    second-level-menu-items="m_oController.getHydroLinks()"
+                                    third-level-menu-items="null"
+                                    third-level-menu-selected-item="null"
+                                    third-level-menu-click="null"
+                                >        
+                                </sidebar-menu-legacy>
+                                
+                                <!--
                                 <div class="map-text-legend">
                                     <div class="map-text-legend-selected">{{m_oController.m_sHydroLegendSelected | translate}}</div>
                                     <div class="map-text-legend-hover">{{m_oController.m_sHydroLegendHover | translate}}</div>
@@ -299,6 +344,7 @@
                                      tooltip-popup-delay="500" tooltip="{{oHydroLink.description | translate}}"><img
                                         class="img-map-firstlevel-icon" src="{{oHydroLink.link}}"
                                         ng-click="m_oController.HydroLinkClicked(oHydroLink)"/></div>
+                                -->
                             </div>
                         </div>
 
@@ -323,6 +369,22 @@
                         </accordion-heading>
                         <div class="map-accordion-content">
                             <div class="row">
+                                <sidebar-menu-legacy
+                                    on-init="null"
+                                    controller="m_oController"
+                                    menu-legend-selected="m_oController.m_sRadarLegendSelected"
+                                    menu-legend-hover="m_oController.m_sRadarLegendHover"
+                                    is-first-level="m_oController.m_bIsRadarFirstLevel"
+                                    on-menu-item-click="m_oController.RadarLinkClicked"
+                                    first-level-menu-items="m_oController.getRadarLinks()"
+                                    second-level-menu-items="m_oController.getRadarLinks()"
+                                    third-level-menu-items="null"
+                                    third-level-menu-selected-item="null"
+                                    third-level-menu-click="null"
+                                >        
+                                </sidebar-menu-legacy>
+                                
+                                <!--
                                 <div class="map-text-legend">
                                     <div class="map-text-legend-selected">{{m_oController.m_sRadarLegendSelected | translate}}</div>
                                     <div class="map-text-legend-hover">{{m_oController.m_sRadarLegendHover | translate}}</div>
@@ -341,6 +403,7 @@
                                      tooltip-popup-delay="500" tooltip="{{oRadarLink.description | translate}}"><img
                                         class="img-map-firstlevel-icon" src="{{oRadarLink.link}}"
                                         ng-click="m_oController.RadarLinkClicked(oRadarLink)"/></div>
+                                -->
                             </div>
                         </div>
                     </accordion-group>
@@ -359,6 +422,21 @@
                         </accordion-heading>
                         <div class="map-accordion-content">
                             <div class="row">
+                                <sidebar-menu-legacy
+                                    on-init="null"
+                                    controller="m_oController"
+                                    menu-legend-selected="m_oController.m_sSatelliteLegendSelected"
+                                    menu-legend-hover="m_oController.m_sSatelliteLegendHover"
+                                    is-first-level="m_oController.m_bIsSatelliteFirstLevel"
+                                    on-menu-item-click="m_oController.SatelliteLinkClicked"
+                                    first-level-menu-items="m_oController.getSatelliteLinks()"
+                                    second-level-menu-items="m_oController.getSatelliteLinks()"
+                                    third-level-menu-items="null"
+                                    third-level-menu-selected-item="null"
+                                    third-level-menu-click="null"
+                                >        
+                                </sidebar-menu-legacy>
+                                <!--
                                 <div class="map-text-legend">
                                     <div class="map-text-legend-selected">{{m_oController.m_sSatelliteLegendSelected | translate}}</div>
                                     <div class="map-text-legend-hover">{{m_oController.m_sSatelliteLegendHover | translate}}</div>
@@ -377,6 +455,7 @@
                                      tooltip-popup-delay="500" tooltip="{{oSatelliteLink.description | translate}}"><img
                                         class="img-map-firstlevel-icon" src="{{oSatelliteLink.link}}"
                                         ng-click="m_oController.SatelliteLinkClicked(oSatelliteLink)"/></div>
+                                -->
                             </div>
                         </div>
                     </accordion-group>

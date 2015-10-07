@@ -1,4 +1,4 @@
-<div class="sidebar-menu" ng-init="initMenuLinks()">
+<div class="sidebar-menu" ng-init="initialize()">
     <div class="row">
         <div class="map-text-legend">
             <!--
@@ -22,7 +22,7 @@
                     ng-class="{'map-firstlevel-icon-selected': isActive(oItem) == true, 'last-of-row' : isLastLinkOfRow(oRow, oItem) == true}"
                     tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}" >
                     <img class="img-map-firstlevel-icon" 
-                         ng-src="{{oItem.link}}"
+                         ng-src="{{getMenuLinkIcon(oItem)}}"
                          ng-click="mainItemClick(oItem, oRow.getRowIdToOpen())"
                          />
                     <div class="sublevel-border-overlay" ng-show="isActive(oItem) == true"></div>
