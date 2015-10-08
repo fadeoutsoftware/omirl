@@ -2363,8 +2363,6 @@ var MapController = (function () {
 
         this.m_oSelectedHydroLink = null;
 
-        this.m_oSelectedMapDateTimeIcon = "";
-        this.m_oSelectedMapDateTimeInfo = "";
     }
 
     /**
