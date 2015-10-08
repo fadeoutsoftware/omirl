@@ -144,7 +144,7 @@ public class OmirlDaemon {
 			return;
 		}
 
-		//TEST
+		//----------------TEST------------------
 		//publishMaps();
 		maxTable();
 		//RefreshSectionsLayer();
@@ -152,7 +152,9 @@ public class OmirlDaemon {
 		//RefreshGallery();
 		//if (true) return;
 		//RefreshHydroModel();
-
+		//----------------TEST------------------
+		
+		
 		InitSensorValueTables();
 
 		RefreshSectionsLayer();
