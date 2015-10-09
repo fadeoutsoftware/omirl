@@ -195,6 +195,13 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 }                
                 
                 var ITEM_PER_ROW = 3;
+                
+                // If we are on small screen the menu position is absolute
+                if( $(".sidebar-menu").css("position") == "absolute")
+                {
+                    ITEM_PER_ROW = 5;
+                }
+                
                 var iCounter = 0;
                 var iRowIdToOpen = 0;
                 Utils.emptyArray($scope.firstLevelMenuRows);

@@ -255,6 +255,47 @@ and open the template in the editor.
     bottom: 40px;
     left: 200px; }
 
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 8-ott-2015, 8.58.17
+    Author     : d.fiori
+*/
+@media only screen and (max-width: 40em) {
+  .sidebar-nav .menu-link {
+    float: left;
+    width: 82.5px;
+    height: 64px;
+    border: 1px solid;
+    box-sizing: border-box;
+    line-height: 2rem;
+    text-align: center;
+    text-indent: 0px; }
+    .sidebar-nav .menu-link a {
+      height: 100%; }
+      .sidebar-nav .menu-link a:hover {
+        background-color: #7fbbda;
+        color: #000; }
+      .sidebar-nav .menu-link a.text-short {
+        padding-top: 20px; }
+      .sidebar-nav .menu-link a.text-midlength {
+        padding-top: 10px; } }
+
+@media only screen and (max-width: 700px) {
+  .sidebar-menu {
+    position: absolute;
+    top: 60px;
+    left: 35vw;
+    /* right: 10px; */
+    /* bottom: 100px; */
+    width: 350px;
+    background-color: #fff;
+    padding: 20px;
+    z-index: 1000; } }
+
 .no-text-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -273,6 +314,42 @@ and open the template in the editor.
 
 ul.sidebar-nav li a:hover {
   cursor: pointer; }
+
+/**
+ * Right sidebar
+ */
+.sidebar-brand {
+  height: 55px;
+  line-height: 55px;
+  font-size: 18px;
+  margin-left: 20px; }
+  .sidebar-brand a {
+    color: #999999; }
+    .sidebar-brand a:hover {
+      color: #fff;
+      background: none; }
+
+.menu-languages-container {
+  margin-bottom: 20px; }
+
+/**
+ * Left Sidebar
+ */
+.side-bar-toggle {
+  position: absolute;
+  right: 0px;
+  margin-right: -40px;
+  top: 25px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 2em;
+  color: white;
+  z-index: 2;
+  background: #7fbbda;
+  height: auto;
+  width: 40px;
+  box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.2);
+  text-align: center; }
 
 /**
  * Styles to override login panel styles

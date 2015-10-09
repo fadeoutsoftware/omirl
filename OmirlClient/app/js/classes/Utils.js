@@ -9,7 +9,7 @@ var Utils = (function ()
     function Utils() {
     }
     
-    // Static methods
+    // Static methods    
     Utils.emptyArray = function (aArray)
     {
         if( Array.isArray(aArray))

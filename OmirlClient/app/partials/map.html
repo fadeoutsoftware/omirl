@@ -49,10 +49,14 @@
             </div> -->
 
 
-            <div class="side-bar-toggle">
+            <div class="side-bar-toggle" ng-class="{'collapsed': m_oController.isSideBarCollapsed()}">
                 <i class=""
                    ng-class="{'fa fa-align-justify fa-rotate-90': !m_oController.isSideBarCollapsed(), 'fa fa-align-justify':m_oController.isSideBarCollapsed()}"
                    ng-click="m_oController.toggleSideBarClicked()"></i>
+                <!--
+                <i class="fa fa-bars" ng-hide="m_oController.isSideBarCollapsed() == false" ng-click="m_oController.toggleSideBarClicked()"></i>
+                <i class="fa fa-chevron-left" ng-hide="m_oController.isSideBarCollapsed() == true" ng-click="m_oController.toggleSideBarClicked()"></i>
+                -->
             </div>
 
 

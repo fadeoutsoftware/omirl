@@ -56,23 +56,23 @@
 <a id="menu-toggle" href="#" class="btn btn-primary btn-lg toggle"><i class="fa fa-bars"></i></a>
 <!--img id="menu-waiting" src="img/Waiting.GIF"  class = "toggle"/-->
 <div id="sidebar-wrapper">
+    <a id="menu-close" href="#" class="btn btn-default btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
+    <div class="sidebar-brand"><a href="#top">OMIRL</a></div>
+    
     <ul class="sidebar-nav">
-        <a id="menu-close" href="#" class="btn btn-default btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
-        <li class="sidebar-brand"><a href="#top">OMIRL</a></li>
-        <li><a href="#top">{{'INDEX_HOME' | translate}}</a></li>
-        <li><a ng-click="m_oController.serviceIconClicked('/maps')">{{'INDEX_DATI' | translate}}</a></li>
-        <li><a ng-click="m_oController.serviceIconClicked('/summarytable')">{{'INDEX_TABELLE' | translate}}</a></li>
-        <li><a ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate }}</a></li>
-        <li><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{ 'INDEX_MODELLI' | translate}}</a></li>
-        <li><a ng-click="m_oController.serviceIconClicked('/credits')">{{ 'INDEX_CREDITI' | translate}}</a></li>
-        <li>
+        <li class="menu-link"><a class='text-short' href="#top">{{'INDEX_HOME' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/maps')">{{'INDEX_DATI' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/summarytable')">{{'INDEX_TABELLE' | translate}}</a></li>
+        <li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate }}</a></li>
+        <li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{ 'INDEX_MODELLI' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/credits')">{{ 'INDEX_CREDITI' | translate}}</a></li>
+        <li class="menu-languages-container">
             <img ng-click="m_oController.changeLanguage('it')" src="img/flag_italy.png" title="{{ 'INDEX_LANGIT' | translate}}">
             </img>
             <img ng-click="m_oController.changeLanguage('fr')" src="img/flag_france.png" title="{{ 'INDEX_LANGFR' | translate}}">
             </img>
         </li>
-        <br>
-        <li>
+        <li class="menu-login-container">
             <a ng-click="m_oController.reservedAreaClicked()"> {{m_oController.ReservedAreaText | translate}}</a>
             <div ng-show="m_oController.getShowLogin()" class="login-panel">
                 <form role="form">
@@ -236,6 +236,11 @@
 </div>
 <!-- /Map -->
 
+    <!-- jQuery -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/start/jquery-ui.css">
+    <!--script src="lib/jquery/jquery-1.10.2.js"></script-->
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    
     <!-- App classes -->
     <script src="js/classes/MenuItemFirstLevel.js"></script>
     <script src="js/classes/Utils.js"></script>
@@ -244,10 +249,7 @@
     <!-- In production use:
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     -->
-    <!-- jQuery -->
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/start/jquery-ui.css">
-    <!--script src="lib/jquery/jquery-1.10.2.js"></script-->
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    
 
     <!-- Bootstrap -->
     <!--script src="lib/bootstrap/bootstrap.js"></script-->

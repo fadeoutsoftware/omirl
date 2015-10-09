@@ -3,8 +3,22 @@
     Author     : d.fiori
 */
 
-$color_blue_active: #428bca;
-$color_omirl_blue: #7fbbda;
+
+$screen-size-small-max: 40em;
+$screen-size-medium-min: 40.063em;
+$screen-size-medium-max: 64em;
+$screen-size-large-min: 64.063em;
+
+$screen-size-700px: 700px;
+
+
+$size-map-titlebar-h: 40px;
+
+$size-sidebar-rigth-width: 250px;
+$size-sidebar-left-toggle-width: 40px;
+$size-sidebar-left-toggle-h: $size-map-titlebar-h;
+
+
 
 @import "mixins";
 @import "theme";
@@ -13,6 +27,7 @@ $color_omirl_blue: #7fbbda;
 @import "sidebar_menu";
 @import "tables";
 @import "map";
+@import "mobile";
 
 
 .no-text-select{ @include noselect;}
@@ -35,6 +50,54 @@ ul.sidebar-nav{
     }
 }
 
+
+/**
+ * Right sidebar
+ */
+.sidebar-brand {
+    height: 55px;
+    line-height: 55px;
+    font-size: 18px;
+    margin-left: 20px;
+    
+    a{
+        color: #999999;
+            &:hover {
+            color: #fff;
+            background: none;
+        }
+    }
+}
+.menu-languages-container{
+    margin-bottom: 20px;
+}
+
+
+/**
+ * Left Sidebar
+ */
+.side-bar-toggle {
+    position: absolute;
+    right:0px;
+    margin-right: -$size-sidebar-left-toggle-width;
+    top: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    //top: 0px;
+    font-size: 2em;
+    color: white;
+    z-index: 2;
+    background: #7fbbda;
+    //height: $size-sidebar-left-toggle-h;
+    height: auto;
+    width: $size-sidebar-left-toggle-width;
+    box-shadow: 10px 0px 10px rgba(0,0,0,.2);
+    text-align: center;
+    
+    &.collapsed{
+        
+    }
+}
 
 
 /**

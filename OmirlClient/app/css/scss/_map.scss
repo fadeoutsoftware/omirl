@@ -13,15 +13,13 @@ and open the template in the editor.
     position: relative;
     
     .map-title{
-        
-        $height: 40px;
         $iconsSize: 24px;
         
         position: absolute;
         top: 0px;
         left: 0px;
         right: 0px;
-        height: $height;
+        height: $size-map-titlebar-h;
         z-index: 1000;
         background-color: $color-map-title-bg;
         text-align: center;

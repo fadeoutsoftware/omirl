@@ -171,8 +171,8 @@ table { margin:auto; text-align: center;}
 }
 
 .sidebar-nav {
-    position: absolute;
-    top: 0;
+    /*position: absolute;
+    top: 0;*/
     width: 250px;
     list-style: none;
     margin: 0;
@@ -201,6 +201,7 @@ table { margin:auto; text-align: center;}
     text-decoration: none;
 }
 
+/*
 .sidebar-nav > .sidebar-brand {
     height: 55px;
     line-height: 55px;
@@ -215,6 +216,7 @@ table { margin:auto; text-align: center;}
     color: #fff;
     background: none;
 }
+*/
 
 #menu-toggle {
     top: 0;
@@ -229,6 +231,7 @@ table { margin:auto; text-align: center;}
     position: fixed;
     z-index: 1;
 }
+/*
 .side-bar-toggle {
     position: absolute;
     right:0px;
