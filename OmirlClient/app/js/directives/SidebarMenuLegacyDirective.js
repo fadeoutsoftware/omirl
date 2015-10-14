@@ -38,8 +38,6 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             $scope.MENU_LEVEL_2 = 1;
             $scope.MENU_LEVEL_3 = 2;
             
-
-            
             
             $scope.m_sParentText = ""; //$scope.menuTitle;
             $scope.m_sChildText = ""; //$scope.menuTitle;
@@ -112,7 +110,18 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             //****************************************************************************************
             //* Directive scope methods
             //****************************************************************************************
-            
+            $scope.closeMenu = function(){
+                $(".panel").each(function(index, elem){
+                    var elem = $(this);
+                    var a = elem.children(".panel-collapse.collapse.in");
+                    
+                    if( a.length > 0)
+                    {
+                        a.collapse('hide');
+                        return false;
+                    }
+                });
+            }
             
             $scope.getMenuLinkIcon = function(oMenuLink)
             {

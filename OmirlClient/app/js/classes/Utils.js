@@ -9,7 +9,23 @@ var Utils = (function ()
     function Utils() {
     }
     
-    // Static methods    
+    // Static methods   
+    Utils.launchIntoFullscreen = function(element)
+    {
+        if( !element )
+            element = document.documentElement; // full page
+        
+        if(element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if(element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if(element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if(element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+    }
+    
     Utils.emptyArray = function (aArray)
     {
         if( Array.isArray(aArray))

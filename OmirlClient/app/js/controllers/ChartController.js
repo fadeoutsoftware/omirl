@@ -226,6 +226,21 @@ var ChartController = (function() {
         {
             timenow = this.m_oConstantsService.getReferenceDate();
         }
+        
+        //-------------------------------------------------
+        // Adjust width/height on mobile
+        var oChartContainer = $(".ui-dialog");        
+        var iDialogTitlebarH = 50;
+        this.m_iWidth = oChartContainer.width();
+        this.m_iHeight = oChartContainer.height() - iDialogTitlebarH;
+        
+        debugger;
+        var oChartButtons = $(".ui-dialog .map-firstlevel-icon");
+        if( oChartButtons && oChartButtons.length > 0)
+            this.m_iHeight -= (oChartButtons.height() + 10);
+        
+        //-------------------------------------------------
+        
 
         if (oChart != null)
         {

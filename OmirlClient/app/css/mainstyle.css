@@ -166,6 +166,10 @@ and open the template in the editor.
     Created on : 30-giu-2015, 17.14.31
     Author     : d.fiori
 */
+.sidebar-menu button.close-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px; }
 .sidebar-menu .map-text-legend-selected {
   height: 3.4rem;
   font-size: 1.3rem;
@@ -264,6 +268,12 @@ and open the template in the editor.
     Created on : 8-ott-2015, 8.58.17
     Author     : d.fiori
 */
+/*// Put language selector on top
+div.menu-languages-container{
+    position: absolute;
+    top: 10px;
+    left: 100px;
+}*/
 @media only screen and (max-width: 40em) {
   .sidebar-nav .menu-link {
     float: left;
@@ -284,6 +294,10 @@ and open the template in the editor.
       .sidebar-nav .menu-link a.text-midlength {
         padding-top: 10px; } }
 
+/* Left menu sidebar */
+#mapNavigation {
+  z-index: 10; }
+
 @media only screen and (max-width: 700px) {
   .sidebar-menu {
     position: absolute;
@@ -295,6 +309,43 @@ and open the template in the editor.
     background-color: #fff;
     padding: 20px;
     z-index: 1000; } }
+
+@media only screen and (max-width: 700px) {
+  .service-item {
+    padding: 10px 0px; }
+    .service-item i.service-icon {
+      /* 
+       * On 'not mobile' the have
+       * font-size: 56px
+       * icon size: 140px
+       * line-height: 136px
+       */
+      font-size: 36px;
+      width: 90px;
+      height: 90px;
+      line-height: 87.42857px; }
+    .service-item h4 {
+      top: 0px;
+      font-size: 2.4em;
+      padding: 0px;
+      padding-left: 20px;
+      letter-spacing: -2px; }
+    .service-item p {
+      top: 3.5em;
+      padding-left: 20px; }
+    .service-item.mod-meteo-marini p {
+      top: 6.5em; } }
+
+@media only screen and (max-width: 700px) {
+  .ui-dialog {
+    width: 100vw !important;
+    height: 100vh !important; } }
+
+.map-legend {
+  left: 10px !important;
+  right: 20px; }
+  .map-legend .map-legend-image {
+    width: 100%; }
 
 .no-text-select {
   -webkit-touch-callout: none;

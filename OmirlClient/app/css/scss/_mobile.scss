@@ -8,6 +8,13 @@ and open the template in the editor.
     Author     : d.fiori
 */
 
+/*// Put language selector on top
+div.menu-languages-container{
+    position: absolute;
+    top: 10px;
+    left: 100px;
+}*/
+
 
 .sidebar-nav{
     @media only screen and (max-width: $screen-size-small-max) {
@@ -34,8 +41,14 @@ and open the template in the editor.
                 &.text-long{}
             }
         }
+        
     }
     
+}
+
+/* Left menu sidebar */
+#mapNavigation{
+    z-index: 10;
 }
 
 .sidebar-menu{
@@ -49,5 +62,65 @@ and open the template in the editor.
         background-color: #fff;
         padding: 20px;
         z-index: 1000;
+    }
+}
+
+.service-item{
+    @media only screen and (max-width: $screen-size-700px) {
+        
+        padding: 10px 0px;
+        
+        i.service-icon{ 
+
+            /* 
+             * On 'not mobile' the have
+             * font-size: 56px
+             * icon size: 140px
+             * line-height: 136px
+             */
+
+            $fontSize: 36px; // on 'not mobile' is 56px,icon size is 140px
+            $iconSize: ($fontSize * 140) / 56; 
+            $lineHeight: ($fontSize * 136) / 56; 
+
+
+            font-size: $fontSize;
+            width: $iconSize;
+            height: $iconSize;
+            line-height: $lineHeight;
+        }
+        
+        h4{
+            top: 0px;
+            font-size: 2.4em;
+            padding: 0px;
+            padding-left: 20px;
+            letter-spacing: -2px;
+        }
+        p{
+            top: 3.5em;
+            padding-left: 20px;
+
+        }
+        
+        &.mod-meteo-marini{
+            p{ top: 6.5em; }
+        }
+    }
+}
+
+.ui-dialog{
+    @media only screen and (max-width: $screen-size-700px) {
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+}
+
+.map-legend{
+    left: 10px !important;
+    right: 20px;
+    
+    .map-legend-image{
+        width: 100%;
     }
 }
