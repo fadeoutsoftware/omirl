@@ -984,11 +984,13 @@ var MapController = (function () {
             }
 
             //set date time
-            var oDate = new Date(data.updateDateTime + " UTC");
-            oController.m_oTranslateService('MAP_LAYERDATEINFO', {data: oDate.toString()}).then(function(msg){
-                oController.m_oSelectedMapDateTimeInfo = msg;
-                oController.m_oSelectedMapDateTimeIcon = oMapLink.link;
-            });
+            if (angular.isDefined(data.updateDateTime) && data.updateDateTime != null) {
+                var oDate = new Date(data.updateDateTime + " UTC");
+                oController.m_oTranslateService('MAP_LAYERDATEINFO', {data: oDate.toString()}).then(function (msg) {
+                    oController.m_oSelectedMapDateTimeInfo = msg;
+                    oController.m_oSelectedMapDateTimeIcon = oMapLink.link;
+                });
+            }
         }).error(function (data, status) {
             oController.setSelectedMapLinkOnScreen(oController,oController.m_oSelectedMapLink);
             oController.m_oTranslateService('ERRORCONTACTSERVER').then(function(error){
@@ -1061,11 +1063,13 @@ var MapController = (function () {
                 oController.m_oMapService.map.setLayerIndex(oLayer, oController.m_oLayerService.getBaseLayers().length);
 
                 //set date time
-                var oDate = new Date(data.updateDateTime + " UTC");
-                oController.m_oTranslateService('MAP_LAYERDATEINFO', {data: oDate.toString()}).then(function(msg){
-                    oController.m_oSelectedMapDateTimeInfo = msg;
-                    oController.m_oSelectedMapDateTimeIcon = oMapLink.link;
-                });
+                if (angular.isDefined(data.updateDateTime) && data.updateDateTime != null) {
+                    var oDate = new Date(data.updateDateTime + " UTC");
+                    oController.m_oTranslateService('MAP_LAYERDATEINFO', {data: oDate.toString()}).then(function (msg) {
+                        oController.m_oSelectedMapDateTimeInfo = msg;
+                        oController.m_oSelectedMapDateTimeIcon = oMapLink.link;
+                    });
+                }
 
             }
             else if (data.layerId == null)
@@ -1496,11 +1500,13 @@ var MapController = (function () {
             oServiceVar.m_oSelectedSensorDateTimeIcon = "";
             if (aoStations != null && aoStations.length > 0)
             {
-                var oDate = new Date(aoStations[0].updateDateTime + " UTC");
-                oServiceVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function(msg){
-                    oServiceVar.m_oSelectedSensorDateTimeInfo = msg;
-                    oServiceVar.m_oSelectedSensorDateTimeIcon = oSensorLink.imageLinkOff;
-                });
+                if (angular.isDefined(aoStations[0].updateDateTime) && aoStations[0].updateDateTime != null) {
+                    var oDate = new Date(aoStations[0].updateDateTime + " UTC");
+                    oServiceVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function (msg) {
+                        oServiceVar.m_oSelectedSensorDateTimeInfo = msg;
+                        oServiceVar.m_oSelectedSensorDateTimeIcon = oSensorLink.imageLinkOff;
+                    });
+                }
             }
 
             try{
@@ -2184,11 +2190,13 @@ var MapController = (function () {
 
             if (data != null) {
                 //SET DATE INFO
-                var oDate = new Date(data.updateDateTime + " UTC");
-                oControllerVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function(msg){
-                    oControllerVar.m_oSelectedSensorDateTimeInfo = msg;
-                    oControllerVar.m_oSelectedSensorDateTimeIcon = oSectionLink.imageLinkOff;
-                });
+                if (angular.isDefined(data[0].updateDateTime) && data[0].updateDateTime != null) {
+                    var oDate = new Date(data[0].updateDateTime + " UTC");
+                    oControllerVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function (msg) {
+                        oControllerVar.m_oSelectedSensorDateTimeInfo = msg;
+                        oControllerVar.m_oSelectedSensorDateTimeIcon = oSectionLink.imageLinkOff;
+                    });
+                }
             }
 
             try{
