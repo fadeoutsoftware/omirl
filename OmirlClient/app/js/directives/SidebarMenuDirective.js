@@ -59,6 +59,21 @@ angular.module('omirl.sidebarMenuDirective', [])
             $scope.m_bIsSubmenuVisible = false;
             
             
+            $scope.isMenuLinkVisible = function(oMenuLink)
+            {
+                console.debug("Is visible:", oMenuLink);
+                if( oMenuLink )
+                {
+                    if(oMenuLink.isVisible != null && oMenuLink.isVisible != undefined)
+                        return oMenuLink.isVisible;
+                    else
+                        return true;
+                }
+                else
+                    return false;
+            }
+            
+            
             $scope.isActive = function(menuItem)
             {
                return ($scope.activeMenuItem == menuItem);

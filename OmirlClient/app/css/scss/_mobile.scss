@@ -117,10 +117,30 @@ div.menu-languages-container{
 }
 
 .map-legend{
-    left: 10px !important;
-    right: 20px;
-    
-    .map-legend-image{
-        width: 100%;
+    @media only screen and (max-width: $screen-size-700px) {
+        left: 10px !important;
+        right: 20px;
+
+        .map-legend-image{
+            width: 100%;
+        }
     }
+}
+
+.scrollable-table-container{
+    //@media only screen and (max-width: $screen-size-700px) {
+        overflow-x: scroll;
+        h2{ font-size: 1.3em; }
+        table{ font-size: 0.9em;}
+    //}
+}
+
+.panel-heading.tables_page{
+    //@media only screen and (max-width: $screen-size-700px) {
+        padding: 0px 10px;
+        padding-top: 4px;
+        .form-group{
+            margin-bottom: 0px;
+        }
+    //}
 }

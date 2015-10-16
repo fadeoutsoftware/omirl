@@ -110,6 +110,21 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             //****************************************************************************************
             //* Directive scope methods
             //****************************************************************************************
+            
+            $scope.isMenuLinkVisible = function(oMenuLink)
+            {
+                console.debug("Is visible:", oMenuLink);
+                if( oMenuLink )
+                {
+                    if(oMenuLink.isVisible != null && oMenuLink.isVisible != undefined)
+                        return oMenuLink.isVisible;
+                    else
+                        return true;
+                }
+                else
+                    return false;
+            }
+            
             $scope.closeMenu = function(){
                 $(".panel").each(function(index, elem){
                     var elem = $(this);

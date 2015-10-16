@@ -23,7 +23,8 @@
                 <li class='map-firstlevel-icon' 
                     ng-repeat="oItem in oRow.getMenuLinks()"
                     ng-class="{'map-firstlevel-icon-selected': isActive(oItem) == true, 'last-of-row' : isLastLinkOfRow(oRow, oItem) == true}"
-                    tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}" >
+                    tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}"
+                    ng-show="isMenuLinkVisible(oItem) == true">
                     <img class="img-map-firstlevel-icon" 
                          ng-src="{{getMenuLinkIcon(oItem)}}"
                          ng-click="mainItemClick(oItem, oRow.getRowIdToOpen())"
@@ -50,7 +51,8 @@
                         <li class='map-firstlevel-icon'
                             ng-repeat="oItem in menuItemsByLevel[MENU_LEVEL_2]"
                             ng-class="{'map-firstlevel-icon-selected': isSubActive(oItem) == true}"
-                            tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}">
+                            tooltip-popup-delay="500" tooltip="{{oItem.description | translate}}"
+                            ng-show="isMenuLinkVisible(oItem) == true">
                             <img class="img-map-firstlevel-icon" ng-src="{{oItem.link}}"
                              ng-click="submenuItemClick(oItem)"/>
                         </li>
