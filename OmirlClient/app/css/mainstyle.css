@@ -374,6 +374,18 @@ div.menu-languages-container{
 .float-right {
   float: right; }
 
+/* centered columns styles */
+.row-centered {
+  text-align: center; }
+
+.col-centered {
+  display: inline-block;
+  float: none;
+  /* reset the text-align */
+  text-align: left;
+  /* inline-block space fix */
+  margin-right: -4px; }
+
 .side-bar-toggle:hover {
   cursor: pointer; }
 
@@ -441,5 +453,22 @@ ul.sidebar-nav li a:hover {
         visibility: hidden; }
     .date-selector-container .date-selector.past {
       background-color: #ffbc6c; }
+
+.credits .row {
+  margin-bottom: 30px; }
+  .credits .row .col {
+    text-align: center; }
+.credits img {
+  width: 100%; }
+.credits .arpal-cima-fadeout {
+  height: 150px;
+  margin-top: 70px; }
+  .credits .arpal-cima-fadeout .col {
+    height: 100%; }
+  .credits .arpal-cima-fadeout .arpal img, .credits .arpal-cima-fadeout .cima img {
+    width: auto;
+    height: 100%; }
+  .credits .arpal-cima-fadeout .fadeout img {
+    width: 80%; }
 
 /*# sourceMappingURL=mainstyle.css.map */

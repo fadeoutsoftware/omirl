@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 251.12758 123.67307"
+   id="svg2"
+   height="123.67307"
+   width="251.12758"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="logo_fadeout.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1280"
+     inkscape:window-height="1002"
+     id="namedview20"
+     showgrid="false"
+     inkscape:zoom="1.9788814"
+     inkscape:cx="116.45737"
+     inkscape:cy="-36.892235"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata38">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs36" />
+  <g
+     id="g4"
+     transform="matrix(1.694032,0,0,1.7201009,-58.366158,-328.55645)">
+    <path
+       id="path6"
+       style="fill:none;stroke:#1b1918;stroke-width:3.51496291;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="m 52.3497,192.7672 c 34.2026,14.9994 15.7363,57.886 8.1747,68.1899 -1.8296,2.4931 7.7324,-11.0516 10.6272,-24.5229 l 75.7443,0.1647 c -6.0586,-14.5382 -45.5963,-34.8732 -94.5462,-43.8317 z"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path8"
+       style="fill:none;stroke:#1b1918;stroke-width:3.51496291;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="m 36.2365,236.8764 144.6775,0"
+       inkscape:connector-curvature="0" />
+    <text
+       id="text10"
+       y="262.35919"
+       x="69.2201">
+      <tspan
+         style="font-size:25px;font-family:Niamey;fill:#1b1918"
+         id="tspan12"
+         font-size="25.0000">FadeOut</tspan>
+    </text>
+  </g>
+</svg>

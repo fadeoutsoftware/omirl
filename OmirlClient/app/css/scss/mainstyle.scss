@@ -38,6 +38,21 @@ $size-sidebar-left-toggle-h: $size-map-titlebar-h;
 }
 
 
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+
+
 .side-bar-toggle{
     &:hover{ cursor: pointer;}
 }
@@ -140,5 +155,36 @@ ul.sidebar-nav{
         }
 
         &.past{background-color: $color-date-selector-bg-past;}
+    }
+}
+
+
+.credits{
+    .row{
+        margin-bottom: 30px;
+        
+        .col{ text-align: center;}
+    }
+    
+    
+    img{width: 100%;}
+    
+    .arpal-cima-fadeout{
+        height: 150px;
+        margin-top: 70px;
+        
+        .col{
+            height: 100%;
+        }
+        
+        .arpal, .cima{
+            img{
+                width: auto;
+                height: 100%;
+            }
+        }
+        .fadeout{
+            img{width: 80%;}
+        }
     }
 }
