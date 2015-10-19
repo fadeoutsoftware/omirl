@@ -167,7 +167,8 @@
     -->
     
     <ul class="sidebar-nav">
-        <li class="menu-link"><a class='text-short' href="#top">{{'INDEX_HOME' | translate}}</a></li>
+        <!--<li class="menu-link"><a class='text-short' href="#top">{{'INDEX_HOME' | translate}}</a></li>-->
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.returnToTop()">{{'INDEX_HOME' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/maps')">{{'INDEX_DATI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/summarytable')">{{'INDEX_TABELLE' | translate}}</a></li>
         <li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate }}</a></li>
@@ -338,7 +339,7 @@
 <!-- /Callout -->
 
 <!-- Map -->
-<div id = "contentcontainer" ng-style="m_oController.m_sContainerStyle">
+<div id="contentcontainer" ng-style="m_oController.m_sContainerStyle">
     <div ng-view ></div>
 </div>
 <!-- /Map -->
@@ -375,20 +376,79 @@
         });
     });
 
-    function OmirlMoveTo(sHash) {
-        var target = $(sHash);
-        target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-        if (target.length) {
-            $('html,body').animate({
-                scrollTop: target.offset().top
-            }, 1000);
-            return false;
+    function OmirlMoveTo(sHash)
+    {
+        var header = $("#top");
+        var mainContainer = $("#contentcontainer");
+        var body = $("body");
+        
+        var sClass = "header-collapsed";
+        var sClassOnMobile = "header-collapsed-mobile";
+        
+        
+        if( body.css("overflow-y") == "hidden")
+        {
+            // ON LARGE SCREEN DEVICES
+            header.removeClass(sClassOnMobile);
+            
+            
+            sHash = sHash.replace("#", "");
+            if(sHash == "top")
+            {
+                header.removeClass(sClass);
+                mainContainer.removeClass(sClass);
+            }
+            else
+            {
+                header.addClass(sClass);
+                mainContainer.addClass(sClass);
+            }
+        }
+        else
+        {
+            
+            sHash = sHash.replace("#", "");
+            if(sHash == "top")
+            {
+                // Show header, hide content
+                header.removeClass(sClass);
+                mainContainer.addClass(sClass);
+            }
+            else
+            {
+                // Hide header, show content
+                header.addClass(sClass);
+                mainContainer.removeClass(sClass);
+            }
+            return;
+            
+            
+            var target = $(sHash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+            if (target.length) {
+                $('html,body').animate({
+                    scrollTop: target.offset().top
+                }, 1000);
+                return false;
+            }
         }
     }
 </script>
-<script>
+<script>   
     $(resizeMap());
     $(window).resize(resizeMap);
+    
+    
+    // Avoid scrolling on small devices
+    window.setTimeout(function(){
+        var body = $("body");
+        if( body.css("overflow-y") != "hidden")
+        {
+            // ON MED/SMALL SCREEN DEVICES
+            OmirlMoveTo("top");
+        }
+    }, 1000);
+    
 
     function resizeMap(){
         var mapHeight = $("#top").height();// - $("#yr-map-header").outerHeight() - $("#yr-map-footer").outerHeight();

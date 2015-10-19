@@ -52,6 +52,11 @@ var TemplateController = (function() {
         this.m_oLocation.path(sPath);
         OmirlMoveTo('#contentcontainer');
     }
+    
+    TemplateController.prototype.returnToTop = function()
+    {
+        OmirlMoveTo('#top');
+    }
 
 
     TemplateController.prototype.reservedAreaClicked = function () {

@@ -113,7 +113,6 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             
             $scope.isMenuLinkVisible = function(oMenuLink)
             {
-                console.debug("Is visible:", oMenuLink);
                 if( oMenuLink )
                 {
                     if(oMenuLink.isVisible != null && oMenuLink.isVisible != undefined)

@@ -259,6 +259,79 @@ and open the template in the editor.
     bottom: 40px;
     left: 200px; }
 
+/* 
+    Created on : 19-ott-2015, 10.37.16
+    Author     : d.fiori
+*/
+.satellite-radar-buttons .cell-text {
+  padding: 20px 10px; }
+.satellite-radar-buttons .satellite-radar-buttons-header td.cell-text {
+  padding: 10px 10px;
+  font-size: 1.4em; }
+.satellite-radar-buttons .cell-button-lastimage button {
+  margin-left: 10px;
+  margin-right: 1px; }
+.satellite-radar-buttons .cell-button-animation button {
+  margin-right: 10px;
+  margin-left: 1px; }
+.satellite-radar-buttons button {
+  text-transform: uppercase;
+  width: 150px;
+  padding: 10px;
+  border: 0px solid;
+  background-color: #7FBBDA; }
+  .satellite-radar-buttons button:hover {
+    background-color: #428bca;
+    color: #eee; }
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19-ott-2015, 11.22.28
+    Author     : d.fiori
+*/
+/*.container-fluid{
+    overflow-y: hidden;
+    max-height: 100vh;
+
+    transition-property: all;
+    transition-duration: .5s;
+    transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.header-collapsed{
+    //display: none;
+    max-height: 0;
+}*/
+#contentcontainer {
+  overflow-y: auto; }
+
+@media only screen and (min-width: 40.063em) {
+  body {
+    overflow-y: hidden; }
+
+  #top {
+    overflow-y: hidden;
+    max-height: 100vh;
+    transition-property: all;
+    transition-duration: 1s;
+    transition-timing-function: ease-out; }
+    #top .container-fluid {
+      max-height: 100vh; }
+
+  #contentcontainer {
+    transition-property: all;
+    transition-duration: 1s;
+    transition-timing-function: ease-out; }
+
+  .header-collapsed {
+    transform: translateY(-100vh); } }
+.header-collapsed-mobile {
+  display: none; }
+
 /*
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates

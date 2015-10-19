@@ -1,0 +1,69 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19-ott-2015, 11.22.28
+    Author     : d.fiori
+*/
+
+/*.container-fluid{
+    overflow-y: hidden;
+    max-height: 100vh;
+
+    transition-property: all;
+    transition-duration: .5s;
+    transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.header-collapsed{
+    //display: none;
+    max-height: 0;
+}*/
+
+$animation-top-slideout-duration: 1.0s;
+
+//$animation-top-slideout-type: cubic-bezier(0, 1, 0.5, 1);
+$animation-top-slideout-type: ease-out;
+
+
+#contentcontainer{
+    overflow-y: auto;
+}
+
+@media only screen and (min-width: $screen-size-medium-min) {
+    body{
+        overflow-y: hidden;
+    }
+
+    #top{
+        overflow-y: hidden;
+        max-height: 100vh;
+
+        transition-property: all;
+        transition-duration: $animation-top-slideout-duration;
+        //transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+        transition-timing-function: $animation-top-slideout-type;
+
+
+        .container-fluid{
+            max-height: 100vh;
+        }
+    }
+
+    #contentcontainer{
+        transition-property: all;
+        transition-duration: $animation-top-slideout-duration;
+        transition-timing-function: $animation-top-slideout-type;
+    }
+
+    .header-collapsed{
+        //display: none;
+        transform: translateY(-100vh);
+    }
+}
+
+.header-collapsed-mobile{
+    display: none;
+}

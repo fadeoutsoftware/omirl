@@ -1,0 +1,44 @@
+/* 
+    Created on : 19-ott-2015, 10.37.16
+    Author     : d.fiori
+*/
+
+
+.satellite-radar-buttons{
+    
+    $space-between-rows: 40px;
+    
+    .cell-text{
+        padding: $space-between-rows/2 10px;
+    }
+    .satellite-radar-buttons-header{
+        td.cell-text{
+            padding: 10px 10px;
+            font-size: 1.4em;
+        }
+    }
+    
+    .cell-button-lastimage{
+        button{ 
+            margin-left: 10px;
+            margin-right: 1px;
+        }
+    }
+    
+    .cell-button-animation{
+        button{ margin-right: 10px; margin-left: 1px;}
+    }
+    
+    button{
+        text-transform: uppercase;
+        width: 150px;
+        padding: 10px;
+        border: 0px solid;
+        background-color: $color-satradar-button-bg;
+        
+        &:hover{
+            background-color: $color-satradar-button-hover-bg;
+            color: $color-satradar-button-hover-text;
+        }
+    }
+}
