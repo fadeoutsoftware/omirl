@@ -146,7 +146,7 @@ public class OmirlDaemon {
 
 		//----------------TEST------------------
 		//publishMaps();
-		maxTable();
+		//maxTable();
 		//RefreshSectionsLayer();
 		//DailyTask();
 		//RefreshGallery();
@@ -162,7 +162,7 @@ public class OmirlDaemon {
 		Date oLastDate = null;
 
 		long lReferenceDate = -1; 
-		lReferenceDate = new Date().getTime();
+		//lReferenceDate = new Date().getTime();
 
 		try {
 
@@ -481,7 +481,8 @@ public class OmirlDaemon {
 										// Set title
 										oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
 										// Subtitle
-										oDataChart.setSubTitle(aoInfo.get(0).getSubtitle());
+										DateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+										oDataChart.setSubTitle(aoInfo.get(0).getSubtitle() + " - " + oFormat.format(new Date()));
 										// Main Axes Values
 										oDataChart.setAxisYMaxValue(aoInfo.get(0).getAxisYMaxValue());
 										oDataChart.setAxisYMinValue(aoInfo.get(0).getAxisYMinValue());
@@ -2713,7 +2714,8 @@ public class OmirlDaemon {
 
 		oDataChart.getDataSeries().add(oDataSerie);
 		oDataChart.setTitle(oStationAnag.getMunicipality() + " - " + oStationAnag.getName());
-		oDataChart.setSubTitle(aoInfo.get(0).getSubtitle());
+		DateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		oDataChart.setSubTitle(aoInfo.get(0).getSubtitle() + " - " + oFormat.format(new Date()));
 		oDataChart.setAxisYMaxValue(dYMax);
 		oDataChart.setAxisYMinValue(dYMin);
 		oDataChart.setAxisYTickInterval(aoInfo.get(0).getAxisYTickInterval());
