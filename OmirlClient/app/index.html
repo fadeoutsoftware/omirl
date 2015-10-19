@@ -382,7 +382,12 @@
         var mainContainer = $("#contentcontainer");
         var body = $("body");
         
-        var sClass = "header-collapsed";
+        var iScrollAmout = header.height();
+        
+        
+        // On 'non small' devices we cannot use a const scroll
+        // amount, it should be calculated dynamically
+        //var sClass = "header-collapsed";
         var sClassOnMobile = "header-collapsed-mobile";
         
         
@@ -395,13 +400,19 @@
             sHash = sHash.replace("#", "");
             if(sHash == "top")
             {
-                header.removeClass(sClass);
-                mainContainer.removeClass(sClass);
+                //header.removeClass(sClass);
+                //mainContainer.removeClass(sClass);
+                iScrollAmout = 0;
+                header.css({transform : "translateY(-"+ iScrollAmout +"px)"});
+                mainContainer.css({transform : "translateY(-"+ iScrollAmout +"px)"});
             }
             else
             {
-                header.addClass(sClass);
-                mainContainer.addClass(sClass);
+                //header.addClass(sClass);
+                //mainContainer.addClass(sClass);
+                
+                header.css({transform : "translateY(-"+ iScrollAmout +"px)"});
+                mainContainer.css({transform : "translateY(-"+ iScrollAmout +"px)"});
             }
         }
         else
