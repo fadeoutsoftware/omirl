@@ -1443,10 +1443,11 @@ var MapController = (function () {
                 "chartType": sSensorType,
                 "isStock": bIsStockChart,
                 "municipality": sMunicipality,
-                "name": sName
+                "name": sName,
+                "subTitle": ""
             };
 
-        oControllerVar.m_oTranslateService('DIALOGTITLE', {name: oFeature.attributes.name, municipality: oFeature.attributes.municipality}).then(function(text){
+        oControllerVar.m_oTranslateService('DIALOGTITLE', {name: oFeature.attributes.name, municipality: oFeature.attributes.municipality, subTitle: ""}).then(function(text){
             // jQuery UI dialog options
             var options = {
                 autoOpen: false,

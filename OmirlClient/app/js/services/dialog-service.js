@@ -136,6 +136,18 @@ angular.module('dialogService', []).service('dialogService',
                 return true;
             };
 
+            this.updateTitle = function(id, text) {
+                // Get the dialog from the cache
+                var dialog = _this.dialogs[id];
+                // Throw an exception if the dialog is not found
+                if (!angular.isDefined(dialog)) {
+                    return false;
+                }
+
+                dialog.ref.dialog('option', 'title', text);
+
+                return true;
+            };
 
         }
     ]);

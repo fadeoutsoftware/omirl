@@ -240,7 +240,7 @@
     "ERRORCONTACTSERVER": "Error contacting Omirl Server",
     "CHARTCONTROLLER_LOADDATA": "Impossibile caricare il grafico della stazione {{value}}",
     "CHARTCONTROLLER_OPTIONSUBTITLE": "{{model}} (Comune di {{municipality}}) - ARPAL CFMI-PC",
-    "DIALOGTITLE": "{{name}} (Comune di {{municipality}})",
+    "DIALOGTITLE": "{{name}} (Comune di {{municipality}}) - {{subTitle}}",
     "DAEMON_PIOGGIA5MYAXIS":"Pioggia 5m (mm)",
     "DAEMON_CUMULATAYAXIS":"Precipitazione Cumulata (mm)",
     "DAEMON_PIOGGIA10MYAXIS":"Pioggia 10m (mm)",
@@ -293,5 +293,6 @@
     "TLC_MOLOCHHMA850NITALY" : "HMA @ 850",
     "TLC_MOLOCHTPREC3NITALY" : "T Prec 3",
     "MODELGALLERY_NOIMAGE" : "Selezionare nel menù a sinistra un modello ed una variabile",
+    "MODELGALLERY_NODATA" : "Nessuna immagine disponibile",
     "MODELGALLERY_LOADING" : "Loading"
 }

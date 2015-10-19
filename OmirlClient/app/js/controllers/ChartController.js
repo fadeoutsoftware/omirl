@@ -102,6 +102,13 @@ var ChartController = (function() {
 
             var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sSectionCode);
 
+            //change dialog title
+            oControllerVar.m_oTranslate('DIALOGTITLE', {name: oControllerVar.m_oDialogModel.name, municipality: oControllerVar.m_oDialogModel.municipality, subTitle: oControllerVar.oChartVM.subTitle}).then(function(text) {
+                //oDialog.scope.model.subTitle = text;
+                //$('$sectionChart.html').dialog('option', 'title', text);
+                oControllerVar.m_oDialogService.updateTitle(oControllerVar.m_sSectionCode, text);
+            });
+
             if(angular.isDefined(oControllerVar.oChartVM.otherChart)) {
 
                 oControllerVar.oChartVM.otherChart.forEach(function(sType){

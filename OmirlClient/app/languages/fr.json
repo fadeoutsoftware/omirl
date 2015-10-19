@@ -289,6 +289,7 @@
     "TLC_MOLOCHHMA700NITALY" : "HMA @ 700 fr",
     "TLC_MOLOCHHMA850NITALY" : "HMA @ 850 fr",
     "TLC_MOLOCHTPREC3NITALY" : "T Prec 3 fr",
-    "MODELGALLERY_NOIMAGE" : "Selezionare nel menù a sinistra un modello ed una variabile",
+    "MODELGALLERY_NOIMAGE" : "Selezionare nel menù a sinistra un modello ed una variabile fr",
+    "MODELGALLERY_NODATA" : "Nessuna immagine disponibile fr",
     "MODELGALLERY_LOADING" : "Loading"
 }

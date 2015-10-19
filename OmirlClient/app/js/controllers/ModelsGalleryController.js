@@ -8,7 +8,21 @@ var ModelsGalleryController = (function() {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oTranslateService = $translate;
-        
+        this.m_oConstantsService = ConstantsService;
+        this.m_bNowMode = true;
+        this.m_oSelectedLink = null;
+        this.m_oReferenceDate = new Date();
+
+        //Set Reference date
+        if (this.m_oConstantsService.getReferenceDate() != null)
+        {
+            if (this.m_oConstantsService.getReferenceDate() != "")
+            {
+                this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
+                this.m_bNowMode = false;
+            }
+        }
+
         //****************************************************************************************
         //* Scope variables
         //****************************************************************************************
@@ -18,6 +32,8 @@ var ModelsGalleryController = (function() {
         $scope.m_iMaxThumbsCount = 9; // MUST BE AN ODD NUMBER
         $scope.m_iThumbsOnSideCount = Math.floor( $scope.m_iMaxThumbsCount / 2 );
         $scope.m_iGalleryTimeIntervalId;
+
+
 
         this.m_oTranslateService('MODELGALLERY_NOIMAGE').then(function(msg){
             $scope.m_sLoadingText = msg;
@@ -37,7 +53,7 @@ var ModelsGalleryController = (function() {
         //load gallery link
         GalleryService.loadGalleryLink().success(function(data){
             $scope.menuLinkItemsList = data;
-        })
+        });
         // DEBUG (+)
         /*
         var json = '[{"active":false,"code":"bo10ar","description":"Sintesi 1","imageLinkOff":"img/wet.png","isActive":false,"location":"/summarytable","sublevelGalleryLink":null},{"active":false,"code":"bo10ac","description":"Sintesi 2","imageLinkOff":"img/rain_drops.png","isActive":false,"location":"/summarytable","sublevelGalleryLink":null}]';
@@ -202,6 +218,9 @@ var ModelsGalleryController = (function() {
 
         $scope.getGallery = function(oLink)
         {
+            //set selected link
+            $scope.m_oController.m_oSelectedLink = oLink;
+
             $scope.m_oController.m_oTranslateService('MODELGALLERY_LOADING').then(function(msg){
                 $scope.m_sLoadingText = msg;
             });
@@ -210,9 +229,23 @@ var ModelsGalleryController = (function() {
             GalleryService.getData(oLink.codeParent, oLink.codeVariable, oLink.code)
                 .success(function(data, status, headers, config){
 
+                    if (angular.isDefined(data.images))
+                    {
+                        if (data.images.length == 0)
+                        {
+                            $scope.m_oController.m_oTranslateService('MODELGALLERY_NODATA').then(function(msg){
+                                $scope.m_sLoadingText = msg;
+                            });
+
+                            $scope.isGalleryReady = false;
+
+                            return;
+                        }
+                    }
+
                     // Get photos and set gallery visible
                     $scope.photos = data.images;
-                    
+
                     // DEBUG (+)
 //                    var sUriPrefix = ConstantsService.getAPIURL().replace("rest", "");
 //                    for(var key in $scope.photos)
@@ -233,7 +266,6 @@ var ModelsGalleryController = (function() {
                     $scope.m_iGalleryTimeIntervalId = setInterval(function(){
                         if( $scope.m_bIsAutoplayEnabled === true)
                         {
-                            console.debug("HERE");
                             $scope.showNext();
                             $scope.$apply();
                         }
@@ -303,10 +335,29 @@ var ModelsGalleryController = (function() {
             }, $scope.m_iAutoplayDuration_ms);*/
 
         }
-        
-        
-        
+
     }
+
+    ModelsGalleryController.prototype.onTimeSet = function (newDate, oldDate) {
+
+        this.m_oConstantsService.setReferenceDate(newDate);
+        this.m_bNowMode = false;
+        this.stopAutoplay();
+        this.getGallery(this.m_oSelectedLink);
+        this.goToFirst();
+
+    };
+
+
+    ModelsGalleryController.prototype.setNow = function () {
+
+        this.m_oConstantsService.setReferenceDate("");
+        this.m_bNowMode = true;
+        this.m_oReferenceDate = new Date();
+        this.stopAutoplay();
+        this.getGallery(this.m_oSelectedLink);
+        this.goToFirst();
+    };
 
     ModelsGalleryController.$inject = [
         '$scope', '$http', 'ConstantsService', 'GalleryService', '$translate'
