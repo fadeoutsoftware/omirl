@@ -1419,7 +1419,7 @@ public class OmirlDaemon {
 		case 15:
 			return 348.75 - 11.25;
 		case 14:
-			return 326.75 - 11.25;
+			return 326.25 - 11.25;
 		case 13:
 			return 303.75 - 11.25;
 		case 12:
