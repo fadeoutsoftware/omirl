@@ -238,7 +238,7 @@
     "ERRORCONTACTSERVER": "Error contacting Omirl Server fr",
     "CHARTCONTROLLER_LOADDATA": "Impossibile caricare il grafico della stazione {{value}} fr",
     "CHARTCONTROLLER_OPTIONSUBTITLE": "{{model}} (Comune di {{municipality}}) - ARPAL CFMI-PC fr",
-    "DIALOGTITLE": "{{name}} (Comune di {{municipality}}) fr",
+    "DIALOGTITLE": "{{name}} (Comune di {{municipality}}) - {{subTitle}} fr",
     "DAEMON_PIOGGIA5MYAXIS":"Pioggia 5m (mm) fr",
     "DAEMON_CUMULATAYAXIS":"Precipitazione Cumulata (mm) fr",
     "DAEMON_PIOGGIA10MYAXIS":"Pioggia 10m (mm) fr",
