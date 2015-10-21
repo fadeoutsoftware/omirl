@@ -103,13 +103,38 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             });
             
             
+            //****************************************************************************************
+            //* Callbacks which can be executed by controller
+            //****************************************************************************************
+            $scope.callbackDeselectLastClickedMenuItem = function(iLevel)
+            {               
+                if( iLevel == $scope.MENU_LEVEL_1)
+                    $scope.mainItemClick($scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_1], $scope.secondLevelMenuOpened);
+                else if( iLevel == $scope.MENU_LEVEL_2)
+                    $scope.submenuItemClick($scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2]);
+            }
             
+//            // Add callbacks to the controller
+//            if( !$scope.controller.directivesCallbacks )
+//                $scope.controller.directivesCallbacks = {};
+//            
+//            $scope.controller.directivesCallbacks[$scope.id] = $scope.callback;
             
             
             
             //****************************************************************************************
             //* Directive scope methods
             //****************************************************************************************
+            
+            /**
+             * When a directive handle a click on the menu items, it will notice to
+             * controller which directive is handling that. With this 'workaround'
+             * the controller can execute the right directive callback if necessary
+             */
+            $scope.setClickHandlingDirectiveToController = function()
+            {
+                $scope.controller.activeDirectiveScope = $scope;
+            }
             
             $scope.isMenuLinkVisible = function(oMenuLink)
             {
@@ -322,6 +347,34 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 return $scope.isTheSameMenuLink( $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2], menuItem );
             }
             
+            
+            $scope.setLevelMenuItemNotSelected = function(iLevel)
+            {
+                if( iLevel == $scope.MENU_LEVEL_1)
+                {
+                    
+                    $scope.secondLevelMenuOpened = -1;
+                    $scope.m_bIsSubmenuVisible = false;
+                    //$scope.activeMenuItem = null;
+                    $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_1] = null;
+                    
+                    $scope.m_sParentText = "";
+                    $scope.m_sChildText = "";
+                }
+                else if( iLevel == $scope.MENU_LEVEL_2)
+                {
+                    //$scope.activeSubItem = null;
+                    $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2] = null;
+
+                    $scope.m_sParentText = $scope.m_sParentText;
+                    $scope.m_sChildText = "";
+                    
+                    // reset 3rd level and make it not visible
+                    $scope.resetThirdLevel(false);
+                }
+            
+            }
+            
             /**
              * Handle the click on a '1st level' menu link
              * @param {type} oMenuLink - The menu link user has clicked on
@@ -335,16 +388,13 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 $scope.isFirstLevel = true;
                 $scope.controller.m_bIsFirstLevel = $scope.isFirstLevel;
                 
+                // Notice to the controller the currently active directive
+                $scope.setClickHandlingDirectiveToController();
+                
                 if( $scope.isActive(oMenuLink) == true)
                 {
                     // Item already selected
-                    $scope.secondLevelMenuOpened = -1;
-                    $scope.m_bIsSubmenuVisible = false;
-                    //$scope.activeMenuItem = null;
-                    $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_1] = null;
-                    
-                    $scope.m_sParentText = "";
-                    $scope.m_sChildText = "";
+                    $scope.setLevelMenuItemNotSelected($scope.MENU_LEVEL_1);
                 }
                 else
                 {
@@ -395,17 +445,14 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 
                 $scope.isFirstLevel = false;
                 $scope.controller.m_bIsFirstLevel = false;
+                
+                // Notice to the controller the currently active directive
+                $scope.setClickHandlingDirectiveToController();
 
                 if( $scope.isSubActive(oMenuLink) == true)
                 {
-                    //$scope.activeSubItem = null;
-                    $scope.selectedMenuItemByLevel[$scope.MENU_LEVEL_2] = null;
-
-                    $scope.m_sParentText = $scope.m_sParentText;
-                    $scope.m_sChildText = "";
-                    
-                    // reset 3rd level and make it not visible
-                    $scope.resetThirdLevel(false);
+                    // Item already selected
+                    $scope.setLevelMenuItemNotSelected($scope.MENU_LEVEL_2);
                 }
                 else
                 {
@@ -442,6 +489,9 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             {
                 //$scope.thirdLevelMenuSelection = $scope.thirdLevelComboBox.selection;
                 $scope.thirdLevelMenuSelection = oSelectedItem;
+                
+                // Notice to the controller the currently active directive
+                $scope.setClickHandlingDirectiveToController();
 
                 if(oSelectedItem && $scope.thirdLevelMenuClick && typeof $scope.thirdLevelMenuClick == "function" )
                 {

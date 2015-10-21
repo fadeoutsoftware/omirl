@@ -60,6 +60,13 @@
     <!-- jQueryUI -->
     <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     
+    <!-- Vex (a modern Dialogs lib) -->
+    <script src="lib/vex-dialogs/2.3.2/vex.min.js"></script>
+    <script src="lib/vex-dialogs/2.3.2/vex.dialog.min.js"></script>
+    <link href="lib/vex-dialogs/2.3.2/vex.css" rel="stylesheet" />
+    <link href="lib/vex-dialogs/2.3.2/vex-theme-default.css" rel="stylesheet" />
+    <link href="lib/vex-dialogs/2.3.2/vex-theme-plain.css" rel="stylesheet" />
+    <script>vex.defaultOptions.className = 'vex-theme-plain';</script>
     
     <!-- Flex Slider (part 1) -->
     <link rel="stylesheet" href="lib/flexslider/flexslider.css" type="text/css" media="screen" />
@@ -387,7 +394,7 @@
         
         // On 'non small' devices we cannot use a const scroll
         // amount, it should be calculated dynamically
-        //var sClass = "header-collapsed";
+        var sClass = "header-collapsed";
         var sClassOnMobile = "header-collapsed-mobile";
         
         
@@ -422,14 +429,14 @@
             if(sHash == "top")
             {
                 // Show header, hide content
-                header.removeClass(sClass);
-                mainContainer.addClass(sClass);
+                header.removeClass(sClassOnMobile);
+                mainContainer.addClass(sClassOnMobile);
             }
             else
             {
                 // Hide header, show content
-                header.addClass(sClass);
-                mainContainer.removeClass(sClass);
+                header.addClass(sClassOnMobile);
+                mainContainer.removeClass(sClassOnMobile);
             }
             return;
             

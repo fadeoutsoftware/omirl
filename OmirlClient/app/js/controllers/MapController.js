@@ -978,8 +978,14 @@ var MapController = (function () {
                     oController.m_oLayerService.setDynamicLayer(null);
                 }
 
-                oController.m_oTranslateService('MAP_NOT_AVAILABLE').then(function(msg){
-                    alert(msg);
+                oController.m_oTranslateService('MAP_NOT_AVAILABLE').then(function(msg)
+                {
+                    oController.activeDirectiveScope.callbackDeselectLastClickedMenuItem(oMapLink.myLevel);
+                    
+                    vex.dialog.alert({
+                        message: msg,
+                    });
+                    //alert(msg);
                 });
             }
 
