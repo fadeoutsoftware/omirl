@@ -71,14 +71,16 @@ public class SectionsService {
 				
 				// Cast Config
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
-				
+								
 				// Find the right Sensor Link Configuration
 				for (HydroLinkConfig oLinkConfig : oConfig.getFlattedHydroLinks()) {
 					
+					System.out.println("SectionsService.GetSection: Flatted " + oLinkConfig.getLinkCode());
+										
 					if (oLinkConfig.getLinkCode().equals(sCode)) {
 						
-						//System.out.println("SectionsService.GetSection: Section Code Config Found");
-						
+						System.out.println("SectionsService.GetSection: TROVATO " + sCode);
+												
 						// Get The path of the right date
 						String sPath = Omirl.getSubPath(oLinkConfig.getFilePath(), oDate);
 						
@@ -86,7 +88,7 @@ public class SectionsService {
 							
 							sPath = sPath + "/features";
 							
-							System.out.println("SectionsService.GetSection: searching path " + sPath);
+							//System.out.println("SectionsService.GetSection: searching path " + sPath);
 							
 							// Get The Last File
 							File oLastFile = Omirl.lastFileModified(sPath, oDate);
