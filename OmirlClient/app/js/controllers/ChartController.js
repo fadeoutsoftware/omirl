@@ -30,6 +30,7 @@ var ChartController = (function() {
 
         var oControllerVar = this;
         this.m_sSubtitle = '';
+        this.m_bZooming = false;
 
         //zoom level
 
@@ -233,21 +234,23 @@ var ChartController = (function() {
         {
             timenow = this.m_oConstantsService.getReferenceDate();
         }
-        
+
+
         //-------------------------------------------------
         // Adjust width/height on mobile
-        var oChartContainer = $(".ui-dialog");        
-        var iDialogTitlebarH = 50;
-        this.m_iWidth = oChartContainer.width();
-        this.m_iHeight = oChartContainer.height() - iDialogTitlebarH;
-        
-        debugger;
-        var oChartButtons = $(".ui-dialog .map-firstlevel-icon");
-        if( oChartButtons && oChartButtons.length > 0)
-            this.m_iHeight -= (oChartButtons.height() + 10);
-        
+        if (!this.m_bZooming) {
+            var oChartContainer = $(".ui-dialog");
+            var iDialogTitlebarH = 50;
+            this.m_iWidth = oChartContainer.width();
+            this.m_iHeight = oChartContainer.height() - iDialogTitlebarH;
+
+            var oChartButtons = $(".ui-dialog .map-firstlevel-icon");
+            if( oChartButtons && oChartButtons.length > 0)
+                this.m_iHeight -= (oChartButtons.height() + 10);
+        }
+
         //-------------------------------------------------
-        
+
 
         if (oChart != null)
         {
@@ -922,20 +925,23 @@ var ChartController = (function() {
     };
 
     ChartController.prototype.zoomIn = function() {
+        this.m_bZooming = true;
         //var oDialog = this.m_oDialogService.getExistingDialog(this.m_sSectionCode);
         this.m_iHeight *= 1.1;
         this.m_iWidth *= 1.1;
         this.LoadData();
         this.addSeriesToChart();
+        this.m_bZooming = false;
     }
 
     ChartController.prototype.zoomOut = function() {
         //alert('out');
-
+        this.m_bZooming = true;
         this.m_iHeight /= 1.1;
         this.m_iWidth /= 1.1;
         this.LoadData();
         this.addSeriesToChart();
+        this.m_bZooming = false;
     }
 
     ChartController.prototype.getHeight = function() {

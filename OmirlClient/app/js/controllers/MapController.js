@@ -2196,13 +2196,17 @@ var MapController = (function () {
             var aoSections = data;
 
             if (data != null) {
-                //SET DATE INFO
-                if (angular.isDefined(data[0].updateDateTime) && data[0].updateDateTime != null) {
-                    var oDate = new Date(data[0].updateDateTime + " UTC");
-                    oControllerVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function (msg) {
-                        oControllerVar.m_oSelectedSensorDateTimeInfo = msg;
-                        oControllerVar.m_oSelectedSensorDateTimeIcon = oSectionLink.imageLinkOff;
-                    });
+
+                if (data.length>0)
+                {
+                    //SET DATE INFO
+                    if (angular.isDefined(data[0].updateDateTime) && data[0].updateDateTime != null) {
+                        var oDate = new Date(data[0].updateDateTime + " UTC");
+                        oControllerVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function (msg) {
+                            oControllerVar.m_oSelectedSensorDateTimeInfo = msg;
+                            oControllerVar.m_oSelectedSensorDateTimeIcon = oSectionLink.imageLinkOff;
+                        });
+                    }
                 }
             }
 
@@ -3086,19 +3090,19 @@ var MapController = (function () {
         // Selected Hydro Link
         if (oController.m_oSelectedHydroLink != null)
         {
-            oController.switchHydroLinkState(true, oController.m_oSelectedHydroLink);
+            oController.switchHydroLinkState(false, oController.m_oSelectedHydroLink);
         }
 
         // Selected Radar Link
         if (oController.m_oSelectedRadarLink != null)
         {
-            oController.switchRadarLinkState(true, oController.m_oSelectedRadarLink);
+            oController.switchRadarLinkState(false, oController.m_oSelectedRadarLink);
         }
 
         // Selected Satellite Link
         if (oController.m_oSelectedSatelliteLink != null)
         {
-            oController.switchSatelliteLinkState(true, oController.m_oSelectedSatelliteLink);
+            oController.switchSatelliteLinkState(false, oController.m_oSelectedSatelliteLink);
         }
 
     }
