@@ -636,7 +636,7 @@ var MapController = (function () {
     }
 
     /**
-     * Method that can be called to obtain the width center (TODO to finish...)
+     * Method that can be called to obtain the width center
      * @returns {number}
      */
     MapController.prototype.getLegendRight = function() {
@@ -867,6 +867,7 @@ var MapController = (function () {
      */
     MapController.prototype.setSelectedMapLinkOnScreen = function (oControllerVar, oMapLink) {
 
+        //TODO: Qui Pulire Direttiva Radar e Satellite
         oMapLink.selected = true;
         // Layer Click
         oControllerVar.m_sMapLegendIconPath = oMapLink.link;
@@ -1178,6 +1179,7 @@ var MapController = (function () {
             // Set this as the active one
             oSensorLink.isActive = true;
 
+            //TODO: QUI PULIRE LA DIRETTIVA IDRO
             oController.hideSectionLayer();
 
             // Set
@@ -1965,8 +1967,12 @@ var MapController = (function () {
             oEntry.selected = false;
         });
 
+        if (oHydroLink.myLevel==1) {
+            oController.m_bIsHydroFirstLevel = true;
+        }
         // We are in the first level?
         if (oController.m_bIsHydroFirstLevel) {
+        //if (oHydroLink.myLevel==1) {
 
             if (oHydroLink.hasChilds) {
                 // Remember we are in second level
@@ -2129,6 +2135,7 @@ var MapController = (function () {
 
         if (!bIsSelected)
         {
+            //TODO: QUI PULIRE LA DIRETTIVA STAZIONI
             this.hideSensorLayer();
             this.setSelectedHydroLinkOnScreen(this,oHydroLink);
             this.showSectionsLayer(oHydroLink);
@@ -2716,7 +2723,7 @@ var MapController = (function () {
 
         if (!bIsSelected)
         {
-
+            // TODO: Qui pulire direttiva Mappe e Satelliti
             this.setSelectedRadarLinkOnScreen(this,oRadarLink);
             this.selectedRadarSatDynamicLayer(oRadarLink, "none");
             //alert('attivo ' + oRadarLink.description);
@@ -3007,7 +3014,7 @@ var MapController = (function () {
     MapController.prototype.switchSatelliteLinkState = function(bIsSelected, oSatelliteLink) {
         if (!bIsSelected)
         {
-
+            // TODO: Qui pulire direttiva Mappe e Radar
             this.setSelectedSatelliteLinkOnScreen(this,oSatelliteLink);
             this.selectedRadarSatDynamicLayer(oSatelliteLink, "none");
             //alert('attivo ' + oSatelliteLink.description);
