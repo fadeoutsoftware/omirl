@@ -90,6 +90,37 @@ public class Omirl extends Application {
 			// Cast to Config
 			OmirlNavigationConfig oConfiguration = (OmirlNavigationConfig) oConfig;
 			
+			if (oConfiguration != null)
+			{
+				if (oConfiguration.getHydroLinks()!=null)
+				{
+					if (oConfiguration.getFlattedHydroLinks()==null)
+					{
+						oConfiguration.setFlattedHydroLinks(new ArrayList<HydroLinkConfig>());
+					}
+					
+					for (HydroLinkConfig oHLinkConfig : oConfiguration.getHydroLinks()) {
+						oConfiguration.getFlattedHydroLinks().add(oHLinkConfig);
+						
+						if (oHLinkConfig.getChildren()!=null)
+						{
+							for (HydroLinkConfig oChild1 : oHLinkConfig.getChildren()) {
+								oConfiguration.getFlattedHydroLinks().add(oChild1);
+								
+								if (oChild1.getChildren()!=null)
+								{
+									for (HydroLinkConfig oChild2 : oChild1.getChildren()) {
+										oConfiguration.getFlattedHydroLinks().add(oChild2);
+									}	
+								}								
+							}	
+						}
+					}
+				}
+				
+				//TODO: Fare lo stesso per radar e satelliti
+			}
+			
 			// Save the config
 			m_oServletConfig.getServletContext().setAttribute("Config", oConfiguration);
 			
@@ -537,6 +568,7 @@ public class Omirl extends Application {
 			OmirlUser oUser = oOmirlUserRepository.Select(oSession.getIdUser(), OmirlUser.class);
 			
 			if (oUser != null) {
+				oOpenSessionRepository.updateBySessionId(sSessionId);
 				return oUser;
 			}
 		}

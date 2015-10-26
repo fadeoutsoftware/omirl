@@ -73,7 +73,7 @@ public class SectionsService {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 				
 				// Find the right Sensor Link Configuration
-				for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
+				for (HydroLinkConfig oLinkConfig : oConfig.getFlattedHydroLinks()) {
 					
 					if (oLinkConfig.getLinkCode().equals(sCode)) {
 						

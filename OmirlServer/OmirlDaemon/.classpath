@@ -6,5 +6,19 @@
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/OmirlBusinessData"/>
+	<classpathentry kind="lib" path="lib/gt-api-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-coverage-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-data-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-epsg-wkt-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-geotiff-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-jdbc-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-main-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-metadata-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-opengis-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-postgis-versioned-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-referencing-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-shapefile-8.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-wms-10.1.jar"/>
+	<classpathentry kind="lib" path="lib/gt-xml-10.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

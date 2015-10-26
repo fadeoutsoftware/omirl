@@ -16,7 +16,11 @@ public class OmirlNavigationConfig {
 	private ArrayList<LegendConfig> sensorLegends = new ArrayList<>();
 	private ArrayList<GalleryLinkConfig> galleryLinks = new ArrayList<GalleryLinkConfig>();
 	private ArrayList<HydroModelLinkConfig> HydroModelLinks = new ArrayList<HydroModelLinkConfig>();
-	
+
+	ArrayList<HydroLinkConfig> flattedHydroLinks = new ArrayList<HydroLinkConfig>();
+	ArrayList<RadarLinkConfig> flattedRadarLinks = new ArrayList<RadarLinkConfig>();
+	ArrayList<SatelliteLinkConfig> flattedSatelliteLinks = new ArrayList<SatelliteLinkConfig>();
+
 	public String getFilesBasePath() {
 		return filesBasePath;
 	}
@@ -89,6 +93,24 @@ public class OmirlNavigationConfig {
 	}
 	public void setHydroModelLinks(ArrayList<HydroModelLinkConfig> hydroModelLinks) {
 		HydroModelLinks = hydroModelLinks;
+	}
+	public ArrayList<HydroLinkConfig> getFlattedHydroLinks() {
+		return flattedHydroLinks;
+	}
+	public void setFlattedHydroLinks(ArrayList<HydroLinkConfig> flattedHydroLinks) {
+		this.flattedHydroLinks = flattedHydroLinks;
+	}
+	public ArrayList<RadarLinkConfig> getFlattedRadarLinks() {
+		return flattedRadarLinks;
+	}
+	public void setFlattedRadarLinks(ArrayList<RadarLinkConfig> flattedRadarLinks) {
+		this.flattedRadarLinks = flattedRadarLinks;
+	}
+	public ArrayList<SatelliteLinkConfig> getFlattedSatelliteLinks() {
+		return flattedSatelliteLinks;
+	}
+	public void setFlattedSatelliteLinks(ArrayList<SatelliteLinkConfig> flattedSatelliteLinks) {
+		this.flattedSatelliteLinks = flattedSatelliteLinks;
 	}
 	
 }

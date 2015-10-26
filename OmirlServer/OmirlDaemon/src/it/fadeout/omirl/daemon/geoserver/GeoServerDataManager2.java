@@ -7,6 +7,21 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.UUID;
+import java.util.Vector;
+
+import org.geotools.data.DefaultTransaction;
+import org.geotools.data.FeatureStore;
+import org.geotools.data.FeatureWriter;
+import org.geotools.data.Transaction;
+import org.geotools.data.shapefile.ShapefileDataStore;
+import org.geotools.feature.FeatureIterator;
+import org.opengis.feature.Feature;
+import org.opengis.feature.type.PropertyDescriptor;
+import org.opengis.geometry.Geometry;
+
+import com.vividsolutions.jts.geom.Point;
 
 import sun.misc.BASE64Encoder;
 
@@ -414,4 +429,147 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 	}
 
 
+	public void AggregateLayer(String sSourceFile, String sAggregationFile, String sOutFile) throws Exception {
+		/*
+		LayerProperties oProp;
+		Vector<String> vsLayers_UUID;
+		
+		float afMap[];
+		float fUndef;
+		GeoImageProperty oGeoProp;
+		String sPaletteId;
+		float fLonStep;
+		float fLatStep;
+		int iDimX;
+		int iDimY;
+		
+		AttributeEntry oShpAttr = oProp.SearchAttribute("shp");
+		if (oShpAttr == null) throw new Exception("Nome shape file non trovato nelle proprieta' del layer");
+
+		String sShpLocalFile = oShpAttr.m_oReferredValues.get("localFile");
+		if (sShpLocalFile == null) throw new Exception("File locale per l'aggregazione non trovato nelle proprieta' del layer");
+
+		File oShapeFile = new File(sShpLocalFile);
+		if (!oShapeFile.isFile()) throw new Exception("Shape file non trovato: " + oShapeFile.getAbsolutePath());
+
+		String sIdField  = oShpAttr.m_oReferredValues.get("idField");
+		if (sIdField == null) throw new Exception("field identificativo non trovato nelle proprieta' del layer");
+
+		String sPaletteField  = oShpAttr.m_oReferredValues.get("paletteField");
+		if (sPaletteField == null) throw new Exception("field palette non trovato nelle proprieta' del layer");
+
+		File oShapeFileDst = new File(sOutFile);
+		
+		Transaction t = new DefaultTransaction(UUID.randomUUID().toString());		
+		
+		try {
+
+			ShapefileDataStore oSrcData = new ShapefileDataStore(oShapeFile.toURI().toURL());
+			FeatureStore oFeatureStore = (FeatureStore)oSrcData.getFeatureSource();
+
+			//verifico che ci sia l'attributo PALETTE e sIdField
+			Collection<PropertyDescriptor> oPropDescriptors = oFeatureStore.getSchema().getDescriptors();
+			boolean bFoundPalette = false; 
+			boolean bFoundIdField = false;
+			for (PropertyDescriptor oPropDescr : oPropDescriptors) {
+				if (oPropDescr.getName().getLocalPart().equals(sPaletteField)) bFoundPalette = true;
+				if (oPropDescr.getName().getLocalPart().equals(sIdField)) bFoundIdField = true;
+			}
+			if (!bFoundPalette || !bFoundIdField) throw new Exception("Shape file per l'aggregazione non valido");			
+
+			//calcolo la "mappa di assegnazione" delle feature sullo shape			
+			VectorialMapBuilder oMapBuilder = new VectorialMapBuilder(oFeatureStore.getFeatures());
+			oMapBuilder.Build(oGeoProp, fLatStep, fLonStep, iDimX, iDimY);
+			int aiMap[] = oMapBuilder.aiFeatureIdxMap;			
+			Vector<String> vsFeatureMap = oMapBuilder.m_vsFeatureMap;
+			//			Vector<String> vsFeatureMap = new Vector<String>();
+			//			int aiMap[] = CalculateAlertAreaMapVectorial(oMyData.oImgProp, oMyData.fLatStep, oMyData.fLonStep, oMyData.iDimX, oMyData.iDimY, oFeatureStore, vsFeatureMap);			
+
+			//calcolo la somma ed il numero di celle per ogni feature
+
+			float afValues[] = new float[vsFeatureMap.size()];
+			int aiCount[] = new int[vsFeatureMap.size()];			
+			AggregateMap(afMap, fUndef, aiMap, afValues, aiCount);
+
+			//applico il valore alle feature
+			ShapefileDataStore oDstData = new ShapefileDataStore(oShapeFileDst.toURI().toURL());			
+			oDstData.createSchema(oSrcData.getSchema());
+			
+			FeatureWriter oWriter = oDstData.getFeatureWriter(t);
+			t.addAuthorization("lockId");
+			
+			for (FeatureIterator fit = oFeatureStore.getFeatures().features(); fit.hasNext();) {
+				Feature oSrcFeature = fit.next();
+				Feature oNewFeature = oWriter.next();				
+				oNewFeature.setDefaultGeometryProperty(oSrcFeature.getDefaultGeometryProperty());
+				for (PropertyDescriptor oPropDescr : oPropDescriptors) {
+					oNewFeature.getProperty(oPropDescr.getName()).setValue(oSrcFeature.getProperty(oPropDescr.getName()).getValue());
+				}
+				String sIdFieldValue = oSrcFeature.getProperty(sIdField).getValue().toString();				
+
+				int iIdx = vsFeatureMap.indexOf(oSrcFeature.getIdentifier().getID());
+
+				float fValue = fUndef;
+				if (iIdx>=0) {
+					if (aiCount[iIdx] > 0) {
+						fValue = afValues[iIdx] /(float)aiCount[iIdx];
+					} 
+					else {
+						//cerco il punto griglia + vicino al baricentro della feature
+						Object oObj = oSrcFeature.getDefaultGeometryProperty().getValue();
+						if (oObj instanceof Geometry) {
+							Geometry oGeom = (Geometry)oObj;
+							Point oCentroid = oGeom.getCentroid();
+							int iCol = (int)Math.round((oCentroid.getX() - oGeoProp.m_oSW.m_dX) / (double)fLonStep);
+							int iRow = (int)Math.round((oCentroid.getY() - oGeoProp.m_oSW.m_dY) / (double)fLatStep);
+
+							if (iCol>=0 && iCol<iDimX && iRow>=0 && iRow<iDimY) {
+								fValue = afMap[iRow*iDimX + iCol];
+							}
+						}
+					}
+				}
+				
+				oNewFeature.getProperty(sPaletteField).setValue(fValue);
+				oWriter.write();
+			}
+
+			oWriter.close();
+			t.commit();
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			throw new Exception("Errore durante la creazione dello shape file");
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new Exception("Errore di I/O durante la creazione dello shape file");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				t.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		/*
+		LayerURL oURL = PublishShp(DewetraSettings.GeoserverImagesPath + sImgName, sImgID, sPaletteId, vsLayers_UUID);
+		oURL.m_sLayerDescr = oProp.m_sDescr;
+		oURL.m_fLonW = (float)oGeoProp.m_oSW.m_dX;
+		oURL.m_fLatS = (float)oGeoProp.m_oSW.m_dY;
+		oURL.m_fLonE = (float)oGeoProp.m_oNE.m_dX;
+		oURL.m_fLatN = (float)oGeoProp.m_oNE.m_dY;
+		return oURL;
+		*/		
+	}
+	
+	protected void AggregateMap(float[] afMap, float fUndef, int[] aiMap, float[] afValues, int[] aiCount) {
+		for (int i = 0; i < aiMap.length; i++) {
+			if (aiMap[i]>=0 && afMap[i] != fUndef) {
+				afValues[aiMap[i]] += afMap[i];
+				aiCount[aiMap[i]]++;
+			}
+		}
+	}
 }

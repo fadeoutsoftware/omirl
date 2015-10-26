@@ -88,6 +88,9 @@ public class ChartService {
 		if (oConfObj != null)  {
 
 			System.out.println("ChartService.GetChart: Config Found");
+			
+			// Call get user from session to update last touch if user is logged. Don't care about return here that is free access
+			Omirl.getUserFromSession(sSessionId);
 
 			// Cast Config
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
