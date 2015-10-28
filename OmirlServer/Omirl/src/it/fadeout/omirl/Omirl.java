@@ -10,6 +10,8 @@ import it.fadeout.omirl.business.config.LegendStepConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
+import it.fadeout.omirl.business.config.RadarLinkConfig;
+import it.fadeout.omirl.business.config.SatelliteLinkConfig;
 import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.StaticLinkConfig;
 import it.fadeout.omirl.business.config.TableLinkConfig;
@@ -35,61 +37,62 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 
 public class Omirl extends Application {
-	
+
 	@Context
 	ServletConfig m_oServletConfig;
-	
+
 	public static String s_sDateHeaderFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXX";
 
 	public static String s_sDateQueryParam = "dd/MM/yyyy HH:mm";
-	
+
 	@Override
-    public Set<Class<?>> getClasses() {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
-        // register resources and features
-        classes.add(MapNavigatorService.class);
-        classes.add(StationsService.class);
-        classes.add(GensonProvider.class);
-        classes.add(ChartService.class);
-        classes.add(AuthService.class);
-        classes.add(TablesService.class);
-        classes.add(SectionsService.class);
-        classes.add(MapService.class);
-        classes.add(GalleryService.class);
-        
-        return classes;
+	public Set<Class<?>> getClasses() {
+		final Set<Class<?>> classes = new HashSet<Class<?>>();
+		// register resources and features
+		classes.add(MapNavigatorService.class);
+		classes.add(StationsService.class);
+		classes.add(GensonProvider.class);
+		classes.add(ChartService.class);
+		classes.add(AuthService.class);
+		classes.add(TablesService.class);
+		classes.add(SectionsService.class);
+		classes.add(MapService.class);
+		classes.add(GalleryService.class);
+		classes.add(OmirlUserService.class);
+
+		return classes;
 	}
-	
+
 	@PostConstruct
 	public void initOmirl() {
 		// Get Configuration file path
 		String sConfigFilePath = m_oServletConfig.getInitParameter("ConfigFilePath");
-		
-		
+
+
 		// Read the configuration
 		ReadConfiguration(sConfigFilePath);
-		
+
 		// Uncomment to write a test configuration!
 		//WriteTestConfiguration("C:\\temp\\OmirlTEST.xml");
 	}
-	
+
 	/**
 	 * Reads the Omirl Configuration from xml file
 	 * @param sFilePath	Configuration File Path
 	 */
 	void ReadConfiguration(String sFilePath) {
-		
+
 		// Create a stub object
 		Object oConfig = null;
-		
+
 		try {
-			
+
 			// Deserialize XML File
 			oConfig = deserializeXMLToObject(sFilePath);
-			
+
 			// Cast to Config
 			OmirlNavigationConfig oConfiguration = (OmirlNavigationConfig) oConfig;
-			
+
 			if (oConfiguration != null)
 			{
 				if (oConfiguration.getHydroLinks()!=null)
@@ -98,15 +101,15 @@ public class Omirl extends Application {
 					{
 						oConfiguration.setFlattedHydroLinks(new ArrayList<HydroLinkConfig>());
 					}
-					
+
 					for (HydroLinkConfig oHLinkConfig : oConfiguration.getHydroLinks()) {
 						oConfiguration.getFlattedHydroLinks().add(oHLinkConfig);
-						
+
 						if (oHLinkConfig.getChildren()!=null)
 						{
 							for (HydroLinkConfig oChild1 : oHLinkConfig.getChildren()) {
 								oConfiguration.getFlattedHydroLinks().add(oChild1);
-								
+
 								if (oChild1.getChildren()!=null)
 								{
 									for (HydroLinkConfig oChild2 : oChild1.getChildren()) {
@@ -117,26 +120,81 @@ public class Omirl extends Application {
 						}
 					}
 				}
+
+				/*
+				//Flatted radar link
+				if (oConfiguration.getRadarLinks()!= null)
+				{
+					if (oConfiguration.getFlattedRadarLinks() == null)
+					{
+						oConfiguration.setFlattedRadarLinks(new ArrayList<RadarLinkConfig>());
+					}
+
+					for (RadarLinkConfig oRadarLinkConfig : oConfiguration.getRadarLinks()) {
+						oConfiguration.getFlattedRadarLinks().add(oRadarLinkConfig);
+
+						if (oRadarLinkConfig.getChildren()!=null)
+						{
+							for (RadarLinkConfig oChild1 : oRadarLinkConfig.getChildren()) {
+								oConfiguration.getFlattedRadarLinks().add(oChild1);
+
+								if (oChild1.getChildren()!=null)
+								{
+									for (RadarLinkConfig oChild2 : oChild1.getChildren()) {
+										oConfiguration.getFlattedRadarLinks().add(oChild2);
+									}	
+								}								
+							}	
+						}
+					}
+				}
 				
-				//TODO: Fare lo stesso per radar e satelliti
+				//Flatted Satellite link
+				if (oConfiguration.getSatelliteLinks()!= null)
+				{
+					if (oConfiguration.getFlattedSatelliteLinks() == null)
+					{
+						oConfiguration.setFlattedSatelliteLinks(new ArrayList<SatelliteLinkConfig>());
+					}
+
+					for (SatelliteLinkConfig oSatelliteLinkConfig : oConfiguration.getSatelliteLinks()) {
+						oConfiguration.getFlattedSatelliteLinks().add(oSatelliteLinkConfig);
+
+						if (oSatelliteLinkConfig.getChildren()!=null)
+						{
+							for (SatelliteLinkConfig oChild1 : oSatelliteLinkConfig.getChildren()) {
+								oConfiguration.getFlattedSatelliteLinks().add(oChild1);
+
+								if (oChild1.getChildren()!=null)
+								{
+									for (SatelliteLinkConfig oChild2 : oChild1.getChildren()) {
+										oConfiguration.getFlattedSatelliteLinks().add(oChild2);
+									}	
+								}								
+							}	
+						}
+					}
+				}
+				*/
+
 			}
-			
+
 			// Save the config
 			m_oServletConfig.getServletContext().setAttribute("Config", oConfiguration);
-			
+
 		} catch (Exception e) {
 			m_oServletConfig.getServletContext().setAttribute("Config", new OmirlNavigationConfig());
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Writes a test configuration file
 	 * @param sFilePath
 	 */
 	void WriteTestConfiguration(String sFilePath) {
-		
+
 		LegendStepConfig aoLegendStepConfig = new LegendStepConfig();
 		aoLegendStepConfig.setClr("#A000C8");
 		aoLegendStepConfig.setLmt(120);
@@ -146,17 +204,17 @@ public class Omirl extends Application {
 		ArrayList<LegendStepConfig> oList = new ArrayList<LegendStepConfig>();
 		oList.add(aoLegendStepConfig);
 		oList.add(aoLegendStepConfig2);
-		
+
 		MapThirdLevelLinkConfig oThird = new MapThirdLevelLinkConfig();
 		oThird.setDefault(true);
 		oThird.setDescription("Interpolata");
 		oThird.setLayerIDModifier("");
-		
+
 		MapThirdLevelLinkConfig oThird2 = new MapThirdLevelLinkConfig();
 		oThird2.setDefault(false);
 		oThird2.setDescription("Comuni");
 		oThird2.setLayerIDModifier("Com");
-		
+
 		MapLinkConfig oMapLink2 = new MapLinkConfig();
 		oMapLink2.getThirdLevels().add(oThird);
 		oMapLink2.getThirdLevels().add(oThird2);
@@ -167,7 +225,7 @@ public class Omirl extends Application {
 		oMapLink2.setLegendLink("img/mapLegend.jpg");
 		oMapLink2.setLink("img/15m.png");
 		oMapLink2.setLinkId(1);		
-		
+
 		MapLinkConfig oMapLink = new MapLinkConfig();
 		oMapLink.setDescription("Pioggia");
 		oMapLink.setHasThirdLevel(false);
@@ -177,7 +235,7 @@ public class Omirl extends Application {
 		oMapLink.setLink("img/rain_drops.png");
 		oMapLink.setLinkId(1);
 		oMapLink.getSecondLevels().add(oMapLink2);
-		
+
 		SensorLinkConfig oSensorLinkConfig = new SensorLinkConfig();
 		oSensorLinkConfig.setCode("Pluvio");
 		oSensorLinkConfig.setDescription("Precipitazione");
@@ -190,12 +248,12 @@ public class Omirl extends Application {
 		oSensorLinkConfig.setFilePath("c:\\temp\\omirl");
 		oSensorLinkConfig.setColumnName("rain05m");
 		oSensorLinkConfig.setLegends(oList);
-		
+
 		StaticLinkConfig oStatic = new StaticLinkConfig();
 		oStatic.setDescription("Comuni");
 		oStatic.setLayerID("Municipalities_ISTAT12010");
 		oStatic.setLayerWMS("http://geoserver.cimafoundation.org/geoserver/dew/wms");
-		
+
 		HydroLinkConfig oHydro = new HydroLinkConfig();
 		oHydro.setDescription("Modelli Idro Monitoraggio");
 		oHydro.setFilePath("c:\\temp\\omirl\\files");
@@ -203,7 +261,7 @@ public class Omirl extends Application {
 		oHydro.setLegendLink("img/sensors/sensorsLegend.jpg");
 		oHydro.setLink("img/sensors/hydroMonitoraggio.jpg");
 		oHydro.setLinkCode("idromonitoraggio");
-		
+
 		HydroLinkConfig oHydroChild = new HydroLinkConfig();  
 		oHydroChild.setDescription("Magra");
 		oHydroChild.setFilePath("c:\\temp\\omirl\\files");
@@ -211,7 +269,7 @@ public class Omirl extends Application {
 		oHydroChild.setLegendLink("img/sensors/sensorsLegend.jpg");
 		oHydroChild.setLink("img/sensors/magra.jpg");
 		oHydroChild.setLinkCode("magra");		
-		
+
 		HydroLinkConfig oHydro3 = new HydroLinkConfig();  
 		oHydro3.setDescription("Magra Q");
 		oHydro3.setFilePath("c:\\temp\\omirl\\files");
@@ -219,10 +277,10 @@ public class Omirl extends Application {
 		oHydro3.setLegendLink("img/sensors/sensorsLegend.jpg");
 		oHydro3.setLink("img/sensors/magra.jpg");
 		oHydro3.setLinkCode("magraq");			
-		
+
 		oHydroChild.getChildren().add(oHydro3);
 		oHydro.getChildren().add(oHydroChild);
-		
+
 		TableLinkConfig oDataTable1 = new TableLinkConfig();
 		oDataTable1.setActive(true);
 		oDataTable1.setCode("Stations");
@@ -230,7 +288,7 @@ public class Omirl extends Application {
 		oDataTable1.setImageLinkOff("img/tables/max.png");
 		oDataTable1.setLocation("/stationstable");
 		oDataTable1.setPrivate(false);
-		
+
 		TableLinkConfig oDataTable2 = new TableLinkConfig();
 		oDataTable2.setActive(false);
 		oDataTable2.setCode("Models");
@@ -238,7 +296,7 @@ public class Omirl extends Application {
 		oDataTable2.setImageLinkOff("img/tables/sintesi.png");
 		oDataTable2.setLocation("/modelstable");
 		oDataTable2.setPrivate(true);
-		
+
 		TableLinkConfig oTable1 = new TableLinkConfig();
 		oTable1.setActive(true);
 		oTable1.setCode("StationValues");
@@ -262,7 +320,7 @@ public class Omirl extends Application {
 		oTable3.setImageLinkOff("img/tables/sintesi.png");
 		oTable3.setLocation("/summarytable");
 		oTable3.setPrivate(true);
-		
+
 		GalleryLinkConfig oGallery1 = new GalleryLinkConfig();
 		oGallery1.setActive(false);
 		oGallery1.setCode("bo10ar");
@@ -290,7 +348,7 @@ public class Omirl extends Application {
 		oGallery1_2.setCodeParent(oGallery1.getCode());
 		oGallery1.getSublevelGalleryLinkConfig().add(oGallery1_1);
 		oGallery1.getSublevelGalleryLinkConfig().add(oGallery1_2);
-		
+
 		GalleryLinkConfig oGallery2 = new GalleryLinkConfig();
 		oGallery2.setActive(false);
 		oGallery2.setCode("bo10ac");
@@ -318,14 +376,14 @@ public class Omirl extends Application {
 		oGallery2_2.setCodeParent(oGallery2.getCode());
 		oGallery2.getSublevelGalleryLinkConfig().add(oGallery2_1);
 		oGallery2.getSublevelGalleryLinkConfig().add(oGallery2_2);
-		
-		
+
+
 		HydroModelLinkConfig oModelChild = new HydroModelLinkConfig();  
 		oModelChild.setDescription("Rainfarmbo10ar+06");
 		oModelChild.setIconLink("/img/tables/sintesi.png");
 		oModelChild.setLinkCode("Rainfarmbo10ar+06");
 		oModelChild.setIsDefault(true);
-		
+
 		OmirlNavigationConfig oConfig = new OmirlNavigationConfig();
 		oConfig.setFilesBasePath("C:/temp/omirl/files");
 		oConfig.getMapLinks().add(oMapLink);
@@ -340,39 +398,39 @@ public class Omirl extends Application {
 		oConfig.getGalleryLinks().add(oGallery1);
 		oConfig.getGalleryLinks().add(oGallery2);
 		oConfig.getHydroModelLinks().add(oModelChild);
-		
-		
+
+
 		try {
 			serializeObjectToXML(sFilePath, oConfig);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
+
 	}
-	
-    /**
-     * This method saves (serializes) any java bean object into xml file
-     */
-    public static void serializeObjectToXML(String xmlFileLocation, Object objectToSerialize) throws Exception {
-        FileOutputStream os = new FileOutputStream(xmlFileLocation);
-        XMLEncoder encoder = new XMLEncoder(os);
-        encoder.writeObject(objectToSerialize);
-        encoder.close();
-    }
- 
-    /**
-     * Reads Java Bean Object From XML File
-     */
-    public static Object deserializeXMLToObject(String xmlFileLocation) throws Exception {
-        FileInputStream os = new FileInputStream(xmlFileLocation);
-        XMLDecoder decoder = new XMLDecoder(os);
-        Object deSerializedObject = decoder.readObject();
-        decoder.close();
- 
-        return deSerializedObject;
-    }
-    
+
+	/**
+	 * This method saves (serializes) any java bean object into xml file
+	 */
+	public static void serializeObjectToXML(String xmlFileLocation, Object objectToSerialize) throws Exception {
+		FileOutputStream os = new FileOutputStream(xmlFileLocation);
+		XMLEncoder encoder = new XMLEncoder(os);
+		encoder.writeObject(objectToSerialize);
+		encoder.close();
+	}
+
+	/**
+	 * Reads Java Bean Object From XML File
+	 */
+	public static Object deserializeXMLToObject(String xmlFileLocation) throws Exception {
+		FileInputStream os = new FileInputStream(xmlFileLocation);
+		XMLDecoder decoder = new XMLDecoder(os);
+		Object deSerializedObject = decoder.readObject();
+		decoder.close();
+
+		return deSerializedObject;
+	}
+
 	/**
 	 * Gets a full path starting from the Base Path appending oDate
 	 * @param sBasePath
@@ -381,14 +439,14 @@ public class Omirl extends Application {
 	 */
 	public static String getSubPath(String sBasePath, Date oDate) {
 		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-		
+
 		String sFullDir = sBasePath + "/" + oDateFormat.format(oDate);
-		
+
 		File oFullPathDir = new File(sFullDir);
 		if (!oFullPathDir.exists()) {
 			return null;
 		}
-		
+
 		return sFullDir;
 	}
 
@@ -401,28 +459,28 @@ public class Omirl extends Application {
 	 */
 	public static String getSubPathWithoutCheck(String sBasePath, Date oDate) {
 		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-		
+
 		String sFullDir = sBasePath + "/" + oDateFormat.format(oDate);
-				
+
 		return sFullDir;
 	}
-	
+
 	public static File lastFileModified(String dir, Date oRefDate) {
 		File oDir = new File(dir);
-		
+
 		if (!oDir.exists()) {
 			System.out.println("OMIRL.lastFileModified: folder does not exists " + dir);
 			return null;
 		}
-		
+
 		File[] aoFiles = oDir.listFiles(new FileFilter() {			
 			public boolean accept(File file) {
 				return file.isFile();
 			}
 		});
-		
+
 		long liLastMod = Long.MIN_VALUE;
-		
+
 		File oChoise = null;
 		for (File file : aoFiles) {
 			if (file.lastModified() > liLastMod) {
@@ -430,7 +488,7 @@ public class Omirl extends Application {
 				liLastMod = file.lastModified();
 			}
 		}
-		
+
 		//se è presente una data allora prendiamo il file immediatamente più vicino in base ad ora e minuti
 		if (oRefDate != null)
 		{
@@ -442,21 +500,21 @@ public class Omirl extends Application {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			
+
 			long lDiff = Long.MAX_VALUE;
 			for (File file : aoFiles) {
 				Date oDateFile = new Date(file.lastModified());
 				try {
 					Date oLastDateFile = oFormat.parse(oFormat.format(oDateFile));
 					long lTicksLastDateFile = oLastDateFile.getTime();
-					
+
 					//se per fortuna la differenza è uguale a 0 allora abbiamo trovato il file candidato
 					if (lTicksLastDateFile - longRefDate == 0)
 					{
 						oChoise = file;
 						break;
 					}
-					
+
 					//se la differenza è maggiore di 0 allora è un file precedente alla data
 					if (longRefDate - lTicksLastDateFile  > 0)
 					{
@@ -467,42 +525,42 @@ public class Omirl extends Application {
 							lDiff = longRefDate - lTicksLastDateFile;
 						}
 					}
-					
+
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		return oChoise;
 	}
-	
+
 	public static File nearestHourSubFolder(String dir, Date oRefDate) {
-		
+
 		File oDir = new File(dir);
-		
+
 		if (!oDir.exists()) {
 			System.out.println("OMIRL.nearestHourSubFolder: folder does not exists " + dir);
 			return null;
 		}
-		
+
 		File[] aoFiles = oDir.listFiles(new FileFilter() {			
 			public boolean accept(File file) {
 				return !file.isFile();
 			}
 		});
-		
+
 		long liLastMod = Long.MIN_VALUE;
-		
+
 		File oChoise = null;
-		
+
 		for (File file : aoFiles) {
 			if (file.lastModified() > liLastMod) {
 				oChoise = file;
 				liLastMod = file.lastModified();
 			}
 		}
-		
+
 		//se è presente una data allora prendiamo il file immediatamente più vicino in base ad ora e minuti
 		if (oRefDate != null)
 		{
@@ -514,21 +572,21 @@ public class Omirl extends Application {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			
+
 			long lDiff = Long.MAX_VALUE;
 			for (File file : aoFiles) {
 				Date oDateFile = new Date(file.lastModified());
 				try {
 					Date oLastDateFile = oFormat.parse(oFormat.format(oDateFile));
 					long lTicksLastDateFile = oLastDateFile.getTime();
-					
+
 					//se per fortuna la differenza è uguale a 0 allora abbiamo trovato il file candidato
 					if (lTicksLastDateFile - longRefDate == 0)
 					{
 						oChoise = file;
 						break;
 					}
-					
+
 					//se la differenza è maggiore di 0 allora è un file precedente alla data
 					if (longRefDate - lTicksLastDateFile  > 0)
 					{
@@ -539,16 +597,16 @@ public class Omirl extends Application {
 							lDiff = longRefDate - lTicksLastDateFile;
 						}
 					}
-					
+
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		return oChoise;
 	}
-	
+
 	public static OmirlUser getUserFromSession(String sSessionId) {
 		if (sSessionId == null) {
 			return null;
@@ -556,23 +614,23 @@ public class Omirl extends Application {
 		if (sSessionId.isEmpty()) {
 			return null;
 		}		
-		
+
 		OpenSessionRepository oOpenSessionRepository = new OpenSessionRepository();
 		OpenSession oSession = oOpenSessionRepository.selectBySessionId(sSessionId);
-		
+
 		if(oSession != null) {
-			
+
 			// TODO: Check also session age ?!
-			
+
 			OmirlUserRepository oOmirlUserRepository = new OmirlUserRepository();
 			OmirlUser oUser = oOmirlUserRepository.Select(oSession.getIdUser(), OmirlUser.class);
-			
+
 			if (oUser != null) {
 				oOpenSessionRepository.updateBySessionId(sSessionId);
 				return oUser;
 			}
 		}
-		
+
 		return null;
 	}
 }
