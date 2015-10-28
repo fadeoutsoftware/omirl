@@ -281,6 +281,8 @@ and open the template in the editor.
   border: 0px solid;
   background-color: #7FBBDA; }
   .satellite-radar-buttons button:hover {
+    background-color: #6aa3d5; }
+  .satellite-radar-buttons button.selected {
     background-color: #428bca;
     color: #eee; }
 

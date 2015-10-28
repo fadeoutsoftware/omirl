@@ -37,6 +37,11 @@
         background-color: $color-satradar-button-bg;
         
         &:hover{
+            background-color: lighten($color-satradar-button-hover-bg, 10%);
+            //color: $color-satradar-button-hover-text;
+        }
+        
+        &.selected{
             background-color: $color-satradar-button-hover-bg;
             color: $color-satradar-button-hover-text;
         }

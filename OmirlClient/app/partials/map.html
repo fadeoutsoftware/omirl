@@ -188,15 +188,15 @@
                         <div class="map-accordion-content">
                             <div class="row">
                                 <sidebar-menu-legacy
-                                    id="menu-sensors"
+                                    id="{{m_oController.MENU_SENSORS}}"
                                     on-init="null"
                                     controller="m_oController"
                                     menu-legend-selected="m_oController.m_sSensorLegendSelected"
                                     menu-legend-hover="m_oController.m_sMapLegendHover"
                                     is-first-level="m_oController.m_bIsFirstLevel"
                                     on-menu-item-click="m_oController.sensorLinkClicked"
-                                    first-level-menu-items="m_oController.m_aoSensorsLinksForDirective"
-                                    second-level-menu-items="m_oController.m_aoSensorsLinksForDirective"
+                                    first-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_SENSORS][m_oController.MENU_LEVEL_1]"
+                                    second-level-menu-items="null"
                                     third-level-menu-items="null"
                                     third-level-menu-selected-item="null"
                                     third-level-menu-click="null"
@@ -245,15 +245,15 @@
                         <div class="map-accordion-content">
                             <div class="row">
                                 <sidebar-menu-legacy
-                                    id="menu-maps"
+                                    id="{{m_oController.MENU_MAPS}}"
                                     controller="m_oController"
                                     menu-legend-selected="m_oController.m_sMapLegendSelected"
                                     menu-legend-hover="m_oController.m_sMapLegendHover"
                                     is-first-level="m_oController.m_bIsFirstLevel"
                                     on-menu-item-click="m_oController.mapLinkClicked"
-                                    first-level-menu-items="m_oController.m_aoMapLinks"
-                                    second-level-menu-items="m_oController.m_aoMapLinks"
-                                    third-level-menu-items="m_oController.m_aoThirdLevels"
+                                    first-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_MAPS][m_oController.MENU_LEVEL_1]"
+                                    second-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_MAPS][m_oController.MENU_LEVEL_2]"
+                                    third-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_MAPS][m_oController.MENU_LEVEL_3]"
                                     third-level-menu-selected-item="m_oController.m_sMapThirdLevelSelected"
                                     third-level-menu-click="m_oController.mapThirdLevelClicked"
                                 >        
@@ -319,20 +319,21 @@
                         <div class="map-accordion-content">
                             <div class="row">
                                 <sidebar-menu-legacy
-                                    id="menu-hydro"
+                                    id="{{m_oController.MENU_HYDRO}}"
                                     on-init="null"
                                     controller="m_oController"
                                     menu-legend-selected="m_oController.m_sHydroLegendSelected"
                                     menu-legend-hover="m_oController.m_sHydroLegendHover"
                                     is-first-level="m_oController.m_bIsHydroFirstLevel"
                                     on-menu-item-click="m_oController.HydroLinkClicked"
-                                    first-level-menu-items="m_oController.getHydroLinks()"
-                                    second-level-menu-items="m_oController.getHydroLinks()"
-                                    third-level-menu-items="null"
+                                    first-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_HYDRO][m_oController.MENU_LEVEL_1]"
+                                    second-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_HYDRO][m_oController.MENU_LEVEL_2]"
+                                    third-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_HYDRO][m_oController.MENU_LEVEL_3]"
                                     third-level-menu-selected-item="null"
-                                    third-level-menu-click="null"
+                                    third-level-menu-click="m_oController.HydroLinkClicked"
                                 >        
                                 </sidebar-menu-legacy>
+                                
                                 
                                 <!--
                                 <div class="map-text-legend">
@@ -379,18 +380,18 @@
                         <div class="map-accordion-content">
                             <div class="row">
                                 <sidebar-menu-legacy
-                                    id="menu-radar"
+                                    id="{{m_oController.MENU_RADAR}}"
                                     on-init="null"
                                     controller="m_oController"
                                     menu-legend-selected="m_oController.m_sRadarLegendSelected"
                                     menu-legend-hover="m_oController.m_sRadarLegendHover"
                                     is-first-level="m_oController.m_bIsRadarFirstLevel"
                                     on-menu-item-click="m_oController.RadarLinkClicked"
-                                    first-level-menu-items="m_oController.getRadarLinks()"
-                                    second-level-menu-items="m_oController.getRadarLinks()"
-                                    third-level-menu-items="null"
+                                    first-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_RADAR][m_oController.MENU_LEVEL_1]"
+                                    second-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_RADAR][m_oController.MENU_LEVEL_2]"
+                                    third-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_RADAR][m_oController.MENU_LEVEL_3]"
                                     third-level-menu-selected-item="null"
-                                    third-level-menu-click="null"
+                                    third-level-menu-click="m_oController.RadarLinkClicked"
                                 >        
                                 </sidebar-menu-legacy>
                                 
@@ -433,20 +434,21 @@
                         <div class="map-accordion-content">
                             <div class="row">
                                 <sidebar-menu-legacy
-                                    id="menu-satellite"
+                                    id="{{m_oController.MENU_SATELLITE}}"
                                     on-init="null"
                                     controller="m_oController"
                                     menu-legend-selected="m_oController.m_sSatelliteLegendSelected"
                                     menu-legend-hover="m_oController.m_sSatelliteLegendHover"
                                     is-first-level="m_oController.m_bIsSatelliteFirstLevel"
                                     on-menu-item-click="m_oController.SatelliteLinkClicked"
-                                    first-level-menu-items="m_oController.getSatelliteLinks()"
-                                    second-level-menu-items="m_oController.getSatelliteLinks()"
-                                    third-level-menu-items="null"
+                                    first-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_SATELLITE][m_oController.MENU_LEVEL_1]"
+                                    second-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_SATELLITE][m_oController.MENU_LEVEL_2]"
+                                    third-level-menu-items="m_oController.m_aoMenuLinks[m_oController.MENU_SATELLITE][m_oController.MENU_LEVEL_3]"
                                     third-level-menu-selected-item="null"
-                                    third-level-menu-click="null"
+                                    third-level-menu-click="m_oController.SatelliteLinkClicked"
                                 >        
                                 </sidebar-menu-legacy>
+                                
                                 <!--
                                 <div class="map-text-legend">
                                     <div class="map-text-legend-selected">{{m_oController.m_sSatelliteLegendSelected | translate}}</div>

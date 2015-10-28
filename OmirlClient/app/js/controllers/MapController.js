@@ -7,7 +7,7 @@
 
 var MapController = (function () {
 
-    function MapController($scope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService, oHydroService, oMapLayerService, $translate) {
+    function MapController($scope, $rootScope, $window, layerService, mapService, oMapNavigatorService, oStationsService, oDialogService, oChartService, oConstantsService, $interval, $log, $location, oTableService, oHydroService, oMapLayerService, $translate) {
         // Initialize Members
         this.m_oScope = $scope;
         this.m_oWindow = $window;
@@ -34,17 +34,75 @@ var MapController = (function () {
         
         
         //**********************************************************************
-        //* Variable used with the menu directive
+        //* Variable and methods used with the menu directive
         //**********************************************************************
-        this.m_aoSensorsLinksForDirective = null;
+        this.MENU_SENSORS = "menu-sensors";
+        this.MENU_MAPS = "menu-maps";
+        this.MENU_HYDRO = "menu-hydro";
+        this.MENU_RADAR = "menu-radar";
+        this.MENU_SATELLITE = "menu-satellite";
+        this.MENU_LEVEL_1 = 0;
+        this.MENU_LEVEL_2 = 1;
+        this.MENU_LEVEL_3 = 2;
+        
+        //this.m_aoSensorsLinksForDirective = null;
+        this.m_aoMenuDirectives = {};
+        
+        this.m_aoMenuLinks = [];
+        this.m_aoMenuLinks[this.MENU_SENSORS] = [];
+            this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_1] = [];
+            this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_3] = [];
+            this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_MAPS] = [];
+            this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_1] = [];
+            this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_3] = [];
+            this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_HYDRO] = [];
+            this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_1] = [];
+            this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_3] = [];
+            this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_RADAR] = [];
+            this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_1] = [];
+            this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_3] = [];
+            this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_SATELLITE] = [];
+            this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_1] = [];
+            this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_3] = [];
+            this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_3] = [];
+        
+        // *** Methods ***
+        this.onPropertyChanged = function (name, newVal)
+        {
+            if(newVal)
+                $rootScope.$broadcast(name, {newValue : newVal});
+            else
+                $rootScope.$broadcast(name);
+        };
+        
         
         //**********************************************************************
         //* Variables listeners
         //**********************************************************************
-        // Listeners to watch "menu 1st level links"
+        // Listeners to watch "menu 1st level links"        
         $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getMapFirstLevels(); }, function(newValue){
             console.debug("[MapController] m_oController.m_oMapNavigatorService.getMapFirstLevels", newValue);
-            $scope.m_oController.m_aoMapLinks = $scope.m_oController.m_oMapNavigatorService.getMapFirstLevels();            
+            $scope.m_oController.m_aoMapLinks = newValue;
+            $scope.m_oController.m_aoMenuLinks[$scope.m_oController.MENU_MAPS][$scope.m_oController.MENU_LEVEL_1] = newValue;
+        });
+        
+        $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getHydroFirstLevels(); }, function(newValue){
+            console.debug("[MapController] m_oController.m_oMapNavigatorService.getHydroFirstLevels()", newValue);
+            $scope.m_oController.m_aoMenuLinks[$scope.m_oController.MENU_HYDRO][$scope.m_oController.MENU_LEVEL_1] = newValue;
+        });
+        
+        $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getRadarFirstLevels(); }, function(newValue){
+            console.debug("[MapController] m_oController.m_oMapNavigatorService.getRadarFirstLevels()", newValue);
+            $scope.m_oController.m_aoMenuLinks[$scope.m_oController.MENU_RADAR][$scope.m_oController.MENU_LEVEL_1] = newValue;
+        });
+        
+        $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getSatelliteFirstLevels(); }, function(newValue){
+            console.debug("[MapController] m_oController.m_oMapNavigatorService.getSatelliteFirstLevels()", newValue);
+            $scope.m_oController.m_aoMenuLinks[$scope.m_oController.MENU_SATELLITE][$scope.m_oController.MENU_LEVEL_1] = newValue;
         });
 
         //**********************************************************************
@@ -301,7 +359,8 @@ var MapController = (function () {
             }
             oControllerVar.m_bStationsReceived = true;
             
-            oControllerVar.m_aoSensorsLinksForDirective = oControllerVar.m_aoSensorsLinks;
+            //oControllerVar.m_aoSensorsLinksForDirective = oControllerVar.m_aoSensorsLinks;
+            oControllerVar.m_aoMenuLinks[oControllerVar.MENU_SENSORS][oControllerVar.MENU_LEVEL_1] = oControllerVar.m_aoSensorsLinks;
             
             // Ok we can init the map
             oControllerVar.FireInitEvent(oControllerVar);
@@ -758,7 +817,7 @@ var MapController = (function () {
                 
                 // Second Level Icons
                 oControllerVar.m_aoMapLinks = data;
-                //oControllerVar.m_oScope.$apply();
+                oControllerVar.m_aoMenuLinks[oControllerVar.MENU_MAPS][oControllerVar.MENU_LEVEL_2] = oControllerVar.m_aoMapLinks;
 
                 // Is there any Map selected?
                 if (oControllerVar.m_oSelectedMapLink != null) {
@@ -867,7 +926,10 @@ var MapController = (function () {
      */
     MapController.prototype.setSelectedMapLinkOnScreen = function (oControllerVar, oMapLink) {
 
-        //TODO: Qui Pulire Direttiva Radar e Satellite
+        // Qui Pulire Direttiva Radar e Satellite
+        oControllerVar.m_aoMenuDirectives[oControllerVar.MENU_RADAR].resetDirectiveSelections();
+        oControllerVar.m_aoMenuDirectives[oControllerVar.MENU_SATELLITE].resetDirectiveSelections();
+        
         oMapLink.selected = true;
         // Layer Click
         oControllerVar.m_sMapLegendIconPath = oMapLink.link;
@@ -891,9 +953,12 @@ var MapController = (function () {
      * @param oControllerVar
      * @param oMapLinkCopy
      */
-    MapController.prototype.gotMapThirdLevelFromServer = function(data,status, oControllerVar, oMapLinkCopy) {
+    MapController.prototype.gotMapThirdLevelFromServer = function(data,status, oControllerVar, oMapLinkCopy)
+    {
         oControllerVar.m_aoThirdLevels = data;
         oControllerVar.m_bShowThirdLevel = true;
+        oControllerVar.m_aoMenuLinks[oControllerVar.MENU_MAPS][oControllerVar.MENU_LEVEL_3] = data;
+        
         // For each level
         var iLevels;
         for (iLevels=0; iLevels < oControllerVar.m_aoThirdLevels.length; iLevels++) {
@@ -1001,7 +1066,10 @@ var MapController = (function () {
         }).error(function (data, status) {
             oController.setSelectedMapLinkOnScreen(oController,oController.m_oSelectedMapLink);
             oController.m_oTranslateService('ERRORCONTACTSERVER').then(function(error){
-                alert(error);
+                vex.dialog.alert({
+                        message: error,
+                    });
+                //alert(error);
             });
         });
     }
@@ -1093,8 +1161,12 @@ var MapController = (function () {
             }
         }).error(function (data, status) {
             //oController.setSelectedMapLinkOnScreen(oController,oController.m_oSelectedMapLink);
-            oController.m_oTranslateService('ERRORCONTACTSERVER').then(function(error){
-                alert(error);
+            oController.m_oTranslateService('ERRORCONTACTSERVER').then(function(error)
+            {
+                vex.dialog.alert({
+                        message: error,
+                    });
+                //alert(error);
             });
         });
     }
@@ -1180,6 +1252,9 @@ var MapController = (function () {
             oSensorLink.isActive = true;
 
             //TODO: QUI PULIRE LA DIRETTIVA IDRO
+            if( oController.m_aoMenuDirectives[oController.MENU_HYDRO] )
+                oController.m_aoMenuDirectives[oController.MENU_HYDRO].resetDirectiveSelections();
+            
             oController.hideSectionLayer();
 
             // Set
@@ -1196,6 +1271,11 @@ var MapController = (function () {
         }
         else {
             oController.hideSensorLayer();
+        }
+        
+        if( oController.m_aoMenuDirectives[oController.MENU_SENSORS] )
+        {
+            oController.m_aoMenuDirectives[oController.MENU_SENSORS].updateByController(0, oSensorLink);
         }
     }
 
@@ -1913,8 +1993,11 @@ var MapController = (function () {
      */
     MapController.prototype.getHydroLinks = function()
     {
-        if (this.m_bIsHydroFirstLevel) {
+        debugger;
+        if (this.m_bIsHydroFirstLevel)
+        {
             this.m_aoHydroLinks = this.m_oMapNavigatorService.getHydroFirstLevels();
+            this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_1] = this.m_aoHydroLinks;
         }
 
         return this.m_aoHydroLinks;
@@ -2000,6 +2083,7 @@ var MapController = (function () {
                     
                     // Second Level Icons
                     oControllerVar.m_aoHydroLinks = data;
+                    oController.m_aoMenuLinks[oController.MENU_HYDRO][oController.MENU_LEVEL_2] = data;
 
 
                     // Is there any Map selected?
@@ -2048,7 +2132,19 @@ var MapController = (function () {
                     oController.m_oMapNavigatorService.getHydroThirdLevel(oHydroLink.linkCode).success(function(data,status) {
 
                         // Third Level Icons
+                        //******************************************************************
+                        // Add the flag to indicate the menu link item level and 
+                        // if the menu link has a sub-level.
+                        // or not. These parametere should come from server but, at the
+                        // moment, are initialized here
+                        for(var key in data)
+                        {
+                            data[key].hasSubLevel = false;
+                            data[key].myLevel = 3;
+                        }
+                        //******************************************************************
                         oControllerVar.m_aoHydroLinks = data;
+                        oController.m_aoMenuLinks[oController.MENU_HYDRO][oController.MENU_LEVEL_3] = data;
 
 
                         // Is there any Map selected?
@@ -2136,6 +2232,11 @@ var MapController = (function () {
         if (!bIsSelected)
         {
             //TODO: QUI PULIRE LA DIRETTIVA STAZIONI
+            if( this.m_aoMenuDirectives[this.MENU_SENSORS] )
+            {
+                this.m_aoMenuDirectives[this.MENU_SENSORS].resetDirectiveSelections();
+            }
+            
             this.hideSensorLayer();
             this.setSelectedHydroLinkOnScreen(this,oHydroLink);
             this.showSectionsLayer(oHydroLink);
@@ -2581,6 +2682,7 @@ var MapController = (function () {
                     
                     // Second Level Icons
                     oControllerVar.m_aoRadarLinks = data;
+                    oControllerVar.m_aoMenuLinks[oControllerVar.MENU_RADAR][oControllerVar.MENU_LEVEL_2] = data;
 
 
                     // Is there any Map selected?
@@ -2642,6 +2744,7 @@ var MapController = (function () {
                         //
                         // Third Level Icons
                         oControllerVar.m_aoRadarLinks = data;
+                        oControllerVar.m_aoMenuLinks[oControllerVar.MENU_RADAR][oControllerVar.MENU_LEVEL_3] = data;
 
 
                         // Is there any Map selected?
@@ -2724,6 +2827,12 @@ var MapController = (function () {
         if (!bIsSelected)
         {
             // TODO: Qui pulire direttiva Mappe e Satelliti
+            if( this.m_aoMenuDirectives[this.MENU_MAPS] && this.m_aoMenuDirectives[this.MENU_SATELLITE])
+            {
+                this.m_aoMenuDirectives[this.MENU_MAPS].resetDirectiveSelections();
+                this.m_aoMenuDirectives[this.MENU_SATELLITE].resetDirectiveSelections();
+            }
+            
             this.setSelectedRadarLinkOnScreen(this,oRadarLink);
             this.selectedRadarSatDynamicLayer(oRadarLink, "none");
             //alert('attivo ' + oRadarLink.description);
@@ -2867,6 +2976,7 @@ var MapController = (function () {
                     
                     // Second Level Icons
                     oControllerVar.m_aoSatelliteLinks = data;
+                    oControllerVar.m_aoMenuLinks[oControllerVar.MENU_SATELLITE][oControllerVar.MENU_LEVEL_2] = data;
 
 
                     // Is there any Map selected?
@@ -2929,6 +3039,7 @@ var MapController = (function () {
                         
                         // Third Level Icons
                         oControllerVar.m_aoSatelliteLinks = data;
+                        oControllerVar.m_aoMenuLinks[oControllerVar.MENU_SATELLITE][oControllerVar.MENU_LEVEL_3] = data;
 
 
                         // Is there any Map selected?
@@ -3015,6 +3126,13 @@ var MapController = (function () {
         if (!bIsSelected)
         {
             // TODO: Qui pulire direttiva Mappe e Radar
+            if(this.m_aoMenuDirectives[this.MENU_MAPS] && this.m_aoMenuDirectives[this.MENU_RADAR])
+            {
+                this.m_aoMenuDirectives[this.MENU_MAPS].resetDirectiveSelections();
+                this.m_aoMenuDirectives[this.MENU_RADAR].resetDirectiveSelections();
+            }
+            
+            
             this.setSelectedSatelliteLinkOnScreen(this,oSatelliteLink);
             this.selectedRadarSatDynamicLayer(oSatelliteLink, "none");
             //alert('attivo ' + oSatelliteLink.description);
@@ -3124,6 +3242,7 @@ var MapController = (function () {
 
     MapController.$inject = [
         '$scope',
+        '$rootScope',
         '$window',
         'az.services.layersService',
         'az.services.mapService',

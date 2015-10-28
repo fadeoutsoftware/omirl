@@ -46,7 +46,10 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             .error(function(data,status)
             {
                 oServiceVar.m_oTranslate('ERRORCONTACTSERVER').then(function (error){
-                    alert(error);
+                    vex.dialog.alert({
+                        message: error,
+                    });
+                    //alert(error);
                 })
 
             });
@@ -87,7 +90,9 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
 
 
 
-        this.fetchHydroFirstLevels = function() {
+        this.fetchHydroFirstLevels = function() 
+        {
+            debugger;
             var oControllerVar = this;
 
             oControllerVar.m_aoHydroFirstLevels = [];
