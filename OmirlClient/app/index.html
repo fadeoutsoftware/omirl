@@ -105,6 +105,7 @@
     <script src="js/directives/ElevateZoomDirective.js"></script>
     
     <!-- Omirl Services -->
+    <script src="js/services/userService.js"></script>
     <script src="js/services/translateService.js"></script>
     <script src="js/services/dialog-service.js"></script>
     <script src="js/services/ConstantsService.js"></script>
@@ -118,6 +119,7 @@
     <script src="js/services/MapLayerService.js"></script>
     <script src="js/services/GalleryService.js"></script>
     <!-- Omirl Controllers -->
+    <script src="js/controllers/UsersController.js"></script>
     <script src="js/controllers/TemplateController.js"></script>
     <script src="js/controllers/MapController.js"></script>
     <script src="js/controllers/TablesController.js"></script>
@@ -181,6 +183,7 @@
         <li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate }}</a></li>
         <li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{ 'INDEX_MODELLI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/credits')">{{ 'INDEX_CREDITI' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/users')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_UTENTI' | translate}}</a></li>
         <li class="menu-languages-container">
             <img ng-click="m_oController.changeLanguage('it')" src="img/flag_italy.png" title="{{ 'INDEX_LANGIT' | translate}}">
             </img>

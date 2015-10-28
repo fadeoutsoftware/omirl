@@ -810,8 +810,8 @@ var MapController = (function () {
                 // moment, are initialized here
                 for(var key in data)
                 {
-                    data[key].hasSubLevel = false;
-                    data[key].myLevel = 1;
+                    data[key].hasSubLevel = true;
+                    data[key].myLevel = oController.MENU_LEVEL_2;
                 }
                 //******************************************************************
                 
@@ -955,6 +955,18 @@ var MapController = (function () {
      */
     MapController.prototype.gotMapThirdLevelFromServer = function(data,status, oControllerVar, oMapLinkCopy)
     {
+        //******************************************************************
+        // Add the flag to indicate the menu link item level and
+        // if the menu link has a sub-level.
+        // or not. These parametere should come from server but, at the
+        // moment, are initialized here
+        for(var key in data)
+        {
+            data[key].hasSubLevel = false;
+            data[key].myLevel = oControllerVar.MENU_LEVEL_3;
+        }
+        //******************************************************************
+
         oControllerVar.m_aoThirdLevels = data;
         oControllerVar.m_bShowThirdLevel = true;
         oControllerVar.m_aoMenuLinks[oControllerVar.MENU_MAPS][oControllerVar.MENU_LEVEL_3] = data;
@@ -2310,7 +2322,7 @@ var MapController = (function () {
                     //SET DATE INFO
                     if (angular.isDefined(data[0].updateDateTime) && data[0].updateDateTime != null) {
                         var oDate = new Date(data[0].updateDateTime + " UTC");
-                        oControllerVar.m_oTranslateService('MAP_STATIONDATEINFO', {data: oDate.toString()}).then(function (msg) {
+                        oControllerVar.m_oTranslateService('MAP_SECTIONDATEINFO', {data: oDate.toString()}).then(function (msg) {
                             oControllerVar.m_oSelectedSensorDateTimeInfo = msg;
                             oControllerVar.m_oSelectedSensorDateTimeIcon = oSectionLink.imageLinkOff;
                         });
@@ -2841,7 +2853,7 @@ var MapController = (function () {
         {
 
             // Remove from the map
-
+            oRadarLink.selected = true;
             if (this.m_oLayerService.getDynamicLayer() != null) {
                 this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
                 this.m_oLayerService.setDynamicLayer(null);
@@ -3141,7 +3153,7 @@ var MapController = (function () {
         {
 
             // Remove from the map
-
+            oSatelliteLink.selected = false;
             if (this.m_oLayerService.getDynamicLayer() != null) {
                 this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
                 this.m_oLayerService.setDynamicLayer(null);

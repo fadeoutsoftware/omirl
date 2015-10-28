@@ -3,7 +3,7 @@
  */
 
 var TemplateController = (function() {
-    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService, $translate, $interpolate, oTranslateService) {
+    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService, $translate, $interpolate, oTranslateService, $interval) {
         this.m_oScope = $scope;
         this.m_oLocation  = $location;
         this.m_oConstantsService = oConstantsService;
@@ -33,6 +33,35 @@ var TemplateController = (function() {
         $scope.$on('$locationChangeStart', function(event) {
             resizeMap();
         });
+
+        //------------------Session Check - Begin----------------------------------
+        var sessionCheck;
+        sessionCheck = $interval(function() {
+            if ($scope.m_oController.m_oConstantsService.isUserLogged())
+                {
+                //check session
+                $scope.m_oController.m_oAuthService.sessionCheck().success(function(data){
+                    if (data == null || data == '') {
+                        //session timeout
+                        $scope.m_oController.m_oConstantsService.setUser(null);
+                        $scope.m_oController.m_bLoading = false;
+                        $scope.m_oController.m_oLocation.path("/");
+                        $scope.m_oController.credentials.userId = "";
+                        $scope.m_oController.credentials.userPassword = "";
+
+                        $scope.m_oController.m_bLoginError = false;
+
+                        $scope.m_oController.ReservedAreaText = this.ReservedAreaTextConstant;
+                        $scope.m_oController.m_sLoginMessage = this.m_sLoginMessageConstant;
+                        $scope.m_oController.m_bShowLogout = false;
+                        $scope.m_oController.m_bShowLogin = true;
+                        OmirlMoveTo('#top');
+                    }
+
+                });
+            }
+        }, 120000);
+        //------------------Session Check - End----------------------------------
 
     }
 
@@ -183,7 +212,8 @@ var TemplateController = (function() {
         'TableService',
         '$translate',
         '$interpolate',
-        'TranslateService'
+        'TranslateService',
+        '$interval'
     ];
 
     return TemplateController;

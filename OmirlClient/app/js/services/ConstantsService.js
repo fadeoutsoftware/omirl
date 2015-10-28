@@ -164,6 +164,17 @@ angular.module('omirl.ConstantsService', []).
             return this.m_bUserLogged;
         }
 
+        this.isUserAdministrator = function() {
+            var ret = false;
+            if (this.isUserLogged()) {
+                if (this.m_oUser != null) {
+                    if (this.m_oUser.role == 1)
+                        ret = true;
+                }
+            }
+            return ret;
+        }
+
         this.setUser = function(oUser) {
 
             this.m_bUserLogged = false;

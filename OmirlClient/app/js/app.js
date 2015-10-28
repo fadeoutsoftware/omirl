@@ -44,7 +44,8 @@ var omirlApp = angular.module('omirl', [
     'angular-flexslider',
     'pascalprecht.translate',
     'omirl.translateService',
-    'omirl.elevateZoomDirective'
+    'omirl.elevateZoomDirective',
+    'omirl.userService'
 ]);
 
 omirlApp.config(['$httpProvider', '$translateProvider', function($httpProvider, $translateProvider) {
@@ -74,6 +75,7 @@ omirlApp.config(function($routeProvider) {
         $routeProvider.when('/summarytable', {templateUrl: 'partials/summarytable.html', controller: 'SummaryTableController'});
         $routeProvider.when('/modelstable', {templateUrl: 'partials/modelstable.html', controller: 'ModelsTableController'});
         $routeProvider.when('/modelsgallery', {templateUrl: 'partials/modelsgallery.html', controller: 'ModelsGalleryController'});
+        $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'UsersController'});
 
         $routeProvider.otherwise({redirectTo: '/map'});
     }

@@ -11,6 +11,7 @@
     "INDEX_SATRADAR": "Satellite e Radar fr",
     "INDEX_MODELLI": "Modelli Meteo Marini fr",
     "INDEX_CREDITI": "Crediti fr",
+    "INDEX_UTENTI": "Utenti fr",
     "INDEX_BENVENUTO": "Benvenuto {{nome}} fr",
     "INDEX_AREARISERVATA": "Area Riservata fr",
     "INDEX_CREDENZIALI": "Inserire le credenziali fr",
@@ -60,6 +61,9 @@
     "MAP_TIMEPAST":"Torna in tempo reale fr",
     "MAP_TIMENOW":"In tempo reale fr",
     "MAP_DATEINFO": "Aggiornato il {{data}} Ore locali fr",
+    "MAP_SECTIONDATEINFO":"Modelli aggiornati il {{data}} Ore locali fr",
+    "MAP_STATIONDATEINFO":"Sensori aggiornati il {{data}} Ore locali fr",
+    "MAP_LAYERDATEINFO":"Mappa aggiornata il {{data}} Ore locali fr",
     "MAXTABLE_TITOLO":"Tabella Massimi Puntuali fr",
     "MAXTABLE_SUBTITOLO":"Dati di precipitazione - Ore locali fr",
     "MAXTABLE_ZONEALL":"Zone Allerta fr",
@@ -291,5 +295,9 @@
     "TLC_MOLOCHTPREC3NITALY" : "T Prec 3 fr",
     "MODELGALLERY_NOIMAGE" : "Selezionare nel menù a sinistra un modello ed una variabile fr",
     "MODELGALLERY_NODATA" : "Nessuna immagine disponibile fr",
-    "MODELGALLERY_LOADING" : "Loading"
+    "MODELGALLERY_LOADING" : "Loading",
+    "USER_TITLE": "Gestione Utenti fr",
+    "USER_ADDTOOLTIP": "Aggiungi Utente fr",
+    "USER_SAVETOOLTIP": "Salva Utente fr",
+    "USER_DELETETOOLTIP": "Cancella Utente fr"
 }

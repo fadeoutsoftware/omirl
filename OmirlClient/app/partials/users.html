@@ -1,0 +1,39 @@
+<div style="text-align: center;" class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">{{'USER_TITLE' | translate}}</div>
+        <div class="panel-body">
+            <div class="row">
+                <table class="table"> <!--class="table table-bordered table-hover table-striped"-->
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Password</th>
+                        <th>Email</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="oTableRow in m_oController.getUsers()">
+                        <td>
+                            <div class="col-xs-1 col-md-1 button-icon" tooltip-popup-delay="500" tooltip="{{'USER_DELETETOOLTIP' | translate}}" >
+                                <i class="fa fa-times fa-2x" ng-click="m_oController.deleteUser(oTableRow.idUser)"></i>
+                            </div>
+                        </td>
+                        <td class="table-user-td-left-align"><input type="text" class="form-control" ng-model="oTableRow.name" ng-change="m_oController.m_oUserService.setAsModified()"></td>
+                        <td class="table-user-td-left-align"><input type="password" class="form-control" ng-model="oTableRow.password" ng-change="m_oController.m_oUserService.setAsModified()"></td>
+                        <td class="table-user-td-left-align"><input type="text" class="form-control" ng-model="oTableRow.userId" ng-change="m_oController.m_oUserService.setAsModified()"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-xs-1 col-md-1 col-lg-1 button-icon" tooltip-popup-delay="500" tooltip="{{'USER_ADDTOOLTIP' | translate}}">
+                        <i class="fa fa-user-plus fa-3x" ng-click="m_oController.addUser()"></i>
+                    </div>
+                    <div class="col-xs-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-1 col-md-1 col-lg-1 button-icon" tooltip-popup-delay="500" tooltip="{{'USER_SAVETOOLTIP' | translate}}">
+                        <i class="fa fa-save fa-3x" ng-click="m_oController.saveUser()"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

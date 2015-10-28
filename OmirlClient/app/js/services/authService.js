@@ -25,5 +25,9 @@ angular.module('omirl.authService', ['omirl.ConstantsService']).
         this.saveMapUserSettings = function(oSettings) {
             return this.m_oHttp.post(this.APIURL + '/auth/mapsettings',oSettings);
         }
+
+        this.sessionCheck = function() {
+            return this.m_oHttp.get(this.APIURL + '/auth/sessionCheck');
+        }
     }]);
 
