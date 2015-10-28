@@ -496,8 +496,10 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 
                 // reset 3rd level and make it not visible
                 $scope.resetThirdLevel(false);
-                
-                $scope.menuLevelToUpdate = $scope.MENU_LEVEL_2;
+
+                if (oMenuLink.hasSubLevel) {
+                    $scope.menuLevelToUpdate = $scope.MENU_LEVEL_2;
+                }
                 
                 // Execute the external 'on click' method 
                 if( typeof $scope.onMenutItemClick == "function")

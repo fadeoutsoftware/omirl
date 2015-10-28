@@ -106,7 +106,7 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
                 for(var key in data)
                 {
                     data[key].hasSubLevel = data[key].hasChilds;
-                    data[key].myLevel = 1;
+                    data[key].myLevel = 0;
                 }
                 //******************************************************************
                 
@@ -152,7 +152,7 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
                 for(var key in data)
                 {
                     data[key].hasSubLevel = data[key].hasChilds;
-                    data[key].myLevel = 1;
+                    data[key].myLevel = 0;
                 }
                 //******************************************************************
                 
@@ -191,7 +191,7 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
                 for(var key in data)
                 {
                     data[key].hasSubLevel = data[key].hasChilds;
-                    data[key].myLevel = 1;
+                    data[key].myLevel = 0;
                 }
                 //******************************************************************
                 

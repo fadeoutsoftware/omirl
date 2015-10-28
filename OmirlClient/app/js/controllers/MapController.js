@@ -1061,7 +1061,7 @@ var MapController = (function () {
                     oController.activeDirectiveScope.callbackDeselectLastClickedMenuItem(oMapLink.myLevel);
                     
                     vex.dialog.alert({
-                        message: msg,
+                        message: msg
                     });
                     //alert(msg);
                 });
@@ -1168,7 +1168,12 @@ var MapController = (function () {
                 }
 
                 oController.m_oTranslateService('MAP_NOT_AVAILABLE').then(function(msg){
-                    alert(msg);
+                    oController.activeDirectiveScope.callbackDeselectLastClickedMenuItem(oMapLink.myLevel);
+
+                    vex.dialog.alert({
+                        message: msg
+                    });
+
                 });
             }
         }).error(function (data, status) {
