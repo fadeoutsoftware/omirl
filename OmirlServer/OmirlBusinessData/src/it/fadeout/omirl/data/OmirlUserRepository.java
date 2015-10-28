@@ -1,5 +1,7 @@
 package it.fadeout.omirl.data;
 
+import java.util.ArrayList;
+
 import it.fadeout.omirl.business.OmirlUser;
 
 import org.hibernate.Query;
@@ -63,5 +65,31 @@ public class OmirlUserRepository  extends Repository<OmirlUser> {
 		}
 		return bLogged;		
 	}
+	
+	public ArrayList<OmirlUser> selectUsersNotAdmin() {
+		
+		Session oSession = null;
+		ArrayList<OmirlUser> oUsers = null;
+		try {
+			oSession = HibernateUtils.getSessionFactory().openSession();
+			Query oQuery = oSession.createQuery("from OmirlUser where role = 2 order by name");
+			if (oQuery.list().size() > 0)
+				oUsers =  (ArrayList<OmirlUser>) oQuery.list();
 
+		}
+		catch(Throwable oEx) {
+			System.err.println(oEx.toString());
+			oEx.printStackTrace();
+		}
+		finally {
+			if (oSession!=null) {
+				oSession.flush();
+				oSession.clear();
+				oSession.close();
+			}
+
+		}
+		return oUsers;		
+	}
+	
 }
