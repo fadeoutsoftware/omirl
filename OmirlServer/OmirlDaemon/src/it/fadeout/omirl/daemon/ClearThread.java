@@ -686,8 +686,6 @@ public class ClearThread extends Thread {
 							continue;
 						}
 
-						System.out.println("Clear Thread - gallery: Deleted folder " + oDayFolder.getAbsolutePath());
-
 						//						// Delete otherwise!
 						//						for (File oSubFolder : aoSubFolders) {
 						//							FileUtils.deleteQuietly(oSubFolder);
@@ -695,6 +693,8 @@ public class ClearThread extends Thread {
 
 						// Delete the day folder
 						FileUtils.deleteQuietly(oDayFolder);
+						
+						System.out.println("Clear Thread - gallery: Deleted folder " + oDayFolder.getAbsolutePath());
 					}
 
 
@@ -730,6 +730,9 @@ public class ClearThread extends Thread {
 
 			// For each type
 			for (File oTypeFolder : aoTablesTypes) {
+				
+				// Special Type: jump
+				if (oTypeFolder.getName().equals("list")) continue;
 
 				asYears = oTypeFolder.list();				
 				aoYears = new ArrayList<File> ();
