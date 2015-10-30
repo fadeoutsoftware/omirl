@@ -67,6 +67,7 @@ omirlApp.config(function($routeProvider) {
         $routeProvider.when('/map', {templateUrl: 'partials/map.html', controller: 'MapController'});
         $routeProvider.when('/tables', {templateUrl: 'partials/tables.html', controller: 'TablesController'});
         $routeProvider.when('/animations', {templateUrl: 'partials/animations.html', controller: 'AnimationsController'});
+        $routeProvider.when('/animationssat', {templateUrl: 'partials/animationssat.html', controller: 'AnimationsSatController'});
         $routeProvider.when('/credits', {templateUrl: 'partials/credits.html', controller: 'CreditsController'});
         $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'SettingsController'});
         $routeProvider.when('/stationstable', {templateUrl: 'partials/stationstable.html', controller: 'StationsTableController'});
@@ -76,6 +77,7 @@ omirlApp.config(function($routeProvider) {
         $routeProvider.when('/modelstable', {templateUrl: 'partials/modelstable.html', controller: 'ModelsTableController'});
         $routeProvider.when('/modelsgallery', {templateUrl: 'partials/modelsgallery.html', controller: 'ModelsGalleryController'});
         $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'UsersController'});
+
 
         $routeProvider.otherwise({redirectTo: '/map'});
     }

@@ -302,5 +302,6 @@
     "USER_ADDTOOLTIP": "Aggiungi Utente fr",
     "USER_SAVETOOLTIP": "Salva Utente fr",
     "USER_DELETETOOLTIP": "Cancella Utente fr",
-    "SECTIONCHART_NODATA": "Impossibile caricare il grafico della sezione {{value}} fr"
+    "SECTIONCHART_NODATA": "Impossibile caricare il grafico della sezione {{value}} fr",
+    "RADARSATMENU_TITOLO": "Satellite e Radar fr"
 }

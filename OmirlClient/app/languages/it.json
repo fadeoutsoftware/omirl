@@ -215,8 +215,8 @@
     "OMIRLCONFIG_MAPTEMPERATURAMAX": "Temperatura - Massima",
     "OMIRLCONFIG_MAPTEMPERATURATHETAMEDIA": "Temperatura - Theta da Media",
     "OMIRLCONFIG_SENSORPLUVIO": "Precipitazione",
-    "OMIRLCONFIG_SENSORTERMO": "Termometri",
-    "OMIRLCONFIG_SENSORIDRO": "Idrometri",
+    "OMIRLCONFIG_SENSORTERMO": "Temperatura",
+    "OMIRLCONFIG_SENSORIDRO": "Livelli Idrometrici",
     "OMIRLCONFIG_SENSORWIND": "Vento",
     "OMIRLCONFIG_SENSORIGRO": "Umidita' dell'aria",
     "OMIRLCONFIG_SENSORRADIO": "Radiazione Solare",
@@ -303,5 +303,6 @@
     "USER_ADDTOOLTIP": "Aggiungi Utente",
     "USER_SAVETOOLTIP": "Salva Utente",
     "USER_DELETETOOLTIP": "Cancella Utente",
-    "SECTIONCHART_NODATA": "Impossibile caricare il grafico della sezione {{value}}"
+    "SECTIONCHART_NODATA": "Impossibile caricare il grafico della sezione {{value}}",
+    "RADARSATMENU_TITOLO": "Satellite e Radar"
 }

@@ -2,8 +2,8 @@
  * Created by p.campanella on 14/05/2014.
  */
 
-var AnimationsController = (function() {
-    function AnimationsController($scope, $translate, $location, oConstantService, $interval) {
+var AnimationsSatController = (function() {
+    function AnimationsSatController($scope, $translate, $location, oConstantService, $interval) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oTranslateService = $translate;
@@ -35,29 +35,30 @@ var AnimationsController = (function() {
 
     }
 
-    AnimationsController.prototype.linkClicked = function (sPath) {
+    AnimationsSatController.prototype.linkClicked = function (sPath) {
         this.m_oLocation.path(sPath);
     }
 
-    AnimationsController.prototype.onTimeSet = function (newDate, oldDate) {
+    AnimationsSatController.prototype.onTimeSet = function (newDate, oldDate) {
 
         this.m_oConstantsService.setReferenceDate(newDate);
         this.m_bNowMode = false;
     };
 
-    AnimationsController.prototype.setNow = function () {
+    AnimationsSatController.prototype.setNow = function () {
 
         this.m_oConstantsService.setReferenceDate("");
         this.m_bNowMode = true;
         this.m_oReferenceDate = new Date();
     };
 
-    AnimationsController.$inject = [
+    AnimationsSatController.$inject = [
         '$scope',
         '$translate',
         '$location',
         'ConstantsService',
         '$interval'
     ];
-    return AnimationsController;
+
+    return AnimationsSatController;
 }) ();

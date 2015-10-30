@@ -2076,7 +2076,7 @@ var MapController = (function () {
             oEntry.selected = false;
         });
 
-        if (oHydroLink.myLevel==1) {
+        if (oHydroLink.myLevel==0) {
             oController.m_bIsHydroFirstLevel = true;
         }
         // We are in the first level?
