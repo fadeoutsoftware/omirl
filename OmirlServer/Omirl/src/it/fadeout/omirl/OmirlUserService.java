@@ -30,7 +30,7 @@ public class OmirlUserService {
 		try {
 			boolean bShowPrivate = false;
 			if (Omirl.getUserFromSession(sSessionId) != null) {
-				aoRet = oRepo.selectUsersNotAdmin();
+				aoRet = (ArrayList<OmirlUser>) oRepo.SelectAll(OmirlUser.class);
 			}
 
 		}
