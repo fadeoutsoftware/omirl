@@ -86,6 +86,7 @@ public class ClearThread extends Thread {
 				catch(Exception oEx) {
 					System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
 					oEx.printStackTrace();
+					continue;
 				}
 
 				String [] asMonths = oYearFolder.list();				
@@ -107,7 +108,8 @@ public class ClearThread extends Thread {
 					}
 					catch(Exception oEx) {
 						System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
-						oEx.printStackTrace();					
+						oEx.printStackTrace();	
+						continue;
 					}				
 
 					String [] asDays = oMonthFolder.list();				
@@ -129,7 +131,8 @@ public class ClearThread extends Thread {
 						}
 						catch(Exception oEx) {
 							System.out.println("OmirlDaemon Clear Thread: excpetion reading day folder " + oEx.toString());
-							oEx.printStackTrace();					
+							oEx.printStackTrace();	
+							continue;
 						}				
 
 						// Get all subfolders and files
@@ -210,6 +213,7 @@ public class ClearThread extends Thread {
 					catch(Exception oEx) {
 						System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
 						oEx.printStackTrace();
+						continue;
 					}
 
 					String [] asMonths = oYearFolder.list();				
@@ -231,7 +235,8 @@ public class ClearThread extends Thread {
 						}
 						catch(Exception oEx) {
 							System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
-							oEx.printStackTrace();					
+							oEx.printStackTrace();
+							continue;
 						}				
 
 						String [] asDays = oMonthFolder.list();				
@@ -253,7 +258,8 @@ public class ClearThread extends Thread {
 							}
 							catch(Exception oEx) {
 								System.out.println("OmirlDaemon Clear Thread: excpetion reading day folder " + oEx.toString());
-								oEx.printStackTrace();					
+								oEx.printStackTrace();
+								continue;
 							}				
 
 							// Get all subfolders and files
@@ -339,6 +345,7 @@ public class ClearThread extends Thread {
 					catch(Exception oEx) {
 						System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
 						oEx.printStackTrace();
+						continue;
 					}
 
 					String [] asMonths = oYearFolder.list();				
@@ -360,7 +367,8 @@ public class ClearThread extends Thread {
 						}
 						catch(Exception oEx) {
 							System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
-							oEx.printStackTrace();					
+							oEx.printStackTrace();		
+							continue;
 						}				
 
 						String [] asDays = oMonthFolder.list();				
@@ -382,7 +390,8 @@ public class ClearThread extends Thread {
 							}
 							catch(Exception oEx) {
 								System.out.println("OmirlDaemon Clear Thread: excpetion reading day folder " + oEx.toString());
-								oEx.printStackTrace();					
+								oEx.printStackTrace();		
+								continue;
 							}				
 
 							// Get all subfolders and files
@@ -467,6 +476,7 @@ public class ClearThread extends Thread {
 					catch(Exception oEx) {
 						System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
 						oEx.printStackTrace();
+						continue;
 					}
 
 					String [] asMonths = oYearFolder.list();				
@@ -488,7 +498,8 @@ public class ClearThread extends Thread {
 						}
 						catch(Exception oEx) {
 							System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
-							oEx.printStackTrace();					
+							oEx.printStackTrace();		
+							continue;
 						}				
 
 						String [] asDays = oMonthFolder.list();				
@@ -510,7 +521,8 @@ public class ClearThread extends Thread {
 							}
 							catch(Exception oEx) {
 								System.out.println("OmirlDaemon Clear Thread: excpetion reading day folder " + oEx.toString());
-								oEx.printStackTrace();					
+								oEx.printStackTrace();		
+								continue;
 							}				
 
 							// Get all subfolders and files
@@ -615,6 +627,7 @@ public class ClearThread extends Thread {
 				catch(Exception oEx) {
 					System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
 					oEx.printStackTrace();
+					continue;
 				}
 
 				String [] asMonths = oYearFolder.list();				
@@ -636,7 +649,8 @@ public class ClearThread extends Thread {
 					}
 					catch(Exception oEx) {
 						System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
-						oEx.printStackTrace();					
+						oEx.printStackTrace();
+						continue;
 					}				
 
 					String [] asDays = oMonthFolder.list();				
@@ -740,6 +754,7 @@ public class ClearThread extends Thread {
 						bFolderIsNumber = false;
 						System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
 						oEx.printStackTrace();
+						//continue;
 					}
 
 					if (bFolderIsNumber)
@@ -766,6 +781,7 @@ public class ClearThread extends Thread {
 								
 								System.out.println("OmirlDaemon Clear Thread: excpetion reading year folder " + oEx.toString());
 								oEx.printStackTrace();
+								continue;
 							}
 							
 							deleteTable(oSubYearFolder, oYesterday, iYear);
@@ -807,7 +823,8 @@ public class ClearThread extends Thread {
 			}
 			catch(Exception oEx) {
 				System.out.println("OmirlDaemon Clear Thread: excpetion reading month folder " + oEx.toString());
-				oEx.printStackTrace();					
+				oEx.printStackTrace();
+				continue;
 			}				
 
 			String [] asDays = oMonthFolder.list();				
@@ -829,7 +846,8 @@ public class ClearThread extends Thread {
 				}
 				catch(Exception oEx) {
 					System.out.println("OmirlDaemon Clear Thread: excpetion reading day folder " + oEx.toString());
-					oEx.printStackTrace();					
+					oEx.printStackTrace();
+					continue;
 				}				
 
 				// Get all subfolders and files
