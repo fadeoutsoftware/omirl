@@ -3,7 +3,7 @@
  */
 
 var SettingsController = (function() {
-    function SettingsController($scope, oConstantsService, oAuthService, oLocation, layerService, mapService, oMapNavigatorService) {
+    function SettingsController($scope, oConstantsService, oAuthService, oLocation, layerService, mapService, oMapNavigatorService, $translate) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         // Layer Service
@@ -18,7 +18,8 @@ var SettingsController = (function() {
         this.m_oLocation = oLocation;
         // Map Navigator Service
         this.m_oMapNavigatorService = oMapNavigatorService;
-
+        // Translate service
+        this.m_oTranslateService = $translate;
 
         // Old Password Value
         this.oldPw = "";
@@ -485,6 +486,7 @@ var SettingsController = (function() {
     }
 
     SettingsController.prototype.onDataChanged = function() {
+        var oController = this;
         try {
             //var oDate = new Date(this.dataRef.getFullYear(), this.dataRef.getMonth() + 1, this.dataRef.getDate(), this.ore, this.min, 0);
 
@@ -510,7 +512,16 @@ var SettingsController = (function() {
 
             this.onSettingsChanged();
         } catch (err) {
-            alert("Errore! Verificare la data inserita.");
+
+            oController.m_oTranslateService('SETTING_ERROREDATA').then(function(msg)
+            {
+
+                vex.dialog.alert({
+                    message: msg
+                });
+                //alert(msg);
+            });
+            //alert("Errore! Verificare la data inserita.");
         }
     }
 
@@ -521,7 +532,8 @@ var SettingsController = (function() {
         '$location',
         'az.services.layersService',
         'az.services.mapService',
-        'MapNavigatorService'
+        'MapNavigatorService',
+        '$translate'
     ];
 
     return SettingsController;

@@ -2,7 +2,7 @@
  * Created by p.campanella on 23/03/2015.
  */
 var SectionChartController = (function() {
-    function SectionChartController($scope, dialogService, oChartService, $timeout, oConstantsService, $log) {
+    function SectionChartController($scope, dialogService, oChartService, $timeout, oConstantsService, $log, $translate) {
         this.m_oScope = $scope;
         this.m_oScope.m_oController = this;
         this.m_oDialogService = dialogService;
@@ -11,6 +11,7 @@ var SectionChartController = (function() {
         this.m_aoOtherCharts = [];
         this.m_bLoading = true;
         this.m_oLog = $log;
+        this.m_oTranslateService = $translate;
         this.m_oDialogModel = this.m_oScope.model;
         this.m_sDialogTitle = "";
 
@@ -43,14 +44,30 @@ var SectionChartController = (function() {
         oControllerVar.m_oChartService.getSectionChart(this.m_sSectionCode,this.m_sChartType).success(function(data,status) {
 
             if (!angular.isDefined(data)){
-                alert('Impossibile caricare il grafico della sezione ' + oControllerVar.m_sSectionCode);
-                oControllerVar.m_bLoading = false;
-                return;
+                oControllerVar.m_oTranslateService('SECTIONCHART_NODATA', {value: oControllerVar.m_sSectionCode}).then(function(msg)
+                {
+                    vex.dialog.alert({
+                        message: msg
+                    });
+                    oControllerVar.m_bLoading = false;
+                    return;
+
+                });
+                //alert('Impossibile caricare il grafico della sezione ' + oControllerVar.m_sSectionCode);
             }
             if (data=="") {
-                alert('Impossibile caricare il grafico della sezione ' + oControllerVar.m_sSectionCode);
-                oControllerVar.m_bLoading = false;
-                return;
+                oControllerVar.m_oTranslateService('SECTIONCHART_NODATA', {value: oControllerVar.m_sSectionCode}).then(function(msg)
+                {
+                    vex.dialog.alert({
+                        message: msg
+                    });
+                    oControllerVar.m_bLoading = false;
+                    return;
+
+                });
+                //alert('Impossibile caricare il grafico della sezione ' + oControllerVar.m_sSectionCode);
+                //oControllerVar.m_bLoading = false;
+                //return;
             }
 
             oControllerVar.oChartVM = data;
@@ -112,14 +129,32 @@ var SectionChartController = (function() {
         oControllerVar.m_oChartService.getSectionChart(this.m_sSectionCode,oOtherLink.sensorType).success(function(data,status) {
 
             if (!angular.isDefined(data)){
-                alert('Impossibile caricare il grafico della sezione ' + oControllerVar.m_sSectionCode);
-                oControllerVar.m_bLoading = false;
-                return;
+                oControllerVar.m_oTranslateService('SECTIONCHART_NODATA', {value: oControllerVar.m_sSectionCode}).then(function(msg)
+                {
+                    vex.dialog.alert({
+                        message: msg
+                    });
+                    oControllerVar.m_bLoading = false;
+                    return;
+
+                });
+                //alert('Impossibile caricare il grafico della sezione ' + oControllerVar.m_sSectionCode);
+                //oControllerVar.m_bLoading = false;
+                //return;
             }
             if (data=="") {
-                alert('Impossibile caricare il grafico della sezione ' + oControllerVar.m_sSectionCode);
-                oControllerVar.m_bLoading = false;
-                return;
+                oControllerVar.m_oTranslateService('SECTIONCHART_NODATA', {value: oControllerVar.m_sSectionCode}).then(function(msg)
+                {
+                    vex.dialog.alert({
+                        message: msg
+                    });
+                    oControllerVar.m_bLoading = false;
+                    return;
+
+                });
+                //alert('Impossibile caricare il grafico della sezione ' + oControllerVar.m_sSectionCode);
+                //oControllerVar.m_bLoading = false;
+                //return;
             }
 
             oControllerVar.oChartVM = data;
@@ -203,7 +238,8 @@ var SectionChartController = (function() {
         'ChartService',
         '$timeout',
         'ConstantsService',
-        '$log'
+        '$log',
+        '$translate'
     ];
     return SectionChartController;
 }) ();

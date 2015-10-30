@@ -58,6 +58,7 @@
     "MAP_T_LEGEND": "{{value}}",
     "MAP_T_LEGENDSELECTED": "Mappe",
     "MAP_NOT_AVAILABLE": "Layer non disponibile",
+    "MAP_MISSINGWEBCAM":"Missing WebCam Image",
     "MAP_TIMEPAST":"Torna in tempo reale",
     "MAP_TIMENOW":"In tempo reale",
     "MAP_DATEINFO": "Aggiornato il {{data}} Ore locali",
@@ -116,6 +117,7 @@
     "SETTING_LAYERSTAZIONI": "Layer Stazioni",
     "SETTING_LAYERSTATICI": "Layer Statici",
     "SETTING_BOTTONESALVA": "Salva",
+    "SETTING_ERROREDATA": "! Verificare la data inserita.",
     "STATION_TABLE": "Tabella Stazioni",
     "STATION_TIPOSENSORE": "Tipo Sensore",
     "STATION_SEARCHNOME": "Nome o Codice",
@@ -300,5 +302,6 @@
     "USER_TITLE": "Gestione Utenti",
     "USER_ADDTOOLTIP": "Aggiungi Utente",
     "USER_SAVETOOLTIP": "Salva Utente",
-    "USER_DELETETOOLTIP": "Cancella Utente"
+    "USER_DELETETOOLTIP": "Cancella Utente",
+    "SECTIONCHART_NODATA": "Impossibile caricare il grafico della sezione {{value}}"
 }

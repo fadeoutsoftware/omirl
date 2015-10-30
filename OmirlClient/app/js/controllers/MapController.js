@@ -893,7 +893,7 @@ var MapController = (function () {
                 if (!bIsSelected) {
                     if (!oMapLink.hasThirdLevel)
                     {
-                        oController.setSelectedMapLinkOnScreen(this,oMapLink);
+                        oController.setSelectedMapLinkOnScreen(oController,oMapLink);
                         oController.selectedDynamicLayer(oMapLink, oController.m_sMapThirdLevelSelectedModifier, oController);
                     }
                 }
@@ -1511,11 +1511,20 @@ var MapController = (function () {
      */
     MapController.prototype.showStationsChart = function(oFeature) {
 
+        var oController = this;
         if (this.m_oSelectedSensorLink.isClickable==false) return;
 
         if (oFeature.attributes.sensorType == 'Webcam') {
-            alert('Missing WebCam Image');
-            return;
+
+            oController.m_oTranslateService('MAP_MISSINGWEBCAM').then(function(msg)
+            {
+                vex.dialog.alert({
+                    message: msg
+                });
+                //alert(msg);
+                return;
+            });
+            //alert('Missing WebCam Image');
         }
 
         var oControllerVar = this;
@@ -2858,7 +2867,7 @@ var MapController = (function () {
         {
 
             // Remove from the map
-            oRadarLink.selected = true;
+            oRadarLink.selected = false;
             if (this.m_oLayerService.getDynamicLayer() != null) {
                 this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
                 this.m_oLayerService.setDynamicLayer(null);

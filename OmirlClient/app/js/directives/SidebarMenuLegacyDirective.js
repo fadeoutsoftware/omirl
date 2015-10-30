@@ -115,7 +115,7 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             });
 
             
-            $scope.$watch(function(){ console.debug($scope.thirdLevelComboBox.selection); return $scope.thirdLevelComboBox.selection;}, function(newValue){
+            $scope.$watch(function(){ return $scope.thirdLevelComboBox.selection;}, function(newValue){
                 $scope.onThirdLevelSelection(newValue);
             });
             
@@ -255,7 +255,7 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
             
             $scope.isSelected = function(option)
             {
-                return ($scope.thirdLevelComboBox.selection.description == option.description)
+                return ($scope.thirdLevelComboBox.selection == option.description)
             }
             
             $scope.updateThirdLevelSelection = function()
@@ -391,6 +391,9 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                 $scope.hasMenuItemBeenUpdated = false;
                 $scope.menuItemsByLevel[$scope.MENU_LEVEL_3] = $scope.thirdLevelMenuItems;
                 $scope.thirdLevelComboBox.options = $scope.menuItemsByLevel[$scope.MENU_LEVEL_3];
+
+                if ($scope.thirdLevelComboBox.options && $scope.thirdLevelComboBox.options.length > 0)
+                    $scope.thirdLevelComboBox.selection = $scope.thirdLevelComboBox.options[0].description;
             }
             
             
@@ -562,6 +565,11 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
              */
             $scope.onThirdLevelSelection = function(oSelectedItem)
             {
+
+                if (!oSelectedItem)
+                    return;
+
+                /*
                 if (oSelectedItem && typeof oSelectedItem == 'string')
                 {
                     for(var key in $scope.menuItemsByLevel[$scope.MENU_LEVEL_3])
@@ -573,10 +581,12 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                         }
                     }
                 }
+                */
 
-                if( oSelectedItem && oSelectedItem.myLevel == $scope.MENU_LEVEL_3)
+                if( oSelectedItem)
                 {
                     //$scope.thirdLevelMenuSelection = $scope.thirdLevelComboBox.selection;
+                    $scope.thirdLevelComboBox.selection = oSelectedItem;
                     $scope.thirdLevelMenuSelection = oSelectedItem;
 
                     // Notice to the controller the currently active directive
@@ -587,13 +597,15 @@ angular.module('omirl.sidebarMenuLegacyDirective', [])
                         var oItem;
                         for(var key in $scope.thirdLevelComboBox.options)
                         {
+
                             if( $scope.thirdLevelComboBox.options[key].description == $scope.thirdLevelComboBox.selection)
                             {
                                 oItem = $scope.thirdLevelComboBox.options[key];
                                 break;
                             }
                         }
-                        $scope.thirdLevelMenuClick(oItem, $scope.controller);
+                        if (oItem)
+                            $scope.thirdLevelMenuClick(oItem, $scope.controller);
                     }
                 }
             }

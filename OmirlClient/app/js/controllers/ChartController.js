@@ -83,7 +83,10 @@ var ChartController = (function() {
 
             if (!angular.isDefined(data)){
                 oControllerVar.m_oTranslate('CHARTCONTROLLER_LOADDATA', {value: oControllerVar.m_sSectionCode}).then(function(text){
-                    alert(text);
+                    vex.dialog.alert({
+                        message: text
+                    });
+                    //alert(text);
                 });
 
                 oControllerVar.m_bLoading = false;
@@ -92,7 +95,10 @@ var ChartController = (function() {
             if (data=="") {
 
                 oControllerVar.m_oTranslate('CHARTCONTROLLER_LOADDATA', {value: oControllerVar.m_sSectionCode}).then(function(text){
-                    alert(text);
+                    vex.dialog.alert({
+                        message: text
+                    });
+                    //alert(text);
                 });
                 oControllerVar.m_bLoading = false;
                 return;
