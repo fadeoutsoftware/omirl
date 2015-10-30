@@ -10,18 +10,25 @@
                         <th>Name</th>
                         <th>Password</th>
                         <th>Email</th>
+                        <th>Ruolo</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="oTableRow in m_oController.getUsers()">
                         <td>
                             <div class="col-xs-1 col-md-1 button-icon" tooltip-popup-delay="500" tooltip="{{'USER_DELETETOOLTIP' | translate}}" >
-                                <i class="fa fa-times fa-2x" ng-click="m_oController.deleteUser(oTableRow.idUser)"></i>
+                                <i class="fa fa-times fa-2x" ng-click="m_oController.deleteUser(oTableRow.idUser, oTableRow.userId)"></i>
                             </div>
                         </td>
                         <td class="table-user-td-left-align"><input type="text" class="form-control" ng-model="oTableRow.name" ng-change="m_oController.m_oUserService.setAsModified()"></td>
                         <td class="table-user-td-left-align"><input type="password" class="form-control" ng-model="oTableRow.password" ng-change="m_oController.m_oUserService.setAsModified()"></td>
                         <td class="table-user-td-left-align"><input type="text" class="form-control" ng-model="oTableRow.userId" ng-change="m_oController.m_oUserService.setAsModified()"></td>
+                        <td class="table-user-td-left-align">
+                            <select class="form-control" ng-change="m_oController.m_oUserService.setAsModified()" ng-model="oTableRow.role">
+                                <option value="1">Amministratore</option>
+                                <option value="2">Utente</option>
+                            </select>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

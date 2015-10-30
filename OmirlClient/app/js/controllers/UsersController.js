@@ -58,6 +58,10 @@ var UsersController = (function() {
                     //load user
                     oController.m_oUserService.loadUsers();
                     oController.getUsers();
+
+                    vex.dialog.alert({
+                        message: 'Utente Salvato'
+                    });
                 });
             }
         }
@@ -117,16 +121,32 @@ var UsersController = (function() {
 
     };
 
-    UsersController.prototype.deleteUser = function(id) {
+    UsersController.prototype.deleteUser = function(id, userId) {
 
         var oConroller = this;
-        //take last user
 
-        //save last user
-        oConroller.m_oUserService.deleteUsers(id).success(function(data){
+        if (oConroller.m_oConstantsService.getUser().mail == userId) {
+            vex.dialog.alert({
+                message: 'Non è possibile eliminare il proprio utente'
+            });
+            return;
+        }
 
-            //load user
-            oConroller.m_oUserService.loadUsers();
+        vex.dialog.confirm({
+            message: 'Eliminare l utente?',
+            callback: function(value)
+            {
+                if (value)
+                {
+                    //save last user
+                    oConroller.m_oUserService.deleteUsers(id).success(function(data){
+
+                        //load user
+                        oConroller.m_oUserService.loadUsers();
+                    });
+                }
+            }
+
         });
 
     };
