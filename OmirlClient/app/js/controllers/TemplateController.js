@@ -3,12 +3,13 @@
  */
 
 var TemplateController = (function() {
-    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService, $translate, $interpolate, oTranslateService, $interval) {
+    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService, $translate, $interpolate, oTranslateService, $interval, oLayerService) {
         this.m_oScope = $scope;
         this.m_oLocation  = $location;
         this.m_oConstantsService = oConstantsService;
         this.m_oAuthService = oAuthService;
         this.m_oTranslationService = oTranslateService;
+        this.m_oLayerService = oLayerService;
         this.m_oScope.m_oController = this;
         this.m_bShowLogin = false;
         this.m_bShowLogout = false;
@@ -194,6 +195,7 @@ var TemplateController = (function() {
         this.m_sLoginMessage = this.m_sLoginMessageConstant;
         this.m_bShowLogout = false;
         this.m_bShowLogin = true;
+        this.m_oLayerService.clarAll();
     }
 
     TemplateController.prototype.changeLanguage = function(language){
@@ -213,7 +215,8 @@ var TemplateController = (function() {
         '$translate',
         '$interpolate',
         'TranslateService',
-        '$interval'
+        '$interval',
+        'az.services.layersService'
     ];
 
     return TemplateController;

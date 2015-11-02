@@ -11,7 +11,12 @@ var AnimationsController = (function() {
         this.m_oConstantsService = oConstantService;
         this.m_oInterval = $interval;
 
-        oControllerVar = this;
+        //---Per ora il menù lo gestiamo così visto che è un mockup---
+        this.m_bMenuRadActive = true;
+        this.m_bMenuSatActive = false;
+        //-----------------------------------------------------------
+
+        var oControllerVar = this;
 
         if (this.m_oConstantsService.isNowMode()) {
             oControllerVar.m_oReferenceDate = new Date();
@@ -36,7 +41,9 @@ var AnimationsController = (function() {
     }
 
     AnimationsController.prototype.linkClicked = function (sPath) {
+
         this.m_oLocation.path(sPath);
+
     }
 
     AnimationsController.prototype.onTimeSet = function (newDate, oldDate) {

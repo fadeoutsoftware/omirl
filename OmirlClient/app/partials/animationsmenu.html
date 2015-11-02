@@ -46,7 +46,8 @@
                     <div class="row">
                         <div class="map-text-legend">
 
-                            <div class="map-text-legend-selected">{{m_oController.m_oTableService.m_sTableLegendSelected | translate}}
+                            <div class="map-text-legend-selected">
+                                {{m_oController.m_oTableService.m_sTableLegendSelected | translate}}
                             </div>
 
                         </div>
@@ -60,12 +61,12 @@
                             <img class="img-map-firstlevel-icon" ng-src="{{oTable.imageLinkOff}}"
                                  ng-click="m_oController.tableLinkClicked(oTable)"/>
                         </div-->
-                        <div class="col-md-1 col-xs-1 map-firstlevel-icon">
+                        <div class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': m_oController.m_bMenuRadActive}">
                             <img class="img-map-firstlevel-icon" ng-src="img/radar/radar10m.png"
                                  ng-click="m_oController.linkClicked('/animations')"/>
                         </div>
 
-                        <div class="col-md-1 col-xs-1 map-firstlevel-icon">
+                        <div class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': m_oController.m_bMenuSatActive}">
                             <img class="img-map-firstlevel-icon" ng-src="img/radar/radar1h.png"
                                  ng-click="m_oController.linkClicked('/animationssat')"/>
                         </div>

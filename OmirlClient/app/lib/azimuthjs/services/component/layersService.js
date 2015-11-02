@@ -67,6 +67,7 @@ angular.module('az.services').factory('az.services.layersService',function($root
             this.m_oMarkerLayer = null;
             this.m_oSensorsLayer = null;
             this.m_oWeatherLayer = null;
+            this.m_oSectionsLayer = null;
         },
         addLayerLegend: function(layerCode,colorRanges){
 

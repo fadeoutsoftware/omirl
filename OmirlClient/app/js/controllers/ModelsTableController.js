@@ -3,7 +3,7 @@
  */
 
 var ModelsTableController = (function() {
-    function ModelsTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, oHydroService) {
+    function ModelsTableController($scope, oConstantsService, $log, oStationsService, oDialogService, oChartService, $location, oTableService, oHydroService, $interval) {
         this.m_oScope = $scope;
         this.m_oConstantsService = oConstantsService;
         this.m_oScope.m_oController = this;
@@ -14,10 +14,13 @@ var ModelsTableController = (function() {
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
         this.m_oHydroService = oHydroService;
+        this.m_oInterval = $interval;
         this.m_bDowloadEnabled = true;
 
         this.m_bShowCancelBasinFilter = false;
         this.m_bShowCancelSectionFilter = false;
+
+        this.m_oSelectedModelLink;
 
         this.m_aoModelLinks = [];
 
@@ -41,6 +44,7 @@ var ModelsTableController = (function() {
             angular.forEach(oControllerVar.m_aoModelLinks, function(value, key) {
                 if (value.isDefault == true) {
                     value.isActive = value.isDefault;
+                    oControllerVar.m_oSelectedModelLink = value;
                     oControllerVar.m_sModelName = value.description;
                     oControllerVar.m_sModelCode = value.code;
                     oControllerVar.m_oHydroService.getModelTable(value.code).success(function(data){
@@ -105,6 +109,30 @@ var ModelsTableController = (function() {
             return found;
         };
 
+        if (this.m_oConstantsService.isNowMode()) {
+            oControllerVar.m_oReferenceDate = new Date();
+            oControllerVar.m_bNowMode = true;
+        }
+        else {
+            oControllerVar.m_oReferenceDate = oControllerVar.m_oConstantsService.getReferenceDate();
+            oControllerVar.m_bNowMode = false;
+        }
+
+        // Add Auto Refresh Interval Callback
+        this.m_oStopTimerPromise = this.m_oInterval(function () {
+
+                if (oControllerVar.m_oConstantsService.isNowMode()) {
+                    oControllerVar.m_oReferenceDate = new Date();
+                    oControllerVar.m_bNowMode = true;
+                }
+
+                if(oControllerVar.m_oSelectedModelLink)
+                    oControllerVar.modelLinkClicked(oControllerVar.m_oSelectedModelLink);
+
+            },
+            this.m_oConstantsService.getRefreshRateMs());
+
+
     }
 
     ModelsTableController.prototype.getModelLinks = function () {
@@ -113,7 +141,7 @@ var ModelsTableController = (function() {
 
     ModelsTableController.prototype.modelLinkClicked = function (oModel) {
         var oControllerVar = this;
-
+        oControllerVar.m_oSelectedModelLink = oModel;
         /*
         this.m_oHydroService.getModelTable(oModel.code).success(function (data, status) {
             oControllerVar.m_aoStations = data.tableRows;
@@ -237,6 +265,23 @@ var ModelsTableController = (function() {
         return this.m_aoTableLinks;
     }
 
+    ModelsTableController.prototype.onTimeSet = function (newDate, oldDate) {
+
+        this.m_oConstantsService.setReferenceDate(newDate);
+        if(this.m_oSelectedModelLink)
+            this.modelLinkClicked(this.m_oSelectedModelLink);
+        this.m_bNowMode = false;
+    };
+
+    ModelsTableController.prototype.setNow = function () {
+
+        this.m_oConstantsService.setReferenceDate("");
+        if(this.m_oSelectedModelLink)
+            this.modelLinkClicked(this.m_oSelectedModelLink);
+        this.m_bNowMode = true;
+        this.m_oReferenceDate = new Date();
+    };
+
     ModelsTableController.$inject = [
         '$scope',
         'ConstantsService',
@@ -246,7 +291,8 @@ var ModelsTableController = (function() {
         'ChartService',
         '$location',
         'TableService',
-        'HydroService'
+        'HydroService',
+        '$interval'
     ];
 
     return ModelsTableController;
