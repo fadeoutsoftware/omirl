@@ -76,6 +76,8 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
+import sun.dc.path.PathException;
+
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
 public class OmirlDaemon {
@@ -153,8 +155,8 @@ public class OmirlDaemon {
 		//if (true) return;
 		//RefreshHydroModel();
 		//----------------TEST------------------
-		
-		
+
+
 		InitSensorValueTables();
 
 		RefreshSectionsLayer();
@@ -225,7 +227,7 @@ public class OmirlDaemon {
 
 						ArrayList<String> asOtherLinks = new ArrayList<>();
 
-						
+
 						// Find other sensors links
 						if (oStationAnag.getRain_01h_every() != null) {
 
@@ -267,7 +269,7 @@ public class OmirlDaemon {
 
 						if (m_oConfig.isEnableCharts())
 						{
-							
+
 							try {
 
 								// --------------------------------------------------------RAIN CHART
@@ -630,7 +632,7 @@ public class OmirlDaemon {
 										oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
 										oStartDate.setMinutes(0);
 										oStartDate.setSeconds(0);
-										
+
 										Calendar oCalendar = Calendar.getInstance(); // creates calendar
 										oCalendar.setTime(oStartDate); // sets calendar time/date
 										oCalendar.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
@@ -1043,7 +1045,7 @@ public class OmirlDaemon {
 			HibernateUtils.shutdown();
 		}		
 	}
-	
+
 	/**
 	 * Gets the name of value column from minutes resolution
 	 * @param iResolution
@@ -1141,7 +1143,7 @@ public class OmirlDaemon {
 		Date oStartDate = new Date( oInputWindDir.get(0).getRefDate().getTime());
 		oStartDate.setMinutes(0);
 		oStartDate.setSeconds(0);
-		
+
 		long lStart = oStartDate.getTime();
 
 		int iCycleCount = 0;
@@ -1157,7 +1159,7 @@ public class OmirlDaemon {
 				if (windDataSeriePoint.getRefDate().getTime() < lNextStep && windDataSeriePoint.getRefDate().getTime() >= lTimeCycle) {
 					oRefWindDirections.add(windDataSeriePoint);
 				}
-				
+
 				if (windDataSeriePoint.getRefDate().getTime() > lNextStep) break;
 			}
 
@@ -1301,7 +1303,7 @@ public class OmirlDaemon {
 	private List<Integer> GetSector(double dDirection)
 	{
 		List<Integer> oReturnList = new ArrayList<Integer>();
-		
+
 		if (dDirection <= 11.25 || dDirection >= 348.75)
 			oReturnList.add(16);
 		if (dDirection >= 11.25 && dDirection <= 33.75)
@@ -1342,7 +1344,7 @@ public class OmirlDaemon {
 	private int GetWmoModifiedIndex(int iOriginalIndex)
 	{
 		int iReturnIndex = iOriginalIndex;
-		
+
 		switch (iOriginalIndex) {
 		case 0:
 			iReturnIndex = 15;
@@ -1407,10 +1409,10 @@ public class OmirlDaemon {
 		default:
 			break;
 		}
-		
+
 		return iReturnIndex;
 	}
-	
+
 	private double GetDeg(int iSector)
 	{
 		switch (iSector) {
@@ -3387,6 +3389,13 @@ public class OmirlDaemon {
 	}
 
 
+	public Boolean PathExist(String sFullPath)
+	{
+		File oXmlConfig = new File((String) sFullPath+"/legend.xml");
+
+		return oXmlConfig.exists();
+	}
+
 	public HashMap<String, Integer> ReadSectionsLegend(String sFullPath) {
 		HashMap<String, Integer> aoRetDictionary = new HashMap<>();
 
@@ -3536,24 +3545,43 @@ public class OmirlDaemon {
 					sFullPath = sNewFullPath;
 				}
 
-				HashMap<String, Integer> aoSectionsMap = ReadSectionsLegend(sFullPath);
+				boolean b2DaysOld = false;
+				// exist today path?
+				if (!PathExist(sFullPath))
+				{
+					// path not exist search on yesterday
+					Date oYesterday = new Date( oDate.getTime() - 24 * 3600 * 1000);
+					sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oYesterday);
+					if (!PathExist(sFullPath))
+						// not esists yesterday
+						b2DaysOld = true;
 
+				}
+
+				HashMap<String, Integer> aoSectionsMap = ReadSectionsLegend(sFullPath);
 
 				for (SectionAnag oSection : aoSections) {
 					try {
+
 						SectionViewModel oSectionViewModel = oSection.getSectionViewModel();
 
 						oSectionViewModel.setModel(sModelName);
 						oSectionViewModel.setSubFolder(sSubFolderVM);
 
+						// no symbol
+						if (b2DaysOld && bDisableOnMap)
+							continue;
+
 						if (aoSectionsMap.containsKey(oSectionViewModel.getCode())) {
-							oSectionViewModel.setColor(aoSectionsMap.get(oSectionViewModel.getCode()));
+							//Grey symbol
+							if (b2DaysOld && !bDisableOnMap)
+								oSectionViewModel.setColor(-1);
+							else
+								oSectionViewModel.setColor(aoSectionsMap.get(oSectionViewModel.getCode()));
 						}
 						else
 						{
-							if (bDisableOnMap)
-								//Colore grigio
-								oSectionViewModel.setColor(-1);
+							oSectionViewModel.setColor(-1);
 						}
 
 						aoSectionsViewModel.add(oSectionViewModel);
@@ -3590,7 +3618,7 @@ public class OmirlDaemon {
 	public void SerializeHydroModel(String sModelName, String sModelCode, Boolean bHasSubFolders, List<SectionBasins> aoSectionsBasins) {
 
 		List<SectionBasinsViewModel> aoSectionBasinsViewModel = new ArrayList<>();
-		
+
 		//System.out.println("SerializeHydroModel COMINCIO ");
 
 		try {
@@ -3603,7 +3631,7 @@ public class OmirlDaemon {
 				Date oDate = new Date();
 
 				String sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/sections/" + sModelCode,oDate);
-				
+
 				//System.out.println("SerializeHydroModel FULL 1 " + sFullPath);
 
 				if (bHasSubFolders)
@@ -3635,7 +3663,7 @@ public class OmirlDaemon {
 
 					sFullPath = sNewFullPath;
 				}
-				
+
 				//System.out.println("SerializeHydroModel FULL 2 " + sFullPath);
 
 				HashMap<String, Integer> aoSectionsMap = ReadSectionsLegend(sFullPath);
@@ -3674,7 +3702,7 @@ public class OmirlDaemon {
 				}
 
 				sFullPath = getSubPath(m_oConfig.getFileRepositoryPath()+"/tables/hydro/" + sModelCode,oDate);
-				
+
 				//System.out.println("SerializeHydroModel sFullPath 3 " + sFullPath);
 
 				if (sFullPath != null)  {
@@ -3686,7 +3714,7 @@ public class OmirlDaemon {
 					oFile.setReadable(true, false);
 
 					String sFileName = sModelCode+m_oDateFormat.format(oDate)+".xml";
-					
+
 					//System.out.println("SerializeHydroModel sFileName  " + sFileName);
 					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, aoSectionBasinsViewModel);
 					//System.out.println("SAVED");
