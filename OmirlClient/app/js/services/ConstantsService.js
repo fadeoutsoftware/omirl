@@ -26,6 +26,20 @@ angular.module('omirl.ConstantsService', []).
         this.m_bIsMiniVersion=false;
 
 
+        this.isMobile = function() {
+            console.debug("is mobile");
+
+            if (navigator.userAgent.match((/Android/i)) ||
+                navigator.userAgent.match(/BlackBerry/i) ||
+                navigator.userAgent.match(/iPhone|iPad|iPod/i) ||
+                navigator.userAgent.match(/Opera Mini/i) ||
+                navigator.userAgent.match(/IEMobile/i)
+                )
+                return true;
+
+            return false;
+        }
+
         this.isNowMode = function() {
             if (this.getReferenceDate() != null)
             {

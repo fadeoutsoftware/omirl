@@ -179,9 +179,10 @@ var ChartController = (function() {
             oControllerVar.oChartVM = data;
             oControllerVar.m_sChartType = oOtherLink.sensorType;
 
-            oControllerVar.m_aoOtherCharts = [];
+            //oControllerVar.m_aoOtherCharts = [];
 
             if(angular.isDefined(oControllerVar.oChartVM.otherChart)) {
+                oControllerVar.m_aoOtherCharts = [];
 
                 oControllerVar.oChartVM.otherChart.forEach(function(sType){
                     var oOtherChartLink = {};
@@ -244,17 +245,18 @@ var ChartController = (function() {
 
         //-------------------------------------------------
         // Adjust width/height on mobile
-        if (!this.m_bZooming) {
-            var oChartContainer = $(".ui-dialog");
-            var iDialogTitlebarH = 50;
-            this.m_iWidth = oChartContainer.width();
-            this.m_iHeight = oChartContainer.height() - iDialogTitlebarH;
+        if (this.m_oConstantsService.isMobile()) {
+            if (!this.m_bZooming) {
+                var oChartContainer = $(".ui-dialog");
+                var iDialogTitlebarH = 50;
+                this.m_iWidth = oChartContainer.width();
+                this.m_iHeight = oChartContainer.height() - iDialogTitlebarH;
 
-            var oChartButtons = $(".ui-dialog .map-firstlevel-icon");
-            if( oChartButtons && oChartButtons.length > 0)
-                this.m_iHeight -= (oChartButtons.height() + 10);
+                var oChartButtons = $(".ui-dialog .map-firstlevel-icon");
+                if (oChartButtons && oChartButtons.length > 0)
+                    this.m_iHeight -= (oChartButtons.height() + 10);
+            }
         }
-
         //-------------------------------------------------
 
 
