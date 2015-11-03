@@ -1,7 +1,7 @@
 package it.fadeout.omirl.daemon;
 
 import it.fadeout.omirl.business.SavedPeriod;
-import it.fadeout.omirl.daemon.geoserver.GeoServerDataManager2;
+import it.fadeout.omirl.geoserver.GeoServerDataManager2;
 import it.fadeout.omirl.data.SavedPeriodRepository;
 
 import java.io.File;

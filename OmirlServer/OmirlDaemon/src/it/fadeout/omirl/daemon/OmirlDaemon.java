@@ -26,7 +26,7 @@ import it.fadeout.omirl.business.StationLastData;
 import it.fadeout.omirl.business.SummaryInfoEntity;
 import it.fadeout.omirl.business.WindDataSeriePoint;
 import it.fadeout.omirl.business.WindSummaryConfiguration;
-import it.fadeout.omirl.daemon.geoserver.GeoServerDataManager2;
+import it.fadeout.omirl.geoserver.GeoServerDataManager2;
 import it.fadeout.omirl.data.CreekThresholdRepository;
 import it.fadeout.omirl.data.HibernateUtils;
 import it.fadeout.omirl.data.OpenSessionRepository;
@@ -119,13 +119,13 @@ public class OmirlDaemon {
 
 		//Test();
 		//testDate();
+		TestGeoTiff();
 
 		//WriteSampleConfig();
 
 		OmirlDaemon oDaemon = new OmirlDaemon();
 		oDaemon.OmirlDaemonCycle(args[0]);
 	}	
-
 
 	/**
 	 * Main Omirl Daemon Cycle
@@ -4976,4 +4976,15 @@ public class OmirlDaemon {
 
 		return aoFiles;
 	}
+	
+
+	private static void TestGeoTiff() {
+		GeoServerDataManager2 oManager = new GeoServerDataManager2("http://93.62.155.217:8080/geoserver/", "", "admin", "geo4Omirl");
+		try {
+			oManager.AggregateLayer("c:\\temp\\Omirl\\aggrega\\rainfall30d_std_0000.tiff", "C:\\temp\\Omirl\\aggrega\\comuni_wgs84\\comuni_wgs84.shp", "C:\\temp\\Omirl\\aggrega\\Output\\output.shp", "NOME_COM", "VALUE", -999000000.0f);
+			oManager.addShapeLayer("output", "omirl", "OmirlRain30d","omirlaggregations");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
 }
