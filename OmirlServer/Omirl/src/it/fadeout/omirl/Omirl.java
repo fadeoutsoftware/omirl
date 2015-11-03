@@ -7,6 +7,7 @@ import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.HydroModelLinkConfig;
 import it.fadeout.omirl.business.config.LegendConfig;
 import it.fadeout.omirl.business.config.LegendStepConfig;
+import it.fadeout.omirl.business.config.MapInfoAggregationConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
@@ -383,6 +384,22 @@ public class Omirl extends Application {
 		oModelChild.setIconLink("/img/tables/sintesi.png");
 		oModelChild.setLinkCode("Rainfarmbo10ar+06");
 		oModelChild.setIsDefault(true);
+		
+		MapInfoAggregationConfig oMapConfig1 = new MapInfoAggregationConfig();
+		oMapConfig1.setModifier("Com");
+		oMapConfig1.setPath("/var/omirl/files/aggregations/com");
+		oMapConfig1.setShapeFile("comuni_wgs84");
+		
+		MapInfoAggregationConfig oMapConfig2 = new MapInfoAggregationConfig();
+		oMapConfig2.setModifier("Bac");
+		oMapConfig2.setPath("/var/omirl/files/aggregations/bac");
+		oMapConfig2.setShapeFile("bacini_wgs84");
+		
+		MapInfoAggregationConfig oMapConfig3 = new MapInfoAggregationConfig();
+		oMapConfig3.setModifier("AA");
+		oMapConfig3.setPath("/var/omirl/files/aggregations/aa");
+		oMapConfig3.setShapeFile("aree_wgs84");
+		
 
 		OmirlNavigationConfig oConfig = new OmirlNavigationConfig();
 		oConfig.setFilesBasePath("C:/temp/omirl/files");
@@ -398,6 +415,9 @@ public class Omirl extends Application {
 		oConfig.getGalleryLinks().add(oGallery1);
 		oConfig.getGalleryLinks().add(oGallery2);
 		oConfig.getHydroModelLinks().add(oModelChild);
+		oConfig.getMapInfoAggregationConfigs().add(oMapConfig1);
+		oConfig.getMapInfoAggregationConfigs().add(oMapConfig2);
+		oConfig.getMapInfoAggregationConfigs().add(oMapConfig3);
 
 
 		try {

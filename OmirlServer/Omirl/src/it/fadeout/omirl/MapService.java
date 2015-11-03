@@ -1,6 +1,8 @@
 package it.fadeout.omirl;
 
+import it.fadeout.omirl.business.config.MapInfoAggregationConfig;
 import it.fadeout.omirl.business.config.OmirlNavigationConfig;
+import it.fadeout.omirl.geoserver.GeoServerDataManager2;
 import it.fadeout.omirl.viewmodels.MapInfoViewModel;
 import it.fadeout.omirl.viewmodels.PrimitiveResult;
 
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
@@ -74,6 +77,7 @@ public class MapService {
 		
 		// Get Config
 		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+		OmirlNavigationConfig oConfig = null;
 		
 		if (oConfObj != null)  {
 			
@@ -81,7 +85,7 @@ public class MapService {
 			Omirl.getUserFromSession(sSessionId);
 
 			// Cast Config
-			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+			oConfig = (OmirlNavigationConfig) oConfObj;
 			
 			SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			
@@ -129,6 +133,71 @@ public class MapService {
 			System.out.println("MapService.GetLayerId: Config NOT Found");
 		}
 		
+		if (sModifier!=null)
+		{
+			if (!sModifier.equals("none"))
+			{
+				oResult = GetAggregatedLayerId(oConfig, oResult, sModifier, sCode, oDate);
+			}
+		}
+		
 		return oResult;
+	}
+	
+	public MapInfoViewModel GetAggregatedLayerId(OmirlNavigationConfig oConfig, MapInfoViewModel oMapInfo, String sModifier, String sCode, Date oDate) {
+		if (oConfig == null) return oMapInfo;
+		if (sModifier == null) return oMapInfo;
+		if (sModifier.equals("none")) return oMapInfo;
+		if (oMapInfo == null) return null;
+		if (oMapInfo.getLayerId() == null) return oMapInfo;
+		if (oMapInfo.getLayerId().isEmpty()) return oMapInfo;
+		if (oMapInfo.getLayerId().length()<8) return oMapInfo;
+		
+		try {
+			SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			
+			MapInfoAggregationConfig oAggregation = null;
+			// Trovare il modifier
+			for (MapInfoAggregationConfig oFindAggregation : oConfig.getMapInfoAggregationConfigs()) {
+				if (oFindAggregation.getModifier().equals(sModifier))
+				{
+					oAggregation = oFindAggregation;
+					break;
+				}
+			}
+			if (oAggregation == null) 
+			{
+				System.out.println("GetAggregatedLayerId: Aggregazione non trovata "+sModifier);
+				return oMapInfo;
+			}
+			
+			System.out.println("GetAggregatedLayerId: Aggregazione trovata "+sModifier);
+			
+			// Set file paths
+			String sTiffMap = oMapInfo.getLayerId().substring(8);
+			sTiffMap = oConfig.getFilesBasePath()+"maps/"+sCode+"/" + oDateFormat.format(oDate) + "/" + sTiffMap;
+			String sAggregationFile = oAggregation.getPath()+"/"+oAggregation.getShapeFile()+".shp";
+			String sNewLayerId = UUID.randomUUID().toString();
+			String sOutFile = oConfig.getGeoServerDataFolder() + "/omirlaggregations/" + sNewLayerId;
+			
+			System.out.println("GetAggregatedLayerId: Tiff "+sTiffMap + " Aggregation: " + sAggregationFile + " Output: " + sOutFile);
+			
+			// Eseguire aggregazione
+			GeoServerDataManager2 oDataManager = new GeoServerDataManager2(oConfig.getGeoServerAddress(), "", oConfig.getGeoServerUser(), oConfig.getGeoServerPassword());
+			oDataManager.AggregateLayer(sTiffMap, sAggregationFile, sOutFile, oAggregation.getFieldID(), "VALUE", oAggregation.getUndefValue());
+			// Pubblicare il layer
+			oDataManager.addShapeLayer(sNewLayerId, oConfig.getGeoServerWorkspace(), "OmirlRain30d_shp" , oConfig.getGeoServerStore());
+			// Modificare id
+			oMapInfo.setLayerId(sNewLayerId);
+		}
+		catch (Exception oEx)
+		{
+			oEx.printStackTrace();
+		}
+		
+
+		
+		
+		return oMapInfo;
 	}
 }

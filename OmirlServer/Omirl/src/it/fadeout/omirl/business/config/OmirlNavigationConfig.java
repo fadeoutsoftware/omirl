@@ -5,6 +5,14 @@ import java.util.ArrayList;
 public class OmirlNavigationConfig {
 	
 	String filesBasePath = "";
+	
+	String geoServerAddress;
+	String geoServerUser;
+	String geoServerPassword;
+	String geoServerDataFolder;
+	String geoServerWorkspace;
+	String geoServerStore;
+	
 	ArrayList<MapLinkConfig> mapLinks = new ArrayList<MapLinkConfig>();
 	ArrayList<SensorLinkConfig> sensorLinks = new ArrayList<SensorLinkConfig>();
 	ArrayList<StaticLinkConfig> staticLinks = new ArrayList<StaticLinkConfig>();
@@ -20,7 +28,15 @@ public class OmirlNavigationConfig {
 	ArrayList<HydroLinkConfig> flattedHydroLinks = new ArrayList<HydroLinkConfig>();
 	ArrayList<RadarLinkConfig> flattedRadarLinks = new ArrayList<RadarLinkConfig>();
 	ArrayList<SatelliteLinkConfig> flattedSatelliteLinks = new ArrayList<SatelliteLinkConfig>();
+	
+	ArrayList<MapInfoAggregationConfig> mapInfoAggregationConfigs = new ArrayList<>();
 
+	public ArrayList<MapInfoAggregationConfig> getMapInfoAggregationConfigs() {
+		return mapInfoAggregationConfigs;
+	}
+	public void setMapInfoAggregationConfigs(ArrayList<MapInfoAggregationConfig> mapInfoAggregationConfigs) {
+		this.mapInfoAggregationConfigs = mapInfoAggregationConfigs;
+	}
 	public String getFilesBasePath() {
 		return filesBasePath;
 	}
@@ -113,4 +129,41 @@ public class OmirlNavigationConfig {
 		this.flattedSatelliteLinks = flattedSatelliteLinks;
 	}
 	
+	
+	public String getGeoServerAddress() {
+		return geoServerAddress;
+	}
+	public void setGeoServerAddress(String geoServerAddress) {
+		this.geoServerAddress = geoServerAddress;
+	}
+	public String getGeoServerUser() {
+		return geoServerUser;
+	}
+	public void setGeoServerUser(String geoServerUser) {
+		this.geoServerUser = geoServerUser;
+	}
+	public String getGeoServerPassword() {
+		return geoServerPassword;
+	}
+	public void setGeoServerPassword(String geoServerPassword) {
+		this.geoServerPassword = geoServerPassword;
+	}
+	public String getGeoServerDataFolder() {
+		return geoServerDataFolder;
+	}
+	public void setGeoServerDataFolder(String geoServerDataFolder) {
+		this.geoServerDataFolder = geoServerDataFolder;
+	}
+	public String getGeoServerWorkspace() {
+		return geoServerWorkspace;
+	}
+	public void setGeoServerWorkspace(String geoServerWorkspace) {
+		this.geoServerWorkspace = geoServerWorkspace;
+	}
+	public String getGeoServerStore() {
+		return geoServerStore;
+	}
+	public void setGeoServerStore(String geoServerStore) {
+		this.geoServerStore = geoServerStore;
+	}
 }

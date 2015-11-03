@@ -67,6 +67,8 @@ public class SectionsService {
 			// Get Config
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
 			
+			System.out.println("SectionsService.GetSection: Config Found ");
+			
 			if (oConfObj != null)  {
 				
 				// Cast Config
