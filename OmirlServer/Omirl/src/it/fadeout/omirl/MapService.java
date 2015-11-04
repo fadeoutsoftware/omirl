@@ -175,10 +175,10 @@ public class MapService {
 			
 			// Set file paths
 			String sTiffMap = oMapInfo.getLayerId().substring(8);
-			sTiffMap = oConfig.getFilesBasePath()+"maps/"+sCode+"/" + oDateFormat.format(oDate) + "/" + sTiffMap;
+			sTiffMap = oConfig.getFilesBasePath()+"/maps/"+sCode+"/" + oDateFormat.format(oDate) + "/" + sTiffMap+".tif";
 			String sAggregationFile = oAggregation.getPath()+"/"+oAggregation.getShapeFile()+".shp";
-			String sNewLayerId = UUID.randomUUID().toString();
-			String sOutFile = oConfig.getGeoServerDataFolder() + "/omirlaggregations/" + sNewLayerId;
+			String sNewLayerId = "vol_" + UUID.randomUUID().toString();
+			String sOutFile = oConfig.getGeoServerDataFolder() + "/omirlaggregations/" + sNewLayerId+".shp";
 			
 			System.out.println("GetAggregatedLayerId: Tiff "+sTiffMap + " Aggregation: " + sAggregationFile + " Output: " + sOutFile);
 			
