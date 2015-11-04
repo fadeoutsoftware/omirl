@@ -3229,7 +3229,7 @@ var MapController = (function () {
         // Selected Map Link
         if (oController.m_oSelectedMapLink != null)
         {
-            oController.selectedDynamicLayer(oController.m_oSelectedMapLink,oController.m_sHydroThirdLevelSelectedModifier);
+            oController.selectedDynamicLayer(oController.m_oSelectedMapLink,oController.m_sMapThirdLevelSelectedModifier);
         }
 
         // Selected Sensor Link
