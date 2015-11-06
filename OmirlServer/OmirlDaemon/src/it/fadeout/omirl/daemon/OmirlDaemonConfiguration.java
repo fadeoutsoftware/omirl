@@ -4,6 +4,7 @@ import it.fadeout.omirl.business.AnagTableInfo;
 import it.fadeout.omirl.business.ChartInfo;
 import it.fadeout.omirl.business.HydroModelTables;
 import it.fadeout.omirl.business.MapInfo;
+import it.fadeout.omirl.business.MaxHydroAlertZone;
 import it.fadeout.omirl.business.MaxTableInfo;
 import it.fadeout.omirl.business.ModelGalleryInfo;
 import it.fadeout.omirl.business.SectionLayerInfo;
@@ -25,6 +26,8 @@ public class OmirlDaemonConfiguration {
 	ArrayList<ChartInfo> chartsInfo = new ArrayList<>();
 	
 	ArrayList<AnagTableInfo> anagTablesInfo = new ArrayList<>();
+	
+	private ArrayList<MaxHydroAlertZone> maxHydroAlertZone = new ArrayList<>();
 	
 	WindSummaryConfiguration windSummaryInfo = new WindSummaryConfiguration();
 	
@@ -51,6 +54,7 @@ public class OmirlDaemonConfiguration {
 	boolean enableDailyTask;
 	boolean enableMaxTable;
 	private boolean enableHydroModel;
+	private boolean enableMaxHydroAlertZones;
 	
 	MaxTableInfo alertMaxTable;
 	MaxTableInfo districtMaxTable;
@@ -334,5 +338,22 @@ public class OmirlDaemonConfiguration {
 
 	public void setEnableHydroModel(boolean enableHydroModel) {
 		this.enableHydroModel = enableHydroModel;
-	}	
-}
+	}
+
+	public ArrayList<MaxHydroAlertZone> getMaxHydroAlertZone() {
+		return maxHydroAlertZone;
+	}
+
+	public void setMaxHydroAlertZone(ArrayList<MaxHydroAlertZone> maxHydroAlertZone) {
+		this.maxHydroAlertZone = maxHydroAlertZone;
+	}
+
+	public boolean isEnableMaxHydroAlertZones() {
+		return enableMaxHydroAlertZones;
+	}
+
+	public void setEnableMaxHydroAlertZones(boolean enableMaxHydroAlertZones) {
+		this.enableMaxHydroAlertZones = enableMaxHydroAlertZones;
+	}
+
+	}

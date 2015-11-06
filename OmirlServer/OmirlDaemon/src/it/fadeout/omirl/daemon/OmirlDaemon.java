@@ -10,6 +10,7 @@ import it.fadeout.omirl.business.DataSerie;
 import it.fadeout.omirl.business.DataSeriePoint;
 import it.fadeout.omirl.business.HydroModelTables;
 import it.fadeout.omirl.business.MapInfo;
+import it.fadeout.omirl.business.MaxHydroAlertZone;
 import it.fadeout.omirl.business.MaxTableInfo;
 import it.fadeout.omirl.business.MaxTableRow;
 import it.fadeout.omirl.business.ModelGalleryInfo;
@@ -40,6 +41,8 @@ import it.fadeout.omirl.data.StationLastDataRepository;
 import it.fadeout.omirl.viewmodels.AlertZoneSummaryInfo;
 import it.fadeout.omirl.viewmodels.DistrictSummaryInfo;
 import it.fadeout.omirl.viewmodels.MapInfoViewModel;
+import it.fadeout.omirl.viewmodels.MaxHydroAlertZoneRowViewModel;
+import it.fadeout.omirl.viewmodels.MaxHydroAlertZoneViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableViewModel;
 import it.fadeout.omirl.viewmodels.ModelGallery;
@@ -119,7 +122,7 @@ public class OmirlDaemon {
 
 		//Test();
 		//testDate();
-		TestGeoTiff();
+		//TestGeoTiff();
 
 		//WriteSampleConfig();
 
@@ -154,6 +157,7 @@ public class OmirlDaemon {
 		//RefreshGallery();
 		//if (true) return;
 		//RefreshHydroModel();
+		//maxHydroAlertZones();
 		//----------------TEST------------------
 
 
@@ -1006,6 +1010,10 @@ public class OmirlDaemon {
 					System.out.println("OmirlDaemon - Max Table");
 					if (m_oConfig.isEnableMaxTable()) maxTable();
 
+					// Max Hydro Alert Zones
+					System.out.println("OmirlDaemon - Max Hydro Alert Zones");
+					if (m_oConfig.isEnableMaxHydroAlertZones()) maxHydroAlertZones();
+
 					// Sections Layer
 					System.out.println("OmirlDaemon - Sections Layer");
 					if (m_oConfig.isEnableSectionsLayer()) RefreshSectionsLayer();
@@ -1665,6 +1673,130 @@ public class OmirlDaemon {
 		catch(Exception oEx) {
 			oEx.printStackTrace();
 		}
+	}
+
+	private void maxHydroAlertZones()
+	{
+		System.out.println("Max Hydro Alert Zones Start");
+
+		try{
+			// Reference Date: today starting from midnight
+			Date oActualDate = new Date();
+
+			// repository
+			StationAnagRepository oStationAnagRepository = new StationAnagRepository();
+			StationLastDataRepository oStationLastDataRepository = new StationLastDataRepository();
+			StationDataRepository oStationDataRepository = new StationDataRepository();
+			
+			MaxHydroAlertZoneViewModel oMaxHydroAlertZoneViewModel = new MaxHydroAlertZoneViewModel();
+			
+			// select by warning area
+			List<StationAnag> oStationList = oStationAnagRepository.SelectAll(StationAnag.class);
+			// get last data value
+			List<SensorLastData> oStationLastData = oStationLastDataRepository.selectByStationType("lastdataidro");
+
+			// Alert Zone table
+			for (int iAlertZone=0; iAlertZone<m_oConfig.getMaxHydroAlertZone().size(); iAlertZone++)
+			{
+
+				// search station with warning area
+				String sWarningArea = m_oConfig.getMaxHydroAlertZone().get(iAlertZone).getZone();
+
+				// Station List
+				for (int iStation=0; iStation< oStationList.size(); iStation++)
+				{
+					if (oStationList.get(iStation).getWarn_area() == null || !oStationList.get(iStation).getWarn_area().contains(sWarningArea))
+						continue;
+					
+					// previous 24h 
+					Date oDate = new Date();
+					oDate.setTime(oDate.getTime() - 24 * 3600 * 1000);
+					
+					//max value
+					MaxTableRow oMaxTableRow = oStationDataRepository.GetStationAlertZonesMaxTableCell(oStationList.get(iStation).getStation_code(), "mean_creek_level", sWarningArea, oDate);
+					if (oMaxTableRow != null)
+					{
+						// new view model
+						MaxHydroAlertZoneRowViewModel oViewModel = new MaxHydroAlertZoneRowViewModel();
+						oViewModel.setDate24HMax(oMaxTableRow.getReference_date());
+						oViewModel.setValueOnDate24HMax(oMaxTableRow.getValue());
+						oViewModel.setStation(oStationList.get(iStation).getName());
+						oViewModel.setCode(oStationList.get(iStation).getStation_code());
+						oViewModel.setMunicipality(oStationList.get(iStation).getMunicipality());
+						oViewModel.setRiver(oStationList.get(iStation).getRiver());
+						oViewModel.setWarnArea(sWarningArea);
+						oViewModel.setBasin(oStationList.get(iStation).getBasin());
+						oViewModel.setDistrict(oStationList.get(iStation).getDistrict());
+
+						// last value
+						for (SensorLastData sensorLastData : oStationLastData) {
+							if (sensorLastData.getStation_code().equals(oStationList.get(iStation).getStation_code()))
+							{
+								oViewModel.setValueOnDateRef(sensorLastData.getSensorvalue());
+								oViewModel.setDateRef(sensorLastData.getReference_date());
+							}
+						}
+						
+						switch (sWarningArea) {
+						case "A":
+							oMaxHydroAlertZoneViewModel.getAlertZonesA().add(oViewModel);
+							break;
+						case "B":
+							oMaxHydroAlertZoneViewModel.getAlertZonesB().add(oViewModel);
+							break;
+						case "C":
+							oMaxHydroAlertZoneViewModel.getAlertZonesC().add(oViewModel);
+							break;
+						case "D":
+							oMaxHydroAlertZoneViewModel.getAlertZonesD().add(oViewModel);
+							break;
+						case "E":
+							oMaxHydroAlertZoneViewModel.getAlertZonesE().add(oViewModel);
+							break;
+						case "M":
+							oMaxHydroAlertZoneViewModel.getAlertZonesM().add(oViewModel);
+							break;
+						case "C+":
+							oMaxHydroAlertZoneViewModel.getAlertZonesCPlus().add(oViewModel);
+							break;
+						case "C-":
+							oMaxHydroAlertZoneViewModel.getAlertZonesCLess().add(oViewModel);
+							break;
+						default:
+							break;
+						}
+						
+					}
+				}
+			}
+			
+			String sBasePath = m_oConfig.getFileRepositoryPath();
+
+			String sOutputPath = sBasePath + "/tables/maxhydrozones";
+
+			SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+			String sFullDir = sOutputPath + "/" + oDateFormat.format(oActualDate);
+
+			File oOutPath = new File(sFullDir);
+			if (oOutPath.exists() == false) {
+				oOutPath.mkdirs();
+				oOutPath.setReadable(true,false);
+				oOutPath.setWritable(true, false);
+			}
+
+			String sOutputFile = sFullDir + "/maxhydroalertzone" +m_oDateFormat.format(new Date())+".xml"; 
+
+			SerializationUtils.serializeObjectToXML(sOutputFile, oMaxHydroAlertZoneViewModel);
+
+			System.out.println("Max Hydro Alert Zones End");
+		}
+		catch(Exception oEx)
+		{
+			oEx.printStackTrace();
+		}
+
+
 	}
 
 	@SuppressWarnings("deprecation")
@@ -4425,6 +4557,47 @@ public class OmirlDaemon {
 
 		oConfig.getChartsInfo().add(oInfo);
 
+		MaxHydroAlertZone oMaxHydroAlertZone = new MaxHydroAlertZone();
+		oMaxHydroAlertZone.setName("Marittimi di ponente");
+		oMaxHydroAlertZone.setDescription("MARITTIMI_PONENTE");
+		oMaxHydroAlertZone.setZone("A");
+		oConfig.getMaxHydroAlertZone().add(oMaxHydroAlertZone);
+		oMaxHydroAlertZone = new MaxHydroAlertZone();
+		oMaxHydroAlertZone.setName("Marittimi di centro");
+		oMaxHydroAlertZone.setDescription("MARITTIMI_CENTRO");
+		oMaxHydroAlertZone.setZone("B");
+		oConfig.getMaxHydroAlertZone().add(oMaxHydroAlertZone);
+		oMaxHydroAlertZone = new MaxHydroAlertZone();
+		oMaxHydroAlertZone.setName("Marittimi di levante");
+		oMaxHydroAlertZone.setDescription("MARITTIMI_LEVANTE");
+		oMaxHydroAlertZone.setZone("C");
+		oConfig.getMaxHydroAlertZone().add(oMaxHydroAlertZone);
+		oMaxHydroAlertZone = new MaxHydroAlertZone();
+		oMaxHydroAlertZone.setName("Padani di ponente");
+		oMaxHydroAlertZone.setDescription("PADANI_PONENTE");
+		oMaxHydroAlertZone.setZone("D");
+		oConfig.getMaxHydroAlertZone().add(oMaxHydroAlertZone);
+		oMaxHydroAlertZone = new MaxHydroAlertZone();
+		oMaxHydroAlertZone.setName("Padani di levante");
+		oMaxHydroAlertZone.setDescription("PADANI_LEVANTE");
+		oMaxHydroAlertZone.setZone("E");
+		oConfig.getMaxHydroAlertZone().add(oMaxHydroAlertZone);
+		oMaxHydroAlertZone = new MaxHydroAlertZone();
+		oMaxHydroAlertZone.setName("C+ Magra");
+		oMaxHydroAlertZone.setDescription("C+_MAGRA");
+		oMaxHydroAlertZone.setZone("C+");
+		oConfig.getMaxHydroAlertZone().add(oMaxHydroAlertZone);
+		oMaxHydroAlertZone = new MaxHydroAlertZone();
+		oMaxHydroAlertZone.setName("C- Magra");
+		oMaxHydroAlertZone.setDescription("C-_MAGRA");
+		oMaxHydroAlertZone.setZone("C-");
+		oConfig.getMaxHydroAlertZone().add(oMaxHydroAlertZone);
+		oMaxHydroAlertZone = new MaxHydroAlertZone();
+		oMaxHydroAlertZone.setName("Magra");
+		oMaxHydroAlertZone.setDescription("M_MAGRA");
+		oMaxHydroAlertZone.setZone("M");
+		oConfig.getMaxHydroAlertZone().add(oMaxHydroAlertZone);
+
 		AnagTableInfo oTableInfo = new AnagTableInfo();
 		oTableInfo.setSensorType("Pluvio");
 		oTableInfo.setColumnName("rain_01h_every");
@@ -4976,7 +5149,7 @@ public class OmirlDaemon {
 
 		return aoFiles;
 	}
-	
+
 
 	private static void TestGeoTiff() {
 		GeoServerDataManager2 oManager = new GeoServerDataManager2("http://93.62.155.217:8080/geoserver/", "", "admin", "geo4Omirl");
