@@ -192,4 +192,32 @@ public class StationAnagRepository extends Repository<StationAnag> {
 		}
 		return aoLastValues;			
 	}
+	
+	
+	public List<StationAnag> selectByWarnArea(String sWarnArea) {
+
+		Session oSession = null;
+		List<StationAnag> aoLastValues = null;
+		try {
+			oSession = HibernateUtils.getSessionFactory().openSession();
+			Query oQuery = oSession.createQuery("from StationAnag where warn_area like '%" + sWarnArea+ "%'");
+			if (oQuery.list().size() > 0)
+				aoLastValues =  (List<StationAnag>) oQuery.list();
+
+		}
+		catch(Throwable oEx) {
+			System.err.println(oEx.toString());
+			oEx.printStackTrace();
+		}
+		finally {
+			if (oSession!=null) {
+				oSession.flush();
+				oSession.clear();
+				oSession.close();
+			}
+
+		}
+		return aoLastValues;		
+	}
+
 }

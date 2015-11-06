@@ -507,5 +507,50 @@ public class StationDataRepository extends Repository<StationData>{
 		
 	}
 	
+	public MaxTableRow GetStationAlertZonesMaxTableCell(String sStationCode, String sColumn, String sFilter, Date oDate)
+	{
+		Session oSession = null;
+		MaxTableRow oMax = null;
+		
+		try {
+			
+			Calendar calStart = new GregorianCalendar();
+			calStart.setTime(oDate);
+			calStart.set(Calendar.HOUR_OF_DAY, 0);
+			calStart.set(Calendar.MINUTE, 0);
+			calStart.set(Calendar.SECOND, 0);
+			calStart.set(Calendar.MILLISECOND, 0);
+			oDate = calStart.getTime();
+			
+			oSession = HibernateUtils.getSessionFactory().openSession();
+			
+			String sQuery = "select MAX(station_data." + sColumn +") as value, station_data.reference_date, station_anag.name as station_name, station_anag.station_code as station_code from station_data inner join station_anag on station_data.station_code = station_anag.station_code where warn_area like '%"+sFilter+"%' and station_data.station_code = '" + sStationCode + "'  and station_data." + sColumn + " is not null and reference_date >= ? "
+					+ "group by station_data.reference_date, station_name, station_anag.station_code order by value desc limit 1";
+			
+			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(MaxTableRow.class);
+			oQuery.setParameter(0, oDate);
+			if (oQuery.list().size() > 0) 
+			{
+				oMax = new MaxTableRow();
+				oMax =  (MaxTableRow) oQuery.list().get(0);
+			}
+		}
+		catch(Throwable oEx) {
+			System.err.println(oEx.toString());
+			oEx.printStackTrace();
+		}
+		finally {
+			if (oSession!=null) {
+				oSession.flush();
+				oSession.clear();
+				oSession.close();
+			}
+
+		}
+		return oMax;		
+		
+	}
+	
+	
 	
 }
