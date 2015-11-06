@@ -23,6 +23,8 @@ import it.fadeout.omirl.business.config.SensorLinkConfig;
 import it.fadeout.omirl.business.config.TableLinkConfig;
 import it.fadeout.omirl.data.StationAnagRepository;
 import it.fadeout.omirl.viewmodels.HydroModelViewModel;
+import it.fadeout.omirl.viewmodels.MaxHydroAlertZoneRowViewModel;
+import it.fadeout.omirl.viewmodels.MaxHydroAlertZoneViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableRowViewModel;
 import it.fadeout.omirl.viewmodels.MaxTableViewModel;
 import it.fadeout.omirl.viewmodels.MobileStation;
@@ -318,6 +320,85 @@ public class TablesService {
 		// Return the list of sensors
 		return oMaxTable;
 	}
+
+	@GET
+	@Path("/maxhydroalert")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public MaxHydroAlertZoneViewModel GetMaxHydroAlertZone(@HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
+		System.out.println("TablesService.GetMaxTable");
+
+		// Create return array List
+		MaxHydroAlertZoneViewModel oMaxTable = null;
+		// Date: will be received from client...
+		Date oDate = new Date();
+
+		if (sRefDate!=null)
+		{
+			if (sRefDate.equals("") == false) 
+			{
+				// Try e catch per fare il parsing 
+				// se è valido sostituire oDate.
+				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
+				try {
+
+					oDate = dtFormat.parse(sRefDate);
+
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// Get Config
+		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+
+		if (oConfObj != null)  {
+
+			// Cast Config
+			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
+
+			String sBasePath = oConfig.getFilesBasePath();
+
+			sBasePath += "/tables/maxhydrozones";
+
+			System.out.println("TablesService.GetMaxHydroAlertZones = " + sBasePath);
+
+			// Get The path of the right date
+			String sPath = Omirl.getSubPath(sBasePath, oDate);
+
+			if (sPath != null) {
+
+				System.out.println("TablesService.GetSummaryTable: searching path " + sPath);
+
+				// Get The Last File:
+				File oLastFile = Omirl.lastFileModified(sPath, oDate);
+
+				// Found?
+				if (oLastFile != null) {
+
+					System.out.println("TablesService.GetSummaryTable: Opening File " + oLastFile.getAbsolutePath());
+
+					try {
+						// Ok read sensors 
+						oMaxTable = (MaxHydroAlertZoneViewModel) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+						if (oMaxTable != null)
+						{
+							Date oLastDate = new Date(oLastFile.lastModified()); 
+							SimpleDateFormat oFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+							oFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+							oMaxTable.setUpdateDateTime(oFormat.format(oLastDate));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}							
+				}
+			}
+		}
+
+		// Return the list of sensors
+		return oMaxTable;
+	}
+
 
 
 	/**
@@ -691,6 +772,241 @@ public class TablesService {
 
 
 		return Response.ok(stream).header("Content-Disposition", "attachment;filename=Max_Values.csv").build();
+	}
+
+
+	/**
+	 * Gets sensors data
+	 * @return
+	 */
+	@GET
+	@Path("/exportmaxhydrozones")
+	@Produces({"application/octet-stream"})
+	public Response ExportMaxHydroZones(@QueryParam("sRefDate") String sRefDate) {
+
+		// Create return array List
+		MaxHydroAlertZoneViewModel oMaxTable = null;
+		// Date: will be received from client...
+		Date oDate = new Date();
+
+		if (sRefDate!=null)
+		{
+			if (sRefDate.equals("") == false) 
+			{
+				// Try e catch per fare il parsing 
+				// se è valido sostituire oDate.
+				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateQueryParam);
+				try {
+
+					oDate = dtFormat.parse(sRefDate);
+
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// Get Config
+		Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+
+		if (oConfObj != null)  {
+
+			// Cast Config
+			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;			
+
+			String sBasePath = oConfig.getFilesBasePath();
+
+			sBasePath += "/tables/maxhydrozones";
+
+			System.out.println("TablesService.GetMaxTable = " + sBasePath);
+
+			// Get The path of the right date
+			String sPath = Omirl.getSubPath(sBasePath, oDate);
+
+			if (sPath != null) {
+
+				System.out.println("TablesService.GetSummaryTable: searching path " + sPath);
+
+				// Get The Last File:
+				File oLastFile = Omirl.lastFileModified(sPath, oDate);
+
+				// Found?
+				if (oLastFile != null) {
+
+					System.out.println("TablesService.GetSummaryTable: Opening File " + oLastFile.getAbsolutePath());
+
+					try {
+						// Ok read sensors 
+						oMaxTable = (MaxHydroAlertZoneViewModel) Omirl.deserializeXMLToObject(oLastFile.getAbsolutePath());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}							
+				}
+			}
+		}
+
+
+		final MaxHydroAlertZoneViewModel oFinalTable = oMaxTable;
+		StreamingOutput stream = null;
+		if (oFinalTable != null)
+		{
+
+			stream = new StreamingOutput() {
+				@Override
+				public void write(OutputStream os) throws IOException, WebApplicationException {
+					Writer writer = new BufferedWriter(new OutputStreamWriter(os));
+					//Header
+					writer.write("Località;Provincia;Comune;Bacino;Corso;Massimo nelle 24H[m];Ora UTC del massimo;Valore all'ora di rif.[m];Ora di rif.;Area;\n");
+					if (oFinalTable.getAlertZonesA()!=null)
+					{
+						if (oFinalTable.getAlertZonesA().size()>0) 
+						{
+							for (int iTableRows=0; iTableRows<oFinalTable.getAlertZonesA().size(); iTableRows++) {
+
+								MaxHydroAlertZoneRowViewModel oRow = oFinalTable.getAlertZonesA().get(iTableRows);
+								FillRow(writer, oRow);
+							}
+						}
+					}
+
+					if (oFinalTable.getAlertZonesB()!=null)
+					{
+						if (oFinalTable.getAlertZonesB().size()>0) 
+						{
+							for (int iTableRows=0; iTableRows<oFinalTable.getAlertZonesB().size(); iTableRows++) {
+
+								MaxHydroAlertZoneRowViewModel oRow = oFinalTable.getAlertZonesB().get(iTableRows);
+								FillRow(writer, oRow);
+							}
+						}
+					}
+
+					if (oFinalTable.getAlertZonesC()!=null)
+					{
+						if (oFinalTable.getAlertZonesC().size()>0) 
+						{
+							for (int iTableRows=0; iTableRows<oFinalTable.getAlertZonesC().size(); iTableRows++) {
+
+								MaxHydroAlertZoneRowViewModel oRow = oFinalTable.getAlertZonesC().get(iTableRows);
+								FillRow(writer, oRow);
+							}
+						}
+					}
+
+					if (oFinalTable.getAlertZonesD()!=null)
+					{
+						if (oFinalTable.getAlertZonesD().size()>0) 
+						{
+							for (int iTableRows=0; iTableRows<oFinalTable.getAlertZonesD().size(); iTableRows++) {
+
+								MaxHydroAlertZoneRowViewModel oRow = oFinalTable.getAlertZonesD().get(iTableRows);
+								FillRow(writer, oRow);
+							}
+						}
+					}
+
+					if (oFinalTable.getAlertZonesE()!=null)
+					{
+						if (oFinalTable.getAlertZonesE().size()>0) 
+						{
+							for (int iTableRows=0; iTableRows<oFinalTable.getAlertZonesE().size(); iTableRows++) {
+
+								MaxHydroAlertZoneRowViewModel oRow = oFinalTable.getAlertZonesE().get(iTableRows);
+								FillRow(writer, oRow);
+							}
+						}
+					}
+
+					if (oFinalTable.getAlertZonesCPlus()!=null)
+					{
+						if (oFinalTable.getAlertZonesCPlus().size()>0) 
+						{
+							for (int iTableRows=0; iTableRows<oFinalTable.getAlertZonesCPlus().size(); iTableRows++) {
+
+								MaxHydroAlertZoneRowViewModel oRow = oFinalTable.getAlertZonesCPlus().get(iTableRows);
+								FillRow(writer, oRow);
+							}
+						}
+					}
+
+					if (oFinalTable.getAlertZonesCLess()!=null)
+					{
+						if (oFinalTable.getAlertZonesCLess().size()>0) 
+						{
+							for (int iTableRows=0; iTableRows<oFinalTable.getAlertZonesCLess().size(); iTableRows++) {
+
+								MaxHydroAlertZoneRowViewModel oRow = oFinalTable.getAlertZonesCLess().get(iTableRows);
+								FillRow(writer, oRow);
+							}
+						}
+					}
+
+					if (oFinalTable.getAlertZonesM()!=null)
+					{
+						if (oFinalTable.getAlertZonesM().size()>0) 
+						{
+							for (int iTableRows=0; iTableRows<oFinalTable.getAlertZonesM().size(); iTableRows++) {
+
+								MaxHydroAlertZoneRowViewModel oRow = oFinalTable.getAlertZonesM().get(iTableRows);
+								FillRow(writer, oRow);
+							}
+						}
+					}
+
+
+					//writer.write("test");
+					writer.flush();
+
+				}
+			};
+
+		}
+
+
+		return Response.ok(stream).header("Content-Disposition", "attachment;filename=Max_Values.csv").build();
+
+	}
+
+	private void FillRow(Writer oWriter, MaxHydroAlertZoneRowViewModel oRow)
+	{
+		try
+		{
+			String sLoc = oRow.getStation() + " [" + oRow.getCode() + "]";
+			String sProv = oRow.getDistrict();
+			String sComune = oRow.getMunicipality();
+			String sBasin = oRow.getBasin();
+			String sCorso = oRow.getRiver();
+			String sMax24h = String.valueOf(oRow.getValueOnDate24HMax());
+			String sOra24h = oRow.getDate24HMax().toString();
+			String sValueH = String.valueOf(oRow.getValueOnDateRef());
+			String sOraRef = oRow.getDateRef().toString();
+			String sArea = oRow.getWarnArea();
+
+			if (sLoc == null) sLoc ="";
+			if (sProv == null) sProv ="";
+			if (sComune == null) sComune ="";
+			if (sBasin == null) sBasin ="";
+			if (sCorso == null) sCorso ="";
+			if (sMax24h == null) sMax24h ="";
+			if (sOra24h == null) sOra24h ="";
+			if (sValueH == null) sValueH ="";
+			if (sOraRef == null) sOraRef ="";
+			if (sArea == null) sArea ="";
+
+
+			oWriter.write(sLoc+";");
+			oWriter.write(sProv+";");
+			oWriter.write(sComune+";");
+			oWriter.write(sBasin+";");
+			oWriter.write(sCorso+";");
+			oWriter.write(sMax24h+";");
+			oWriter.write(sOra24h+";");
+			oWriter.write(sValueH+";");
+			oWriter.write(sOraRef+";");
+			oWriter.write(sArea+";");
+			oWriter.write("\n");
+		}
+		catch(Exception e){e.printStackTrace();}
 	}
 
 
