@@ -77,6 +77,7 @@ omirlApp.config(function($routeProvider) {
         $routeProvider.when('/modelstable', {templateUrl: 'partials/modelstable.html', controller: 'ModelsTableController'});
         $routeProvider.when('/modelsgallery', {templateUrl: 'partials/modelsgallery.html', controller: 'ModelsGalleryController'});
         $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'UsersController'});
+        $routeProvider.when('/alertzones', {templateUrl: 'partials/maxhydroalertzones.html', controller: 'MaxHydroAlertZoneController'});
 
 
         $routeProvider.otherwise({redirectTo: '/map'});

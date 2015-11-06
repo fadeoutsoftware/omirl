@@ -1331,6 +1331,7 @@ table.omirltbl th {
     padding:5px;
     border:1px solid #fff;
     border-width:0 1px 1px 0;
+
 }
 
 thead.omirltbl th {
@@ -1392,7 +1393,7 @@ tbody.omirltbl td.odd {
 /*------User table--------------*/
 
 .table-user-td-left-align{
-    text-align: left;
+    text-align: left !important;
 }
 
 /*------User table--------------*/
@@ -1417,3 +1418,8 @@ tbody.omirltbl td.odd {
     -webkit-transition: all .3s;
     transition: all .3s;
 }
+
+.h2-text-center{
+    text-align: center;
+}
+

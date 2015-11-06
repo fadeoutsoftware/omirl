@@ -259,10 +259,20 @@ angular.module('omirl.TableService', ['omirl.ConstantsService']).
             return this.m_oHttp.get(this.APIURL + '/tables/max');
         }
 
+        this.getMaxHydroAlertZones = function() {
+            return this.m_oHttp.get(this.APIURL + '/tables/maxhydroalert');
+        }
+
         this.exportCsvMax = function(sRefDate) {
             var sAPIURL = this.APIURL;
 
             return sAPIURL + '/tables/exportmaxvalues?sRefDate=' + sRefDate;
+        }
+
+        this.exportCsvMaxHydroZones = function(sRefDate) {
+            var sAPIURL = this.APIURL;
+
+            return sAPIURL + '/tables/exportmaxhydrozones?sRefDate=' + sRefDate;
         }
 
         this.getStationAnag = function(sCode) {

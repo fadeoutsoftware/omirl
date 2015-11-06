@@ -303,5 +303,16 @@
     "USER_SAVETOOLTIP": "Salva Utente fr",
     "USER_DELETETOOLTIP": "Cancella Utente fr",
     "SECTIONCHART_NODATA": "Impossibile caricare il grafico della sezione {{value}} fr",
-    "RADARSATMENU_TITOLO": "Satellite e Radar fr"
+    "RADARSATMENU_TITOLO": "Satellite e Radar fr",
+    "MAXHYDROALERT_TITOLO": "Riepilogo Valori Idrometrici Massimi su Zone di Allerta fr",
+    "MAXHYDROALERT_UPDATEINFO":"Dati  Aggiornati il {{data}} Ore locali fr",
+    "MAXHYDROALERT_A":"A [Marittimi di Ponente] fr",
+    "MAXHYDROALERT_B":"B [Marittimi di Centro] fr",
+    "MAXHYDROALERT_C":"C [Marittimi di Levante] fr",
+    "MAXHYDROALERT_D":"D [Padani di Ponente] fr",
+    "MAXHYDROALERT_E":"E [Padani di Levante] fr",
+    "MAXHYDROALERT_C+":"C+ [C + Magra] fr",
+    "MAXHYDROALERT_C-":"C- [C - Magra] fr",
+    "MAXHYDROALERT_M":"M [Magra] fr",
+    "OMIRLCONFIG_ZONEALLERTA": "Livelli idrometrici max su zone di allerta fr"
 }
