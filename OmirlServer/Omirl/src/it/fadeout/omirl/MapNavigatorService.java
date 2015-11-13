@@ -70,6 +70,33 @@ public class MapNavigatorService {
 			oConfig = Omirl.deserializeXMLToObject(sConfigFilePath);
 			
 			OmirlNavigationConfig oConfiguration = (OmirlNavigationConfig) oConfig;
+			
+			if (oConfiguration.getHydroLinks()!=null)
+			{
+				if (oConfiguration.getFlattedHydroLinks()==null)
+				{
+					oConfiguration.setFlattedHydroLinks(new ArrayList<HydroLinkConfig>());
+				}
+
+				for (HydroLinkConfig oHLinkConfig : oConfiguration.getHydroLinks()) {
+					oConfiguration.getFlattedHydroLinks().add(oHLinkConfig);
+
+					if (oHLinkConfig.getChildren()!=null)
+					{
+						for (HydroLinkConfig oChild1 : oHLinkConfig.getChildren()) {
+							oConfiguration.getFlattedHydroLinks().add(oChild1);
+
+							if (oChild1.getChildren()!=null)
+							{
+								for (HydroLinkConfig oChild2 : oChild1.getChildren()) {
+									oConfiguration.getFlattedHydroLinks().add(oChild2);
+								}	
+							}								
+						}	
+					}
+				}
+			}
+			
 			m_oServletConfig.getServletContext().setAttribute("Config", oConfiguration);
 			
 		} catch (Exception e) {
