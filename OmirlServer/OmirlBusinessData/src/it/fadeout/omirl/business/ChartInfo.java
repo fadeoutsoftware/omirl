@@ -21,6 +21,7 @@ public class ChartInfo {
 	String color;
 	//Refresh in minutes
 	int refreshTime;
+	long lastRefreshTime;
 	
 	public String getName() {
 		return name;
@@ -130,5 +131,11 @@ public class ChartInfo {
 	}
 	public void setRefreshTime(int refreshTime) {
 		this.refreshTime = refreshTime;
+	}
+	public long getLastRefreshTime() {
+		return lastRefreshTime;
+	}
+	public void setLastRefreshTime(long lastRefreshTime) {
+		this.lastRefreshTime = lastRefreshTime;
 	}
 }
