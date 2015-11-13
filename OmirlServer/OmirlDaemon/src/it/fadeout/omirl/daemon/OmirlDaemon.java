@@ -1125,7 +1125,12 @@ public class OmirlDaemon {
 
 		Boolean bReturn = false;
 		long lNow = new Date().getTime();
-		if (lReferenceDate <= 0) return true;
+		if (lReferenceDate <= 0) 
+		{
+			// Imposta ChartInfo oInfo = aoChartInfo.get(0);
+			// oInfo.setLastRefreshTime(lNow); alla mezzanotte di oggi
+			return true;
+		}
 
 		if (aoChartInfo != null)
 		{
@@ -1134,7 +1139,11 @@ public class OmirlDaemon {
 				ChartInfo oInfo = aoChartInfo.get(0);
 				//Convert time in minutes
 				long lRefreshMilliseconds = oInfo.getRefreshTime() * 60 * 1000;
-				if ((lNow - lReferenceDate) > lRefreshMilliseconds) bReturn = true;
+				if ((lNow - lReferenceDate) > lRefreshMilliseconds)
+				{
+					oInfo.setLastRefreshTime(lNow);
+					bReturn = true;
+				}
 			}
 		}
 
