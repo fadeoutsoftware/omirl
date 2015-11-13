@@ -110,7 +110,14 @@ var ChartController = (function() {
             var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sSectionCode);
 
             //change dialog title
-            oControllerVar.m_oTranslate('DIALOGTITLE', {name: oControllerVar.m_oDialogModel.name, municipality: oControllerVar.m_oDialogModel.municipality, subTitle: oControllerVar.oChartVM.subTitle}).then(function(text) {
+            var oDateUTC = "";
+            try {
+                oDateUTC = new Date(oControllerVar.oChartVM.subTitle.split("-")[1] + " UTC");
+            }catch (ex){
+
+            }
+
+            oControllerVar.m_oTranslate('DIALOGTITLE', {name: oControllerVar.m_oDialogModel.name, municipality: oControllerVar.m_oDialogModel.municipality, subTitle: oDateUTC.toString() }).then(function(text) {
                 //oDialog.scope.model.subTitle = text;
                 //$('$sectionChart.html').dialog('option', 'title', text);
                 oControllerVar.m_oDialogService.updateTitle(oControllerVar.m_sSectionCode, text);
@@ -358,6 +365,7 @@ var ChartController = (function() {
                                 type: 'day',
                                 count: 15,
                                 text: '15gg'
+                            }/*, {
                             }/*, {
                                 type: 'all',
                                 text: 'Tutti'

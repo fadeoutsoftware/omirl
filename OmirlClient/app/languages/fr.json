@@ -298,6 +298,7 @@
     "MODELGALLERY_NOIMAGE" : "Selezionare nel menù a sinistra un modello ed una variabile fr",
     "MODELGALLERY_NODATA" : "Nessuna immagine disponibile fr",
     "MODELGALLERY_LOADING" : "Loading",
+    "MODELGALLERY_TITLE" : "Modelli Meteo Marini fr",
     "USER_TITLE": "Gestione Utenti fr",
     "USER_ADDTOOLTIP": "Aggiungi Utente fr",
     "USER_SAVETOOLTIP": "Salva Utente fr",

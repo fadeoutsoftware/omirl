@@ -257,7 +257,7 @@ and open the template in the editor.
   .map .map-legend {
     position: absolute;
     bottom: 40px;
-    left: 200px; }
+    left: 20%; }
 
 /* 
     Created on : 19-ott-2015, 10.37.16
@@ -407,9 +407,7 @@ div.menu-languages-container{
       letter-spacing: -2px; }
     .service-item p {
       top: 3.5em;
-      padding-left: 20px; }
-    .service-item.mod-meteo-marini p {
-      top: 6.5em; } }
+      padding-left: 20px; } }
 
 @media only screen and (max-width: 700px) {
   .ui-dialog {
@@ -435,6 +433,12 @@ div.menu-languages-container{
   padding-top: 4px; }
   .panel-heading.tables_page .form-group {
     margin-bottom: 0px; }
+
+.clearfix {
+  clear: both; }
+
+li.clearfix {
+  float: none; }
 
 .no-text-select {
   -webkit-touch-callout: none;

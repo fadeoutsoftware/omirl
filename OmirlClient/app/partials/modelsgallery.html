@@ -1,26 +1,32 @@
 <div ng-include="'partials/gallerymenu.html'"></div>
 
-<div class='gallery-wrapper' ng-init='initGallery()'>
-    
-    <!-- Loading block -->
-    <div class='loading' ng-if="isGalleryReady == false">
-        <h1>{{m_sLoadingText}}</h1>
-    </div>
-    
-    <!-- Gallery -->
-    <div ng-if="isGalleryReady == true" style='height: 100%; width: 100%;'>
-        <!-- slider container -->
-        <div class="container slider no-text-select">
+<div class="container">
 
-            <!-- enumerate all photos -->
-            <img class="slide" 
-                 ng-repeat="photo in photos"
-                 ng-swipe-right="showPrev()"
-                 ng-swipe-left="showNext()"
-                 ng-show="isActive($index)"
-                 ng-src="{{photo.imageLink}}" />
+    <div class="Tabella_Stazioni">
+        <h1 class="medium">{{'MODELGALLERY_TITLE' | translate}}</h1><br>
+        <hr>
 
-            <!-- prev / next controls -->
+        <div class='gallery-wrapper' ng-init='initGallery()'>
+
+            <!-- Loading block -->
+            <div class='loading' ng-if="isGalleryReady == false">
+                <h1>{{m_sLoadingText}}</h1>
+            </div>
+
+            <!-- Gallery -->
+            <div ng-if="isGalleryReady == true" style='height: 100%; width: 100%;'>
+                <!-- slider container -->
+                <div class="container slider no-text-select">
+
+                    <!-- enumerate all photos -->
+                    <img class="slide"
+                         ng-repeat="photo in photos"
+                         ng-swipe-right="showPrev()"
+                         ng-swipe-left="showNext()"
+                         ng-show="isActive($index)"
+                         ng-src="{{photo.imageLink}}" />
+
+                    <!-- prev / next controls -->
             <span class="arrow prev no-text-select" ng-click="showPrev()">
                 <span class="arrow-icon fa-stack fa-lg">
                     <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
@@ -33,43 +39,41 @@
                     <i class="fa fa-arrow-right fa-stack-1x"></i>
                 </span>
             </span>
+                </div>
 
+                <!-- extra navigation controls -->
+                <div class='thumbnails-wrapper'>
+                    <ul class="nav">
+                        <li ng-repeat="photo in photos" ng-class="{'active':isActive($index)}" ng-show="photo.visible">
+                            <img ng-src="{{photo.imageLink}}" alt="{{photo.description | translate}}" title="{{photo.description | translate}}" ng-click="showPhoto($index);"/>
+                            <span>{{$index}}</span>
+                        </li>
+                    </ul>
+                </div>
 
-
+                <div class='controls'>
+                    <button ng-click="goToFirst()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
+                        <i class="fa fa-step-backward"></i>
+                    </button>
+                    <button ng-click="showPrev()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
+                        <i class="fa fa-backward"></i>
+                    </button>
+                    <button ng-click="stopAutoplay()">
+                        <i class="fa fa-stop"></i>
+                    </button>
+                    <button ng-click="toggleAutoplay()">
+                        <i class="fa fa-play" ng-show="m_bIsAutoplayEnabled == false"></i>
+                        <i class="fa fa-pause" ng-show="m_bIsAutoplayEnabled == true"></i>
+                    </button>
+                    <button ng-click="showNext()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
+                        <i class="fa fa-forward"></i>
+                    </button>
+                    <button ng-click="goToLast()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
+                        <i class="fa fa-step-forward"></i>
+                    </button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
         </div>
-
-        <!-- extra navigation controls -->
-        <div class='thumbnails-wrapper'>
-            <ul class="nav">
-                <li ng-repeat="photo in photos" ng-class="{'active':isActive($index)}" ng-show="photo.visible">
-                    <img ng-src="{{photo.imageLink}}" alt="{{photo.description | translate}}" title="{{photo.description | translate}}" ng-click="showPhoto($index);"/>
-                    <span>{{$index}}</span>
-                </li>
-            </ul>
-        </div>
-
-        <div class='controls'>
-            <button ng-click="goToFirst()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
-                <i class="fa fa-step-backward"></i>
-            </button>
-            <button ng-click="showPrev()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
-                <i class="fa fa-backward"></i>
-            </button>
-            <button ng-click="stopAutoplay()">
-                <i class="fa fa-stop"></i>
-            </button>
-            <button ng-click="toggleAutoplay()">
-                <i class="fa fa-play" ng-show="m_bIsAutoplayEnabled == false"></i>
-                <i class="fa fa-pause" ng-show="m_bIsAutoplayEnabled == true"></i>
-            </button>
-            <button ng-click="showNext()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
-                <i class="fa fa-forward"></i>
-            </button>           
-            <button ng-click="goToLast()" ng-disabled="m_bIsAutoplayEnabled == true" ng-class="{'disabled' : m_bIsAutoplayEnabled == true}">
-                <i class="fa fa-step-forward"></i>
-            </button>
-        </div>
-
-        <div class="clearfix"></div>
     </div>
 </div>

@@ -5,9 +5,9 @@
 'use strict';
 angular.module('omirl.ConstantsService', []).
     service('ConstantsService', [function () {
-        this.APIURL = 'http://localhost:8080/Omirl/rest';
+        //this.APIURL = 'http://localhost:8080/Omirl/rest';
         //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        //this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
+        this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
 
         this.m_aoSensorLinks = [];
         this.m_aoHydroLinks = [];
@@ -27,7 +27,6 @@ angular.module('omirl.ConstantsService', []).
 
 
         this.isMobile = function() {
-            console.debug("is mobile");
 
             if (navigator.userAgent.match((/Android/i)) ||
                 navigator.userAgent.match(/BlackBerry/i) ||

@@ -31,6 +31,11 @@ $size-sidebar-left-toggle-h: $size-map-titlebar-h;
 @import "template_overriding";
 @import "mobile";
 
+.clearfix{clear: both;
+
+}
+
+li.clearfix{float: none;}
 
 .no-text-select{ @include noselect;}
 

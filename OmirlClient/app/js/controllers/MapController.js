@@ -348,7 +348,7 @@ var MapController = (function () {
             for(var key in data)
             {
                 data[key].hasSubLevel = false;
-                data[key].myLevel = 1;
+                data[key].myLevel = oControllerVar.MENU_LEVEL_1;
             }
             //******************************************************************
 
@@ -1825,6 +1825,19 @@ var MapController = (function () {
                 // Remember it exists now
                 oServiceVar.m_oMapService.stationsPopupControllerAdded = true;
             }
+
+            if (aoStations.length == 0)
+            {
+                oServiceVar.m_oTranslateService('MAP_NOT_AVAILABLE').then(function(msg){
+                    oServiceVar.activeDirectiveScope.callbackDeselectLastClickedMenuItem(oSensorLink.myLevel);
+
+                    vex.dialog.alert({
+                        message: msg
+                    });
+
+                });
+            }
+
         }).error(function(data,status){
             oServiceVar.m_oLog.error('Error contacting Omirl Server');
         });

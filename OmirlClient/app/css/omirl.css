@@ -51,7 +51,7 @@ a, p { font-weight: 300;}
 p > em { font-weight: 400; font-style: italic;}
 
 table { margin:auto; text-align: center;}
-.loghi {padding:25px; margin: auto; text-align: center;}
+.loghi {padding:25px; margin: auto; text-align: center; padding-top: 10px; padding-bottom: 30px;}
 .logo {height:100px;}
 .g2 {width:150px; height: auto; padding:0 20px; margin: 0 25px;}
 
@@ -297,7 +297,7 @@ table { margin:auto; text-align: center;}
     background: #7fbbda;
     /*background: #147442;*/
     padding: 20px 0;
-    margin-bottom: 80px;
+    /*margin-bottom: 80px;*/
     color: #ffffff;
 }
 
@@ -306,6 +306,7 @@ table { margin:auto; text-align: center;}
 }
 
 i.service-icon {
+    /*
     border: 3px solid #ffffff;
     border-radius: 50%;
     display: inline-block;
@@ -313,6 +314,17 @@ i.service-icon {
     width: 140px;
     height: 140px;
     line-height: 136px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    */
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    display: inline-block;
+    font-size: 50px;
+    width: 110px;
+    height: 110px;
+    line-height: 106px;
     vertical-align: middle;
     text-align: center;
     cursor: pointer;
@@ -848,7 +860,7 @@ i.scroll:hover {
 
 [class*="map-legend-"] li:first-child {width:50px; height:60 }
 .map-legend-stations a,
-.map-legend-stations ul {margin-bottom:65px;}
+.map-legend-stations ul {margin-bottom:0px;}
 
 
 /*[class*="-legend-icon"] {  text-align: center;  }*/
@@ -1421,5 +1433,10 @@ tbody.omirltbl td.odd {
 
 .h2-text-center{
     text-align: center;
+}
+
+.tooltip.top{
+    max-width: 100px !important;
+    height: auto;
 }
 

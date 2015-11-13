@@ -88,7 +88,7 @@
                     <ul class="dropdown-menu" role="menu" aria-labelledby="statics">
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
-                               ng-click="m_oController.setBaseLayer('OSM')">{{'MAP_OSM' | translate}}</a>
+                               ng-click="m_oController.setBaseLayer('OpenStreetMap')">{{'MAP_OSM' | translate}}</a>
                         </li>
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
@@ -493,6 +493,7 @@
                             <img class="map-legend-image" src="{{m_oController.m_sMapLegendPath}}"
                                  ng-show="m_oController.m_bShowMapLegendImage">
                         </li>
+                        <li class="clearfix"></li>
                     </ul>
                 </a>
             </div>
@@ -503,6 +504,7 @@
                         <li><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" style="height: 35px; vertical-align: super;"></li>
                         <li><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}"
                                  ng-show="m_oController.m_bShowSensorsLegendImage"></li>
+                        <li class="clearfix"></li>
                     </ul>
                 </a>
             </div>
