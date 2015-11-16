@@ -81,7 +81,7 @@ var ChartController = (function() {
 
         oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sSectionCode,this.m_sChartType).success(function(data,status) {
 
-            if (!angular.isDefined(data)){
+            if (!angular.isDefined(data) || data == ""){
                 oControllerVar.m_oTranslate('CHARTCONTROLLER_LOADDATA', {value: oControllerVar.m_sSectionCode}).then(function(text){
                     vex.dialog.alert({
                         message: text
@@ -89,17 +89,6 @@ var ChartController = (function() {
                     //alert(text);
                 });
 
-                oControllerVar.m_bLoading = false;
-                return;
-            }
-            if (data=="") {
-
-                oControllerVar.m_oTranslate('CHARTCONTROLLER_LOADDATA', {value: oControllerVar.m_sSectionCode}).then(function(text){
-                    vex.dialog.alert({
-                        message: text
-                    });
-                    //alert(text);
-                });
                 oControllerVar.m_bLoading = false;
                 return;
             }
@@ -110,16 +99,19 @@ var ChartController = (function() {
             var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sSectionCode);
 
             //change dialog title
-            var oDateUTC = "";
+            var oDate = "";
             try {
-                oDateUTC = new Date(oControllerVar.oChartVM.subTitle.split("-")[1] + " UTC");
+                var subTitle = oControllerVar.oChartVM.subTitle.split("-")[0];
+                var strDate = oControllerVar.oChartVM.subTitle.split("-")[1];
+                var time = Utils.getDateFromFormat(strDate.replace(" ", ""), 'dd/MM/yyyy HH:mm')
+                oDate = new Date(time + " UTC");
+
             }catch (ex){
 
             }
 
-            oControllerVar.m_oTranslate('DIALOGTITLE', {name: oControllerVar.m_oDialogModel.name, municipality: oControllerVar.m_oDialogModel.municipality, subTitle: oDateUTC.toString() }).then(function(text) {
-                //oDialog.scope.model.subTitle = text;
-                //$('$sectionChart.html').dialog('option', 'title', text);
+            //update title dialogue
+            oControllerVar.m_oTranslate('DIALOGTITLE', {name: oControllerVar.m_oDialogModel.name, municipality: oControllerVar.m_oDialogModel.municipality, subTitle: subTitle + " " + oDate.toString() }).then(function(text) {
                 oControllerVar.m_oDialogService.updateTitle(oControllerVar.m_sSectionCode, text);
             });
 
@@ -182,11 +174,41 @@ var ChartController = (function() {
 
         oControllerVar.oChartVM = oControllerVar.m_oChartService.getStationChart(this.m_sSectionCode,oOtherLink.sensorType).success(function(data,status) {
 
+
+            if (!angular.isDefined(data) || data == ""){
+                oControllerVar.m_oTranslate('CHARTCONTROLLER_LOADDATA', {value: oControllerVar.m_sSectionCode}).then(function(text){
+                    vex.dialog.alert({
+                        message: text
+                    });
+                    //alert(text);
+                });
+
+                oControllerVar.m_bLoading = false;
+                return;
+            }
+
             oControllerVar.m_oScope.model.isStock = bIsStockChart;
             oControllerVar.oChartVM = data;
             oControllerVar.m_sChartType = oOtherLink.sensorType;
 
             //oControllerVar.m_aoOtherCharts = [];
+
+            //change dialog title
+            var oDate = "";
+            try {
+                var subTitle = oControllerVar.oChartVM.subTitle.split("-")[0];
+                var strDate = oControllerVar.oChartVM.subTitle.split("-")[1];
+                var time = Utils.getDateFromFormat(strDate.replace(" ", ""), 'dd/MM/yyyy HH:mm')
+                oDate = new Date(time + " UTC");
+
+            }catch (ex){
+
+            }
+
+            //update title dialogue
+            oControllerVar.m_oTranslate('DIALOGTITLE', {name: oControllerVar.m_oDialogModel.name, municipality: oControllerVar.m_oDialogModel.municipality, subTitle: subTitle + " " + oDate.toString() }).then(function(text) {
+                oControllerVar.m_oDialogService.updateTitle(oControllerVar.m_sSectionCode, text);
+            });
 
             if(angular.isDefined(oControllerVar.oChartVM.otherChart)) {
                 oControllerVar.m_aoOtherCharts = [];
