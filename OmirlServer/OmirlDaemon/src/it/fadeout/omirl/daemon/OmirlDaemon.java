@@ -1125,18 +1125,23 @@ public class OmirlDaemon {
 
 		Boolean bReturn = false;
 		long lNow = new Date().getTime();
-		if (lReferenceDate <= 0) 
-		{
-			// Imposta ChartInfo oInfo = aoChartInfo.get(0);
-			// oInfo.setLastRefreshTime(lNow); alla mezzanotte di oggi
-			return true;
-		}
-
 		if (aoChartInfo != null)
 		{
 			if (aoChartInfo.size() > 0)
 			{
 				ChartInfo oInfo = aoChartInfo.get(0);
+				if (lReferenceDate <= 0) 
+				{
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					Calendar now = Calendar.getInstance();
+					now.set(Calendar.HOUR, 0);
+					now.set(Calendar.MINUTE, 0);
+					now.set(Calendar.SECOND, 0);
+					now.set(Calendar.HOUR_OF_DAY, 0);
+					oInfo.setLastRefreshTime(now.getTimeInMillis());
+					return true;
+				}
+				
 				//Convert time in minutes
 				long lRefreshMilliseconds = oInfo.getRefreshTime() * 60 * 1000;
 				if ((lNow - lReferenceDate) > lRefreshMilliseconds)
@@ -1146,7 +1151,7 @@ public class OmirlDaemon {
 				}
 			}
 		}
-
+		
 		return bReturn;
 	}
 
@@ -1696,9 +1701,9 @@ public class OmirlDaemon {
 			StationAnagRepository oStationAnagRepository = new StationAnagRepository();
 			StationLastDataRepository oStationLastDataRepository = new StationLastDataRepository();
 			StationDataRepository oStationDataRepository = new StationDataRepository();
-			
+
 			MaxHydroAlertZoneViewModel oMaxHydroAlertZoneViewModel = new MaxHydroAlertZoneViewModel();
-			
+
 			// select by warning area
 			List<StationAnag> oStationList = oStationAnagRepository.SelectAll(StationAnag.class);
 			// get last data value
@@ -1716,11 +1721,11 @@ public class OmirlDaemon {
 				{
 					if (oStationList.get(iStation).getWarn_area() == null || !oStationList.get(iStation).getWarn_area().contains(sWarningArea))
 						continue;
-					
+
 					// previous 24h 
 					Date oDate = new Date();
 					oDate.setTime(oDate.getTime() - 24 * 3600 * 1000);
-					
+
 					//max value
 					MaxTableRow oMaxTableRow = oStationDataRepository.GetStationAlertZonesMaxTableCell(oStationList.get(iStation).getStation_code(), "mean_creek_level", sWarningArea, oDate);
 					if (oMaxTableRow != null)
@@ -1745,7 +1750,7 @@ public class OmirlDaemon {
 								oViewModel.setDateRef(sensorLastData.getReference_date());
 							}
 						}
-						
+
 						switch (sWarningArea) {
 						case "A":
 							oMaxHydroAlertZoneViewModel.getAlertZonesA().add(oViewModel);
@@ -1774,11 +1779,11 @@ public class OmirlDaemon {
 						default:
 							break;
 						}
-						
+
 					}
 				}
 			}
-			
+
 			String sBasePath = m_oConfig.getFileRepositoryPath();
 
 			String sOutputPath = sBasePath + "/tables/maxhydrozones";
