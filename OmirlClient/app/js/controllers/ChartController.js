@@ -74,7 +74,16 @@ var ChartController = (function() {
     }
 
 
+    ChartController.prototype.convertUTCDateToLocalDate = function(date) {
+        var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
 
+        var offset = date.getTimezoneOffset() / 60;
+        var hours = date.getHours();
+
+        newDate.setHours(hours - offset);
+
+        return newDate;
+    }
 
     ChartController.prototype.LoadData = function () {
         var oControllerVar = this;
@@ -104,7 +113,8 @@ var ChartController = (function() {
                 var subTitle = oControllerVar.oChartVM.subTitle.split("-")[0];
                 var strDate = oControllerVar.oChartVM.subTitle.split("-")[1];
                 var time = Utils.getDateFromFormat(strDate.replace(" ", ""), 'dd/MM/yyyy HH:mm')
-                oDate = new Date(time + " UTC");
+                oDate = new Date(time);
+                oDate = oControllerVar.convertUTCDateToLocalDate(oDate);
 
             }catch (ex){
 
@@ -199,7 +209,8 @@ var ChartController = (function() {
                 var subTitle = oControllerVar.oChartVM.subTitle.split("-")[0];
                 var strDate = oControllerVar.oChartVM.subTitle.split("-")[1];
                 var time = Utils.getDateFromFormat(strDate.replace(" ", ""), 'dd/MM/yyyy HH:mm')
-                oDate = new Date(time + " UTC");
+                oDate = new Date(time);
+                oDate = oControllerVar.convertUTCDateToLocalDate(oDate);
 
             }catch (ex){
 

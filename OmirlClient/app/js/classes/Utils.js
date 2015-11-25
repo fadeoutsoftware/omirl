@@ -165,7 +165,7 @@ var Utils = (function ()
             if (hh<12 && ampm=="PM") { hh=hh-0+12; }
             else if (hh>11 && ampm=="AM") { hh-=12; }
             var newdate=new Date(year,month-1,date,hh,mm,ss);
-            return newdate.toLocaleString();
+            return newdate.getTime();
         };
 
     Utils._getInt = function(str,i,minlength,maxlength) {

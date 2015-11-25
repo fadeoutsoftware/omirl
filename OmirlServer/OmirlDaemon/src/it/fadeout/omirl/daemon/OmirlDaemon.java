@@ -1132,7 +1132,6 @@ public class OmirlDaemon {
 				ChartInfo oInfo = aoChartInfo.get(0);
 				if (lReferenceDate <= 0) 
 				{
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					Calendar now = Calendar.getInstance();
 					now.set(Calendar.HOUR, 0);
 					now.set(Calendar.MINUTE, 0);
