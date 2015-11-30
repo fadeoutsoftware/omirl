@@ -1060,6 +1060,9 @@ var MapController = (function () {
             sOldLayerIdentifier = oController.m_oLayerService.getDynamicLayer().params.LAYERS;
         }
 
+        this.m_oSelectedSatelliteLink = null;
+        this.m_oSelectedRadarLink = null;
+
         oController.m_oMapLayerService.getLayerId(sLayerCode, sModifier).success(function (data, status) {
 
             oController.setSelectedMapLinkOnScreen(oController,oMapLink);
@@ -1140,10 +1143,6 @@ var MapController = (function () {
 
         var oController = this;
 
-        //reset date time
-        oController.m_oSelectedMapDateTimeIcon = "";
-        oController.m_oSelectedMapDateTimeInfo = "";
-
         var sLayerCode = oMapLink.linkCode;
 
         if (oMapLink.linkCode.indexOf(":")>-1)
@@ -1198,6 +1197,10 @@ var MapController = (function () {
             }
             else if (data.layerId == null)
             {
+                //reset date time
+                oController.m_oSelectedMapDateTimeIcon = "";
+                oController.m_oSelectedMapDateTimeInfo = "";
+
                 // Remove last one
                 if (oController.m_oLayerService.getDynamicLayer() != null) {
                     oController.m_oMapService.map.removeLayer(oController.m_oLayerService.getDynamicLayer());
@@ -1416,7 +1419,9 @@ var MapController = (function () {
     MapController.prototype.getFeatureOpacity = function(oReferenceDate)
     {
         // Get Now
-        var oDate = new Date();
+        var oDate = this.m_oConstantsService.getReferenceDate();
+        if (oDate == null) oDate = new Date();
+        if (oDate == "") oDate = new Date();
 
         //console.log("Now  = " + oDate);
         //console.log("Ref  = " + oReferenceDate);
@@ -2928,6 +2933,9 @@ var MapController = (function () {
                 this.m_aoMenuDirectives[this.MENU_MAPS].resetDirectiveSelections();
                 this.m_aoMenuDirectives[this.MENU_SATELLITE].resetDirectiveSelections();
             }
+
+            this.m_oSelectedMapLink = null;
+            this.m_oSelectedSatelliteLink = null;
             
             this.setSelectedRadarLinkOnScreen(this,oRadarLink);
             this.selectedRadarSatDynamicLayer(oRadarLink, "none");
@@ -3234,7 +3242,9 @@ var MapController = (function () {
                 this.m_aoMenuDirectives[this.MENU_MAPS].resetDirectiveSelections();
                 this.m_aoMenuDirectives[this.MENU_RADAR].resetDirectiveSelections();
             }
-            
+
+            this.m_oSelectedMapLink = null;
+            this.m_oSelectedRadarLink = null;
             
             this.setSelectedSatelliteLinkOnScreen(this,oSatelliteLink);
             this.selectedRadarSatDynamicLayer(oSatelliteLink, "none");
