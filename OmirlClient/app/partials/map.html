@@ -73,12 +73,19 @@
 
             <!--Map weather-->
             <ul class="map-weather-panel">
-                <li class="map-weather-panel-icon"
+                <!--li class="map-weather-panel-icon"
                     ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsWeatherActive}"
                     tooltip-popup-delay="500" tooltip="{{'MAP_T_SITUAZIONETEMPO' | translate}}">
                     <img class="img-map-firstlevel-icon"
                          ng-src="{{m_oController.m_bIsWeatherActive == true && 'img/chetempofa_on3.png' || 'img/chetempofa.png'}}"
                          ng-click="m_oController.ToggleWeatherLayer()"/>
+                </li-->
+                <li class="map-weather-panel-icon"
+                    ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsInfoActive}"
+                    tooltip-popup-delay="500" tooltip="{{'MAP_T_INFO' | translate}}">
+                    <img class="img-map-firstlevel-icon"
+                         ng-src="{{m_oController.m_bIsInfoActive == true && 'img/infoon.png' || 'img/info.png'}}"
+                         ng-click="m_oController.ToggleInfoTool()"/>
                 </li>
                 <!--sfondi-->
 

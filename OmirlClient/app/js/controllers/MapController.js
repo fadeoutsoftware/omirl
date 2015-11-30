@@ -246,6 +246,8 @@ var MapController = (function () {
         this.m_oReferenceDate = new Date();
         this.m_bNowMode = true;
 
+        this.m_bIsInfoActive = false;
+
 
         // Initialize Layer Service
         if (this.m_oLayerService.getBaseLayers().length == 0) {
@@ -409,6 +411,13 @@ var MapController = (function () {
         this.m_oMapService.callbackArg = this;
         this.m_oMapService.readyCallback = this.MapReadyCallback;
 
+        this.infoControls = {
+            click: new OpenLayers.Control.WMSGetFeatureInfo({
+                url: this.m_oConstantsService.getWMSURL(),
+                title: 'Layer Info',
+                queryVisible: true
+            })
+        };
 
         // When we are leaving the page....
         $scope.$on('$locationChangeStart', function (event, next, current) {
@@ -427,6 +436,7 @@ var MapController = (function () {
                 oControllerVar.m_oMapService.map.destroy();
                 oControllerVar.m_oMapService.map = null;
                 oControllerVar.m_oMapService.stationsPopupControllerAdded = false;
+                oControllerVar.m_oMapService.sectionsPopupControllerAdded = false;
             }
 
             oControllerVar.m_oInterval.cancel(oControllerVar.m_oStopTimerPromise);
@@ -588,6 +598,14 @@ var MapController = (function () {
                     oControllerVar.sensorLinkClicked(oSensorLink);
                 }
             }
+
+
+            for (var i in oControllerVar.infoControls) {
+                oControllerVar.infoControls[i].events.register("beforegetfeatureinfo", oControllerVar, oControllerVar.askInfo);
+                oControllerVar.infoControls[i].events.register("getfeatureinfo", oControllerVar, oControllerVar.showInfo);
+                oControllerVar.m_oMapService.map.addControl(oControllerVar.infoControls[i]);
+            }
+
         });
     }
 
@@ -597,6 +615,25 @@ var MapController = (function () {
         return this.m_sMapLegendSelected
     }
 
+    MapController.prototype.askInfo = function(evt) {
+        console.log(evt.text);
+    }
+
+    MapController.prototype.showInfo = function(evt) {
+       alert (evt.text);
+
+        /*
+        var oControllerVar = this;
+        this.m_oMapService.map.addPopup(new OpenLayers.Popup.Popup.FramedCloud(
+            "chicken",
+            oControllerVar.m_oMapService.map.getLonLatFromPixel(evt.xy),
+            null,
+            event.text,
+            null,
+            true
+        ));
+        */
+    }
 
     /**
      * Method that fires initMap Event when all needed data are received
@@ -2024,6 +2061,17 @@ var MapController = (function () {
         }
     }
 
+    //////////////////////////////////////////////INFO ////////////////////////////////////////////////////////////////
+    MapController.prototype.ToggleInfoTool = function() {
+        if  (this.m_bIsInfoActive)  {
+            this.m_bIsInfoActive = false;
+            this.infoControls.click.deactivate();
+        }
+        else {
+            this.m_bIsInfoActive = true;
+            this.infoControls.click.activate();
+        }
+    }
 
     //////////////////////////////////////////////HYDRO LINKS//////////////////////////////////////////////////////////
     /**
@@ -2365,6 +2413,7 @@ var MapController = (function () {
 
                 // remove the actual Sensors Layer from the map
                 oControllerVar.m_oMapService.map.removeLayer(oControllerVar.m_oLayerService.getSectionsLayer());
+
             }
             catch (err) {
 

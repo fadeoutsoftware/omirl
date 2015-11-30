@@ -261,7 +261,11 @@ var ChartController = (function() {
     }
 
     ChartController.prototype.csvExport = function (sCode, sChart) {
-        window.open(this.m_oChartService.exportCsvStationChart(this.m_sSectionCode,this.m_sChartType), '_blank', '');
+
+        if (sCode == undefined) sCode = this.m_sSectionCode;
+        if (sChart == undefined) sChart = this.m_sChartType;
+
+        window.open(this.m_oChartService.exportCsvStationChart(sCode,sChart), '_blank', '');
     }
 
     ChartController.prototype.addSeriesToChart = function () {
@@ -522,13 +526,15 @@ var ChartController = (function() {
                 this.m_oChartService.setChart(this.m_sSectionCode,oChart);
 
 
+                oChart.chartType = this.m_sChartType;
+                oChart.sectionCode = this.m_sSectionCode;
 
                 if (Highcharts.getOptions().exporting.buttons.contextButton.menuItems.length == 6)
                 {
                     Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
                         text: 'Scarica CSV',
                         onclick: function () {
-                            oControllerVar.csvExport();
+                            oControllerVar.csvExport(this.sectionCode, this.chartType);
                         }
                     });
                 }
@@ -826,6 +832,12 @@ var ChartController = (function() {
 
                     }
                 }
+
+                oWindDirSerie.tooltip = {
+                    pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
+                    '<td style="text-align: right"><b>{point.toolText}</b></td></tr>'
+                }
+
                 chart.addSeries(oWindDirSerie);
             }
         }

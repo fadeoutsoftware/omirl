@@ -286,7 +286,7 @@ angular.module('az.services').factory('az.services.layersService',function($root
         getSectionsLayerIndex : function() {
             var iIndex = this.m_aoBaseLayers.length;
 
-            if (this.m_oDynamicLayer != null) iIndex ++;
+            if (this.m_oSectionsLayer != null) iIndex ++;
 
             iIndex += this.m_aoStaticLayers.length;
 

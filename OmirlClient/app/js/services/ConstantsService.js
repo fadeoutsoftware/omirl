@@ -8,6 +8,7 @@ angular.module('omirl.ConstantsService', []).
         //this.APIURL = 'http://localhost:8080/Omirl/rest';
         //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
         this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
+        this.WMSURL = 'http://93.62.155.217:8080/geoserver/wms'
 
         this.m_aoSensorLinks = [];
         this.m_aoHydroLinks = [];
@@ -94,6 +95,10 @@ angular.module('omirl.ConstantsService', []).
 
         this.getAPIURL = function() {
             return this.APIURL;
+        }
+
+        this.getWMSURL = function() {
+            return this.WMSURL;
         }
 
         this.clearSensorLinks = function() {
