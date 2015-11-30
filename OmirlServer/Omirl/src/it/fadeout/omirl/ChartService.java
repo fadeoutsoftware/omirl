@@ -437,13 +437,14 @@ public class ChartService {
 								sRelativePath+="/"+sSubPath + "/" + sSection+".png";
 							}
 							// Save it
-							oDataChart.setsImageLink(sRelativePath);
+							oDataChart.setImageLink(sRelativePath);
 							// and log
 							System.out.println("ChartService.GetSectionChart: return path " + sRelativePath);
 
 							// Find the config object
 							HydroLinkConfig oSelectedHydroConfig = null;
 
+							/*
 							for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
 								if (oHydroConfig.getLinkCode().equals(sModel)) {
 									// This is my model
@@ -461,6 +462,31 @@ public class ChartService {
 									}
 								}								
 							}
+							*/
+							
+							System.out.println("SectionsService.GetSectionChart:Cerco " + sModel);
+							
+							for (HydroLinkConfig oHydroConfig : oConfig.getFlattedHydroLinks()) {
+								if (oHydroConfig.getLinkCode().equals(sModel)) {
+									// This is my model
+									oSelectedHydroConfig=oHydroConfig;
+									System.out.println("SectionsService.GetSectionChart: TROVATO " + sModel);
+									break;
+								}
+							}
+							
+							System.out.println("SectionsService.GetSectionChart: Cerco i fratelli di " + sModel);
+							
+							for (HydroLinkConfig oHydroConfig : oConfig.getFlattedHydroLinks()) {
+								
+								if (oHydroConfig.getColFlag()!=null)
+								{
+									if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
+										oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
+										System.out.println("SectionsService.GetSectionChart: Aggiunto " + oHydroConfig.getLinkCode());
+									}
+								}
+							}								
 
 						}
 						else {
@@ -528,7 +554,7 @@ public class ChartService {
 
 
 										// Save it
-										oDataChart.setsImageLink(sRelativePath);
+										oDataChart.setImageLink(sRelativePath);
 										// and log
 										System.out.println("ChartService.GetSectionChart: return path " + sRelativePath);
 

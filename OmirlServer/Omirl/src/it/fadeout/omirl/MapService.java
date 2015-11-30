@@ -122,6 +122,43 @@ public class MapService {
 						oInfo.setUpdateDateTime(oFormat.format(oLastDate));
 						System.out.println("MapService.GetLayerId: Layer ID Found " + oResult.getLayerId());
 						
+						try {
+							String sLayerId = oResult.getLayerId();
+							
+							if (sLayerId != null)
+							{
+								String [] asSplitName = sLayerId.split("_");
+								
+								if (asSplitName != null)
+								{
+									if (asSplitName.length>=3)
+									{
+										String sHourMinutes = asSplitName[2];
+										
+										if (sHourMinutes != null)
+										{
+											if (sHourMinutes.length()>=4)
+											{
+												String sHour = "" + sHourMinutes.charAt(0) +sHourMinutes.charAt(1);
+												String sMinutes = "" + sHourMinutes.charAt(2) +sHourMinutes.charAt(3);
+												
+												int iHour = Integer.parseInt(sHour);
+												int iMinutes = Integer.parseInt(sMinutes);
+												
+												oLastDate.setHours(iHour);
+												oLastDate.setMinutes(iMinutes);
+												oInfo.setUpdateDateTime(oFormat.format(oLastDate));
+											}
+										}
+									}
+								}
+							}							
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						
 						break;
 					}
 				}

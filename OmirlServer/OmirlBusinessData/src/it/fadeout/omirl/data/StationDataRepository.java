@@ -81,6 +81,8 @@ public class StationDataRepository extends Repository<StationData>{
 		
 		Session oSession = null;
 		List<DataSeriePoint> aoLastValues = null;
+		List<DataSeriePoint> aoVeryLastValues = null;
+		
 		try {
 			oSession = HibernateUtils.getSessionFactory().openSession();
 			
@@ -113,8 +115,6 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			try {
 				oSession = HibernateUtils.getSessionFactory().openSession();
-
-				List<DataSeriePoint> aoVeryLastValues = null;
 				
 				String sQuery = "select reference_date, "+ sColumnName +" as value from station_data where station_code = '"+sStationCode+"' and "+sColumnName+" is not null and reference_date >= ? order by reference_date desc limit 1";
 
@@ -123,20 +123,7 @@ public class StationDataRepository extends Repository<StationData>{
 				
 				if (oQuery2.list().size() > 0)
 				{
-					aoVeryLastValues =  (List<DataSeriePoint>) oQuery2.list();
-					
-					if (aoVeryLastValues!=null)
-					{
-						if (aoVeryLastValues.size()>0)
-						{
-							int iOldLast = aoLastValues.size()-1;
-							
-							if (aoVeryLastValues.get(0).getRefDate().getHours() == aoLastValues.get(iOldLast).getRefDate().getHours())
-							{
-								aoLastValues.get(iOldLast).setVal(aoVeryLastValues.get(0).getVal());
-							}
-						}
-					}
+					aoVeryLastValues =  (List<DataSeriePoint>) oQuery2.list();					
 				}
 
 			}
@@ -151,6 +138,35 @@ public class StationDataRepository extends Repository<StationData>{
 					oSession.close();
 				}
 
+			}
+			
+			try {
+				if (aoVeryLastValues!=null)
+				{
+					if (aoVeryLastValues.size()>0)
+					{
+						int iOldLast = aoLastValues.size()-1;
+						
+						if (aoVeryLastValues.get(0).getRefDate().getHours() == aoLastValues.get(iOldLast).getRefDate().getHours() && aoVeryLastValues.get(0).getRefDate().getMinutes()!=0)
+						{
+							//aoLastValues.get(iOldLast).setVal(aoVeryLastValues.get(0).getVal());
+							Date oVeryLastDate = aoVeryLastValues.get(0).getRefDate();
+							Date oCopy = new Date(oVeryLastDate.getTime());
+							oCopy.setMinutes(0);
+							long lTime = oCopy.getTime();
+							lTime += 60*60*1000;
+							oCopy = new Date(lTime);
+							DataSeriePoint oLastPoint = new DataSeriePoint();
+							oLastPoint.setVal(aoVeryLastValues.get(0).getVal());
+							oLastPoint.setRefDate(oCopy);
+							aoLastValues.add(oLastPoint);
+						}
+					}
+				}				
+			}
+			catch(Exception oEx){
+				System.err.println(oEx.toString());
+				oEx.printStackTrace();				
 			}
 		}
 

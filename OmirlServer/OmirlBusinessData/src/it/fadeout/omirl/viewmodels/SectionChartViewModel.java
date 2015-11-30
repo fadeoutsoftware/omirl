@@ -7,19 +7,19 @@ public class SectionChartViewModel {
 	/**
 	 * Chart Image Link
 	 */
-	String sImageLink;
+	String imageLink;
 	
 	/**
 	 * Other Chart links
 	 */
 	ArrayList<String> otherChart = new ArrayList<>();
 
-	public String getsImageLink() {
-		return sImageLink;
+	public String getImageLink() {
+		return imageLink;
 	}
 
-	public void setsImageLink(String sImageLink) {
-		this.sImageLink = sImageLink;
+	public void setImageLink(String sImageLink) {
+		this.imageLink = sImageLink;
 	}
 
 	public ArrayList<String> getOtherChart() {
