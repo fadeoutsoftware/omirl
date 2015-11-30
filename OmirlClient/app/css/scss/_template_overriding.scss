@@ -49,6 +49,7 @@ $animation-top-slideout-type: ease-out;
 
         .container-fluid{
             max-height: 100vh;
+            overflow-y: auto;
         }
     }
 

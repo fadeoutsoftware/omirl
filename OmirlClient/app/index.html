@@ -248,94 +248,98 @@
 <!-- Intro
 <div id="about" class="intro">-->
 <div id="top" class="header">
+
     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px">
-        <div class="row loghi">
-            <table>
-                <tr>
-                    <td class="hidden-xs"><img class="logo payoff" src="img/Slogan_it.png" /></td>
-                    <td><img class="logo" src="img/Logo_Marittimo.jpg" /></td>
-                    <td class="hidden-xs"><img class="logo payoff right" src="img/Slogan_fr.png"  /></td>
-                </tr>
-            </table>
-        </div>
-        <hr/>
-        <div >
-            <table>
-                <tr>
-<!--                    <td class="hidden-xs"><img class="logo" src="img/logo-arpal.png" /></td>-->
-                    <td>
-                        <h1 class="big">{{'INDEX_HEADER1' | translate}}</h1>
-                        <br/>
-                        <p class="lead">{{'INDEX_HEADER2' | translate}}</p>
-                    </td>
-<!--                    <td class="hidden-xs"><img class="logo" src="img/logo-regione.svg" /></td>-->
-                </tr>
-            </table>
-        </div>
-        <hr/>
-        <div class="row loghi">
-            
-                <img class="logo g2" src="img/logo-regione.png" />
-                <img class="logo g2" src="img/logo-arpal.png" />
-            
-        </div>
+        <div>
+            <div class="row loghi">
+                <table>
+                    <tr>
+                        <td class="hidden-xs"><img class="logo payoff" src="img/Slogan_it.png" /></td>
+                        <td><img class="logo" src="img/Logo_Marittimo.jpg" /></td>
+                        <td class="hidden-xs"><img class="logo payoff right" src="img/Slogan_fr.png"  /></td>
+                    </tr>
+                </table>
+            </div>
+            <hr/>
+            <div >
+                <table>
+                    <tr>
+    <!--                    <td class="hidden-xs"><img class="logo" src="img/logo-arpal.png" /></td>-->
+                        <td>
+                            <h1 class="big">{{'INDEX_HEADER1' | translate}}</h1>
+                            <br/>
+                            <p class="lead">{{'INDEX_HEADER2' | translate}}</p>
+                        </td>
+    <!--                    <td class="hidden-xs"><img class="logo" src="img/logo-regione.svg" /></td>-->
+                    </tr>
+                </table>
+            </div>
+            <hr/>
+            <div class="row loghi">
+
+                    <img class="logo g2" src="img/logo-regione.png" />
+                    <img class="logo g2" src="img/logo-arpal.png" />
+
+            </div>
 
 
-        <!-- Services -->
-        <div id="services" class="services">
-            <div class="row">
+            <!-- Services -->
+            <div id="services" class="services">
+                <div class="row">
 
 
-                <!--div class="row">
-                    <div class="col-md-4 col-md-offset-4 text-center">
-                        <h2>Servizi</h2>
-                        <hr>
+                    <!--div class="row">
+                        <div class="col-md-4 col-md-offset-4 text-center">
+                            <h2>Servizi</h2>
+                            <hr>
+                        </div>
+                    </div-->
+
+                    <div class="col-md-2 col-md-offset-2 text-center">
+                        <div class="service-item">
+                            <i class="service-icon fa fa-bar-chart-o" ng-click="m_oController.serviceIconClicked('/map')"></i>
+                            <h4><a ng-click="m_oController.serviceIconClicked('/map')" style="cursor: pointer">{{'INDEX_DATI' | translate}}</a></h4>
+                            <p>{{'INDEX_TEXT_DATI' | translate}}</p>
+                        </div>
                     </div>
-                </div-->
-
-                <div class="col-md-2 col-md-offset-2 text-center">
-                    <div class="service-item">
-                        <i class="service-icon fa fa-bar-chart-o" ng-click="m_oController.serviceIconClicked('/map')"></i>
-                        <h4><a ng-click="m_oController.serviceIconClicked('/map')" style="cursor: pointer">{{'INDEX_DATI' | translate}}</a></h4>
-                        <p>{{'INDEX_TEXT_DATI' | translate}}</p>
+                    <div class="col-md-2 text-center">
+                        <div class="service-item">
+                            <i class="service-icon fa fa-table" ng-click="m_oController.serviceIconClicked('/summarytable')"></i>
+                            <h4><a  ng-click="m_oController.serviceIconClicked('/summarytable')"  style="cursor: pointer">{{'INDEX_TABELLE' | translate}}</a></h4>
+                            <p>{{'INDEX_TEXT_TABELLE' | translate}}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2 text-center">
-                    <div class="service-item">
-                        <i class="service-icon fa fa-table" ng-click="m_oController.serviceIconClicked('/summarytable')"></i>
-                        <h4><a  ng-click="m_oController.serviceIconClicked('/summarytable')"  style="cursor: pointer">{{'INDEX_TABELLE' | translate}}</a></h4>
-                        <p>{{'INDEX_TEXT_TABELLE' | translate}}</p>
+                    <div class="col-md-2 text-center">
+                        <div class="service-item">
+                            <i class="service-icon fa omirl-sat-ground" ng-click="m_oController.serviceIconClicked('/animations')"></i>
+                            <h4><a ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate}}</a></h4>
+                            <p>{{'INDEX_TEXT_SATRADAR' | translate}}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2 text-center">
-                    <div class="service-item">
-                        <i class="service-icon fa omirl-sat-ground" ng-click="m_oController.serviceIconClicked('/animations')"></i>
-                        <h4><a ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate}}</a></h4>
-                        <p>{{'INDEX_TEXT_SATRADAR' | translate}}</p>
-                    </div>
-                </div>
-                <div class="col-md-2 text-center">
-                    <div class="service-item mod-meteo-marini">
-                        <i class="service-icon fa fa-globe" ng-click="m_oController.serviceIconClicked('/modelsgallery')"></i>
-                        <h4><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{'INDEX_MODELLI' | translate}}</a></h4>
-                        <p>{{'INDEX_TEXT_MODELLI' | translate}}</p>
+                    <div class="col-md-2 text-center">
+                        <div class="service-item mod-meteo-marini">
+                            <i class="service-icon fa fa-globe" ng-click="m_oController.serviceIconClicked('/modelsgallery')"></i>
+                            <h4><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{'INDEX_MODELLI' | translate}}</a></h4>
+                            <p>{{'INDEX_TEXT_MODELLI' | translate}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- /Services -->
+            <!-- /Services -->
 
-        <div class="row loghi fixed  ">
-            <table>
-                <tr>
-                    <td class="payoff right"><h6>{{'INDEX_INFO1' | translate}}<br/> {{'INDEX_INFO2' | translate}}</h6></td>
-                    <td ><img class="logo payoff"  src="img/Flag_of_Europe.svg" /></td>
-                    <td class="payoff left"><h6>{{'INDEX_INFO3' | translate}} <br/> {{'INDEX_INFO4' | translate}}</h6></td>
-                </tr>
-            </table>
+            <div class="row loghi fixed  ">
+                <table>
+                    <tr>
+                        <td class="payoff right"><h6>{{'INDEX_INFO1' | translate}}<br/> {{'INDEX_INFO2' | translate}}</h6></td>
+                        <td ><img class="logo payoff"  src="img/Flag_of_Europe.svg" /></td>
+                        <td class="payoff left"><h6>{{'INDEX_INFO3' | translate}} <br/> {{'INDEX_INFO4' | translate}}</h6></td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
+    <!-- END OF container-fluid -->
 </div>
 
 

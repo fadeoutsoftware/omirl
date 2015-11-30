@@ -322,7 +322,8 @@ and open the template in the editor.
     transition-duration: 1s;
     transition-timing-function: ease-out; }
     #top .container-fluid {
-      max-height: 100vh; }
+      max-height: 100vh;
+      overflow-y: auto; }
 
   #contentcontainer {
     transition-property: all;
