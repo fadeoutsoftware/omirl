@@ -2692,8 +2692,16 @@ var MapController = (function () {
             oEntry.selected = false;
         });
 
+
+
         // We are in the first level?
-        if (oController.m_bIsRadarFirstLevel) {
+        if (oController.m_bIsRadarFirstLevel)
+        {
+            oController.m_aoMenuLinks[oController.MENU_RADAR][oController.MENU_LEVEL_1].forEach(function(oEntry)
+            {
+                if( oEntry.description != oRadarLink.description)
+                    oEntry.selected = false;
+            });
 
             if (oRadarLink.hasChilds) {
                 // Remember we are in second level
@@ -2986,7 +2994,14 @@ var MapController = (function () {
         });
 
         // We are in the first level?
-        if (oController.m_bIsSatelliteFirstLevel) {
+        if (oController.m_bIsSatelliteFirstLevel)
+        {
+
+            oController.m_aoMenuLinks[oController.MENU_SATELLITE][oController.MENU_LEVEL_1].forEach(function(oEntry)
+            {
+                if( oEntry.description != oSatelliteLink.description)
+                    oEntry.selected = false;
+            });
 
             if (oSatelliteLink.hasChilds) {
                 // Remember we are in second level
