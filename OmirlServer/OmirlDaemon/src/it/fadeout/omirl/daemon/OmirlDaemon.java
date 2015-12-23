@@ -225,9 +225,10 @@ public class OmirlDaemon {
 					// For Each
 					for (StationAnag oStationAnag : m_aoAllStations) {
 
-						System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
+						//System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
+						System.out.print(".");
 
-						//if (oStationAnag.getStation_code().equals("GEPVA")==false) continue;
+						//if (oStationAnag.getStation_code().equals("CFUNZ")==false) continue;
 
 						ArrayList<String> asOtherLinks = new ArrayList<>();
 
@@ -376,6 +377,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}
 
@@ -444,6 +446,7 @@ public class OmirlDaemon {
 
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}
 
@@ -545,6 +548,7 @@ public class OmirlDaemon {
 
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}			
 
@@ -565,6 +569,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}
 
@@ -615,6 +620,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}						
 
@@ -770,6 +776,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}
 
@@ -791,6 +798,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}							
 
@@ -815,6 +823,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}			
 
@@ -838,6 +847,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}	
 
@@ -861,6 +871,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}	
 
@@ -883,6 +894,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}	
 
@@ -904,6 +916,7 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}
 
@@ -925,12 +938,14 @@ public class OmirlDaemon {
 								}
 							}
 							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}
 
 						}
 					}
 
+					System.out.println();
 					System.out.println("OmirlDaemon - Charts Cycle End");
 
 
@@ -1143,7 +1158,14 @@ public class OmirlDaemon {
 				
 				//Convert time in minutes
 				long lRefreshMilliseconds = oInfo.getRefreshTime() * 60 * 1000;
-				if ((lNow - lReferenceDate) > lRefreshMilliseconds)
+				
+				Calendar oNowCalendar = Calendar.getInstance();
+				oNowCalendar.setTimeInMillis(lNow);
+				
+				Calendar oLastCalendar = Calendar.getInstance();
+				oLastCalendar.setTimeInMillis(oInfo.getLastRefreshTime());
+				
+				if ((lNow - oInfo.getLastRefreshTime()) > lRefreshMilliseconds || oNowCalendar.get(Calendar.DAY_OF_YEAR) != oLastCalendar.get(Calendar.DAY_OF_YEAR))
 				{
 					oInfo.setLastRefreshTime(lNow);
 					bReturn = true;
@@ -3137,6 +3159,16 @@ public class OmirlDaemon {
 					long lNow = oNow.getMillis();
 
 					long lStart = aoPoints.get(0).getRefDate().getTime();
+					
+					int iLastIndex = aoPoints.size()-1;
+					if (iLastIndex>0)
+					{
+						if (aoPoints.get(iLastIndex).getRefDate().getTime()>lNow)
+						{
+							//System.out.println("AGGIUSTATO END TIME CICLO CONVERSIONE!!!!!");
+							lNow = aoPoints.get(iLastIndex).getRefDate().getTime();
+						}
+					}
 
 					int iPointIndex = 0;
 

@@ -455,7 +455,10 @@ public class ClearThread extends Thread {
 
 				//System.out.println("OmirlDaemon ClearThread - clearing sections PATH " + oModelFolder.getAbsolutePath());
 
-				asYears = oMapFolder.list();				
+				asYears = oMapFolder.list();
+				
+				if (asYears==null) continue;
+				
 				aoYears = new ArrayList<File> ();
 
 				for (String sYear : asYears) {

@@ -6,6 +6,7 @@ import it.fadeout.omirl.business.StationData;
 import it.fadeout.omirl.business.SummaryInfoEntity;
 import it.fadeout.omirl.business.WindDataSeriePoint;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -113,6 +114,8 @@ public class StationDataRepository extends Repository<StationData>{
 		if (sColumnName.contains("_part"))
 		{
 			
+			//if (sStationCode.equals("CFUNZ")) System.out.println("COLONNA PART");
+			
 			try {
 				oSession = HibernateUtils.getSessionFactory().openSession();
 				
@@ -123,12 +126,13 @@ public class StationDataRepository extends Repository<StationData>{
 				
 				if (oQuery2.list().size() > 0)
 				{
+					//if (sStationCode.equals("CFUNZ")) System.out.println("GOT LAST VALUE");
 					aoVeryLastValues =  (List<DataSeriePoint>) oQuery2.list();					
 				}
 
 			}
 			catch(Throwable oEx) {
-				System.err.println(oEx.toString());
+				System.out.println(oEx.toString());
 				oEx.printStackTrace();
 			}
 			finally {
@@ -149,23 +153,27 @@ public class StationDataRepository extends Repository<StationData>{
 						
 						if (aoVeryLastValues.get(0).getRefDate().getHours() == aoLastValues.get(iOldLast).getRefDate().getHours() && aoVeryLastValues.get(0).getRefDate().getMinutes()!=0)
 						{
+							//if (sStationCode.equals("CFUNZ")) System.out.println("SPOSTO IN AVANTI");
+							
 							//aoLastValues.get(iOldLast).setVal(aoVeryLastValues.get(0).getVal());
 							Date oVeryLastDate = aoVeryLastValues.get(0).getRefDate();
-							Date oCopy = new Date(oVeryLastDate.getTime());
+							Timestamp oCopy = new Timestamp(oVeryLastDate.getTime());
+							//Date oCopy = new Date(oVeryLastDate.getTime());
 							oCopy.setMinutes(0);
 							long lTime = oCopy.getTime();
 							lTime += 60*60*1000;
-							oCopy = new Date(lTime);
+							oCopy = new Timestamp(lTime);
 							DataSeriePoint oLastPoint = new DataSeriePoint();
 							oLastPoint.setVal(aoVeryLastValues.get(0).getVal());
 							oLastPoint.setRefDate(oCopy);
 							aoLastValues.add(oLastPoint);
+							//if (sStationCode.equals("CFUNZ")) System.out.println("PUNTO AGGIUNTO");
 						}
 					}
 				}				
 			}
 			catch(Exception oEx){
-				System.err.println(oEx.toString());
+				System.out.println(oEx.toString());
 				oEx.printStackTrace();				
 			}
 		}
