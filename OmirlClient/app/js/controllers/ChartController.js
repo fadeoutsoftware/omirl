@@ -339,10 +339,10 @@ var ChartController = (function() {
                             labels: {
                                 formatter: function () {
                                     var oDate = new Date(this.value);
-                                    if (oDate.getHours() != 0 && oDate.getMinutes() == 0)
-                                        return Highcharts.dateFormat('%H:%M', this.value);
-                                    else
+                                    if (oDate.getHours() == 0 && oDate.getMinutes() == 0)
                                         return '<b>' + Highcharts.dateFormat('%d %b', this.value) + '</b>';
+                                    else
+                                        return Highcharts.dateFormat('%H:%M', this.value);
                                 }
                             }
                         },
@@ -448,10 +448,18 @@ var ChartController = (function() {
                             labels: {
                                 formatter: function () {
                                     var oDate = new Date(this.value);
+                                    /*
                                     if (oDate.getHours() != 0 && oDate.getMinutes() == 0)
                                         return Highcharts.dateFormat('%H:%M', this.value);
                                     else
                                         return '<b>' + Highcharts.dateFormat('%d %b', this.value) + '</b>';
+                                    */
+                                    if (oDate.getHours() == 0 && oDate.getMinutes() == 0)
+                                        return '<b>' + Highcharts.dateFormat('%d %b', this.value) + '</b>';
+                                    else
+                                        return Highcharts.dateFormat('%H:%M', this.value);
+
+
                                 }
                             },
                             events: {
