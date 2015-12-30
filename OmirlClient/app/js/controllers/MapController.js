@@ -616,11 +616,29 @@ var MapController = (function () {
     }
 
     MapController.prototype.askInfo = function(evt) {
-        console.log(evt.text);
+        console.log('ask');
+
+        /*
+        var url =  layer_group.getFullRequestString({
+            REQUEST: "GetFeatureInfo",
+            EXCEPTIONS: "application/vnd.ogc.se_xml",
+            BBOX: layer_group.map.getExtent().toBBOX(),
+            X: e.xy.x,
+            Y: e.xy.y,
+            INFO_FORMAT: 'text/html',
+            QUERY_LAYERS: layer_group.params.LAYERS,
+            WIDTH: layer_group.map.size.w,
+            HEIGHT: layer_group.map.size.h});
+
+        window.open(url,
+            "getfeatureinfo",
+            "location=0,status=0,scrollbars=1,width=600,height=150"
+        );
+        */
     }
 
     MapController.prototype.showInfo = function(evt) {
-       alert (evt.text);
+        console.log('show');
 
         /*
         var oControllerVar = this;
@@ -2068,6 +2086,28 @@ var MapController = (function () {
 
     //////////////////////////////////////////////INFO ////////////////////////////////////////////////////////////////
     MapController.prototype.ToggleInfoTool = function() {
+
+        /*
+        this.m_oMapService.map.events.register('click',  this.m_oMapService.map, function (e) {
+            var url =  layer_group.getFullRequestString({
+                REQUEST: "GetFeatureInfo",
+                EXCEPTIONS: "application/vnd.ogc.se_xml",
+                BBOX: layer_group.map.getExtent().toBBOX(),
+                X: e.xy.x,
+                Y: e.xy.y,
+                INFO_FORMAT: 'text/html',
+                QUERY_LAYERS: layer_group.params.LAYERS,
+                WIDTH: layer_group.map.size.w,
+                HEIGHT: layer_group.map.size.h});
+
+            window.open(url,
+                "getfeatureinfo",
+                "location=0,status=0,scrollbars=1,width=600,height=150"
+            );
+        });
+        */
+
+
         if  (this.m_bIsInfoActive)  {
             this.m_bIsInfoActive = false;
             this.infoControls.click.deactivate();
@@ -2076,6 +2116,7 @@ var MapController = (function () {
             this.m_bIsInfoActive = true;
             this.infoControls.click.activate();
         }
+
     }
 
     //////////////////////////////////////////////HYDRO LINKS//////////////////////////////////////////////////////////

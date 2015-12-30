@@ -41,6 +41,7 @@ var omirlApp = angular.module('omirl', [
     'omirl.sidebarMenuDirective',
     'omirl.sidebarMenuLegacyDirective',
     'omirl.galleryService',
+    'omirl.animationService',
     'angular-flexslider',
     'pascalprecht.translate',
     'omirl.translateService',

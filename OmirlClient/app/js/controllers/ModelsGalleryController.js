@@ -257,6 +257,8 @@ var ModelsGalleryController = (function() {
                         }
                     }
 
+                    data.images.sort($scope.m_oController.compareImages);
+
                     // Get photos and set gallery visible
                     $scope.photos = data.images;
 
@@ -288,6 +290,13 @@ var ModelsGalleryController = (function() {
                 .error(function(data, status, headers, config) {
                     console.error("Fail to do GET:");
                 });
+        }
+
+        $scope.key = function($event){
+            if ($event.keyCode == 39)
+                $scope.showNext();
+            else if ($event.keyCode == 37)
+                $scope.showPrev();
         }
 
         $scope.initGallery = function()
@@ -349,7 +358,14 @@ var ModelsGalleryController = (function() {
              }, $scope.m_iAutoplayDuration_ms);*/
 
         }
+    }
 
+    ModelsGalleryController.prototype.compareImages = function(oFirst, oSecond) {
+        if (oFirst.imageLink < oSecond.imageLink)
+            return -1;
+        if (oFirst.imageLink > oSecond.imageLink)
+            return 1;
+        return 0;
     }
 
     ModelsGalleryController.prototype.onTimeSet = function (newDate, oldDate) {
