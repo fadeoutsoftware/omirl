@@ -60,6 +60,7 @@ public class Omirl extends Application {
 		classes.add(MapService.class);
 		classes.add(GalleryService.class);
 		classes.add(OmirlUserService.class);
+		classes.add(AnimationService.class);
 
 		return classes;
 	}
