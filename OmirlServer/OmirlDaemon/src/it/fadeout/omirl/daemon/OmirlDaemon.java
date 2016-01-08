@@ -64,6 +64,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -1648,7 +1649,7 @@ public class OmirlDaemon {
 
 				String sFullDir = sLayerPath + "/" + oDateFormat.format(oActualDate);
 
-				File oFile = OmirlDaemon.lastFileModified(sFullDir, ".tif");
+				File oFile = OmirlDaemon.lastFileByName(sFullDir, ".tif");
 				if (oFile == null) 
 				{
 					System.out.println("Map Code " + oMapInfo.getCode() + " Path Not Available " + sFullDir);
@@ -5014,7 +5015,11 @@ public class OmirlDaemon {
 
 	public static void Test() {
 		try {
+			
+			
+			File oFileTest = lastFileByName("C:\\temp\\Omirl\\Files\\maps\\rainfall1d\\2016\\01\\07", "tif");
 
+			if (oFileTest != null) System.out.println(oFileTest.getAbsolutePath()); 
 
 
 			StationDataRepository oStationDataRepositorySum = new StationDataRepository();
@@ -5162,6 +5167,46 @@ public class OmirlDaemon {
 			if (file.lastModified() > liLastMod) {
 				oChoise = file;
 				liLastMod = file.lastModified();
+			}
+		}
+
+		return oChoise;
+	}
+	
+	
+	public static File lastFileByName(String dir, String sExtension) {
+		File oDir = new File(dir);
+
+		if (!oDir.exists()) {
+			System.out.println("OMIRL.lastFileModified: folder does not exists " + dir);
+			return null;
+		}
+
+		final String sExt = sExtension;
+
+		File[] aoFiles = oDir.listFiles(new FileFilter() {			
+			public boolean accept(File file) {
+
+				if (file.isFile())
+				{
+					if (file.getName().endsWith(sExt))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+		
+		Arrays.sort(aoFiles);
+
+		File oChoise = null;
+		
+		if (aoFiles!=null)
+		{
+			if (aoFiles.length>0)
+			{
+				oChoise = aoFiles[aoFiles.length-1];
 			}
 		}
 

@@ -256,8 +256,74 @@ public class AuthService {
 	@Path("/sessionCheck")
 	@Produces({"application/xml", "application/json", "text/xml"})
 	@Consumes({"application/xml", "application/json", "text/xml"})
-	public OmirlUser SessionCheck(@HeaderParam("x-session-token") String sSessionId) {
-		return Omirl.getUserFromSession(sSessionId);
+	public UserViewModel SessionCheck(@HeaderParam("x-session-token") String sSessionId) {
+		
+		UserViewModel oUserVM = null;
+		
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		
+		if (oUser != null)
+		{
+			oUserVM = new UserViewModel();
+			
+			oUserVM.setLogged(true);
+			oUserVM.setDefaultLat(oUser.getDefaultLat());
+			oUserVM.setDefaultLon(oUser.getDefaultLon());
+			oUserVM.setDefaultSensorType(oUser.getDefaultSensorType());
+			oUserVM.setDefaultZoom(oUser.getDefaultZoom());
+			oUserVM.setName(oUser.getName());
+			oUserVM.setRole(oUser.getRole());
+			oUserVM.setMail(oUser.getUserId());
+			oUserVM.setDefaultStatics(oUser.getDefaultStatics());
+			oUserVM.setDefaultMap(oUser.getDefaultMap());
+						
+			oUserVM.setSessionId(sSessionId);
+			
+			System.out.println("AuthService.SessionCheck: access succeeded");
+		}
+		else
+		{
+			System.out.println("AuthService.SessionCheck: access failed");
+		}
+		
+		return oUserVM;
 	}
 
+	
+	@GET
+	@Path("/cookieCheck/{sessionId}")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	@Consumes({"application/xml", "application/json", "text/xml"})
+	public UserViewModel CookieCheck(@PathParam("sessionId") String sSessionId) {
+		
+		UserViewModel oUserVM = null;
+		
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		
+		if (oUser != null)
+		{
+			oUserVM = new UserViewModel();
+			
+			oUserVM.setLogged(true);
+			oUserVM.setDefaultLat(oUser.getDefaultLat());
+			oUserVM.setDefaultLon(oUser.getDefaultLon());
+			oUserVM.setDefaultSensorType(oUser.getDefaultSensorType());
+			oUserVM.setDefaultZoom(oUser.getDefaultZoom());
+			oUserVM.setName(oUser.getName());
+			oUserVM.setRole(oUser.getRole());
+			oUserVM.setMail(oUser.getUserId());
+			oUserVM.setDefaultStatics(oUser.getDefaultStatics());
+			oUserVM.setDefaultMap(oUser.getDefaultMap());
+						
+			oUserVM.setSessionId(sSessionId);
+			
+			System.out.println("AuthService.SessionCheck: access succeeded");
+		}
+		else
+		{
+			System.out.println("AuthService.SessionCheck: access failed");
+		}
+		
+		return oUserVM;
+	}
 }

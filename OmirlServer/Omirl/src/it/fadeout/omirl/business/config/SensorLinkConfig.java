@@ -18,6 +18,7 @@ public class SensorLinkConfig {
 	boolean isVisible = true;
 	boolean isClickable = true;
 	private ArrayList<LegendStepConfig> legends = new ArrayList<LegendStepConfig>();
+	int accessLevel;
 	
 	public String getCode() {
 		return code;
@@ -114,6 +115,18 @@ public class SensorLinkConfig {
 	}
 	public void setLegends(ArrayList<LegendStepConfig> legends) {
 		this.legends = legends;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
+	}
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+	public void setClickable(boolean isClickable) {
+		this.isClickable = isClickable;
 	}
 
 }

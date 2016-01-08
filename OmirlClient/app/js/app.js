@@ -17,6 +17,7 @@ Date.prototype.toString = function() {
 // Declare app level module which depends on filters, and services
 var omirlApp = angular.module('omirl', [
     'ngRoute',
+    'ngCookies',
     'az.config',
     'az.directives',
     'az.services',

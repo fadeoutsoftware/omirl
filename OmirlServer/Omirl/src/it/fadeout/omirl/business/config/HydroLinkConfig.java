@@ -19,6 +19,7 @@ public class HydroLinkConfig {
 	String legendLink;
 	// Col Flag (if needed)
 	String colFlag;
+	int accessLevel;
 	
 	ArrayList<HydroLinkConfig> children = new ArrayList<HydroLinkConfig>();
 	/*
@@ -95,5 +96,11 @@ public class HydroLinkConfig {
 	}
 	public void setColFlag(String colFlag) {
 		this.colFlag = colFlag;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 }

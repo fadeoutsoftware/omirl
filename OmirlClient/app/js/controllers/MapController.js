@@ -638,7 +638,11 @@ var MapController = (function () {
     }
 
     MapController.prototype.showInfo = function(evt) {
-        console.log('show');
+        console.log(evt.text);
+
+        vex.dialog.alert({
+            message: evt.text,
+        });
 
         /*
         var oControllerVar = this;
@@ -649,8 +653,8 @@ var MapController = (function () {
             event.text,
             null,
             true
-        ));
-        */
+        ));*/
+
     }
 
     /**
@@ -2106,6 +2110,8 @@ var MapController = (function () {
             );
         });
         */
+
+
 
 
         if  (this.m_bIsInfoActive)  {

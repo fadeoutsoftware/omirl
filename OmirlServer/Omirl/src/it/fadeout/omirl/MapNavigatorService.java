@@ -3,6 +3,7 @@ package it.fadeout.omirl;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.fadeout.omirl.business.OmirlUser;
 import it.fadeout.omirl.business.config.HydroLinkConfig;
 import it.fadeout.omirl.business.config.MapLinkConfig;
 import it.fadeout.omirl.business.config.MapThirdLevelLinkConfig;
@@ -125,12 +126,17 @@ public class MapNavigatorService {
 		if (oConfObj != null)  {
 			
 			// Call get user from session to update last touch if user is logged. Don't care about return here that is free access
-			Omirl.getUserFromSession(sSessionId);
+			OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+			
+			int iUserAccessLevel = 9999;
+			if (oUser!=null) iUserAccessLevel = oUser.getRole();
 
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 			
 			for (SensorLinkConfig oLinkConfig : oConfig.getSensorLinks()) {
-				aoSensorLinks.add(oLinkConfig.getSensorLink());
+				
+				if (oLinkConfig.getAccessLevel() == 0 || oLinkConfig.getAccessLevel()>= iUserAccessLevel) 
+					aoSensorLinks.add(oLinkConfig.getSensorLink());
 			}
 		}
 		
@@ -154,8 +160,16 @@ public class MapNavigatorService {
 		if (oConfObj != null)  {
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 			
+			// Call get user from session to update last touch if user is logged. Don't care about return here that is free access
+			OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+			
+			int iUserAccessLevel = 9999;
+			if (oUser!=null) iUserAccessLevel = oUser.getRole();
+			
+			
 			for (StaticLinkConfig oLinkConfig : oConfig.getStaticLinks()) {
-				aoStaticLinks.add(oLinkConfig.getStaticLink());
+				if (oLinkConfig.getAccessLevel() == 0 || oLinkConfig.getAccessLevel()>= iUserAccessLevel) 
+					aoStaticLinks.add(oLinkConfig.getStaticLink());
 			}
 		}
 		
@@ -178,8 +192,15 @@ public class MapNavigatorService {
 		if (oConfObj != null)  {
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 			
+			// Call get user from session to update last touch if user is logged. Don't care about return here that is free access
+			OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+			
+			int iUserAccessLevel = 9999;
+			if (oUser!=null) iUserAccessLevel = oUser.getRole();
+			
 			for (MapLinkConfig oLinkConfig : oConfig.getMapLinks()) {
-				aoMapLinks.add(oLinkConfig.getMapLink());
+				if (oLinkConfig.getAccessLevel() == 0 || oLinkConfig.getAccessLevel()>= iUserAccessLevel) 
+					aoMapLinks.add(oLinkConfig.getMapLink());
 			}
 		}
 		
@@ -197,11 +218,18 @@ public class MapNavigatorService {
 		if (oConfObj != null)  {
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 			
+			// Call get user from session to update last touch if user is logged. Don't care about return here that is free access
+			OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+			
+			int iUserAccessLevel = 9999;
+			if (oUser!=null) iUserAccessLevel = oUser.getRole();
+			
 			for (MapLinkConfig oLinkConfig : oConfig.getMapLinks()) {
 				
 				if (oLinkConfig.getLinkId() == iIdLink) {
 					for (MapLinkConfig oSecondLevelLink : oLinkConfig.getSecondLevels()) {
-						aoMapLinks.add(oSecondLevelLink.getMapLink());
+						if (oSecondLevelLink.getAccessLevel() == 0 || oSecondLevelLink.getAccessLevel()>= iUserAccessLevel) 
+							aoMapLinks.add(oSecondLevelLink.getMapLink());
 					}
 					break;
 					
@@ -223,6 +251,12 @@ public class MapNavigatorService {
 		if (oConfObj != null)  {
 			OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 			
+			// Call get user from session to update last touch if user is logged. Don't care about return here that is free access
+			OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+			
+			int iUserAccessLevel = 9999;
+			if (oUser!=null) iUserAccessLevel = oUser.getRole();
+			
 			for (MapLinkConfig oLinkConfig : oConfig.getMapLinks()) {
 				
 				
@@ -231,7 +265,8 @@ public class MapNavigatorService {
 					if (oSecondLevelLink.getLinkId() == iIdLink) {
 						if (oSecondLevelLink.isHasThirdLevel()) {
 							for (MapThirdLevelLinkConfig oThird : oSecondLevelLink.getThirdLevels()) {
-								aoMapThirdLevelLinks.add(oThird.getMapThirdLevelLink());
+								if (oThird.getAccessLevel() == 0 || oThird.getAccessLevel()>= iUserAccessLevel) 
+									aoMapThirdLevelLinks.add(oThird.getMapThirdLevelLink());
 							}
 						}
 						
@@ -259,15 +294,20 @@ public class MapNavigatorService {
 	public List<HydroLink> getHydroFirstLevelLinks(@HeaderParam("x-session-token") String sSessionId) {
 		
 		ArrayList<HydroLink> aoHydroLinks = new ArrayList<>();
+		
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
 
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		if (oUser != null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			int iUserAccessLevel = oUser.getRole();
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 				
 				for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
-					aoHydroLinks.add(oLinkConfig.getHydroLink());
+					if (oLinkConfig.getAccessLevel() == 0 || oLinkConfig.getAccessLevel()>= iUserAccessLevel) 
+						aoHydroLinks.add(oLinkConfig.getHydroLink());
 				}
 			}			
 		}
@@ -281,11 +321,14 @@ public class MapNavigatorService {
 	public List<HydroLink> getHydroSecondLevelLinks(@PathParam("linkcode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
 		ArrayList<HydroLink> aoHydroLinks = new ArrayList<>();
 
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		if (oUser != null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				int iUserAccessLevel = oUser.getRole();
 				
 				for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
 					
@@ -294,7 +337,9 @@ public class MapNavigatorService {
 							HydroLink oHydroSecondLink = oSecondLevelLink.getHydroLink();
 							oHydroSecondLink.setParentLinkCode(sLinkCode);
 							oHydroSecondLink.setParentDescription(oLinkConfig.getDescription());
-							aoHydroLinks.add(oHydroSecondLink);
+							
+							if (oSecondLevelLink.getAccessLevel() == 0 || oSecondLevelLink.getAccessLevel()>= iUserAccessLevel)
+								aoHydroLinks.add(oHydroSecondLink);
 						}
 						break;
 						
@@ -312,8 +357,12 @@ public class MapNavigatorService {
 	public List<HydroLink> getHydroThirdLevelLinks(@PathParam("linkCode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
 		ArrayList<HydroLink> aoHydroThirdLevelLinks = new ArrayList<>();
 		
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		
+		if (oUser != null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			int iUserAccessLevel = oUser.getRole();
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -329,7 +378,8 @@ public class MapNavigatorService {
 									HydroLink oThirdLink = oThird.getHydroLink();
 									oThirdLink.setParentLinkCode(oLinkConfig.getLinkCode());
 									oThirdLink.setParentDescription(oSecondLevelLink.getDescription());
-									aoHydroThirdLevelLinks.add(oThirdLink);
+									if (oThird.getAccessLevel() == 0 || oThird.getAccessLevel()>= iUserAccessLevel)
+										aoHydroThirdLevelLinks.add(oThirdLink);
 								}
 							}
 							
@@ -356,15 +406,20 @@ public class MapNavigatorService {
 	public List<RadarLink> getRadarFirstLevelLinks(@HeaderParam("x-session-token") String sSessionId) {
 		
 		ArrayList<RadarLink> aoRadarLinks = new ArrayList<>();
+		
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
 
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		if (oUser!= null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			int iUserAccessLevel = oUser.getRole();
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 				
 				for (RadarLinkConfig oLinkConfig : oConfig.getRadarLinks()) {
-					aoRadarLinks.add(oLinkConfig.getRadarLink());
+					if (oLinkConfig.getAccessLevel() == 0 || oLinkConfig.getAccessLevel()>= iUserAccessLevel)
+						aoRadarLinks.add(oLinkConfig.getRadarLink());
 				}
 			}			
 		}
@@ -378,8 +433,12 @@ public class MapNavigatorService {
 	public List<RadarLink> getRadarSecondLevelLinks(@PathParam("linkcode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
 		ArrayList<RadarLink> aoRadarLinks = new ArrayList<>();
 
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		
+		if (oUser!= null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			int iUserAccessLevel = oUser.getRole();
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -391,7 +450,8 @@ public class MapNavigatorService {
 							RadarLink oHydroSecondLink = oSecondLevelLink.getRadarLink();
 							oHydroSecondLink.setParentLinkCode(sLinkCode);
 							oHydroSecondLink.setParentDescription(oLinkConfig.getDescription());
-							aoRadarLinks.add(oHydroSecondLink);
+							if (oSecondLevelLink.getAccessLevel() == 0 || oSecondLevelLink.getAccessLevel()>= iUserAccessLevel)
+								aoRadarLinks.add(oHydroSecondLink);
 						}
 						break;
 						
@@ -409,8 +469,12 @@ public class MapNavigatorService {
 	public List<RadarLink> getRadarThirdLevelLinks(@PathParam("linkCode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
 		ArrayList<RadarLink> aoRadarThirdLevelLinks = new ArrayList<>();
 		
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		
+		if (oUser!= null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			int iUserAccessLevel = oUser.getRole();
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -426,7 +490,8 @@ public class MapNavigatorService {
 									RadarLink oThirdLink = oThird.getRadarLink();
 									oThirdLink.setParentLinkCode(oLinkConfig.getLinkCode());
 									oThirdLink.setParentDescription(oSecondLevelLink.getDescription());
-									aoRadarThirdLevelLinks.add(oThirdLink);
+									if (oThird.getAccessLevel() == 0 || oThird.getAccessLevel()>= iUserAccessLevel)
+										aoRadarThirdLevelLinks.add(oThirdLink);
 								}
 							}
 							
@@ -453,15 +518,20 @@ public class MapNavigatorService {
 	public List<SatelliteLink> getSatelliteFirstLevelLinks(@HeaderParam("x-session-token") String sSessionId) {
 		
 		ArrayList<SatelliteLink> aoSatelliteLinks = new ArrayList<>();
+		
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
 
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		if (oUser!= null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			int iUserAccessLevel = oUser.getRole();
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
 				
 				for (SatelliteLinkConfig oLinkConfig : oConfig.getSatelliteLinks()) {
-					aoSatelliteLinks.add(oLinkConfig.getSatelliteLink());
+					if (oLinkConfig.getAccessLevel() == 0 || oLinkConfig.getAccessLevel()>= iUserAccessLevel)
+						aoSatelliteLinks.add(oLinkConfig.getSatelliteLink());
 				}
 			}			
 		}
@@ -475,8 +545,12 @@ public class MapNavigatorService {
 	public List<SatelliteLink> getSatelliteSecondLevelLinks(@PathParam("linkcode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
 		ArrayList<SatelliteLink> aoSatelliteLinks = new ArrayList<>();
 
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		
+		if (oUser!= null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			int iUserAccessLevel = oUser.getRole();
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -488,7 +562,8 @@ public class MapNavigatorService {
 							SatelliteLink oSatelliteSecondLink = oSecondLevelLink.getSatelliteLink();
 							oSatelliteSecondLink.setParentLinkCode(sLinkCode);
 							oSatelliteSecondLink.setParentDescription(oLinkConfig.getDescription());
-							aoSatelliteLinks.add(oSatelliteSecondLink);
+							if (oSecondLevelLink.getAccessLevel() == 0 || oSecondLevelLink.getAccessLevel()>= iUserAccessLevel)
+								aoSatelliteLinks.add(oSatelliteSecondLink);
 						}
 						break;
 						
@@ -506,8 +581,12 @@ public class MapNavigatorService {
 	public List<SatelliteLink> getSatelliteThirdLevelLinks(@PathParam("linkCode") String sLinkCode, @HeaderParam("x-session-token") String sSessionId) {
 		ArrayList<SatelliteLink> aoSatelliteThirdLevelLinks = new ArrayList<>();
 		
-		if (Omirl.getUserFromSession(sSessionId)!= null) {
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		
+		if (oUser!= null) {
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			int iUserAccessLevel = oUser.getRole();
 			
 			if (oConfObj != null)  {
 				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
@@ -523,7 +602,8 @@ public class MapNavigatorService {
 									SatelliteLink oThirdLink = oThird.getSatelliteLink();
 									oThirdLink.setParentLinkCode(oLinkConfig.getLinkCode());
 									oThirdLink.setParentDescription(oSecondLevelLink.getDescription());
-									aoSatelliteThirdLevelLinks.add(oThirdLink);
+									if (oThird.getAccessLevel() == 0 || oThird.getAccessLevel()>= iUserAccessLevel)
+										aoSatelliteThirdLevelLinks.add(oThirdLink);
 								}
 							}
 							

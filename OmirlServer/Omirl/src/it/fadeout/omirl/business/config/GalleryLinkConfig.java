@@ -14,6 +14,7 @@ public class GalleryLinkConfig {
 	private String codeVariable;
 	private String codeParent;
 	private ArrayList<GalleryLinkConfig> sublevelGalleryLinkConfig = new ArrayList<GalleryLinkConfig>();
+	int accessLevel;
 	
 	public String getCode() {
 		return code;
@@ -100,6 +101,12 @@ public class GalleryLinkConfig {
 	}
 	public void setCodeParent(String codeParent) {
 		this.codeParent = codeParent;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 	
 	

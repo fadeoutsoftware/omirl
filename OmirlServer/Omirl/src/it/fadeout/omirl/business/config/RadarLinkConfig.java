@@ -19,6 +19,7 @@ public class RadarLinkConfig {
 	String legendLink;
 	// Link to the WMS server
 	String layerWMS;
+	int accessLevel;
 	
 	ArrayList<RadarLinkConfig> children = new ArrayList<RadarLinkConfig>();
 	/*
@@ -97,5 +98,11 @@ public class RadarLinkConfig {
 	}
 	public void setLayerWMS(String layerWMS) {
 		this.layerWMS = layerWMS;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 }

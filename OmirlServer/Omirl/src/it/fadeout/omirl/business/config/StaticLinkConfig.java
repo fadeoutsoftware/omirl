@@ -6,6 +6,7 @@ public class StaticLinkConfig {
 	String description;
 	String layerWMS;
 	String layerID;
+	int accessLevel;
 	
 	public String getDescription() {
 		return description;
@@ -33,5 +34,11 @@ public class StaticLinkConfig {
 		oStatic.setLayerWMS(layerWMS);
 		oStatic.setSelected(false);
 		return oStatic;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 }

@@ -3,7 +3,7 @@
  */
 
 var TemplateController = (function() {
-    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService, $translate, $interpolate, oTranslateService, $interval, oLayerService) {
+    function TemplateController($scope, $location, oConstantsService, oAuthService, $log, $route, $templateCache, oTableService, $translate, $interpolate, oTranslateService, $interval, oLayerService, $cookies) {
         this.m_oScope = $scope;
         this.m_oLocation  = $location;
         this.m_oConstantsService = oConstantsService;
@@ -30,10 +30,35 @@ var TemplateController = (function() {
         this.m_oTranslateService = $translate;
         this.m_oInterpolateService = $interpolate;
         this.m_sContainerStyle = "overflow: hidden;";
+        this.m_oCookies = $cookies;
 
         $scope.$on('$locationChangeStart', function(event) {
             resizeMap();
         });
+
+        var sSessionId = this.m_oCookies.omirlId;
+
+        if (sSessionId!=null)
+        {
+            if (angular.isDefined(sSessionId))
+            {
+                if (sSessionId != "")
+                {
+                    var oController = this;
+                    this.m_oAuthService.cookieCheck(sSessionId).success(function(data){
+                        if (data == null || data == '') {
+                            oController.loginresult(null,false);
+                        }
+                        else {
+                            oController.loginresult(data,false);
+                        }
+
+                    }).error(function(data, status) {
+                        oController.loginresult(data,true);
+                    });
+                }
+            }
+        }
 
         //------------------Session Check - Begin----------------------------------
         var sessionCheck;
@@ -109,6 +134,57 @@ var TemplateController = (function() {
         return this.m_bShowLogin;
     }
 
+    TemplateController.prototype.loginresult = function(data, bError) {
+        if (!bError) {
+            this.credentials.userPassword = "";
+
+            if (!angular.isDefined(data)) data = {};
+            this.m_oConstantsService.setUser(data);
+
+            if (this.m_oConstantsService.isUserLogged()) {
+                this.credentials.userId = "";
+                this.m_oTranslateService('INDEX_BENVENUTO', {nome: this.m_oConstantsService.getUser().name}).then(function(text){
+                    this.ReservedAreaText = text;
+                });
+                this.m_bShowLogin = false;
+                this.m_bShowLogout = true;
+                this.m_bLoginError = false;
+
+                //oController.serviceIconClicked(oController.m_sLastPath);
+                var oCurrentTemplate = this.m_oRoute.current.templateUrl;
+                this.m_oTemplateCache.remove(oCurrentTemplate);
+                this.m_oScope.$broadcast("$locationChangeStart");
+                this.m_oRoute.reload();
+
+                this.m_oCookies.omirlId = data.sessionId;
+
+            }
+            else {
+                this.m_bLoginError = true;
+                this.ReservedAreaText = this.ReservedAreaTextConstant;
+                this.m_sLoginMessage = "INDEX_LOGINCRNONCORR";
+
+                this.m_oCookies.omirlId = "";
+            }
+
+            this.m_oTableService.refreshTableLinks();
+            this.m_bLoading = false;
+        }
+        else {
+            //oController.credentials.userId = "";
+            this.credentials.userPassword = "";
+
+            this.m_bLoginError = true;
+            this.m_oConstantsService.setUser(null);
+            this.ReservedAreaText = this.ReservedAreaTextConstant;
+            this.m_sLoginMessage = "INDEX_LOGINCRNONCORR";
+
+            this.m_bLoading = false;
+
+            this.m_oCookies.omirlId = "";
+        }
+    }
+
     TemplateController.prototype.login = function() {
 
         this.m_bLoginError = false;
@@ -119,7 +195,7 @@ var TemplateController = (function() {
         var oController = this;
 
         this.m_oAuthService.login(this.credentials).success(function(data, status) {
-
+/*
             oController.credentials.userPassword = "";
 
             if (!angular.isDefined(data)) data = {};
@@ -147,8 +223,10 @@ var TemplateController = (function() {
             }
 
             oController.m_oTableService.refreshTableLinks();
-            oController.m_bLoading = false;
+            oController.m_bLoading = false;*/
+            oController.loginresult(data,false);
         }).error(function(data, status) {
+            /*
             //oController.credentials.userId = "";
             oController.credentials.userPassword = "";
 
@@ -158,6 +236,8 @@ var TemplateController = (function() {
             oController.m_sLoginMessage = "INDEX_LOGINCRNONCORR";
 
             oController.m_bLoading = false;
+            */
+            oController.loginresult(data,true);
         });
 
     }
@@ -216,7 +296,8 @@ var TemplateController = (function() {
         '$interpolate',
         'TranslateService',
         '$interval',
-        'az.services.layersService'
+        'az.services.layersService',
+        '$cookies'
     ];
 
     return TemplateController;

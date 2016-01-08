@@ -12,6 +12,7 @@ public class MapLinkConfig {
 	String layerWMS;
 	String legendLink;
 	String layerID;
+	int accessLevel;
 	
 	ArrayList<MapThirdLevelLinkConfig> thirdLevels = new ArrayList<MapThirdLevelLinkConfig>();
 	ArrayList<MapLinkConfig> secondLevels = new ArrayList<MapLinkConfig>();
@@ -86,5 +87,11 @@ public class MapLinkConfig {
 		oLink.setSelected(false);
 		
 		return oLink;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 }

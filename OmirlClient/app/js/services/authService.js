@@ -29,5 +29,9 @@ angular.module('omirl.authService', ['omirl.ConstantsService']).
         this.sessionCheck = function() {
             return this.m_oHttp.get(this.APIURL + '/auth/sessionCheck');
         }
+
+        this.cookieCheck = function(sessionId) {
+            return this.m_oHttp.get(this.APIURL + '/auth/cookieCheck/'+sessionId);
+        }
     }]);
 

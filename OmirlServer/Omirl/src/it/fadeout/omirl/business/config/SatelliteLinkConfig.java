@@ -19,6 +19,7 @@ public class SatelliteLinkConfig {
 	String legendLink;
 	// Link to the WMS server
 	String layerWMS;
+	int accessLevel;
 
 	ArrayList<SatelliteLinkConfig> children = new ArrayList<SatelliteLinkConfig>();
 	/*
@@ -97,5 +98,11 @@ public class SatelliteLinkConfig {
 	}
 	public void setLayerWMS(String layerWMS) {
 		this.layerWMS = layerWMS;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 }

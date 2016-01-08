@@ -11,6 +11,8 @@ public class HydroModelLinkConfig {
 	private String filePath;
 	
 	private Boolean isDefault;
+	
+	int accessLevel;
 
 	public String getLinkCode() {
 		return linkCode;
@@ -50,6 +52,14 @@ public class HydroModelLinkConfig {
 
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 
 }

@@ -9,6 +9,7 @@ public class TableLinkConfig {
 	boolean isActive;
 	String location;
 	boolean isPrivate;
+	int accessLevel;
 	
 	public String getCode() {
 		return code;
@@ -56,6 +57,12 @@ public class TableLinkConfig {
 		oTableLink.setLocation(this.getLocation());
 		
 		return oTableLink;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 
 }

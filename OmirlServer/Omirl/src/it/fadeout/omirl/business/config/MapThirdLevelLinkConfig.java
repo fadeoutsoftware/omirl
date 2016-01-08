@@ -6,6 +6,7 @@ public class MapThirdLevelLinkConfig {
 	boolean isDefault;
 	String description;
 	String layerIDModifier;
+	int accessLevel;
 	
 	public boolean isDefault() {
 		return isDefault;
@@ -33,5 +34,11 @@ public class MapThirdLevelLinkConfig {
 		oThird.setLayerIDModifier(layerIDModifier);
 		
 		return oThird;
+	}
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+	public void setAccessLevel(int accessLevel) {
+		this.accessLevel = accessLevel;
 	}	
 }
