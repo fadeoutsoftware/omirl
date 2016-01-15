@@ -35,7 +35,10 @@ var SectionChartController = (function() {
 
     SectionChartController.prototype.getImageLink = function() {
         //return this.m_sImageLink;
-        return 'http://93.62.155.217:8080/Omirl/' + this.m_sImageLink;
+
+        var sBaseAddress = this.m_oConstantsService.getURL();
+
+        return sBaseAddress + '/' + this.m_sImageLink;
     }
 
     SectionChartController.prototype.LoadData = function () {
@@ -72,7 +75,7 @@ var SectionChartController = (function() {
 
             oControllerVar.oChartVM = data;
             oControllerVar.m_aoOtherCharts = [];
-            oControllerVar.m_sImageLink = data.sImageLink;
+            oControllerVar.m_sImageLink = data.imageLink;
 
             var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sSectionCode);
 
@@ -91,7 +94,7 @@ var SectionChartController = (function() {
                         oOtherChartLink.isActive = false;
                     }
 
-                    var oHydroLink = oControllerVar.m_oConstantsService.getHydroLinkByType(sType);
+                    var oHydroLink = oControllerVar.m_oConstantsService.getFlattedHydroLinkByType(sType);
 
                     if (oHydroLink != null)
                     {
@@ -159,7 +162,7 @@ var SectionChartController = (function() {
 
             oControllerVar.oChartVM = data;
             oControllerVar.m_aoOtherCharts = [];
-            oControllerVar.m_sImageLink = data.sImageLink;
+            oControllerVar.m_sImageLink = data.imageLink;
 
             var oDialog = oControllerVar.m_oDialogService.getExistingDialog(oControllerVar.m_sSectionCode);
 
@@ -178,7 +181,7 @@ var SectionChartController = (function() {
                         oOtherChartLink.isActive = false;
                     }
 
-                    var oHydroLink = oControllerVar.m_oConstantsService.getHydroLinkByType(sType);
+                    var oHydroLink = oControllerVar.m_oConstantsService.getFlattedHydroLinkByType(sType);
 
                     if (oHydroLink != null)
                     {

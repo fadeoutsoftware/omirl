@@ -7,8 +7,9 @@ angular.module('omirl.ConstantsService', []).
     service('ConstantsService', [function () {
         //this.APIURL = 'http://localhost:8080/Omirl/rest';
         //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        this.APIURL = 'http://93.62.155.217:8080/Omirl/rest';
-        this.WMSURL = 'http://93.62.155.217:8080/geoserver/wms'
+        this.URL = 'http://93.62.155.217:8080/Omirl';
+        this.APIURL = this.URL + '/rest';
+        this.WMSURL = 'http://93.62.155.217:8080/geoserver/wms';
 
         this.m_aoSensorLinks = [];
         this.m_aoHydroLinks = [];
@@ -25,6 +26,8 @@ angular.module('omirl.ConstantsService', []).
 
         this.m_sSensorLayerActive = null;
         this.m_bIsMiniVersion=false;
+
+        this.m_aoFlattedHydroLinks = [];
 
 
         this.isMobile = function() {
@@ -93,6 +96,10 @@ angular.module('omirl.ConstantsService', []).
             this.m_oMapZoom = oZoom;
         }
 
+        this.getURL = function() {
+            return this.URL;
+        }
+
         this.getAPIURL = function() {
             return this.APIURL;
         }
@@ -147,6 +154,30 @@ angular.module('omirl.ConstantsService', []).
 
         this.getHydroLinks = function() {
             return this.m_aoHydroLinks;
+        }
+
+        this.clearFlattedHydroLinks = function() {
+            this.m_aoFlattedHydroLinks = [];
+        }
+
+        this.setFlattedHydroLinks = function(aoHydroLinks) {
+            this.m_aoFlattedHydroLinks = aoHydroLinks;
+        }
+
+        this.getFlattedHydroLinkByType = function(sType) {
+
+            for (var iElement = 0; iElement < this.m_aoFlattedHydroLinks.length; iElement++) {
+                if (this.m_aoFlattedHydroLinks[iElement].linkCode == sType) {
+                    return this.m_aoFlattedHydroLinks[iElement];
+                    break;
+                }
+            }
+
+            return null;
+        }
+
+        this.getFlattedHydroLinks = function() {
+            return this.m_aoFlattedHydroLinks;
         }
 
         this.clearStaticLinks = function() {

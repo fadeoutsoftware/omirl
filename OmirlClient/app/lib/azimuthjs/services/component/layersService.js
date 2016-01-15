@@ -58,7 +58,7 @@ angular.module('az.services').factory('az.services.layersService',function($root
             {"lmt":3,"clr":"#F08228"},
             {"lmt":4,"clr":"#FA3C3C"},
             {"lmt":5,"clr":"#FA3C3C"},
-            {"lmt":10000,"clr":"#FA3C3C"}
+            {"lmt":10000,"clr":"#FFFFFF"}
         ],
         clarAll: function() {
             this.clearBaseLayers();
@@ -568,8 +568,22 @@ angular.module('az.services').factory('az.services.layersService',function($root
                             //color grey, station not present or enabled
                             if (feature.attributes.color == -1)
                                 return "#808080";
-                            var oColor = oService.m_aoHydroSensorLayerColorRanges[feature.attributes.color];
-                            return oColor.clr;
+
+                            var oColor = "#808080";
+
+                            for (iCount = 0; iCount< oService.m_aoHydroSensorLayerColorRanges.length; iCount++) {
+                                if (feature.attributes.color < oService.m_aoHydroSensorLayerColorRanges[iCount].lmt )
+                                {
+                                    oColor = oService.m_aoHydroSensorLayerColorRanges[iCount].clr;
+                                    break;
+                                }
+                            }
+
+                            oService.m_aoHydroSensorLayerColorRanges[feature.attributes.color];
+
+
+
+                            return oColor;
                         }
                         catch (e) {
                             return "#FFFFFF";

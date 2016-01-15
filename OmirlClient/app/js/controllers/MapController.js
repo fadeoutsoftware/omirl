@@ -324,6 +324,14 @@ var MapController = (function () {
         // Get Hydro Links
         if (this.m_oConstantsService.isUserLogged()) {
             this.m_oMapNavigatorService.fetchHydroFirstLevels();
+
+            this.m_oMapNavigatorService.getFlattedHydro().success(function(data, status) {
+
+                oControllerVar.m_oConstantsService.setFlattedHydroLinks(data);
+
+            }).error(function (data, status) {
+                oControllerVar.m_oLog.error('Error Loading Flatted Hydro Links');
+            });
         }
 
         // Get Radar Links

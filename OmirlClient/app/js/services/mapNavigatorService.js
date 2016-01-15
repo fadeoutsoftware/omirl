@@ -89,6 +89,10 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
         }
 
 
+        this.getFlattedHydro = function()
+        {
+            return this.m_oHttp.get(this.APIURL + '/mapnavigator/flattedhydro');
+        }
 
         this.fetchHydroFirstLevels = function() 
         {
