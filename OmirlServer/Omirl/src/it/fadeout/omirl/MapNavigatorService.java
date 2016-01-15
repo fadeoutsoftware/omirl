@@ -396,6 +396,47 @@ public class MapNavigatorService {
 	}	
 	
 	
+	@GET
+	@Path("/flattedhydro")
+	@Produces({"application/xml", "application/json", "text/xml"})
+	public List<HydroLink> getFlattedHydroLinks(@HeaderParam("x-session-token") String sSessionId) {
+		ArrayList<HydroLink> aoHydroLinks = new ArrayList<>();
+
+		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+		
+		if (oUser != null) {
+			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
+			
+			if (oConfObj != null)  {
+				OmirlNavigationConfig oConfig = (OmirlNavigationConfig) oConfObj;
+				
+				int iUserAccessLevel = oUser.getRole();
+				
+				for (HydroLinkConfig oLinkConfig : oConfig.getHydroLinks()) {
+					
+					if (oLinkConfig.getAccessLevel() == 0 || oLinkConfig.getAccessLevel()>= iUserAccessLevel)
+						aoHydroLinks.add(oLinkConfig.getHydroLink());
+					
+					//System.out.println("Livello 1 " + oLinkConfig.getLinkCode());
+										
+					for (HydroLinkConfig oSecondLevelLink : oLinkConfig.getChildren()) {
+						HydroLink oHydroSecondLink = oSecondLevelLink.getHydroLink();
+						oHydroSecondLink.setParentLinkCode(oLinkConfig.getLinkCode());
+						oHydroSecondLink.setParentDescription(oLinkConfig.getDescription());
+						
+						if (oSecondLevelLink.getAccessLevel() == 0 || oSecondLevelLink.getAccessLevel()>= iUserAccessLevel)
+							aoHydroLinks.add(oHydroSecondLink);
+						
+						//System.out.println("Livello 2 " + oHydroSecondLink.getLinkCode());
+					}
+				}
+			}
+		}
+		
+		return aoHydroLinks;
+	}	
+	
+	
 	/**
 	 * Gets the first level of dynamic layers
 	 * @return

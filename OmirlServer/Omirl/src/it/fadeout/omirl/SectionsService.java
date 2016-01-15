@@ -77,11 +77,11 @@ public class SectionsService {
 				// Find the right Sensor Link Configuration
 				for (HydroLinkConfig oLinkConfig : oConfig.getFlattedHydroLinks()) {
 					
-					System.out.println("SectionsService.GetSection: Flatted " + oLinkConfig.getLinkCode());
+					//System.out.println("SectionsService.GetSection: Flatted " + oLinkConfig.getLinkCode());
 										
 					if (oLinkConfig.getLinkCode().equals(sCode)) {
 						
-						System.out.println("SectionsService.GetSection: TROVATO " + sCode);
+						//System.out.println("SectionsService.GetSection: TROVATO " + sCode);
 												
 						// Get The path of the right date
 						String sPath = Omirl.getSubPath(oLinkConfig.getFilePath(), oDate);

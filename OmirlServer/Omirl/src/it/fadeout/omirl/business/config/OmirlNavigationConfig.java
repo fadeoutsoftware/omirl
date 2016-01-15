@@ -12,6 +12,7 @@ public class OmirlNavigationConfig {
 	String geoServerDataFolder;
 	String geoServerWorkspace;
 	String geoServerStore;
+	int backDaysSearch = 1;
 	
 	ArrayList<MapLinkConfig> mapLinks = new ArrayList<MapLinkConfig>();
 	ArrayList<SensorLinkConfig> sensorLinks = new ArrayList<SensorLinkConfig>();
@@ -165,5 +166,11 @@ public class OmirlNavigationConfig {
 	}
 	public void setGeoServerStore(String geoServerStore) {
 		this.geoServerStore = geoServerStore;
+	}
+	public int getBackDaysSearch() {
+		return backDaysSearch;
+	}
+	public void setBackDaysSearch(int backDaysSearch) {
+		this.backDaysSearch = backDaysSearch;
 	}
 }

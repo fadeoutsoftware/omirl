@@ -2964,7 +2964,7 @@ public class OmirlDaemon {
 
 				System.out.println("OmirlDaemon - Model " + oLayerInfo.getModelName() + " Code: " + oLayerInfo.getModelCode() +  " Flag Col " + oLayerInfo.getFlagColumn());
 
-				SerializeSectionsLayer(oLayerInfo.getModelName(), oLayerInfo.getModelCode(), oLayerInfo.getFlagColumn(), oLayerInfo.getHasSubFolders(), oLayerInfo.getDisableOnMap());
+				SerializeSectionsLayer(oLayerInfo.getModelName(), oLayerInfo.getModelCode(), oLayerInfo.getFlagColumn(), oLayerInfo.getHasSubFolders(), oLayerInfo.getDisableOnMap(), oLayerInfo.getTimeRewind(), oLayerInfo.getMaxDelayMinutes());
 			}
 		}
 		catch(Exception oEx)
@@ -3595,7 +3595,12 @@ public class OmirlDaemon {
 						if (aoMarkers != null) {
 							for (Element oMarker : aoMarkers) {
 								String sCode = oMarker.getAttribute("code").getValue();
-								Integer iColor = oMarker.getAttribute("ALERT").getIntValue();
+								Integer iColor = 1000;
+								
+								if (oMarker.getAttribute("ALERT")!= null)
+								{
+									iColor = oMarker.getAttribute("ALERT").getIntValue();
+								}
 
 								if (!aoRetDictionary.containsKey(sCode)){
 									aoRetDictionary.put(sCode, iColor);
@@ -3675,14 +3680,41 @@ public class OmirlDaemon {
 	}
 
 
-	public void SerializeSectionsLayer(String sModelName, String sModelCode, String sFlagColumn, Boolean bHasSubFolders, Boolean bDisableOnMap) {
+	public void SerializeSectionsLayer(String sModelName, String sModelCode, String sFlagColumn, Boolean bHasSubFolders, Boolean bDisableOnMap, Boolean bTimeRewind, int iMaxDelay) {
 
 		List<SectionViewModel> aoSectionsViewModel = new ArrayList<>();
 
 		try {
+			
+			List<SectionAnag> aoSections = null;
 
-			SectionAnagRepository oSectionsRepository = new SectionAnagRepository();
-			List<SectionAnag> aoSections = oSectionsRepository.selectByModel(sFlagColumn);
+			if (sFlagColumn.equals("boxplot") == false) {
+				SectionAnagRepository oSectionsRepository = new SectionAnagRepository();
+				aoSections = oSectionsRepository.selectByModel(sFlagColumn);
+			}
+
+			
+			
+			if (aoSections == null && sFlagColumn.equals("boxplot")) {
+				
+				System.out.println("BOXPLOT SECTION: ADDING PSEUDO SECTION");
+				
+				SectionAnag oSection = new SectionAnag();
+				oSection.setCode("SintesiPrevisione");
+				oSection.setBasin("BOXPLOT");
+				oSection.setDistrict("GE");
+				oSection.setLat(44.12);
+				oSection.setLon(8.76);
+				oSection.setElev(0.0);
+				oSection.setName("BOXPLOT");
+				oSection.setRiver("");
+				oSection.setBasin_area(0.0);
+				oSection.setWarn_area("");
+				oSection.setBasin_class("");
+				
+				aoSections = new ArrayList<>();
+				aoSections.add(oSection);
+			}
 
 			String sSubFolderVM = "";
 

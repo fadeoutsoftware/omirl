@@ -393,7 +393,7 @@ public class ChartService {
 								if (aoSections !=null) {
 									if (aoSections.size()>0) {
 										sSubPath = aoSections.get(0).getSubFolder();
-										System.out.println("SectionsService.GetSectionChart: SubPath found " + sSubPath);
+										System.out.println("SectionsService.GetSectionChart: SubPath found [" + sSubPath + "]");
 									}
 								}
 							} catch (Exception e) {
@@ -443,39 +443,19 @@ public class ChartService {
 
 							// Find the config object
 							HydroLinkConfig oSelectedHydroConfig = null;
-
-							/*
-							for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
-								if (oHydroConfig.getLinkCode().equals(sModel)) {
-									// This is my model
-									oSelectedHydroConfig=oHydroConfig;
-									break;
-								}
-							}
-
-							// Find related models in the same section
-							if (oSelectedHydroConfig!=null) {
-								for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
-
-									if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
-										oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
-									}
-								}								
-							}
-							*/
 							
-							System.out.println("SectionsService.GetSectionChart:Cerco " + sModel);
+							//System.out.println("ChartService.GetSectionChart:Cerco " + sModel);
 							
 							for (HydroLinkConfig oHydroConfig : oConfig.getFlattedHydroLinks()) {
 								if (oHydroConfig.getLinkCode().equals(sModel)) {
 									// This is my model
 									oSelectedHydroConfig=oHydroConfig;
-									System.out.println("SectionsService.GetSectionChart: TROVATO " + sModel);
+									System.out.println("ChartService.GetSectionChart: found " + sModel);
 									break;
 								}
 							}
 							
-							System.out.println("SectionsService.GetSectionChart: Cerco i fratelli di " + sModel);
+							//System.out.println("SectionsService.ChartService: Cerco i fratelli di " + sModel);
 							
 							for (HydroLinkConfig oHydroConfig : oConfig.getFlattedHydroLinks()) {
 								
@@ -483,7 +463,7 @@ public class ChartService {
 								{
 									if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
 										oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
-										System.out.println("SectionsService.GetSectionChart: Aggiunto " + oHydroConfig.getLinkCode());
+										//System.out.println("ChartService.GetSectionChart: Aggiunto " + oHydroConfig.getLinkCode());
 									}
 								}
 							}								
@@ -491,20 +471,38 @@ public class ChartService {
 						}
 						else {
 
+							System.out.println("ChartService.GetSectionChart: File does not exists, try in the previous days");
+							
 							Integer oDays = 0;
 
 							//Search back
-							oDays = Integer.parseInt(m_oServletConfig.getInitParameter("BackDaysSearch"));
+							oDays = oConfig.getBackDaysSearch();
+							
 							if (oDays != null)
 							{
 								for(int iDay = 1; iDay <= oDays; iDay ++)
 								{
-									oDate = new Date( oDate.getTime() - 24 * 3600 * 1000);
+									oDate = new Date( oDate.getTime() - (long)( 24 * 3600 * 1000));
+									
+									System.out.println("ChartService.GetSectionChart: NEW DATE " + oDate.toString());
+									
+									
+									sPath = Omirl.getSubPath(sBasePath, oDate);
+									
+									if (sPath == null)
+									{
+										System.out.println("ChartService.GetSectionChart: no folder on this date ");
+										continue;
+									}
+									
+									sFeaturesPath = sPath + "/features";
+									
 									// Get The Last File
 									oLastFile = Omirl.lastFileModified(sFeaturesPath, oDate);
+									
 									if (oLastFile != null) {
 
-										System.out.println("SectionsService.GetSectionChart: Opening Sections File " + oLastFile.getAbsolutePath());
+										System.out.println("ChartService.GetSectionChart: Opening Sections File " + oLastFile.getAbsolutePath());
 
 										try {
 											// Ok read sections 
@@ -512,7 +510,7 @@ public class ChartService {
 											if (aoSections !=null) {
 												if (aoSections.size()>0) {
 													sSubPath = aoSections.get(0).getSubFolder();
-													System.out.println("SectionsService.GetSectionChart: SubPath found " + sSubPath);
+													System.out.println("SectionsService.GetSectionChart: SubPath found [" + sSubPath + "]");
 												}
 											}
 										} catch (Exception e) {
@@ -536,6 +534,8 @@ public class ChartService {
 
 									// Found?					
 									if (oBackChartFile.exists()) {
+										
+										System.out.println("ChartService.GetSectionChart: file exists");
 
 										// Create return object
 										oDataChart = new SectionChartViewModel();
@@ -543,6 +543,7 @@ public class ChartService {
 										// Compose the img relative path
 										String sRelativePath = Omirl.getSubPathWithoutCheck("img/sections/" + sModel, oDate);
 
+										System.out.println("ChartService.GetSectionChart: relative Path: " + sRelativePath);
 
 										if (sSubPath.equals("")){
 											sRelativePath+="/"+sSection+".png";
@@ -550,8 +551,6 @@ public class ChartService {
 										else {
 											sRelativePath+="/"+sSubPath + "/" + sSection+".png";
 										}
-
-
 
 										// Save it
 										oDataChart.setImageLink(sRelativePath);
@@ -580,6 +579,10 @@ public class ChartService {
 										}
 										//Chart Found - break;
 										break;
+									}
+									else
+									{
+										System.out.println("ChartService.GetSectionChart: file does not exists");
 									}
 								}
 							}

@@ -6,6 +6,8 @@ public class SectionLayerInfo {
 	String flagColumn;
 	Boolean hasSubFolders=false;
 	private Boolean disableOnMap=false;
+	Boolean timeRewind = false;
+	int maxDelayMinutes = 120;
 	
 	public String getModelName() {
 		return modelName;
@@ -36,6 +38,18 @@ public class SectionLayerInfo {
 	}
 	public void setDisableOnMap(Boolean disableOnMap) {
 		this.disableOnMap = disableOnMap;
+	}
+	public Boolean getTimeRewind() {
+		return timeRewind;
+	}
+	public void setTimeRewind(Boolean timeRewind) {
+		this.timeRewind = timeRewind;
+	}
+	public int getMaxDelayMinutes() {
+		return maxDelayMinutes;
+	}
+	public void setMaxDelayMinutes(int maxDelayMinutes) {
+		this.maxDelayMinutes = maxDelayMinutes;
 	}
 
 }
