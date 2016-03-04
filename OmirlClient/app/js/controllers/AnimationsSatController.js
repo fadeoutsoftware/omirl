@@ -20,6 +20,9 @@ var AnimationsSatController = (function() {
         this.m_bMenuSatActive = true;
         //-----------------------------------------------------------
 
+        // Flag to know if the side bar is collapsed or not
+        this.m_bSideBarCollapsed = false;
+
         var oControllerVar = this;
 
         if (this.m_oConstantsService.isNowMode()) {
@@ -105,6 +108,29 @@ var AnimationsSatController = (function() {
         }).error(function(data, status, headers, config) {
             console.error("Fail to do GET:");
         });
+    }
+
+    AnimationsSatController.prototype.toggleSideBarClicked = function() {
+
+        var oElement = angular.element("#mapNavigation");
+
+        if (oElement != null) {
+            if (oElement.length>0) {
+                var iWidth = oElement[0].clientWidth;
+                iWidth -= 0;
+
+                if (!this.m_bSideBarCollapsed) {
+                    oElement[0].style.left = "-" + iWidth + "px";
+                }
+                else {
+                    oElement[0].style.left =  "0px";
+                }
+
+                //oElement.sty
+            }
+        }
+
+        this.m_bSideBarCollapsed = !this.m_bSideBarCollapsed;
     }
 
 
