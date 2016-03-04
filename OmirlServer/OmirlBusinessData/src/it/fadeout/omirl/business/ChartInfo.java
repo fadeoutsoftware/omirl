@@ -1,5 +1,6 @@
 package it.fadeout.omirl.business;
 
+import java.util.Hashtable;
 
 public class ChartInfo {
 	String name;
@@ -21,7 +22,7 @@ public class ChartInfo {
 	String color;
 	//Refresh in minutes
 	int refreshTime;
-	long lastRefreshTime;
+	Hashtable<String, Long> lastRefreshTime = new Hashtable<>();
 	
 	public String getName() {
 		return name;
@@ -132,10 +133,33 @@ public class ChartInfo {
 	public void setRefreshTime(int refreshTime) {
 		this.refreshTime = refreshTime;
 	}
-	public long getLastRefreshTime() {
+	public Hashtable<String, Long> getLastRefreshTime() {
 		return lastRefreshTime;
 	}
-	public void setLastRefreshTime(long lastRefreshTime) {
+	public void setLastRefreshTime(Hashtable<String, Long> lastRefreshTime) {
 		this.lastRefreshTime = lastRefreshTime;
 	}
+	
+	public long getStationLastRefreshTime(String sStationCode) {
+		long lRetValue = -1;
+		
+		if (lastRefreshTime!=null)
+		{
+			if (lastRefreshTime.containsKey(sStationCode))
+			{
+				Long lValue = lastRefreshTime.get(sStationCode);
+				
+				if (lValue != null) lRetValue = lValue.longValue();
+			}
+		}
+		
+		return lRetValue;
+	}
+	public void setStationLastRefreshTime(long lTime, String sStationCode) {
+		
+		if (lastRefreshTime != null)
+		{
+			lastRefreshTime.put(sStationCode, new Long(lTime));
+		}
+	}	
 }

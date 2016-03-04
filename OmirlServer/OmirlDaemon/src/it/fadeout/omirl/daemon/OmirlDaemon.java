@@ -283,7 +283,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Pluvio");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -331,17 +331,30 @@ public class OmirlDaemon {
 
 										// Save
 										serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(1).getFolderName(), m_oDateFormat);
+									}
+								}
+							}
+							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
+								oChartEx.printStackTrace();
+							}
+							
+							// --------------------------------------------------------RAIN 7gg CHART
+							try {
+								if (asOtherLinks.contains("Pluvio7")) {
+									
+									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Pluvio7");
 
-										aoInfo = getChartInfoFromSensorCode("Pluvio7");
-
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
+									{
 										// Initialize Start Date
-										oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
+										Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
 
-										oDataChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate, false, true);
-										oDataSerie = oDataChart.getDataSeries().get(0); 
+										DataChart oDataChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate, false, true);
+										DataSerie oDataSerie = oDataChart.getDataSeries().get(0); 
 
 										// Create Additional Axes
-										oAdditionalAxis = new ChartAxis();
+										ChartAxis oAdditionalAxis = new ChartAxis();
 										oAdditionalAxis.setAxisYMaxValue(aoInfo.get(1).getAxisYMaxValue());
 										oAdditionalAxis.setAxisYMinValue(aoInfo.get(1).getAxisYMinValue());
 										oAdditionalAxis.setAxisYTickInterval(aoInfo.get(1).getAxisYTickInterval());
@@ -351,7 +364,7 @@ public class OmirlDaemon {
 										oDataChart.getVerticalAxes().add(oAdditionalAxis);
 
 										// Add Cumulated Serie
-										oCumulatedSerie = new DataSerie();
+										DataSerie oCumulatedSerie = new DataSerie();
 										oCumulatedSerie.setName(aoInfo.get(1).getName());
 										oCumulatedSerie.setType(aoInfo.get(1).getType());
 										// Refer to other axes
@@ -376,11 +389,12 @@ public class OmirlDaemon {
 										serializeStationChart(oDataChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(1).getFolderName(), m_oDateFormat);
 									}
 								}
+
 							}
 							catch(Exception oChartEx) {
 								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
-							}
+							}								
 
 
 							// --------------------------------------------------------RAIN NATIVE CHART
@@ -397,7 +411,7 @@ public class OmirlDaemon {
 
 										List<ChartInfo> aoInfo = getChartInfoFromSensorColumn(sNativeColumn);
 
-										if (RefreshChart(aoInfo, lReferenceDate))
+										if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 										{
 
 											// Initialize Start Date
@@ -460,7 +474,7 @@ public class OmirlDaemon {
 								if (asOtherLinks.contains("Pluvio30")) {
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Pluvio30");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -560,7 +574,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Termo");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 										// Initialize Start Date
 										Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
@@ -581,7 +595,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Idro");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -636,7 +650,7 @@ public class OmirlDaemon {
 
 									Date oStartDate = null;
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -710,7 +724,7 @@ public class OmirlDaemon {
 
 									aoInfo = getChartInfoFromSensorCode("Vento2");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -788,7 +802,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Igro");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -813,7 +827,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Radio");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -837,7 +851,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Foglie");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -861,7 +875,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Press");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -884,7 +898,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Batt");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 
 										// Initialize Start Date
@@ -907,7 +921,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Boa");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 										// Initialize Start Date
 										Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
@@ -929,7 +943,7 @@ public class OmirlDaemon {
 
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Neve");
 
-									if (RefreshChart(aoInfo, lReferenceDate))
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
 										// Initialize Start Date
 										Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
@@ -1137,7 +1151,7 @@ public class OmirlDaemon {
 	 * @param lReferenceDate
 	 * @return
 	 */
-	public Boolean RefreshChart(List<ChartInfo> aoChartInfo, long lReferenceDate) {
+	public Boolean RefreshChart(List<ChartInfo> aoChartInfo, long lReferenceDate, String sStationCode) {
 
 		Boolean bReturn = false;
 		long lNow = new Date().getTime();
@@ -1153,7 +1167,7 @@ public class OmirlDaemon {
 					now.set(Calendar.MINUTE, 0);
 					now.set(Calendar.SECOND, 0);
 					now.set(Calendar.HOUR_OF_DAY, 0);
-					oInfo.setLastRefreshTime(now.getTimeInMillis());
+					oInfo.setStationLastRefreshTime(now.getTimeInMillis(),sStationCode);
 					return true;
 				}
 				
@@ -1164,11 +1178,11 @@ public class OmirlDaemon {
 				oNowCalendar.setTimeInMillis(lNow);
 				
 				Calendar oLastCalendar = Calendar.getInstance();
-				oLastCalendar.setTimeInMillis(oInfo.getLastRefreshTime());
+				oLastCalendar.setTimeInMillis(oInfo.getStationLastRefreshTime(sStationCode));
 				
-				if ((lNow - oInfo.getLastRefreshTime()) > lRefreshMilliseconds || oNowCalendar.get(Calendar.DAY_OF_YEAR) != oLastCalendar.get(Calendar.DAY_OF_YEAR))
+				if ((lNow - oInfo.getStationLastRefreshTime(sStationCode)) > lRefreshMilliseconds || oNowCalendar.get(Calendar.DAY_OF_YEAR) != oLastCalendar.get(Calendar.DAY_OF_YEAR))
 				{
-					oInfo.setLastRefreshTime(lNow);
+					oInfo.setStationLastRefreshTime(lNow, sStationCode);
 					bReturn = true;
 				}
 			}
