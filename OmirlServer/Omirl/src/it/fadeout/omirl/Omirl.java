@@ -18,6 +18,7 @@ import it.fadeout.omirl.business.config.StaticLinkConfig;
 import it.fadeout.omirl.business.config.TableLinkConfig;
 import it.fadeout.omirl.data.OmirlUserRepository;
 import it.fadeout.omirl.data.OpenSessionRepository;
+import it.fadeout.omirl.viewmodels.SensorViewModel;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -29,11 +30,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletSecurityElement;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 
@@ -41,6 +46,9 @@ public class Omirl extends Application {
 
 	@Context
 	ServletConfig m_oServletConfig;
+	
+	@Context
+	ServletContext m_oContext;
 
 	public static String s_sDateHeaderFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXX";
 
@@ -74,6 +82,11 @@ public class Omirl extends Application {
 		// Read the configuration
 		ReadConfiguration(sConfigFilePath);
 
+		
+		//Init cache
+		HashMap<String, CacheObject> oCacheDictionary = new HashMap<>();
+		m_oContext.setAttribute("Cache", oCacheDictionary);
+		
 		// Uncomment to write a test configuration!
 		//WriteTestConfiguration("C:\\temp\\OmirlTEST.xml");
 	}
@@ -653,5 +666,58 @@ public class Omirl extends Application {
 		}
 
 		return null;
+	}
+	
+	public synchronized  static Object getCacheValues(String sResourcesPath, ServletContext oContext)
+	{
+		try
+		{
+			HashMap<String, CacheObject> oCacheDictionary = (HashMap<String, CacheObject>) oContext.getAttribute("Cache");
+			if (oCacheDictionary == null)
+				oCacheDictionary = new HashMap<String, CacheObject>();
+			if (oCacheDictionary.containsKey(sResourcesPath))
+			{
+				CacheObject oCache = oCacheDictionary.get(sResourcesPath);
+				if (oCache == null)
+				{
+					return null;
+				}
+				
+				long now = new Date().getTime();
+				long cacheTime = oCache.getTimestamp();
+				long minuteMs = 1000*60*1;
+				if (now - cacheTime < minuteMs)
+				{
+					return oCache.getData();
+				}
+			}
+			
+		}
+		catch(Exception oEx)
+		{
+			oEx.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public synchronized  static void setCacheValues(String sResourcesPath, Object oData, ServletContext oContext)
+	{
+		try
+		{
+			//create new cache object
+			CacheObject oCache = new CacheObject();
+			//set timestamp
+			oCache.setTimestamp(new Date().getTime());
+			//set data
+			oCache.setData(oData);
+			//put in dictionary
+			((HashMap<String, CacheObject>)oContext.getAttribute("Cache")).put(sResourcesPath, oCache);
+			
+		}
+		catch(Exception oEx)
+		{
+			oEx.printStackTrace();
+		}
 	}
 }

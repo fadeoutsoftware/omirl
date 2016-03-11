@@ -22,11 +22,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
 import javax.print.attribute.standard.DateTimeAtCompleted;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -37,11 +39,18 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 
 @Path("/stations")
 public class StationsService {
 	@Context
 	ServletConfig m_oServletConfig;
+
+	@Context
+	ServletContext m_oContext;
+
+	@Context
+	UriInfo uriInfo;
 
 
 	/**
@@ -56,7 +65,14 @@ public class StationsService {
 	public List<SensorViewModel> GetSensors(@PathParam("sCode") String sCode, @HeaderParam("x-session-token") String sSessionId, @HeaderParam("x-refdate") String sRefDate) {
 
 		System.out.println("StationsService.GetSensors: Code = " + sCode);
-
+		
+		if (sRefDate == null || sRefDate.equals("") == true)
+		{
+			Object oResults = Omirl.getCacheValues(uriInfo.getPath(), m_oContext);
+			if (oResults != null)
+				return (List<SensorViewModel>) oResults;
+		}
+		
 		// Create return array List
 		List<SensorViewModel> aoSensors = new ArrayList<>();
 		// Date: will be received from client...
@@ -143,6 +159,26 @@ public class StationsService {
 			System.out.println("StationsService.GetSensors: Config NOT Found");
 		}
 
+		//if we are not in pass
+		if (sRefDate == null || sRefDate.equals("") == true)
+		{
+			//populate cache if there are some value
+			if (aoSensors != null && aoSensors.size() > 0)
+			{
+				
+			}	
+		}
+		
+		
+		//populate cache if there are some value
+		if (aoSensors != null && aoSensors.size() > 0)
+		{
+			//if we are not in pass
+			if (sRefDate == null || sRefDate.equals("") == true)
+			{
+				Omirl.setCacheValues(uriInfo.getPath(), aoSensors, m_oContext);
+			}
+		}
 
 		// Return the list of sensors
 		return aoSensors;
@@ -195,7 +231,7 @@ public class StationsService {
 			@PathParam("dLon") String dLon
 			//@HeaderParam("x-session-token") String sSessionId
 			)
-			{
+	{
 
 		System.out.println("StationsService.GetSensors: GetStationsByLatLon = [" + dLat + ", " + dLon + "]");
 
@@ -219,7 +255,7 @@ public class StationsService {
 
 		// Return the list of stations
 		return iStationsList;
-			}
+	}
 
 
 
