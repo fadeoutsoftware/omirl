@@ -349,7 +349,7 @@ var MapController = (function () {
 
             // Clear old result
             oControllerVar.m_oConstantsService.clearSensorLinks();
-            
+
             //******************************************************************
             // Add the flag to indicate the menu link item level and 
             // if the menu link has a sub-level.
@@ -1586,17 +1586,22 @@ var MapController = (function () {
         var oController = this;
         if (this.m_oSelectedSensorLink.isClickable==false) return;
 
-        if (oFeature.attributes.sensorType == 'Webcam') {
+        if (oFeature.attributes.sensorType == 'webcam') {
 
-            oController.m_oTranslateService('MAP_MISSINGWEBCAM').then(function(msg)
-            {
-                vex.dialog.alert({
-                    message: msg
-                });
-                //alert(msg);
-                return;
-            });
-            //alert('Missing WebCam Image');
+            WebcamDialog.add(oFeature);
+
+            return;
+            /*
+             oController.m_oTranslateService('MAP_MISSINGWEBCAM').then(function(msg)
+             {
+             vex.dialog.alert({
+             message: msg
+             });
+             //alert(msg);
+             return;
+             });
+             //alert('Missing WebCam Image');
+             */
         }
 
         var oControllerVar = this;
@@ -1633,6 +1638,8 @@ var MapController = (function () {
                 "subTitle": ""
             };
 
+
+
         oControllerVar.m_oTranslateService('DIALOGTITLE', {name: oFeature.attributes.name, municipality: oFeature.attributes.municipality, subTitle: ""}).then(function(text){
             // jQuery UI dialog options
             var options = {
@@ -1650,7 +1657,6 @@ var MapController = (function () {
             oControllerVar.m_oDialogService.open(sStationCode,"stationsChart.html", model, options)
 
         });
-
 
     }
 
@@ -1862,6 +1868,11 @@ var MapController = (function () {
             // Add the layer to the map
             oServiceVar.m_oMapService.map.addLayer(oServiceVar.m_oLayerService.getSensorsLayer());
             oServiceVar.m_oMapService.map.setLayerIndex(oServiceVar.m_oLayerService.getSensorsLayer(), oServiceVar.m_oLayerService.getSensorsLayerIndex());
+
+            //Refresh WebCam
+            if (oFeature.attributes.sensorType == 'webcam') {
+                WebcamDialog.refreshWebcamImage(oFeature.attributes.shortCode, oFeature.attributes.imgPath);
+            }
 
             // Feature Click and Hover Control: added?
             if (oServiceVar.m_oMapService.stationsPopupControllerAdded == false) {

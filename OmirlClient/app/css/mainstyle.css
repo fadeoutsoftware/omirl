@@ -435,6 +435,21 @@ div.menu-languages-container{
   .panel-heading.tables_page .form-group {
     margin-bottom: 0px; }
 
+.webcam-dialog img {
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  display: block; }
+
+.dialogs-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 100;
+  display: none; }
+
 .clearfix {
   clear: both; }
 
