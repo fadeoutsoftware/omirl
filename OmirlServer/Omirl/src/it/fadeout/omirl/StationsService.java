@@ -158,17 +158,6 @@ public class StationsService {
 		{
 			System.out.println("StationsService.GetSensors: Config NOT Found");
 		}
-
-		//if we are not in pass
-		if (sRefDate == null || sRefDate.equals("") == true)
-		{
-			//populate cache if there are some value
-			if (aoSensors != null && aoSensors.size() > 0)
-			{
-				
-			}	
-		}
-		
 		
 		//populate cache if there are some value
 		if (aoSensors != null && aoSensors.size() > 0)

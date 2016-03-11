@@ -673,8 +673,13 @@ public class Omirl extends Application {
 		try
 		{
 			HashMap<String, CacheObject> oCacheDictionary = (HashMap<String, CacheObject>) oContext.getAttribute("Cache");
-			if (oCacheDictionary == null)
+			
+			if (oCacheDictionary == null) 
+			{
 				oCacheDictionary = new HashMap<String, CacheObject>();
+				oContext.setAttribute("Cache", oCacheDictionary);
+			}
+			
 			if (oCacheDictionary.containsKey(sResourcesPath))
 			{
 				CacheObject oCache = oCacheDictionary.get(sResourcesPath);
@@ -712,8 +717,13 @@ public class Omirl extends Application {
 			//set data
 			oCache.setData(oData);
 			//put in dictionary
-			((HashMap<String, CacheObject>)oContext.getAttribute("Cache")).put(sResourcesPath, oCache);
+			if (((HashMap<String, CacheObject>)oContext.getAttribute("Cache"))==null)
+			{
+				HashMap<String, CacheObject> oCacheDictionary = new HashMap<String, CacheObject>();
+				oContext.setAttribute("Cache", oCacheDictionary);
+			}
 			
+			((HashMap<String, CacheObject>)oContext.getAttribute("Cache")).put(sResourcesPath, oCache);
 		}
 		catch(Exception oEx)
 		{
