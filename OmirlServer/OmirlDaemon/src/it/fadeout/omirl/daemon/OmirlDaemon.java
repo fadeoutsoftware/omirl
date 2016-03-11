@@ -68,6 +68,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -222,7 +223,8 @@ public class OmirlDaemon {
 					m_aoAllStations = oStationAnagRepository.SelectAll(StationAnag.class);
 					//ArrayList<StationAnag> aoAllStations = new ArrayList<>();
 					//aoAllStations.add(oStationAnagRepository.selectByStationCode("PCERR"));
-
+					
+					
 					// For Each
 					for (StationAnag oStationAnag : m_aoAllStations) {
 
@@ -315,7 +317,6 @@ public class OmirlDaemon {
 
 										// Set dash style if in configuration
 										if (aoInfo.get(1).getDashStyle() != null) {
-											oCumulatedSerie.setDashStyle(aoInfo.get(1).getDashStyle());
 										}
 
 										// Set color if in configuration
@@ -1170,16 +1171,16 @@ public class OmirlDaemon {
 					oInfo.setStationLastRefreshTime(now.getTimeInMillis(),sStationCode);
 					return true;
 				}
-				
+
 				//Convert time in minutes
 				long lRefreshMilliseconds = oInfo.getRefreshTime() * 60 * 1000;
-				
+
 				Calendar oNowCalendar = Calendar.getInstance();
 				oNowCalendar.setTimeInMillis(lNow);
-				
+
 				Calendar oLastCalendar = Calendar.getInstance();
 				oLastCalendar.setTimeInMillis(oInfo.getStationLastRefreshTime(sStationCode));
-				
+
 				if ((lNow - oInfo.getStationLastRefreshTime(sStationCode)) > lRefreshMilliseconds || oNowCalendar.get(Calendar.DAY_OF_YEAR) != oLastCalendar.get(Calendar.DAY_OF_YEAR))
 				{
 					oInfo.setStationLastRefreshTime(lNow, sStationCode);
@@ -1187,7 +1188,7 @@ public class OmirlDaemon {
 				}
 			}
 		}
-		
+
 		return bReturn;
 	}
 
@@ -3174,7 +3175,7 @@ public class OmirlDaemon {
 					long lNow = oNow.getMillis();
 
 					long lStart = aoPoints.get(0).getRefDate().getTime();
-					
+
 					int iLastIndex = aoPoints.size()-1;
 					if (iLastIndex>0)
 					{
@@ -3417,7 +3418,7 @@ public class OmirlDaemon {
 						if (oStation.getElevation() != null) oSensorViewModel.setAlt(oStation.getElevation().intValue());
 						else oSensorViewModel.setAlt(-1);
 
-						oSensorViewModel.setImgPath("");
+						oSensorViewModel.setImgPath(GetLastWebCamImage(oStation.getName()));
 						oSensorViewModel.setLat(oStation.getLat()/100000.0);
 						oSensorViewModel.setLon(oStation.getLon()/100000.0);
 						if (oStation.getName()!=null) oSensorViewModel.setName(oStation.getName());
@@ -3461,6 +3462,52 @@ public class OmirlDaemon {
 		catch(Exception oEx) {
 			oEx.printStackTrace();
 		}
+	}
+
+	private String GetLastWebCamImage(String sWebCamName)
+	{
+		// Get Repo Path
+		String sBasePath = m_oConfig.getFileRepositoryPath();
+
+		SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date oActualDate = new Date();
+
+		String sWebCamPath = sBasePath + "/stations/webcam";
+
+		String sFullDir = sWebCamPath + "/" + oDateFormat.format(oActualDate) + "/" + "images";
+
+		File oFolder = new File(sFullDir);
+
+		// Find Subfolders
+		String [] asSubFolders = oFolder.list();
+
+		if (asSubFolders!=null)
+		{
+			for (String sSubFolder : asSubFolders) {
+				File oTempFile = new File(sFullDir+"/"+sSubFolder);
+				if (oTempFile.isDirectory())
+				{
+					if (oTempFile.getName().equals(sWebCamName))
+					{
+						long liLastMod = Long.MIN_VALUE;
+
+						File oLast = null;
+						for (File file : oTempFile.listFiles()) {
+							if (file.lastModified() > liLastMod) {
+								oLast = file;
+								liLastMod = file.lastModified();
+							}
+						}
+
+						sFullDir = sFullDir + "/" + sWebCamName + "/" + oLast.getName();
+
+					}
+				}
+			}
+		}
+
+		return sFullDir;
+
 	}
 
 	/**
@@ -3610,7 +3657,7 @@ public class OmirlDaemon {
 							for (Element oMarker : aoMarkers) {
 								String sCode = oMarker.getAttribute("code").getValue();
 								Integer iColor = 1000;
-								
+
 								if (oMarker.getAttribute("ALERT")!= null)
 								{
 									iColor = oMarker.getAttribute("ALERT").getIntValue();
@@ -3699,7 +3746,7 @@ public class OmirlDaemon {
 		List<SectionViewModel> aoSectionsViewModel = new ArrayList<>();
 
 		try {
-			
+
 			List<SectionAnag> aoSections = null;
 
 			if (sFlagColumn.equals("boxplot") == false) {
@@ -3707,12 +3754,12 @@ public class OmirlDaemon {
 				aoSections = oSectionsRepository.selectByModel(sFlagColumn);
 			}
 
-			
-			
+
+
 			if (aoSections == null && sFlagColumn.equals("boxplot")) {
-				
+
 				System.out.println("BOXPLOT SECTION: ADDING PSEUDO SECTION");
-				
+
 				SectionAnag oSection = new SectionAnag();
 				oSection.setCode("SintesiPrevisione");
 				oSection.setBasin("BOXPLOT");
@@ -3725,7 +3772,7 @@ public class OmirlDaemon {
 				oSection.setBasin_area(0.0);
 				oSection.setWarn_area("");
 				oSection.setBasin_class("");
-				
+
 				aoSections = new ArrayList<>();
 				aoSections.add(oSection);
 			}
@@ -4204,6 +4251,7 @@ public class OmirlDaemon {
 		}
 
 	}
+
 
 
 	public void RefreshGallery() {
@@ -5061,8 +5109,8 @@ public class OmirlDaemon {
 
 	public static void Test() {
 		try {
-			
-			
+
+
 			File oFileTest = lastFileByName("C:\\temp\\Omirl\\Files\\maps\\rainfall1d\\2016\\01\\07", "tif");
 
 			if (oFileTest != null) System.out.println(oFileTest.getAbsolutePath()); 
@@ -5218,8 +5266,8 @@ public class OmirlDaemon {
 
 		return oChoise;
 	}
-	
-	
+
+
 	public static File lastFileByName(String dir, String sExtension) {
 		File oDir = new File(dir);
 
@@ -5243,11 +5291,11 @@ public class OmirlDaemon {
 				return false;
 			}
 		});
-		
+
 		Arrays.sort(aoFiles);
 
 		File oChoise = null;
-		
+
 		if (aoFiles!=null)
 		{
 			if (aoFiles.length>0)
