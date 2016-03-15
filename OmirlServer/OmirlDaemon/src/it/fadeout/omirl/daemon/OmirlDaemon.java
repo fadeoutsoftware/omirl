@@ -224,7 +224,6 @@ public class OmirlDaemon {
 					//ArrayList<StationAnag> aoAllStations = new ArrayList<>();
 					//aoAllStations.add(oStationAnagRepository.selectByStationCode("PCERR"));
 					
-					
 					// For Each
 					for (StationAnag oStationAnag : m_aoAllStations) {
 
@@ -3418,7 +3417,7 @@ public class OmirlDaemon {
 						if (oStation.getElevation() != null) oSensorViewModel.setAlt(oStation.getElevation().intValue());
 						else oSensorViewModel.setAlt(-1);
 
-						oSensorViewModel.setImgPath(GetLastWebCamImage(oStation.getName()));
+						oSensorViewModel.setImgPath(GetLastWebCamImage(oStation.getStation_code()));
 						oSensorViewModel.setLat(oStation.getLat()/100000.0);
 						oSensorViewModel.setLon(oStation.getLon()/100000.0);
 						if (oStation.getName()!=null) oSensorViewModel.setName(oStation.getName());
@@ -3464,7 +3463,7 @@ public class OmirlDaemon {
 		}
 	}
 
-	private String GetLastWebCamImage(String sWebCamName)
+	private String GetLastWebCamImage(String sWebCamCode)
 	{
 		// Get Repo Path
 		String sBasePath = m_oConfig.getFileRepositoryPath();
@@ -3474,7 +3473,7 @@ public class OmirlDaemon {
 
 		String sWebCamPath = sBasePath + "/stations/webcam";
 
-		String sFullDir = sWebCamPath + "/" + oDateFormat.format(oActualDate) + "/" + "images";
+		String sFullDir = sWebCamPath + "/" + oDateFormat.format(oActualDate);
 
 		File oFolder = new File(sFullDir);
 
@@ -3484,10 +3483,10 @@ public class OmirlDaemon {
 		if (asSubFolders!=null)
 		{
 			for (String sSubFolder : asSubFolders) {
-				File oTempFile = new File(sFullDir+"/"+sSubFolder);
+				File oTempFile = new File(sFullDir + "/" + sSubFolder + "/images");
 				if (oTempFile.isDirectory())
 				{
-					if (oTempFile.getName().equals(sWebCamName))
+					if (sSubFolder.equals(sWebCamCode))
 					{
 						long liLastMod = Long.MIN_VALUE;
 
@@ -3499,7 +3498,7 @@ public class OmirlDaemon {
 							}
 						}
 
-						sFullDir = sFullDir + "/" + sWebCamName + "/" + oLast.getName();
+						sFullDir = "img/webcam/" + oDateFormat.format(oActualDate) + "/" + sWebCamCode + "/images/" + oLast.getName();
 
 					}
 				}
