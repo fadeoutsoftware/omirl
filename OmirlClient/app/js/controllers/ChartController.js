@@ -331,8 +331,16 @@ var ChartController = (function() {
                             renderTo: oElement,
                             zoomType: "xy",
                             width: this.m_iWidth,
-                            height: this.m_iHeight
-
+                            height: this.m_iHeight,
+                            resetZoomButton: {
+                                position: {
+                                    // align: 'right', // by default
+                                    // verticalAlign: 'top', // by default
+                                    x: -260,
+                                    y: 39
+                                },
+                                relativeTo: 'chart'
+                            }
                         },
                         xAxis: {
                             type:'datetime',
