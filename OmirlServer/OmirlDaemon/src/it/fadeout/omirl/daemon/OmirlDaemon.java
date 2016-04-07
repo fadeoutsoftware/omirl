@@ -223,7 +223,7 @@ public class OmirlDaemon {
 					m_aoAllStations = oStationAnagRepository.SelectAll(StationAnag.class);
 					//ArrayList<StationAnag> aoAllStations = new ArrayList<>();
 					//aoAllStations.add(oStationAnagRepository.selectByStationCode("PCERR"));
-					
+
 					// For Each
 					for (StationAnag oStationAnag : m_aoAllStations) {
 
@@ -338,11 +338,11 @@ public class OmirlDaemon {
 								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}
-							
+
 							// --------------------------------------------------------RAIN 7gg CHART
 							try {
 								if (asOtherLinks.contains("Pluvio7")) {
-									
+
 									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Pluvio7");
 
 									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
@@ -579,7 +579,63 @@ public class OmirlDaemon {
 										// Initialize Start Date
 										Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
 
-										SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate);
+										DataChart oTermoChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate);
+
+										if (aoInfo.size() > 1) {
+											if (oStationAnag.getMin_air_temp_every() != null && oStationAnag.getMax_air_temp_every() != null)
+											{
+												ChartInfo oMinInfo = aoInfo.get(1);
+
+												DataSerie oMinSerie = new DataSerie();
+												// Get Data from the Db: for rain1h only hourly rate
+												List<DataSeriePoint> aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), oMinInfo.getColumnName(), oStartDate);
+
+												int iMinuteTimeStep = GetMinutesStep(oMinInfo.getColumnName(),oStationAnag);
+												// Convert points to Data Serie
+												DataSeriePointToDataSerie(aoPoints,oMinSerie, oMinInfo.getConversionFactor(), iMinuteTimeStep);
+												// Set Serie Name
+												oMinSerie.setName(oMinInfo.getName());
+												// Main Axis Reference
+												oMinSerie.setAxisId(0);
+
+												if (aoInfo.get(1).getDashStyle() != null) {
+													oMinSerie.setDashStyle(oMinInfo.getDashStyle());
+												}
+
+												if (oMinInfo.getLineWidth()>0) oMinSerie.setLineWidth(oMinInfo.getLineWidth());
+												if (oMinInfo.getColor()!=null) oMinSerie.setColor(oMinInfo.getColor());
+
+												// Add serie to the chart
+												oTermoChart.getDataSeries().add(oMinSerie);
+
+
+												ChartInfo oMaxInfo = aoInfo.get(2);
+
+												DataSerie oMaxSerie = new DataSerie();
+												// Get Data from the Db: for rain1h only hourly rate
+												aoPoints = oStationDataRepository.getDataSerie(oStationAnag.getStation_code(), oMaxInfo.getColumnName(), oStartDate);
+
+												iMinuteTimeStep = GetMinutesStep(oMaxInfo.getColumnName(),oStationAnag);
+												// Convert points to Data Serie
+												DataSeriePointToDataSerie(aoPoints,oMaxSerie, oMaxInfo.getConversionFactor(), iMinuteTimeStep);
+												// Set Serie Name
+												oMaxSerie.setName(oMaxInfo.getName());
+												// Main Axis Reference
+												oMaxSerie.setAxisId(0);
+
+												if (oMaxInfo.getDashStyle() != null) {
+													oMinSerie.setDashStyle(oMaxInfo.getDashStyle());
+												}
+
+												if (oMaxInfo.getLineWidth()>0) oMaxSerie.setLineWidth(oMaxInfo.getLineWidth());
+												if (oMaxInfo.getColor()!=null) oMaxSerie.setColor(oMaxInfo.getColor());
+
+												// Add serie to the chart
+												oTermoChart.getDataSeries().add(oMaxSerie);
+												
+												serializeStationChart(oTermoChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
+											}
+										}
 									}
 								}
 							}
@@ -2139,7 +2195,7 @@ public class OmirlDaemon {
 			StationDataRepository oStationDataRepository = new StationDataRepository();
 
 			// trova il max e min temperatura di oggi x provincia
-			SummaryInfoEntity oGeMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("GE", oActualDate);
+			SummaryInfoEntity oGeMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("GE", oActualDate, "Genova");
 			DistrictSummaryInfo oDistrictSummaryGe = new DistrictSummaryInfo();
 			oDistrictSummaryGe.setDescription("Genova");
 
@@ -2156,7 +2212,7 @@ public class OmirlDaemon {
 				oDistrictSummaryGe.setRefDateMax(null);
 			}
 
-			SummaryInfoEntity oGeMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("GE", oActualDate);
+			SummaryInfoEntity oGeMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("GE", oActualDate, "Genova");
 
 			if (oGeMin != null)
 			{
@@ -2175,7 +2231,7 @@ public class OmirlDaemon {
 
 
 
-			SummaryInfoEntity oSvMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SV", oActualDate);
+			SummaryInfoEntity oSvMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SV", oActualDate, "Savona");
 			DistrictSummaryInfo oDistrictSummarySv = new DistrictSummaryInfo();
 			oDistrictSummarySv.setDescription("Savona");
 
@@ -2192,7 +2248,7 @@ public class OmirlDaemon {
 				oDistrictSummarySv.setRefDateMax(null);
 			}
 
-			SummaryInfoEntity oSvMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SV", oActualDate);
+			SummaryInfoEntity oSvMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SV", oActualDate, "Savona");
 
 			if (oSvMin != null)
 			{
@@ -2211,7 +2267,7 @@ public class OmirlDaemon {
 
 
 
-			SummaryInfoEntity oImMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("IM", oActualDate);
+			SummaryInfoEntity oImMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("IM", oActualDate, "Imperia");
 			DistrictSummaryInfo oDistrictSummaryIm = new DistrictSummaryInfo();
 			oDistrictSummaryIm.setDescription("Imperia");
 
@@ -2228,7 +2284,7 @@ public class OmirlDaemon {
 				oDistrictSummaryIm.setRefDateMax(null);
 			}
 
-			SummaryInfoEntity oImMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("IM", oActualDate);
+			SummaryInfoEntity oImMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("IM", oActualDate, "Imperia");
 
 			if (oImMin != null)
 			{
@@ -2247,7 +2303,7 @@ public class OmirlDaemon {
 
 
 
-			SummaryInfoEntity oSpMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SP", oActualDate);
+			SummaryInfoEntity oSpMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SP", oActualDate, "La Spezia");
 			DistrictSummaryInfo oDistrictSummarySp = new DistrictSummaryInfo();
 			oDistrictSummarySp.setDescription("La Spezia");
 
@@ -2264,7 +2320,7 @@ public class OmirlDaemon {
 				oDistrictSummarySp.setRefDateMax(null);
 			}
 
-			SummaryInfoEntity oSpMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SP", oActualDate);
+			SummaryInfoEntity oSpMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SP", oActualDate, "La Spezia");
 
 			if (oSpMin!=null)
 			{
