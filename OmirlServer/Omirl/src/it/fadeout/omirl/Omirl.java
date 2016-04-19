@@ -69,7 +69,7 @@ public class Omirl extends Application {
 		classes.add(GalleryService.class);
 		classes.add(OmirlUserService.class);
 		classes.add(AnimationService.class);
-
+		classes.add(PeriodsService.class);
 		return classes;
 	}
 
