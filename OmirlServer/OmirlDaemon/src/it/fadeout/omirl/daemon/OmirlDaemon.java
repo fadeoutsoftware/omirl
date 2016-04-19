@@ -624,7 +624,7 @@ public class OmirlDaemon {
 												oMaxSerie.setAxisId(0);
 
 												if (oMaxInfo.getDashStyle() != null) {
-													oMinSerie.setDashStyle(oMaxInfo.getDashStyle());
+													oMaxSerie.setDashStyle(oMaxInfo.getDashStyle());
 												}
 
 												if (oMaxInfo.getLineWidth()>0) oMaxSerie.setLineWidth(oMaxInfo.getLineWidth());
@@ -3009,6 +3009,15 @@ public class OmirlDaemon {
 
 		try {
 			ClearThread oThread = new ClearThread(m_oConfig.getFileRepositoryPath(), m_oConfig.getCircleBufferDays(), m_oConfig.getGeoServerAddress(), m_oConfig.getGeoServerUser(), m_oConfig.getGeoServerPassword(), m_oConfig.getGeoServerDataFolder());
+			oThread.start();			
+		}
+		catch(Exception oEx) {
+			System.out.println("OmirlDaemon - Clear Daemon Exception");
+			oEx.printStackTrace();
+		}
+		
+		try {
+			DBClearThread oThread = new DBClearThread(m_oConfig.getCircleBufferDays());
 			oThread.start();			
 		}
 		catch(Exception oEx) {
