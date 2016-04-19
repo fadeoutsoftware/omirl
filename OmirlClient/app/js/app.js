@@ -47,7 +47,8 @@ var omirlApp = angular.module('omirl', [
     'pascalprecht.translate',
     'omirl.translateService',
     'omirl.elevateZoomDirective',
-    'omirl.userService'
+    'omirl.userService',
+    'omirl.periodService'
 ]);
 
 omirlApp.config(['$httpProvider', '$translateProvider', function($httpProvider, $translateProvider) {
@@ -80,6 +81,7 @@ omirlApp.config(function($routeProvider) {
         $routeProvider.when('/modelsgallery', {templateUrl: 'partials/modelsgallery.html', controller: 'ModelsGalleryController'});
         $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'UsersController'});
         $routeProvider.when('/alertzones', {templateUrl: 'partials/maxhydroalertzones.html', controller: 'MaxHydroAlertZoneController'});
+        $routeProvider.when('/periods', {templateUrl: 'partials/periods.html', controller: 'PeriodController'});
 
 
         $routeProvider.otherwise({redirectTo: '/map'});

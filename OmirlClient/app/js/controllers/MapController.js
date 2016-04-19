@@ -1870,8 +1870,10 @@ var MapController = (function () {
             oServiceVar.m_oMapService.map.setLayerIndex(oServiceVar.m_oLayerService.getSensorsLayer(), oServiceVar.m_oLayerService.getSensorsLayerIndex());
 
             //Refresh WebCam
-            if (oFeature.attributes.sensorType == 'webcam') {
-                WebcamDialog.refreshWebcamImage(oFeature.attributes.shortCode, oFeature.attributes.imgPath);
+            if (oFeature) {
+                if (oFeature.attributes.sensorType == 'webcam') {
+                    WebcamDialog.refreshWebcamImage(oFeature.attributes.shortCode, oFeature.attributes.imgPath);
+                }
             }
 
             // Feature Click and Hover Control: added?

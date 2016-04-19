@@ -326,5 +326,14 @@
     "MAXHYDROALERT_C+":"C+ [C + Magra] fr",
     "MAXHYDROALERT_C-":"C- [C - Magra] fr",
     "MAXHYDROALERT_M":"M [Magra] fr",
-    "OMIRLCONFIG_ZONEALLERTA": "Livelli idrometrici max su zone di allerta fr"
+    "OMIRLCONFIG_ZONEALLERTA": "Livelli idrometrici max su zone di allerta fr",
+    "INDEX_PERIODS": "Periodi fr",
+    "PERIOD_TITLE": "Gestione Periodi fr",
+    "PERIOD_DELETETOOLTIP": "Cancella Periodo fr",
+    "PERIOD_ADDTOOLTIP":"Aggiungi Periodo fr",
+    "PERIOD_SAVETOOLTIP":"Salva Periodo fr",
+    "PERIOD_CHECKDATA":"Data di inizio deve essere più piccola della data di fine fr",
+    "PERIOD_SAVED":"Periodo salvato fr",
+    "PERIOD_FIELDMANDATORY":"Compilare i campi del periodo fr",
+    "PERIOD_DELETEASK": "Eliminare il periodo? fr"
 }

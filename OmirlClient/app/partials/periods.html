@@ -1,0 +1,41 @@
+<div style="text-align: center;" class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">{{'PERIOD_TITLE' | translate}}</div>
+        <div class="panel-body">
+            <div class="row">
+                <table class="table"> <!--class="table table-bordered table-hover table-striped"-->
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Data Inizio</th>
+                        <th>Data Fine</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="oTableRow in m_oController.getPeriods()">
+                        <td>
+                            <div class="col-xs-1 col-md-1 button-icon" tooltip-popup-delay="500" tooltip="{{'PERIOD_DELETETOOLTIP' | translate}}" >
+                                <i class="fa fa-times fa-2x" ng-click="m_oController.deletePeriod(oTableRow.idPeriod)"></i>
+                            </div>
+                        </td>
+                        <td class="table-user-td-left-align">
+                            <input type="datetime" class="form-control" ng-model="oTableRow.timestampStart" ng-change="m_oController.m_oPeriodService.setAsModified()" placeholder="dd/MM/yyyy HH:mm">
+                        </td>
+                        <td class="table-user-td-left-align">
+                            <input type="datetime" class="form-control" ng-model="oTableRow.timestampEnd" ng-change="m_oController.m_oPeriodService.setAsModified()" placeholder="dd/MM/yyyy HH:mm">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-xs-1 col-md-1 col-lg-1 button-icon" tooltip-popup-delay="500" tooltip="{{'PERIOD_ADDTOOLTIP' | translate}}" ng-hide="m_oController.m_oPeriodService.isModified()">
+                        <i class="fa fa-calendar-plus-o fa-3x" ng-click="m_oController.addPeriod()"></i>
+                    </div>
+                    <div class="col-xs-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-1 col-md-1 col-lg-1 button-icon" tooltip-popup-delay="500" tooltip="{{'PERIOD_SAVETOOLTIP' | translate}}" ng-show="m_oController.m_oPeriodService.isModified()">
+                        <i class="fa fa-save fa-3x" ng-click="m_oController.savePeriods()"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
