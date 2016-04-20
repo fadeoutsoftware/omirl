@@ -3017,7 +3017,7 @@ public class OmirlDaemon {
 		}
 		
 		try {
-			DBClearThread oThread = new DBClearThread(m_oConfig.getCircleBufferDays());
+			DBClearThread oThread = new DBClearThread(m_oConfig.getDbBufferDataDays());
 			oThread.start();			
 		}
 		catch(Exception oEx) {

@@ -61,6 +61,8 @@ public class OmirlDaemonConfiguration {
 	
 	int circleBufferDays = 1;
 	
+	private int dbBufferDataDays = 60;
+	
 	String geoServerAddress;
 	String geoServerUser;
 	String geoServerPassword;
@@ -354,6 +356,14 @@ public class OmirlDaemonConfiguration {
 
 	public void setEnableMaxHydroAlertZones(boolean enableMaxHydroAlertZones) {
 		this.enableMaxHydroAlertZones = enableMaxHydroAlertZones;
+	}
+
+	public int getDbBufferDataDays() {
+		return dbBufferDataDays;
+	}
+
+	public void setDbBufferDataDays(int dbBufferDataDays) {
+		dbBufferDataDays = dbBufferDataDays;
 	}
 
 	}
