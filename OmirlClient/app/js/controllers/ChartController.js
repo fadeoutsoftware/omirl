@@ -340,7 +340,19 @@ var ChartController = (function() {
                                     y: 39
                                 },
                                 relativeTo: 'chart'
+                            },
+                            events:{
+                                selection:function(event) {
+                                    if (!event.xAxis)
+                                    {
+                                        //reset zoom clicked
+                                        event.preventDefault();
+                                        oControllerVar.LoadData();
+                                        oControllerVar.addSeriesToChart();
+                                    }
+                                }
                             }
+
                         },
                         xAxis: {
                             type:'datetime',
@@ -430,7 +442,6 @@ var ChartController = (function() {
                                 }
                             }
                         }
-
                     };
                 }
                 else {
