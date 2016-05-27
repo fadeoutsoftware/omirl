@@ -372,6 +372,36 @@ public class ChartService {
 					// Get The path of the right date
 					String sPath = Omirl.getSubPath(sBasePath, oDate);
 					
+					// Create return object
+					oDataChart = new SectionChartViewModel();
+					
+					// Find the config object
+					HydroLinkConfig oSelectedHydroConfig = null;
+					
+					//System.out.println("ChartService.GetSectionChart:Cerco " + sModel);
+					
+					for (HydroLinkConfig oHydroConfig : oConfig.getFlattedHydroLinks()) {
+						if (oHydroConfig.getLinkCode().equals(sModel)) {
+							// This is my model
+							oSelectedHydroConfig=oHydroConfig;
+							System.out.println("ChartService.GetSectionChart: found " + sModel);
+							break;
+						}
+					}
+					
+					//System.out.println("SectionsService.ChartService: Cerco i fratelli di " + sModel);
+					
+					for (HydroLinkConfig oHydroConfig : oConfig.getFlattedHydroLinks()) {
+						
+						if (oHydroConfig.getColFlag()!=null)
+						{
+							if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
+								oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
+								//System.out.println("ChartService.GetSectionChart: Aggiunto " + oHydroConfig.getLinkCode());
+							}
+						}
+					}		
+					
 					if (sPath != null) {
 
 						String sSubPath = "";
@@ -416,6 +446,7 @@ public class ChartService {
 						}
 
 						System.out.println("ChartService.GetSectionChart: searching file " + sFile);
+						
 
 						// Check if the file exists
 						File oChartFile = new File(sFile);
@@ -423,9 +454,7 @@ public class ChartService {
 						// Found?					
 						if (oChartFile.exists()) {
 
-							// Create return object
-							oDataChart = new SectionChartViewModel();
-
+							
 							// Compose the img relative path
 							String sRelativePath = Omirl.getSubPathWithoutCheck("img/sections/" + sModel, oDate);
 
@@ -441,32 +470,7 @@ public class ChartService {
 							// and log
 							System.out.println("ChartService.GetSectionChart: return path " + sRelativePath);
 
-							// Find the config object
-							HydroLinkConfig oSelectedHydroConfig = null;
-							
-							//System.out.println("ChartService.GetSectionChart:Cerco " + sModel);
-							
-							for (HydroLinkConfig oHydroConfig : oConfig.getFlattedHydroLinks()) {
-								if (oHydroConfig.getLinkCode().equals(sModel)) {
-									// This is my model
-									oSelectedHydroConfig=oHydroConfig;
-									System.out.println("ChartService.GetSectionChart: found " + sModel);
-									break;
-								}
-							}
-							
-							//System.out.println("SectionsService.ChartService: Cerco i fratelli di " + sModel);
-							
-							for (HydroLinkConfig oHydroConfig : oConfig.getFlattedHydroLinks()) {
-								
-								if (oHydroConfig.getColFlag()!=null)
-								{
-									if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
-										oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
-										//System.out.println("ChartService.GetSectionChart: Aggiunto " + oHydroConfig.getLinkCode());
-									}
-								}
-							}								
+													
 
 						}
 						else {
@@ -536,10 +540,7 @@ public class ChartService {
 									if (oBackChartFile.exists()) {
 										
 										System.out.println("ChartService.GetSectionChart: file exists");
-
-										// Create return object
-										oDataChart = new SectionChartViewModel();
-
+										
 										// Compose the img relative path
 										String sRelativePath = Omirl.getSubPathWithoutCheck("img/sections/" + sModel, oDate);
 
@@ -556,27 +557,7 @@ public class ChartService {
 										oDataChart.setImageLink(sRelativePath);
 										// and log
 										System.out.println("ChartService.GetSectionChart: return path " + sRelativePath);
-
-										// Find the config object
-										HydroLinkConfig oSelectedHydroConfig = null;
-
-										for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
-											if (oHydroConfig.getLinkCode().equals(sModel)) {
-												// This is my model
-												oSelectedHydroConfig=oHydroConfig;
-												break;
-											}
-										}
-
-										// Find related models in the same section
-										if (oSelectedHydroConfig!=null) {
-											for (HydroLinkConfig oHydroConfig : oConfig.getHydroLinks()) {
-
-												if (oHydroConfig.getColFlag().equals(oSelectedHydroConfig.getColFlag())) {
-													oDataChart.getOtherChart().add(oHydroConfig.getLinkCode());
-												}
-											}								
-										}
+										
 										//Chart Found - break;
 										break;
 									}
