@@ -15,6 +15,10 @@ service('PeriodService', ['$http', 'ConstantsService',  function ($http, oConsta
         this.m_bModified = true;
     };
 
+    this.setAsUnchanged = function() {
+        this.m_bModified = false;
+    };
+
     this.isModified = function() {
         return this.m_bModified;
     };
