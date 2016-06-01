@@ -29,6 +29,8 @@ var PeriodController = (function() {
             }
         }
 
+        this.m_oPeriodService.setAsUnchanged();
+
         $scope.$on('$locationChangeStart', function (event, next, current) {
 
             if (oController.m_oPeriodService.isModified()) {
