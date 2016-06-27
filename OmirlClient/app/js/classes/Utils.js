@@ -33,6 +33,16 @@ var Utils = (function ()
         else
             throw("Not an array");
     }
+    Utils.isStrNullOrEmpty = function (sString) {
+        if (sString && typeof sString != 'string') {
+            throw "[Utils.isStrNullOrEmpty] The value is NOT a string";
+            return true;
+        }
+        if (sString && sString.length > 0)
+            return false; // string has content
+        else
+            return true; // string is empty or null
+    };
 
     // ------------------------------------------------------------------
 // getDateFromFormat( date_string , format_string )

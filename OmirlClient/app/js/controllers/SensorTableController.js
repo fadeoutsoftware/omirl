@@ -45,6 +45,13 @@ var SensorTableController = (function() {
 
         var oControllerVar = this;
 
+
+        this.isOrderedBy = function(colName)
+        {
+            return (this.m_sOrderBy == colName);
+        }
+
+
         refreshSensorTable = function() {
             oControllerVar.m_oStationsService.getStationsTypes().success(function (data, status) {
 
@@ -56,6 +63,17 @@ var SensorTableController = (function() {
                 }
 
                 oControllerVar.m_aoTypes = data;
+
+                // Remove 'webcam' from the sensors list due to
+                // it is not a datatype suitable for a table
+                for(var i = 0; i < oControllerVar.m_aoTypes.length; i++)
+                {
+                    var code = oControllerVar.m_aoTypes[i].code;
+                    if( code == "webcam")
+                    {
+                        oControllerVar.m_aoTypes.splice(i, 1);
+                    }
+                }
 
                 oControllerVar.typeSelected();
 

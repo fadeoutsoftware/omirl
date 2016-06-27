@@ -59,6 +59,7 @@
     "MAP_T_LEGENDSELECTED": "Mappe",
     "MAP_T_INFO": "Info Tool",
     "MAP_NOT_AVAILABLE": "Layer non disponibile",
+    "MAP_NOT_AVAILABLE_SFLOC": "Nessuna fulminazione registrata",
     "MAP_MISSINGWEBCAM":"Missing WebCam Image",
     "MAP_TIMEPAST":"Torna in tempo reale",
     "MAP_TIMENOW":"In tempo reale",

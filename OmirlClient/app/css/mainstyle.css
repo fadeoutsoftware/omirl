@@ -221,6 +221,13 @@ and open the template in the editor.
   .scrollable-table-container.maxtable {
     height: 72vh; }
 
+.sortable_col:hover {
+  cursor: pointer; }
+.sortable_col.sorted-by {
+  font-weight: bold;
+  background-color: #3997c6;
+  color: whitesmoke; }
+
 /*
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
@@ -271,9 +278,15 @@ and open the template in the editor.
 .satellite-radar-buttons .cell-button-lastimage button {
   margin-left: 10px;
   margin-right: 1px; }
+.satellite-radar-buttons .cell-button-lastimage.disabled button {
+  background-color: #555555;
+  cursor: not-allowed; }
 .satellite-radar-buttons .cell-button-animation button {
   margin-right: 10px;
   margin-left: 1px; }
+.satellite-radar-buttons .cell-button-animation.disabled button {
+  background-color: #555555;
+  cursor: not-allowed; }
 .satellite-radar-buttons button {
   text-transform: uppercase;
   width: 150px;

@@ -362,10 +362,21 @@ var MapController = (function () {
             }
             //******************************************************************
 
+
+
             // Remember links
-            for (var iElement = 0; iElement < data.length; iElement++) {
-                oControllerVar.m_aoSensorsLinks.push(data[iElement]);
-                oControllerVar.m_oConstantsService.pushToSensorLinks(data[iElement]);
+            for (var iElement = 0; iElement < data.length; iElement++)
+            {
+                var oSensorLink = data[iElement];
+                // Change measure unit for sensor 'Vento' (+)
+                if( oSensorLink.code == "Vento")
+                {
+                    oSensorLink.mesUnit = oSensorLink.mesUnit.toLowerCase();
+                }
+                // Change measure unit for sensor 'Vento' (-)
+
+                oControllerVar.m_aoSensorsLinks.push(oSensorLink);
+                oControllerVar.m_oConstantsService.pushToSensorLinks(oSensorLink);
             }
             oControllerVar.m_bStationsReceived = true;
             
@@ -395,6 +406,32 @@ var MapController = (function () {
         }).error(function (data, status) {
             oControllerVar.m_oLog.error('Error Loading Static Layers to add to the Menu');
         });
+
+
+        /**
+         * Perform the UI alignment of the legend icon and palette
+         */
+        this.alignStationLegend = function ()
+        {
+            var oLegendContainer = $("#stations-legend-container");
+            var oLegendIcon = $("#stations-legend-container .sensor-legend-icon");
+            var oLegendPalette = $("#stations-legend-container .map-legend-image");
+
+            var iLegendContainerHeight = oLegendContainer.height();
+            var iPaletteHeight = oLegendPalette.height();
+            var iLegendIconHeight = oLegendIcon.height();
+            //var iDiff = iLegendContainerHeight - iLegendIconHeight;
+            var iDiff = iPaletteHeight - iLegendIconHeight;
+
+            if( iDiff > 0)
+            {
+                oLegendIcon.css({
+                    "margin-top": Math.floor(iDiff / 2)
+                });
+            }
+
+        }
+
 
 
         // Add Auto Refresh Interval Callback
@@ -607,8 +644,8 @@ var MapController = (function () {
                 }
             }
 
-
-            for (var i in oControllerVar.infoControls) {
+            for (var i in oControllerVar.infoControls)
+            {
                 oControllerVar.infoControls[i].events.register("beforegetfeatureinfo", oControllerVar, oControllerVar.askInfo);
                 oControllerVar.infoControls[i].events.register("getfeatureinfo", oControllerVar, oControllerVar.showInfo);
                 oControllerVar.m_oMapService.map.addControl(oControllerVar.infoControls[i]);
@@ -616,6 +653,15 @@ var MapController = (function () {
 
         });
     }
+
+
+
+    MapController.prototype.hasSensorLegendLink = function()
+    {
+        var sLegendPath = this.m_oScope.m_oController.m_sSensorsLegendPath;
+        return ( Utils.isStrNullOrEmpty(sLegendPath) == false);
+    }
+
 
 
     MapController.prototype.getMapTitle = function()
@@ -1355,6 +1401,9 @@ var MapController = (function () {
             oController.m_oSelectedSensorLink = oSensorLink;
 
             oController.m_oConstantsService.setSensorLayerActive(oSensorLink.code);
+
+            // Perform some corrections to station legend elements
+            setTimeout(oController.alignStationLegend, 200);
         }
         else {
             oController.hideSensorLayer();
@@ -1913,6 +1962,21 @@ var MapController = (function () {
 
             if (aoStations.length == 0)
             {
+
+                // If the layer is 'Fulminazioni (Sfloc)' change the alert message
+                // into "Nessuna fulminazione registrata"
+                if( oSensorLink.code == "Sfloc")
+                {
+                    oServiceVar.m_oTranslateService('MAP_NOT_AVAILABLE_SFLOC').then(function(msg){
+                        oServiceVar.activeDirectiveScope.callbackDeselectLastClickedMenuItem(oSensorLink.myLevel);
+
+                        vex.dialog.alert({
+                            message: msg
+                        });
+
+                    });
+                }
+
                 oServiceVar.m_oTranslateService('MAP_NOT_AVAILABLE').then(function(msg){
                     oServiceVar.activeDirectiveScope.callbackDeselectLastClickedMenuItem(oSensorLink.myLevel);
 

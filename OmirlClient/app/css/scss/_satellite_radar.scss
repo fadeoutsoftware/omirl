@@ -23,10 +23,23 @@
             margin-left: 10px;
             margin-right: 1px;
         }
+
+        &.disabled{
+            button{
+                background-color: #555555;
+                cursor: not-allowed;
+            }
+        }
     }
     
     .cell-button-animation{
         button{ margin-right: 10px; margin-left: 1px;}
+        &.disabled{
+            button{
+                background-color: #555555;
+                cursor: not-allowed;
+            }
+        }
     }
     
     button{

@@ -48,15 +48,15 @@
 
                         <thead class="omirltbl">
                             <tr>
-                                <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Max (mm)</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'm5'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">5'</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'm15'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">15'</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'm30'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">30'</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'h1'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">1h</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'h3'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">3h</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'h6'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">6h</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'h12'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">12h</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'h24'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">24h</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('name') == true}" ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Max (mm)</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('m5') == true}" ng-click="m_oController.m_sOrderBy = 'm5'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">5'</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('m15') == true}" ng-click="m_oController.m_sOrderBy = 'm15'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">15'</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('m30') == true}" ng-click="m_oController.m_sOrderBy = 'm30'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">30'</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h1') == true}" ng-click="m_oController.m_sOrderBy = 'h1'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">1h</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h3') == true}" ng-click="m_oController.m_sOrderBy = 'h3'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">3h</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h6') == true}" ng-click="m_oController.m_sOrderBy = 'h6'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">6h</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h12') == true}" ng-click="m_oController.m_sOrderBy = 'h12'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">12h</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h24') == true}" ng-click="m_oController.m_sOrderBy = 'h24'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">24h</th>
                             </tr>
                         </thead>
                         <tbody class="omirltbl">
@@ -79,15 +79,15 @@
                     <table class="omirltbl" >
                         <thead class="omirltbl">
                         <tr>
-                            <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Max (mm)</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'm5'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">5'</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'm15'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">15'</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'm30'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">30'</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'h1'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">1h</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'h3'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">3h</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'h6'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">6h</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'h12'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">12h</th>
-                            <th ng-click="m_oController.m_sOrderBy = 'h24'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">24h</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('name') == true}" ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">Max (mm)</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('m5') == true}" ng-click="m_oController.m_sOrderBy = 'm5'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">5'</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('m15') == true}" ng-click="m_oController.m_sOrderBy = 'm15'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">15'</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('m30') == true}" ng-click="m_oController.m_sOrderBy = 'm30'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">30'</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h1') == true}" ng-click="m_oController.m_sOrderBy = 'h1'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">1h</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h3') == true}" ng-click="m_oController.m_sOrderBy = 'h3'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">3h</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h6') == true}" ng-click="m_oController.m_sOrderBy = 'h6'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">6h</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h12') == true}" ng-click="m_oController.m_sOrderBy = 'h12'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">12h</th>
+                            <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('h24') == true}" ng-click="m_oController.m_sOrderBy = 'h24'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" class="table-list-header">24h</th>
                         </tr>
                         </thead>
                         <tbody class="omirltbl">

@@ -52,6 +52,11 @@ var MaxTableController = (function() {
             this.m_oConstantsService.getRefreshRateMs());
 
 
+        this.isOrderedBy = function(colName)
+        {
+            return (this.m_sOrderBy == colName);
+        }
+
         oControllerVar.getDateTimeInLocalFormat =  function(sData)
         {
             var sHour = sData.split("]")[0].replace("[", "");

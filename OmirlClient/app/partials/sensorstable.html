@@ -95,17 +95,17 @@
                     <table class="omirltbl" style="margin-left: 0px; margin-right: 0px; width: 100%">
                         <thead class="omirltbl">
                             <tr>
-                                <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_NOME' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'code'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_CODICE' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_COMUNE' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_PROVINCIA' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_AREA' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_BACINO' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'underbasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_SOTTOBACINO' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'last'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">{{'SENSOTABLE_ULTIMO' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'max'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">{{'SENSOTABLE_MAX' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'min'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">{{'SENSOTABLE_MIN' | translate}}</th>
-                                <th ng-click="m_oController.m_sOrderBy = 'min'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">{{'SENSOTABLE_UM' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('name') == true}" ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_NOME' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('code') == true}" ng-click="m_oController.m_sOrderBy = 'code'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_CODICE' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('municipality') == true}" ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_COMUNE' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('district') == true}" ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_PROVINCIA' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('area') == true}" ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_AREA' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('basin') == true}" ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_BACINO' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('underbasin') == true}" ng-click="m_oController.m_sOrderBy = 'underbasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'SENSOTABLE_SOTTOBACINO' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('last') == true}" ng-click="m_oController.m_sOrderBy = 'last'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">{{'SENSOTABLE_ULTIMO' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('max') == true}" ng-click="m_oController.m_sOrderBy = 'max'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">{{'SENSOTABLE_MAX' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('min') == true}" ng-click="m_oController.m_sOrderBy = 'min'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">{{'SENSOTABLE_MIN' | translate}}</th>
+                                <th class="sortable_col" ng-class="{'sorted-by' : m_oController.isOrderedBy('min') == true}" ng-click="m_oController.m_sOrderBy = 'min'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder">{{'SENSOTABLE_UM' | translate}}</th>
                             </tr>
                         </thead>
                         <tbody class="omirltbl">

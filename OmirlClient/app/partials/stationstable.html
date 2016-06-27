@@ -85,12 +85,12 @@
                         <table class="omirltbl" style="margin-left: 0px; margin-right: 0px; width: 100%; cursor: pointer">
                             <thead class="omirltbl">
                                 <tr>
-                                    <th ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_NOME' | translate}}</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_PROVINCIA' | translate}}</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_ZONA' | translate}}</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_BACINO' | translate}}</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'subBasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_SOTTOBACINO' | translate}}</th>
-                                    <th ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_COMUNE' | translate}}</th>
+                                    <th class="sortable_col" ng-click="m_oController.m_sOrderBy = 'name'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_NOME' | translate}}</th>
+                                    <th class="sortable_col" ng-click="m_oController.m_sOrderBy = 'district'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_PROVINCIA' | translate}}</th>
+                                    <th class="sortable_col" ng-click="m_oController.m_sOrderBy = 'area'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_ZONA' | translate}}</th>
+                                    <th class="sortable_col" ng-click="m_oController.m_sOrderBy = 'basin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_BACINO' | translate}}</th>
+                                    <th class="sortable_col" ng-click="m_oController.m_sOrderBy = 'subBasin'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_SOTTOBACINO' | translate}}</th>
+                                    <th class="sortable_col" ng-click="m_oController.m_sOrderBy = 'municipality'; m_oController.m_bReverseOrder=!m_oController.m_bReverseOrder" >{{'STATION_COMUNE' | translate}}</th>
                                 </tr>
                             </thead>
                             <tbody class="omirltbl">
