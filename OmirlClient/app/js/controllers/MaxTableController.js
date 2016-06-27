@@ -52,6 +52,24 @@ var MaxTableController = (function() {
             this.m_oConstantsService.getRefreshRateMs());
 
 
+        oControllerVar.getDateTimeInLocalFormat =  function(sData)
+        {
+            var sHour = sData.split("]")[0].replace("[", "");
+            var oDate = moment.utc(sHour, "HH:mm");
+            oDate.local();
+            return oDate.format("HH:mm");
+        };
+
+        oControllerVar.convertTablesHourToLocal = function(sData)
+        {
+            var sLocalHour = oControllerVar.getDateTimeInLocalFormat(sData);
+            var regex = /\[(.*?)\]/;
+            var str = sData.replace(regex, "[" + sLocalHour +"]");
+            return str;
+        };
+        
+        
+        
 /*
         this.m_oStationsService.getAggregationsTypes().success(function (data, status) {
 

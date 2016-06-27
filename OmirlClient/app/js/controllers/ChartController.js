@@ -715,8 +715,14 @@ var ChartController = (function() {
                                 // if direction not null
                                 if (oSerie.data[iElement][1] != null) {
 
-                                    //var oData = {x: oSerie.data[iElement][0], y:100, marker:{symbol: 'windArrow'}};
+                                    /******DA USARE IN PRODUZIONE ******************/
+                                    var oData = {x: oSerie.data[iElement][0], y: -10, marker: {symbol: 'url('+ oControllerVar.m_oConstantsService.getURL() +'/img/windDirections/' + oSerie.data[iElement][1] + '.png)'}, toolText: oSerie.data[iElement][1]};
+
+
+                                    /******DA USARE IN TEST PER VEDERE LA DIREZIONE DEL VENTO
                                     var oData = {x: oSerie.data[iElement][0], y: -10, marker: {symbol: 'url(img/windDirections/' + oSerie.data[iElement][1] + '.png)'}, toolText: oSerie.data[iElement][1]};
+                                     *********************************************************/
+
                                     oSerieCustomMarker.data.push(oData);
                                 }
                             }
