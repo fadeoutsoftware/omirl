@@ -258,24 +258,29 @@ var MapController = (function () {
             var oBaseLayer3 = new OpenLayers.Layer.Google("Streets", {numZoomLevels: 20});
             var oBaseLayer4 = new OpenLayers.Layer.Google("Satellite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20});
 
-            /*
+
+
+
+
             // OSM tiles
-            var oOSMLayer = new OpenLayers.Layer.XYZ(
-                'OSM',
-                //'http://www.toolserver.org/tiles/bw-mapnik/${z}/${x}/${y}.png',
-                'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            var layerBW = new OpenLayers.Layer.XYZ(
+                'BW',
+                'http://www.toolserver.org/tiles/bw-mapnik/${z}/${x}/${y}.png',
+                //'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {
                     attribution: 'basemap data &copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>',
                     sphericalMercator: true,
                     wrapDateLine: true,
                     transitionEffect: "resize",
                     buffer: 0,
-                    numZoomLevels: 20
+                    numZoomLevels: 20,
+                    tileOptions: {crossOriginKeyword: null}
                 }
             );
-            */
+            layerBW.tileOptions.crossOriginKeyword = null;
 
             var oOSMLayer = new OpenLayers.Layer.OSM();
+            oOSMLayer.tileOptions.crossOriginKeyword = null;
 
             // Add Base Layers
             this.m_oLayerService.addBaseLayer(oOSMLayer);
@@ -283,6 +288,8 @@ var MapController = (function () {
             this.m_oLayerService.addBaseLayer(oBaseLayer2);
             this.m_oLayerService.addBaseLayer(oBaseLayer3);
             this.m_oLayerService.addBaseLayer(oBaseLayer4);
+            this.m_oLayerService.addBaseLayer(layerBW);
+
         }
 
         // Set map height
@@ -368,13 +375,7 @@ var MapController = (function () {
             for (var iElement = 0; iElement < data.length; iElement++)
             {
                 var oSensorLink = data[iElement];
-                // Change measure unit for sensor 'Vento' (+)
-                if( oSensorLink.code == "Vento")
-                {
-                    oSensorLink.mesUnit = oSensorLink.mesUnit.toLowerCase();
-                }
-                // Change measure unit for sensor 'Vento' (-)
-
+                
                 oControllerVar.m_aoSensorsLinks.push(oSensorLink);
                 oControllerVar.m_oConstantsService.pushToSensorLinks(oSensorLink);
             }

@@ -1,7 +1,5 @@
 <div class="map container-fluid" style="padding-left: 0px; padding-right: 0px">
     <div id="webcam-dialogs-container" class="dialogs-container"></div>
-    <div id="webcam-dialogs-container" class="dialogs-container"></div>
-
     <div class="row">
         <div class="map-panel col-md-10 col-xs-9" id="omirlMap" ol-map zoom="9" center="8.60,44.20"
             controls="zoom,navigation,attribution,mousePosition">
@@ -113,6 +111,10 @@
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
                                ng-click="m_oController.setBaseLayer('Satellite')">{{'MAP_SATELLITE' | translate}}</a>
+                        </li>
+                        <li role="presentation">
+                            <a class="basemaps-dropdown-menu-item" role="menuitem"
+                               ng-click="m_oController.setBaseLayer('BW')">{{'BW' | translate}}</a>
                         </li>
                     </ul>
                 </li>
@@ -487,8 +489,6 @@
 
                 </accordion>
             </div>
-
-            <button ng-click="addWebcamDialog()">WEBCAM</button>
         </nav>
     </div>
     <div class="map-legend">
