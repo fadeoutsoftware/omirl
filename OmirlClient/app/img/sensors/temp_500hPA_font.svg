@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 512.00001 512.00001"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="temp_500hPA.svg"
+   inkscape:export-filename="C:\Users\d.fiori\Downloads\omirl\temperaturaOff.png"
+   inkscape:export-xdpi="5.6300001"
+   inkscape:export-ydpi="5.6300001">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="283.68083"
+     inkscape:cy="221.83604"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     units="px"
+     inkscape:window-width="1280"
+     inkscape:window-height="961"
+     inkscape:window-x="1272"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       position="229.55357,849.46431"
+       orientation="0,1"
+       id="guide4170" />
+    <sodipodi:guide
+       position="230.58036,829.10716"
+       orientation="0,1"
+       id="guide4172" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid4246" />
+    <sodipodi:guide
+       position="256.02679,751.69645"
+       orientation="1,0"
+       id="guide4248" />
+    <sodipodi:guide
+       position="-13.131983,256"
+       orientation="0,1"
+       id="guide4284"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Livello 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-540.36216)">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:16.40411949;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 231.3347,553.36068 c -24.60309,-0.005 -44.54893,17.96774 -44.54488,40.1354 0.008,1.17537 0.0864,139.49653 0.20827,153.81613 a 68.668026,61.870579 0 0 0 -24.33507,47.17903 68.668026,61.870579 0 0 0 68.67136,61.87358 68.668026,61.870579 0 0 0 68.65535,-61.87358 68.668026,61.870579 0 0 0 -24.31908,-47.23687 c 0.12266,-13.35614 0.18665,-152.57888 0.19269,-153.75829 0.005,-22.16196 -19.93192,-40.13103 -44.52881,-40.1354 z"
+       id="path3351"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:none"
+       id="rect4174"
+       width="103.65225"
+       height="135.57915"
+       x="184.26154"
+       y="585.87146" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.37219107;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 224.65773,638.00169 0,131.48713 a 31.759664,28.615775 0 0 0 -23.08741,27.52306 31.759664,28.615775 0 0 0 31.76198,28.61787 31.759664,28.615775 0 0 0 31.76199,-28.61787 31.759664,28.615775 0 0 0 -23.47547,-27.58387 l 0,-131.42632 -16.96109,0 z"
+       id="path4204"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4209"
+       width="53.726612"
+       height="16.13607"
+       x="302.09787"
+       y="579.48151" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4209-8"
+       width="53.726612"
+       height="16.13607"
+       x="303.05695"
+       y="624.41455" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4209-1"
+       width="53.726612"
+       height="16.13607"
+       x="302.03195"
+       y="670.76282" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4209-8-4"
+       width="53.726612"
+       height="16.13607"
+       x="302.99106"
+       y="715.69586" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4250"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:131.25px;line-height:125%;font-family:Arial;-inkscape-font-specification:Arial;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(-15.152288,511.06774)"
+       inkscape:export-xdpi="5"
+       inkscape:export-ydpi="5"><flowRegion
+         id="flowRegion4252"><rect
+           id="rect4254"
+           width="512.14734"
+           height="185.86812"
+           x="15.152289"
+           y="354.4162"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:131.25px;font-family:Arial;-inkscape-font-specification:Arial" /></flowRegion><flowPara
+         id="flowPara4256"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:127.5px;line-height:125%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:4px;text-anchor:middle"><flowSpan
+           style="font-size:143.75px"
+           id="flowSpan4327">50<flowSpan
+   style="letter-spacing:20.01000023px"
+   id="flowSpan4349">0</flowSpan></flowSpan><flowSpan
+           style="font-size:112.5px"
+           id="flowSpan4325">hPa</flowSpan></flowPara></flowRoot>  </g>
+</svg>
