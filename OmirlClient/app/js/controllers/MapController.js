@@ -488,7 +488,9 @@ var MapController = (function () {
             oControllerVar.m_oInterval.cancel(oControllerVar.m_oStopTimerPromise);
         });
 
-        this.m_oScope.$on('mapInitComplete', function (event, next, current) {
+        this.m_oScope.$on('mapInitComplete', function (event, next, current)
+        {
+            oControllerVar.alignOpenLayerControllerToMap();
 
             if (oControllerVar.m_oConstantsService.getIsMiniVersion()) {
                 var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType("Vento");
@@ -655,7 +657,12 @@ var MapController = (function () {
         });
     }
 
-
+    MapController.prototype.alignOpenLayerControllerToMap = function()
+    {
+        if( this.m_oMapService && this.m_oMapService.map) {
+            this.m_oMapService.map.updateSize();
+        }
+    }
 
     MapController.prototype.hasSensorLegendLink = function()
     {
@@ -3505,6 +3512,7 @@ var MapController = (function () {
         'MapLayerService',
         '$translate'
     ];
+
 
     return MapController;
 })();
