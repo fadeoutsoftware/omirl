@@ -1436,7 +1436,7 @@ tbody.omirltbl td.odd {
 }
 
 .tooltip.top{
-    max-width: 100px !important;
+    max-width: 200px !important;
     height: auto;
 }
 

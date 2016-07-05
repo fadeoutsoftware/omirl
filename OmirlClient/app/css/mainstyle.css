@@ -482,6 +482,12 @@ li.clearfix {
 .float-right {
   float: right; }
 
+.padding-left {
+  padding-left: 8px; }
+
+.padding-right {
+  padding-right: 8px; }
+
 /* centered columns styles */
 .row-centered {
   text-align: center; }
@@ -499,6 +505,36 @@ li.clearfix {
 
 ul.sidebar-nav li a:hover {
   cursor: pointer; }
+
+.logo-container-map {
+  position: absolute;
+  width: 240px;
+  height: 48px;
+  bottom: 90px;
+  right: 0px;
+  z-index: 1000;
+  text-align: right; }
+  .logo-container-map .logo-image {
+    height: 100%;
+    width: auto;
+    margin: 0px 20px;
+    padding: 0px; }
+.logo-container-table .logo-image {
+  height: 60px;
+  padding: 0px 20px;
+  margin-top: -6px; }
+
+/**
+ * Style to correct 'info tool tooltip' behaviour
+ */
+.map-weather-panel .tooltip.top-right {
+  left: 10px !important;
+  top: 2px !important; }
+  .map-weather-panel .tooltip.top-right .tooltip-arrow {
+    left: 28px;
+    bottom: -5px; }
+  .map-weather-panel .tooltip.top-right .tooltip-inner {
+    min-width: 200px; }
 
 /**
  * Right sidebar

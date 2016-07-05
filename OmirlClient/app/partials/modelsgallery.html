@@ -3,7 +3,12 @@
 <div class="container" ng-keydown="key($event)"  tabindex="0">
 
     <div class="Tabella_Stazioni">
-        <h1 class="medium">{{'MODELGALLERY_TITLE' | translate}}</h1><br>
+        <h1 class="medium logo-container-table">
+            <img class="logo-image" src="img/logo-regione.png">
+            {{ 'MODELGALLERY_TITLE' | translate }}
+            <img class="logo-image" src="img/logo-arpal.png">
+        </h1>
+        <br>
         <hr>
 
         <div class='gallery-wrapper' ng-init='initGallery()'>

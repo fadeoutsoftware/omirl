@@ -46,6 +46,8 @@ li.clearfix{float: none;}
     &-right{ float: right;}
 }
 
+.padding-left{ padding-left: 8px;}
+.padding-right{ padding-right: 8px;}
 
 /* centered columns styles */
 .row-centered {
@@ -70,6 +72,57 @@ ul.sidebar-nav{
     li{
         a{
             &:hover{ cursor: pointer;}
+        }
+    }
+}
+
+
+.logo-container{
+    &-map{
+        position: absolute;
+        width: 240px;
+        height: 48px;
+        bottom: 90px;
+        right: 0px;
+        z-index: 1000;
+        text-align: right;
+
+        .logo-image{
+            height: 100%; width: auto; margin: 0px 20px; padding: 0px;
+        }
+    }
+
+    &-table{
+        .logo-image{
+            height: 60px;
+            padding: 0px 20px;
+            margin-top: -6px;
+        }
+    }
+}
+
+
+/**
+ * Style to correct 'info tool tooltip' behaviour
+ */
+//.info-tool{
+//    .tooltip.top{
+//        left: 3px;
+//        .tooltip-arrow{
+//            left: 40px;
+//        }
+//    }
+//}
+.map-weather-panel{
+    .tooltip.top-right{
+        left: 10px !important;
+        top: 2px !important;
+        .tooltip-arrow{
+            left: 28px;
+            bottom: -5px;
+        }
+        .tooltip-inner{
+            min-width: 200px;
         }
     }
 }

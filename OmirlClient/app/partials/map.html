@@ -1,4 +1,9 @@
 <div class="map container-fluid" style="padding-left: 0px; padding-right: 0px">
+    <div class="logo-container-map">
+            <img class="logo-image" src="img/logo-regione.png">
+            <img class="logo-image" src="img/logo-arpal.png">
+    </div>
+
     <div id="webcam-dialogs-container" class="dialogs-container"></div>
     <div class="row">
         <div class="map-panel col-md-10 col-xs-9" id="omirlMap" ol-map zoom="9" center="8.60,44.20"
@@ -79,9 +84,12 @@
                          ng-src="{{m_oController.m_bIsWeatherActive == true && 'img/chetempofa_on3.png' || 'img/chetempofa.png'}}"
                          ng-click="m_oController.ToggleWeatherLayer()"/>
                 </li-->
-                <li class="map-weather-panel-icon"
+                <li class="map-weather-panel-icon info-tool"
                     ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsInfoActive}"
-                    tooltip-popup-delay="500" tooltip="{{'MAP_T_INFO' | translate}}">
+                    tooltip-popup-delay="500"
+                    tooltip-class="info-tool"
+                    tooltip-placement="top-right"
+                    tooltip="{{'MAP_T_INFO' | translate}}">
                     <img class="img-map-firstlevel-icon"
                          ng-src="{{m_oController.m_bIsInfoActive == true && 'img/infoon.png' || 'img/info.png'}}"
                          ng-click="m_oController.ToggleInfoTool()"/>
@@ -235,16 +243,18 @@
                             -->
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="{{'MAP_T_RICERCASTAZIONI' | translate}}">
-                                    <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/stationstable')"/>
-                                </div>
-                            </div>
+                            <!--<div class="row">-->
+                                <!--<div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="{{'MAP_T_RICERCASTAZIONI' | translate}}">-->
+                                    <!--<img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/stationstable')"/>-->
+                                <!--</div>-->
+                            <!--</div>-->
                         </div>
                     </accordion-group>
 
 
-                    <!--------------------------------------------------------------------------- Mappe --------------------------------------------------------------------------->
+                    <!---------------------------------------------------------------------------->
+                    <!-- Mappe -->
+                    <!---------------------------------------------------------------------------->
 
                     <accordion-group ng-class="{'map-accordion-open' : isopen}">
                         <accordion-heading>
@@ -368,12 +378,12 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="{{'MAP_T_RICERCASTAZIONI' | translate}}">
-                                <!--<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>-->
-                                <img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/modelstable')"/>
-                            </div>
-                        </div>
+                        <!--<div class="row">-->
+                            <!--<div class="col-md-3 col-xs-3 map-tablelink-icon" tooltip-popup-delay="500" tooltip="{{'MAP_T_RICERCASTAZIONI' | translate}}">-->
+                                <!--&lt;!&ndash;<img ng-src="{{oSensor.isActive && oSensor.imageLinkOn || oSensor.imageLinkOff }}" ng-click="m_oController.sensorLinkClicked(oSensor)"/>&ndash;&gt;-->
+                                <!--<img class="img-map-tablelink-icon" src="img/tablelink.png" ng-click="m_oController.tablesLinkClicked('/modelstable')"/>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
                     </accordion-group>
 
