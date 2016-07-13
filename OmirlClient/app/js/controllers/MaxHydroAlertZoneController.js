@@ -216,6 +216,8 @@ var MaxHydroAlertZoneController = (function() {
         });
     };
 
+    
+
 
     MaxHydroAlertZoneController.$inject = [
         '$scope',

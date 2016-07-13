@@ -490,7 +490,7 @@ var MapController = (function () {
 
         this.m_oScope.$on('mapInitComplete', function (event, next, current)
         {
-            oControllerVar.alignOpenLayerControllerToMap();
+
 
             if (oControllerVar.m_oConstantsService.getIsMiniVersion()) {
                 var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType("Vento");
@@ -654,7 +654,11 @@ var MapController = (function () {
                 oControllerVar.m_oMapService.map.addControl(oControllerVar.infoControls[i]);
             }
 
+
         });
+
+
+
     }
 
     MapController.prototype.alignOpenLayerControllerToMap = function()
@@ -741,6 +745,15 @@ var MapController = (function () {
 
         oMapController.m_bMapReady = true;
         oMapController.FireInitEvent(oMapController);
+
+        /*
+        Per ora questa è l'unica soluzione trovata per il problema dell'Info Tools
+        Un timeout di tre secondi permette alla mappa di essere pronta e comunque l'utente in tre secondi non ha il tempo di lavorare sulla mappa
+         */
+
+        setTimeout( function() {
+            oMapController.alignOpenLayerControllerToMap();
+        }, 3000);
 
     }
 
