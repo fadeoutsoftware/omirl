@@ -61,6 +61,9 @@ import it.fadeout.omirl.viewmodels.WindSummaryInfo;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -160,6 +163,7 @@ public class OmirlDaemon {
 		//if (true) return;
 		//RefreshHydroModel();
 		//maxHydroAlertZones();
+		//SerializeWebCamLayer();
 		//----------------TEST------------------
 
 
@@ -632,7 +636,7 @@ public class OmirlDaemon {
 
 												// Add serie to the chart
 												oTermoChart.getDataSeries().add(oMaxSerie);
-												
+
 												serializeStationChart(oTermoChart,m_oConfig, oStationAnag.getStation_code(), aoInfo.get(0).getFolderName(), m_oDateFormat);
 											}
 										}
@@ -1908,7 +1912,7 @@ public class OmirlDaemon {
 	@SuppressWarnings("deprecation")
 	private void maxTable() {
 		try {
-			System.out.println("Max Table Start");
+ 			System.out.println("Max Table Start");
 
 			// Data Repository
 			StationDataRepository oStationDataRepository = new StationDataRepository();
@@ -3015,7 +3019,7 @@ public class OmirlDaemon {
 			System.out.println("OmirlDaemon - Clear Daemon Exception");
 			oEx.printStackTrace();
 		}
-		
+
 		try {
 			DBClearThread oThread = new DBClearThread(m_oConfig.getDbBufferDataDays());
 			oThread.start();			
@@ -3110,7 +3114,9 @@ public class OmirlDaemon {
 
 				if (sFullPath != null)  {
 					String sFileName = oTable.getSensorTye() + ".xml"; 
-					SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, oTable);
+					Path oPath = Paths.get(sFullPath);
+					if (Files.exists(oPath))
+						SerializationUtils.serializeObjectToXML(sFullPath+"/"+sFileName, oTable);
 				}				
 			}
 
@@ -3495,8 +3501,25 @@ public class OmirlDaemon {
 							oSensorViewModel.setMunicipality("-");
 						}
 
-						oSensorViewModel.setOtherHtml("");
-						oSensorViewModel.setRefDate(new Date());
+						if (oSensorViewModel.getImgPath() != null && oSensorViewModel.getImgPath() != "")
+						{
+							Integer iHour = 0;
+							Integer iMin = 0;
+							try
+							{
+								oSensorViewModel.setOtherHtml("");
+								String sTimeImage = oSensorViewModel.getImgPath().split("_")[2];
+								iHour = Integer.valueOf(sTimeImage.substring(0, 2));
+								iMin = Integer.valueOf(sTimeImage.substring(2, 4));
+							}
+							catch(Exception oEx){
+	
+							}
+							Date oRefDate = new Date();
+							oRefDate.setHours(iHour);
+							oRefDate.setMinutes(iMin);
+							oSensorViewModel.setRefDate(oRefDate);
+						}
 						oSensorViewModel.setShortCode(oStation.getStation_code());
 						oSensorViewModel.setStationId(1);
 						oSensorViewModel.setValue(0.0);
@@ -3541,10 +3564,12 @@ public class OmirlDaemon {
 		String sFullDir = sWebCamPath + "/" + oDateFormat.format(oActualDate);
 
 		File oFolder = new File(sFullDir);
-
+		
 		// Find Subfolders
 		String [] asSubFolders = oFolder.list();
 
+		Boolean bFound = false;
+		
 		if (asSubFolders!=null)
 		{
 			for (String sSubFolder : asSubFolders) {
@@ -3565,11 +3590,14 @@ public class OmirlDaemon {
 
 						sFullDir = "img/webcam/" + oDateFormat.format(oActualDate) + "/" + sWebCamCode + "/images/" + oLast.getName();
 
+						bFound = true;
 					}
 				}
 			}
 		}
 
+		if (!bFound)
+			sFullDir = "";
 		return sFullDir;
 
 	}
@@ -3583,18 +3611,18 @@ public class OmirlDaemon {
 		if (sType == "wind") {
 
 			ArrayList<Double> aoWindLimits = new ArrayList<>();
-			aoWindLimits.add(0.514444);
-			aoWindLimits.add(1.543332);
-			aoWindLimits.add(4.115552);
-			aoWindLimits.add(6.687772);
-			aoWindLimits.add(9.259992);
-			aoWindLimits.add(11.832212);
-			aoWindLimits.add(14.404432);
-			aoWindLimits.add(16.976652);
-			aoWindLimits.add(19.548872);
-			aoWindLimits.add(22.121092);
-			aoWindLimits.add(24.693312);
-			aoWindLimits.add(27.265532);
+			aoWindLimits.add(0.555556);
+			aoWindLimits.add(1.66667);
+			aoWindLimits.add(3.05556);
+			aoWindLimits.add(5.0);
+			aoWindLimits.add(8.33333);
+			aoWindLimits.add(10.8333);
+			aoWindLimits.add(13.8889);
+			aoWindLimits.add(16.9444);
+			aoWindLimits.add(20.5556);
+			aoWindLimits.add(24.1667);
+			aoWindLimits.add(28.3333);
+			aoWindLimits.add(100.0);
 			//aoWindLimits.add(29.837752);
 
 			ArrayList<String> aoWindImages = new ArrayList<>();
@@ -3608,7 +3636,7 @@ public class OmirlDaemon {
 			aoWindImages.add("img/sensors/wind_7.png");
 			aoWindImages.add("img/sensors/wind_8.png");
 			aoWindImages.add("img/sensors/wind_9.png");
-			aoWindImages.add("img/sensors/wind_10.png");
+			//aoWindImages.add("img/sensors/wind_10.png");
 			aoWindImages.add("img/sensors/wind_11.png");
 			aoWindImages.add("img/sensors/wind_12.png");
 			//aoWindImages.add("img/sensors/wind_13.png");
