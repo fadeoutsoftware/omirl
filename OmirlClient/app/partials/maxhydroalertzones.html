@@ -1,4 +1,4 @@
-<div ng-include="'partials/datatablesmenu.html'"></div>
+<div ng-include="'partials/tablesmenu.html'"></div>
 <div class=" Tabella_Stazioni">
 
     <div class="row">
@@ -10,32 +10,6 @@
     <hr/>
     <div class="container">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <!--Panel heading-->
-                <div class="row">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <!--
-                            <div class="col-xs-12 col-sm-2 col-sm-offset-3 col-md-2 col-md-offset-4 col-lg-2 col-lg-offset-4">
-                                <label for="aggregation" class="control-label">Ritaglio</label>
-                            </div>
-                            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
-                                <select class="form-control" id="aggregation" ng-change="m_oController.aggregationSelected()" ng-options="type.aggregation for aggregation in m_oController.m_aoAggregations" ng-model = "m_oController.m_oSelectedAggregation" ng-selected="m_oController.m_oSelectedAggregation">
-                                </select>
-                            </div>
-                            -->
-                            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 table-export-button-panel">
-                                <i class="fa fa-download" ng-show="m_oController.m_bDowloadEnabled" ng-click="m_oController.exportCsv()"></i>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-
-            <div class="panel-footer">
-                <!--Panel footer-->
-            </div>
 
             <div class="panel-body scrollable-table-container maxtable">
                 <!--Panel content-->
@@ -56,9 +30,9 @@
                         <th>Provincia</th>
                         <th>Comune</th>
                         <th>Bacino</th>
-                        <th>Corso</th>
+                        <th>Corso d'acqua</th>
                         <th>Massimo nelle 24H[m]</th>
-                        <th>Ora UTC del massimo</th>
+                        <th>Ora locale del massimo</th>
                         <th>Valore all'ora di rif.[m]</th>
                         <th>Ora di rif.</th>
                     </tr>
@@ -88,9 +62,9 @@
                         <th class="table-list-header">Provincia</th>
                         <th class="table-list-header">Comune</th>
                         <th class="table-list-header">Bacino</th>
-                        <th class="table-list-header">Corso</th>
+                        <th class="table-list-header">Corso d'acqua</th>
                         <th class="table-list-header">Massimo nelle 24H[m]</th>
-                        <th class="table-list-header">Ora UTC del massimo</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
                         <th class="table-list-header">Valore all'ora di rif.[m]</th>
                         <th class="table-list-header">Ora di rif.</th>
                     </tr>
@@ -120,9 +94,9 @@
                         <th class="table-list-header">Provincia</th>
                         <th class="table-list-header">Comune</th>
                         <th class="table-list-header">Bacino</th>
-                        <th class="table-list-header">Corso</th>
+                        <th class="table-list-header">Corso d'acqua</th>
                         <th class="table-list-header">Massimo nelle 24H[m]</th>
-                        <th class="table-list-header">Ora UTC del massimo</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
                         <th class="table-list-header">Valore all'ora di rif.[m]</th>
                         <th class="table-list-header">Ora di rif.</th>
                     </tr>
@@ -152,9 +126,9 @@
                         <th class="table-list-header">Provincia</th>
                         <th class="table-list-header">Comune</th>
                         <th class="table-list-header">Bacino</th>
-                        <th class="table-list-header">Corso</th>
+                        <th class="table-list-header">Corso d'acqua</th>
                         <th class="table-list-header">Massimo nelle 24H[m]</th>
-                        <th class="table-list-header">Ora UTC del massimo</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
                         <th class="table-list-header">Valore all'ora di rif.[m]</th>
                         <th class="table-list-header">Ora di rif.</th>
                     </tr>
@@ -184,9 +158,9 @@
                         <th class="table-list-header">Provincia</th>
                         <th class="table-list-header">Comune</th>
                         <th class="table-list-header">Bacino</th>
-                        <th class="table-list-header">Corso</th>
+                        <th class="table-list-header">Corso d'acqua</th>
                         <th class="table-list-header">Massimo nelle 24H[m]</th>
-                        <th class="table-list-header">Ora UTC del massimo</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
                         <th class="table-list-header">Valore all'ora di rif.[m]</th>
                         <th class="table-list-header">Ora di rif.</th>
                     </tr>
@@ -216,9 +190,9 @@
                         <th class="table-list-header">Provincia</th>
                         <th class="table-list-header">Comune</th>
                         <th class="table-list-header">Bacino</th>
-                        <th class="table-list-header">Corso</th>
+                        <th class="table-list-header">Corso d'acqua</th>
                         <th class="table-list-header">Massimo nelle 24H[m]</th>
-                        <th class="table-list-header">Ora UTC del massimo</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
                         <th class="table-list-header">Valore all'ora di rif.[m]</th>
                         <th class="table-list-header">Ora di rif.</th>
                     </tr>
@@ -248,9 +222,9 @@
                         <th class="table-list-header">Provincia</th>
                         <th class="table-list-header">Comune</th>
                         <th class="table-list-header">Bacino</th>
-                        <th class="table-list-header">Corso</th>
+                        <th class="table-list-header">Corso d'acqua</th>
                         <th class="table-list-header">Massimo nelle 24H[m]</th>
-                        <th class="table-list-header">Ora UTC del massimo</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
                         <th class="table-list-header">Valore all'ora di rif.[m]</th>
                         <th class="table-list-header">Ora di rif.</th>
                     </tr>
@@ -280,9 +254,9 @@
                         <th class="table-list-header">Provincia</th>
                         <th class="table-list-header">Comune</th>
                         <th class="table-list-header">Bacino</th>
-                        <th class="table-list-header">Corso</th>
+                        <th class="table-list-header">Corso d'acqua</th>
                         <th class="table-list-header">Massimo nelle 24H[m]</th>
-                        <th class="table-list-header">Ora UTC del massimo</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
                         <th class="table-list-header">Valore all'ora di rif.[m]</th>
                         <th class="table-list-header">Ora di rif.</th>
                     </tr>

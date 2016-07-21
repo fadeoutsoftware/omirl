@@ -84,7 +84,7 @@
                          ng-src="{{m_oController.m_bIsWeatherActive == true && 'img/chetempofa_on3.png' || 'img/chetempofa.png'}}"
                          ng-click="m_oController.ToggleWeatherLayer()"/>
                 </li-->
-                <li class="map-weather-panel-icon info-tool"
+                <!--li class="map-weather-panel-icon info-tool"
                     ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsInfoActive}"
                     tooltip-popup-delay="500"
                     tooltip-class="info-tool"
@@ -93,7 +93,7 @@
                     <img class="img-map-firstlevel-icon"
                          ng-src="{{m_oController.m_bIsInfoActive == true && 'img/infoon.png' || 'img/info.png'}}"
                          ng-click="m_oController.ToggleInfoTool()"/>
-                </li>
+                </li-->
                 <!--sfondi-->
 
                 <li class="map-base-layer dropdown">
@@ -122,7 +122,7 @@
                         </li>
                         <li role="presentation">
                             <a class="basemaps-dropdown-menu-item" role="menuitem"
-                               ng-click="m_oController.setBaseLayer('BW')">{{'BW' | translate}}</a>
+                               ng-click="m_oController.setBaseLayer('BW')">{{'MAP_BW' | translate}}</a>
                         </li>
                     </ul>
                 </li>

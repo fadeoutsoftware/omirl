@@ -190,8 +190,8 @@
         <li class="menu-link"><a class='text-short' ng-click="m_oController.returnToTop()">{{'INDEX_HOME' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/maps')">{{'INDEX_DATI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/summarytable')">{{'INDEX_TABELLE' | translate}}</a></li>
-        <li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate }}</a></li>
-        <li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{ 'INDEX_MODELLI' | translate}}</a></li>
+        <li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{'INDEX_SATRADAR' | translate }}</a></li>
+        <li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_MODELLI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/credits')">{{ 'INDEX_CREDITI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/users')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_UTENTI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/periods')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_PERIODS' | translate}}</a></li>
@@ -302,7 +302,7 @@
                         </div>
                     </div-->
 
-                    <div class="col-md-2 col-md-offset-2 text-center">
+                    <div class="col-md-2 text-center" ng-class="{'col-md-offset-2': m_oController.m_oConstantsService.isUserAdministrator(), 'col-md-offset-4': !m_oController.m_oConstantsService.isUserAdministrator()}">
                         <div class="service-item">
                             <i class="service-icon fa fa-bar-chart-o" ng-click="m_oController.serviceIconClicked('/map')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/map')" style="cursor: pointer">{{'INDEX_DATI' | translate}}</a></h4>
@@ -316,14 +316,14 @@
                             <p>{{'INDEX_TEXT_TABELLE' | translate}}</p>
                         </div>
                     </div>
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">
                         <div class="service-item">
                             <i class="service-icon fa omirl-sat-ground" ng-click="m_oController.serviceIconClicked('/animations')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate}}</a></h4>
                             <p>{{'INDEX_TEXT_SATRADAR' | translate}}</p>
                         </div>
                     </div>
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">
                         <div class="service-item mod-meteo-marini">
                             <i class="service-icon fa fa-globe" ng-click="m_oController.serviceIconClicked('/modelsgallery')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{'INDEX_MODELLI' | translate}}</a></h4>
@@ -468,6 +468,7 @@
                 return false;
             }
         }
+
     }
 </script>
 <script>   

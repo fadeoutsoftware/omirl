@@ -5,11 +5,11 @@
 'use strict';
 angular.module('omirl.ConstantsService', []).
     service('ConstantsService', [function () {
-        //this.APIURL = 'http://localhost:8080/Omirl/rest';
+        this.APIURL = 'http://localhost:8080/Omirl/rest';
         //this.APIURL = 'http://omirltest.regione.liguria.it/Omirl/rest';
         //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        this.URL = 'http://93.62.155.217:8080/Omirl/';
-        this.APIURL = this.URL + '/rest';
+        //this.URL = 'http://omirltest.regione.liguria.it/Omirl/';
+        //this.APIURL = this.URL + '/rest';
         //this.WMSURL = 'http://93.62.155.217:8080/geoserver/wms';
         this.WMSURL = 'http://omirltest.regione.liguria.it/geoserver/wms';
 

@@ -654,7 +654,6 @@ var MapController = (function () {
                 oControllerVar.m_oMapService.map.addControl(oControllerVar.infoControls[i]);
             }
 
-
         });
 
 
@@ -663,8 +662,9 @@ var MapController = (function () {
 
     MapController.prototype.alignOpenLayerControllerToMap = function()
     {
-        if( this.m_oMapService && this.m_oMapService.map) {
-            this.m_oMapService.map.updateSize();
+        var oControllerVar = this;
+        if( oControllerVar.m_oMapService && oControllerVar.m_oMapService.map) {
+            oControllerVar.m_oMapService.map.updateSize();
         }
     }
 

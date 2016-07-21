@@ -1302,14 +1302,15 @@ a:hover, a:focus {
 }
 
 .max-table-green-cell {
-    background-color: transparent;
+    background-color: #ffffff !important;
 }
 
 .max-table-yellow-cell {
-    background-color: #ffff00 !important;
+    background-color: #878787 !important;
 }
 .max-table-red-cell {
-    background-color: red !important;
+    background-color: #030101 !important;
+    color: #ffffff !important;
 }
 
 .link-text-decoration-none
@@ -1438,5 +1439,18 @@ tbody.omirltbl td.odd {
 .tooltip.top{
     max-width: 200px !important;
     height: auto;
+}
+
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
 }
 

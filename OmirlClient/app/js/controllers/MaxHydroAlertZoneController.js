@@ -148,21 +148,12 @@ var MaxHydroAlertZoneController = (function() {
     }
 
     MaxHydroAlertZoneController.prototype.ConvertToLocalTime = function(date) {
-        var oDate = new Date(Date.parse(date));
 
-        var hours = oDate.getHours();
-        var minutes = oDate.getMinutes();
+        var utcDate = moment.utc(date).format('YYYY-MM-DDTHH:mm:ss')
+        var localTime  = moment.utc(utcDate).toDate();
+        localTime = moment(localTime).format('DD/MM/YYYY HH:mm');
+        return localTime;
 
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        }
-
-        hours =  oDate.getUTCHours();
-        if (hours < 10) {
-            hours = "0" + hours;
-        }
-
-        return oDate.toLocaleDateString('it-IT') + " " + hours + ":" + minutes;
     }
 
     MaxHydroAlertZoneController.prototype.ConvertToMeters = function(value) {
