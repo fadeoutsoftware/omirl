@@ -2198,8 +2198,8 @@ public class OmirlDaemon {
 
 			StationDataRepository oStationDataRepository = new StationDataRepository();
 
-			// trova il max e min temperatura di oggi x provincia
-			SummaryInfoEntity oGeMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("GE", oActualDate, "Genova");
+			// trova il max e min temperatura di oggi x provincia nelle centraline indicate da ARPAL
+			SummaryInfoEntity oGeMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("GE", oActualDate, "Genova", "CFUNZ");
 			DistrictSummaryInfo oDistrictSummaryGe = new DistrictSummaryInfo();
 			oDistrictSummaryGe.setDescription("Genova");
 
@@ -2216,7 +2216,7 @@ public class OmirlDaemon {
 				oDistrictSummaryGe.setRefDateMax(null);
 			}
 
-			SummaryInfoEntity oGeMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("GE", oActualDate, "Genova");
+			SummaryInfoEntity oGeMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("GE", oActualDate, "Genova", "CFUNZ");
 
 			if (oGeMin != null)
 			{
@@ -2235,7 +2235,7 @@ public class OmirlDaemon {
 
 
 
-			SummaryInfoEntity oSvMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SV", oActualDate, "Savona");
+			SummaryInfoEntity oSvMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SV", oActualDate, "Savona", "INASV");
 			DistrictSummaryInfo oDistrictSummarySv = new DistrictSummaryInfo();
 			oDistrictSummarySv.setDescription("Savona");
 
@@ -2252,7 +2252,7 @@ public class OmirlDaemon {
 				oDistrictSummarySv.setRefDateMax(null);
 			}
 
-			SummaryInfoEntity oSvMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SV", oActualDate, "Savona");
+			SummaryInfoEntity oSvMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SV", oActualDate, "Savona", "INASV");
 
 			if (oSvMin != null)
 			{
@@ -2271,7 +2271,7 @@ public class OmirlDaemon {
 
 
 
-			SummaryInfoEntity oImMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("IM", oActualDate, "Imperia");
+			SummaryInfoEntity oImMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("IM", oActualDate, "Imperia", "IMPER");
 			DistrictSummaryInfo oDistrictSummaryIm = new DistrictSummaryInfo();
 			oDistrictSummaryIm.setDescription("Imperia");
 
@@ -2288,7 +2288,7 @@ public class OmirlDaemon {
 				oDistrictSummaryIm.setRefDateMax(null);
 			}
 
-			SummaryInfoEntity oImMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("IM", oActualDate, "Imperia");
+			SummaryInfoEntity oImMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("IM", oActualDate, "Imperia" , "IMPER");
 
 			if (oImMin != null)
 			{
@@ -2307,7 +2307,7 @@ public class OmirlDaemon {
 
 
 
-			SummaryInfoEntity oSpMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SP", oActualDate, "La Spezia");
+			SummaryInfoEntity oSpMax = oStationDataRepository.getDistrictMaxTemperatureSummaryInfo("SP", oActualDate, "La Spezia", "SPZIA");
 			DistrictSummaryInfo oDistrictSummarySp = new DistrictSummaryInfo();
 			oDistrictSummarySp.setDescription("La Spezia");
 
@@ -2324,7 +2324,7 @@ public class OmirlDaemon {
 				oDistrictSummarySp.setRefDateMax(null);
 			}
 
-			SummaryInfoEntity oSpMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SP", oActualDate, "La Spezia");
+			SummaryInfoEntity oSpMin = oStationDataRepository.getDistrictMinTemperatureSummaryInfo("SP", oActualDate, "La Spezia", "SPZIA");
 
 			if (oSpMin!=null)
 			{
