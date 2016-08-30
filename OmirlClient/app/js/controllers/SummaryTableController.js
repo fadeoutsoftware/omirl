@@ -21,6 +21,8 @@ var SummaryTableController = (function() {
         this.m_aoWindReturn = [];
 
         this.m_oLastDateRef = "";
+        this.m_oLastDateRefVento = "";
+        
 
         var oControllerVar = this;
 
@@ -124,6 +126,11 @@ var SummaryTableController = (function() {
     SummaryTableController.prototype.getDayString = function () {
 
         return this.m_oScope.m_oController.m_oLastDateRef;
+    }
+
+    SummaryTableController.prototype.getDayStringVento = function () {
+
+        return this.m_oScope.m_oController.m_oLastDateRefVento;
     }
 
     SummaryTableController.prototype.stationClicked = function(sName, sSensorType) {
