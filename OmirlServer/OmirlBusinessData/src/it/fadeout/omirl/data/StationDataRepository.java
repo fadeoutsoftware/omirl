@@ -213,7 +213,7 @@ public class StationDataRepository extends Repository<StationData>{
 		return aoLastValues;		
 	}
 
-	public SummaryInfoEntity getDistrictMaxTemperatureSummaryInfo(String sDistrict, Date oDate, String sMunicipality)
+	public SummaryInfoEntity getDistrictMaxTemperatureSummaryInfo(String sDistrict, Date oDate, String sMunicipality, String sStationCode)
 	{
 		Session oSession = null;
 		SummaryInfoEntity oSummaryInfoEntity = null;
@@ -230,7 +230,7 @@ public class StationDataRepository extends Repository<StationData>{
 
 			oSession = HibernateUtils.getSessionFactory().openSession();
 
-			String sQuery = "select station_data.max_air_temp as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where district = '"+sDistrict+"' and municipality = '"+sMunicipality+"' and station_data.max_air_temp is not null and reference_date >= ? order by value desc limit 1";
+			String sQuery = "select station_data.max_air_temp as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where district = '"+sDistrict+"' and municipality = '"+sMunicipality+"' and station_anag.station_code = '"+sStationCode+"' and station_data.max_air_temp is not null and reference_date >= ? order by value desc limit 1";
 
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(SummaryInfoEntity.class);
 			oQuery.setParameter(0, oDate);
@@ -253,7 +253,7 @@ public class StationDataRepository extends Repository<StationData>{
 	}
 
 
-	public SummaryInfoEntity getDistrictMinTemperatureSummaryInfo(String sDistrict, Date oDate, String sMunicipality)
+	public SummaryInfoEntity getDistrictMinTemperatureSummaryInfo(String sDistrict, Date oDate, String sMunicipality, String sStationCode)
 	{
 		Session oSession = null;
 		SummaryInfoEntity oSummaryInfoEntity = null;
@@ -270,7 +270,7 @@ public class StationDataRepository extends Repository<StationData>{
 
 			oSession = HibernateUtils.getSessionFactory().openSession();
 
-			String sQuery = "select station_data.min_air_temp as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where district = '"+sDistrict+"' and municipality = '"+sMunicipality+"' and station_data.min_air_temp is not null and reference_date >= ? order by value limit 1";
+			String sQuery = "select station_data.min_air_temp as value, station_data.reference_date, station_anag.name as station_name from station_data inner join station_anag on station_data.station_code = station_anag.station_code where district = '"+sDistrict+"' and municipality = '"+sMunicipality+"' and station_anag.station_code = '"+sStationCode+"' and station_data.min_air_temp is not null and reference_date >= ? order by value limit 1";
 
 			Query oQuery = oSession.createSQLQuery(sQuery).addEntity(SummaryInfoEntity.class);
 			oQuery.setParameter(0, oDate);
