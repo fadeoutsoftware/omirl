@@ -923,6 +923,31 @@ var MapController = (function () {
             oEntry.selected = false;
         });
 
+        //S.Adamo: Tappullo per sistemare il problema dello switch dei pulsanti fra radar e satellite
+        if (oController.m_aoMenuDirectives[oController.MENU_RADAR])
+            oController.m_aoMenuDirectives[oController.MENU_RADAR].resetDirectiveSelections();
+        if (oController.m_aoMenuDirectives[oController.MENU_SATELLITE])
+            oController.m_aoMenuDirectives[oController.MENU_SATELLITE].resetDirectiveSelections();
+        if(oController.m_oSelectedRadarLink) {
+            if (oController.m_oSelectedRadarLink.selected)
+                oController.m_oSelectedRadarLink.selected = false;
+            oController.m_oSelectedRadarLink = null;
+            oController.m_oSelectedRadarLink = null;
+            oController.m_bRadarLayerActive = false;
+            oController.m_sRadarLegendPath = "";
+            oController.m_sRadarLegendTooltip = "";
+            oController.m_sRadarLegendIconPath = "";
+        }
+        if(oController.m_oSelectedSatelliteLink) {
+            if (oController.m_oSelectedSatelliteLink.selected)
+                oController.m_oSelectedSatelliteLink.selected = false;
+            oController.m_oSelectedSatelliteLink = null;
+            oController.m_oSelectedSatelliteLink = null;
+            oController.m_bSatelliteLayerActive = false;
+            oController.m_sSatelliteLegendPath = "";
+            oController.m_sSatelliteLegendTooltip = "";
+            oController.m_sSatelliteLegendIconPath = "";
+        }
 
         // We are in the first level?
         if (oController.m_bIsFirstLevel) {
@@ -2861,8 +2886,8 @@ var MapController = (function () {
     MapController.prototype.RadarLinkClicked = function(oRadarLink, oController)
     {
         if( !oController )
-            oController = this;        
-        
+            oController = this;
+
         // Hydro Link = null stands for back: impossible to have back on first level
         if (oController.m_bIsRadarFirstLevel && oRadarLink == null) return;
 
@@ -2899,7 +2924,13 @@ var MapController = (function () {
             oEntry.selected = false;
         });
 
-
+        if (oController.m_aoMenuDirectives[oController.MENU_SATELLITE])
+            oController.m_aoMenuDirectives[oController.MENU_SATELLITE].resetDirectiveSelections();
+        if(oController.m_oSelectedSatelliteLink) {
+            if (oController.m_oSelectedSatelliteLink.selected)
+                oController.m_oSelectedSatelliteLink.selected = false;
+            oController.m_oSelectedSatelliteLink = null;
+        }
 
         // We are in the first level?
         if (oController.m_bIsRadarFirstLevel)
@@ -2921,7 +2952,7 @@ var MapController = (function () {
 
                 // Get second level from server
                 oController.m_oMapNavigatorService.getRadarSecondLevels(oRadarLink.linkCode).success(function(data,status) {
-                    
+
                     //******************************************************************
                     // Add the flag to indicate the menu link item level and 
                     // if the menu link has a sub-level.
@@ -2933,7 +2964,7 @@ var MapController = (function () {
                         data[key].myLevel = 2;
                     }
                     //******************************************************************
-                    
+
                     // Second Level Icons
                     oControllerVar.m_aoRadarLinks = data;
                     oControllerVar.m_aoMenuLinks[oControllerVar.MENU_RADAR][oControllerVar.MENU_LEVEL_2] = data;
@@ -3078,6 +3109,14 @@ var MapController = (function () {
 
     MapController.prototype.switchRadarLinkState = function(bIsSelected, oRadarLink) {
 
+        // Remove from the map
+        oRadarLink.selected = false;
+        if (this.m_oLayerService.getDynamicLayer() != null) {
+            this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+            this.m_oLayerService.setDynamicLayer(null);
+            this.m_bDynamicLayerActive = false;
+        }
+
         if (!bIsSelected)
         {
             // TODO: Qui pulire direttiva Mappe e Satelliti
@@ -3089,7 +3128,11 @@ var MapController = (function () {
 
             this.m_oSelectedMapLink = null;
             this.m_oSelectedSatelliteLink = null;
-            
+            this.m_bSatelliteLayerActive = false;
+            this.m_sSatelliteLegendPath = "";
+            this.m_sSatelliteLegendTooltip = "";
+            this.m_sSatelliteLegendIconPath = "";
+
             this.setSelectedRadarLinkOnScreen(this,oRadarLink);
             this.selectedRadarSatDynamicLayer(oRadarLink, "none");
             //alert('attivo ' + oRadarLink.description);
@@ -3097,12 +3140,7 @@ var MapController = (function () {
         else
         {
 
-            // Remove from the map
-            oRadarLink.selected = false;
-            if (this.m_oLayerService.getDynamicLayer() != null) {
-                this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
-                this.m_oLayerService.setDynamicLayer(null);
-            }
+
 
             //alert('DISattivo ' + oRadarLink.description);
 
@@ -3202,6 +3240,15 @@ var MapController = (function () {
         oController.m_aoSatelliteLinks.forEach(function(oEntry) {
             oEntry.selected = false;
         });
+
+        //S.Adamo: Tappullo per sistemare il problema dello switch dei pulsanti fra radar e satellite
+        if (oController.m_aoMenuDirectives[oController.MENU_RADAR])
+            oController.m_aoMenuDirectives[oController.MENU_RADAR].resetDirectiveSelections();
+        if(oController.m_oSelectedRadarLink) {
+            if (oController.m_oSelectedRadarLink.selected)
+                oController.m_oSelectedRadarLink.selected = false;
+            oController.m_oSelectedRadarLink = null;
+        }
 
         // We are in the first level?
         if (oController.m_bIsSatelliteFirstLevel)
@@ -3387,6 +3434,14 @@ var MapController = (function () {
      * @param oSatelliteLink
      */
     MapController.prototype.switchSatelliteLinkState = function(bIsSelected, oSatelliteLink) {
+
+        // Remove from the map
+        if (this.m_oLayerService.getDynamicLayer() != null) {
+            this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
+            this.m_oLayerService.setDynamicLayer(null);
+            this.m_bDynamicLayerActive = false;
+        }
+
         if (!bIsSelected)
         {
             // TODO: Qui pulire direttiva Mappe e Radar
@@ -3398,7 +3453,11 @@ var MapController = (function () {
 
             this.m_oSelectedMapLink = null;
             this.m_oSelectedRadarLink = null;
-            
+            this.m_bRadarLayerActive = false;
+            this.m_sRadarLegendPath = "";
+            this.m_sRadarLegendTooltip = "";
+            this.m_sRadarLegendIconPath = "";
+
             this.setSelectedSatelliteLinkOnScreen(this,oSatelliteLink);
             this.selectedRadarSatDynamicLayer(oSatelliteLink, "none");
             //alert('attivo ' + oSatelliteLink.description);
@@ -3406,12 +3465,7 @@ var MapController = (function () {
         else
         {
 
-            // Remove from the map
             oSatelliteLink.selected = false;
-            if (this.m_oLayerService.getDynamicLayer() != null) {
-                this.m_oMapService.map.removeLayer(this.m_oLayerService.getDynamicLayer());
-                this.m_oLayerService.setDynamicLayer(null);
-            }
 
             //alert('DISattivo ' + oSatelliteLink.description);
 
@@ -3422,6 +3476,7 @@ var MapController = (function () {
             this.m_sSatelliteLegendIconPath = "";
 
             this.m_oSelectedSatelliteLink = null;
+
         }
     }
 

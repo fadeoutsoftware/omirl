@@ -517,6 +517,34 @@
                     </ul>
                 </a>
             </div>
+            <div class="map-legend-map" ng-show="m_oController.m_bSatelliteLayerActive" >
+                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSatelliteLegendTooltip | translate}}" ng-click="m_oController.mapLegendClicked()">
+                    <ul>
+                        <li>
+                            <img class="map-legend-icon" src="{{m_oController.m_sSatelliteLegendIconPath}}" >
+                        </li>
+                        <li>
+                            <img class="map-legend-image" src="{{m_oController.m_sSatelliteLegendPath}}"
+                                 ng-show="m_oController.m_bShowMapLegendImage">
+                        </li>
+                        <li class="clearfix"></li>
+                    </ul>
+                </a>
+            </div>
+            <div class="map-legend-map" ng-show="m_oController.m_bRadarLayerActive" >
+                <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sRadarLegendTooltip | translate}}" ng-click="m_oController.mapLegendClicked()">
+                    <ul>
+                        <li>
+                            <img class="map-legend-icon" src="{{m_oController.m_sRadarLegendIconPath}}" >
+                        </li>
+                        <li>
+                            <img class="map-legend-image" src="{{m_oController.m_sRadarLegendPath}}"
+                                 ng-show="m_oController.m_bShowMapLegendImage">
+                        </li>
+                        <li class="clearfix"></li>
+                    </ul>
+                </a>
+            </div>
 
             <div class="map-legend-stations" ng-show="m_oController.m_bSensorLayerActive">
                 <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip | translate}}"  ng-click="m_oController.sensorsLegendClicked()">
