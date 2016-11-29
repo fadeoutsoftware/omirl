@@ -84,16 +84,6 @@
                          ng-src="{{m_oController.m_bIsWeatherActive == true && 'img/chetempofa_on3.png' || 'img/chetempofa.png'}}"
                          ng-click="m_oController.ToggleWeatherLayer()"/>
                 </li-->
-                <!--li class="map-weather-panel-icon info-tool"
-                    ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsInfoActive}"
-                    tooltip-popup-delay="500"
-                    tooltip-class="info-tool"
-                    tooltip-placement="top-right"
-                    tooltip="{{'MAP_T_INFO' | translate}}">
-                    <img class="img-map-firstlevel-icon"
-                         ng-src="{{m_oController.m_bIsInfoActive == true && 'img/infoon.png' || 'img/info.png'}}"
-                         ng-click="m_oController.ToggleInfoTool()"/>
-                </li-->
                 <!--sfondi-->
 
                 <li class="map-base-layer dropdown">
@@ -150,7 +140,17 @@
                        ng-click="m_oController.resetZoomClick()"><i class="fa fa-arrows-alt"></i></a>
                 </li>
 
-
+                <!-- Info Button -->
+                <li class="map-weather-panel-icon info-tool"
+                    ng-class="{'map-firstlevel-icon-selected': m_oController.m_bIsInfoActive}"
+                    tooltip-popup-delay="500"
+                    tooltip-class="info-tool"
+                    tooltip-placement="top-right"
+                    tooltip="{{'MAP_T_INFO' | translate}}">
+                    <img class="img-map-firstlevel-icon"
+                         ng-src="{{m_oController.m_bIsInfoActive == true && 'img/infoon.png' || 'img/info.png'}}"
+                         ng-click="m_oController.ToggleInfoTool()"/>
+                </li>
             </ul>
             <br/>
 
