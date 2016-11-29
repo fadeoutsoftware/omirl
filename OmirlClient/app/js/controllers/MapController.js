@@ -684,31 +684,31 @@ var MapController = (function () {
     MapController.prototype.askInfo = function(evt) {
         console.log('ask');
 
-        /*
-        var url =  layer_group.getFullRequestString({
-            REQUEST: "GetFeatureInfo",
-            EXCEPTIONS: "application/vnd.ogc.se_xml",
-            BBOX: layer_group.map.getExtent().toBBOX(),
-            X: e.xy.x,
-            Y: e.xy.y,
-            INFO_FORMAT: 'text/html',
-            QUERY_LAYERS: layer_group.params.LAYERS,
-            WIDTH: layer_group.map.size.w,
-            HEIGHT: layer_group.map.size.h});
+        var sGetFeatureInfoUrl = this.m_oLayerService.getQueryLayers(evt);
 
-        window.open(url,
-            "getfeatureinfo",
-            "location=0,status=0,scrollbars=1,width=600,height=150"
-        );
-        */
+        // Qui ho messo il window open perchè non mi andava chiamata asincrona che sarebbe tipo:
+        // this.m_oMapNavigatorService.getFeaturesInfo(url).success(function (data,status){...})
+
+
+        if (sGetFeatureInfoUrl!="") {
+            window.open(sGetFeatureInfoUrl,
+                "getfeatureinfo",
+                "location=0,status=0,scrollbars=1,width=600,height=150"
+            );
+        }
     }
 
     MapController.prototype.showInfo = function(evt) {
+
+        // TODO: Inoltre questa showInfo io non la sto usando. Forse c'è un modo per fare chiamare a lui il nostro url, ma per ora ce ne possiamo fregare direi.
+
         console.log(evt.text);
 
+        /*
         vex.dialog.alert({
             message: evt.text,
         });
+        */
 
         /*
         var oControllerVar = this;
@@ -2263,7 +2263,7 @@ var MapController = (function () {
      */
     MapController.prototype.getHydroLinks = function()
     {
-        debugger;
+
         if (this.m_bIsHydroFirstLevel)
         {
             this.m_aoHydroLinks = this.m_oMapNavigatorService.getHydroFirstLevels();

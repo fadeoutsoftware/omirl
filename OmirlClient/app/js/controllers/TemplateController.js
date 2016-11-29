@@ -195,48 +195,10 @@ var TemplateController = (function() {
         var oController = this;
 
         this.m_oAuthService.login(this.credentials).success(function(data, status) {
-/*
-            oController.credentials.userPassword = "";
 
-            if (!angular.isDefined(data)) data = {};
-            oController.m_oConstantsService.setUser(data);
-
-            if (oController.m_oConstantsService.isUserLogged()) {
-                oController.credentials.userId = "";
-                oController.m_oTranslateService('INDEX_BENVENUTO', {nome: oController.m_oConstantsService.getUser().name}).then(function(text){
-                    oController.ReservedAreaText = text;
-                });
-                oController.m_bShowLogin = false;
-                oController.m_bShowLogout = true;
-                oController.m_bLoginError = false;
-
-                //oController.serviceIconClicked(oController.m_sLastPath);
-                var oCurrentTemplate = oController.m_oRoute.current.templateUrl;
-                oController.m_oTemplateCache.remove(oCurrentTemplate);
-                oController.m_oScope.$broadcast("$locationChangeStart");
-                oController.m_oRoute.reload();
-            }
-            else {
-                oController.m_bLoginError = true;
-                oController.ReservedAreaText = oController.ReservedAreaTextConstant;
-                oController.m_sLoginMessage = "INDEX_LOGINCRNONCORR";
-            }
-
-            oController.m_oTableService.refreshTableLinks();
-            oController.m_bLoading = false;*/
             oController.loginresult(data,false);
         }).error(function(data, status) {
-            /*
-            //oController.credentials.userId = "";
-            oController.credentials.userPassword = "";
 
-            oController.m_bLoginError = true;
-            oController.m_oConstantsService.setUser(null);
-            oController.ReservedAreaText = oController.ReservedAreaTextConstant;
-            oController.m_sLoginMessage = "INDEX_LOGINCRNONCORR";
-
-            oController.m_bLoading = false;
-            */
             oController.loginresult(data,true);
         });
 

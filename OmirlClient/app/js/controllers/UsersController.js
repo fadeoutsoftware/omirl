@@ -81,7 +81,7 @@ var UsersController = (function() {
             var oUser = {
                 name: '',
                 password: '',
-                role: 2,
+                role: 3,
                 userId: ''
             };
 
@@ -106,7 +106,7 @@ var UsersController = (function() {
                         var oUser = {
                             name: '',
                             password: '',
-                            role: 2,
+                            role: 3,
                             userId: ''
                         };
 

@@ -23,13 +23,22 @@ service('PeriodService', ['$http', 'ConstantsService',  function ($http, oConsta
         return this.m_bModified;
     };
 
+    this.ConvertToLocalTime = function(date) {
+        var utcDate = moment.utc(date).format('YYYY-MM-DDTHH:mm:ss')
+        var localTime  = moment.utc(utcDate).toDate();
+        localTime = moment(localTime).format('DD/MM/YYYY HH:mm');
+        return localTime;
+    }
+
     this.loadPeriods  = function() {
         var oPeriodsService = this;
         this.m_oHttp.get(this.APIURL + '/periods/load/').success(function(data){
-            if (data == '' || data == null)
+            if (data == '' || data == null) {
                 oPeriodsService.m_aoPeriods = [];
-            else
+            }
+            else {
                 oPeriodsService.m_aoPeriods = data;
+            }
         });
     };
 

@@ -217,6 +217,10 @@ angular.module('omirl.mapNavigatorService', ['omirl.ConstantsService']).
             return this.m_oHttp.get(this.APIURL + '/mapnavigator/satellitethird/'+linkCode);
         }
 
+        this.getFeaturesInfo = function (url) {
+            return this.m_oHttp.get(url);
+        }
+
         // TEST Code with hard-coded json
 /*
 
