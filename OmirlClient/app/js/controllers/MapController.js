@@ -15,24 +15,37 @@ var MapController = (function () {
         this.m_oLayerService = layerService;
         this.m_oMapService = mapService;
         this.m_oMapNavigatorService = oMapNavigatorService;
-        this.m_oStationsService  = oStationsService;
+        this.m_oStationsService = oStationsService;
         this.m_oDialogService = oDialogService;
         this.m_oChartService = oChartService;
         this.m_oConstantsService = oConstantsService;
         this.m_oInterval = $interval;
-        this.m_oLog =$log;
+        this.m_oLog = $log;
         this.m_oLocation = $location;
         this.m_oTableService = oTableService;
         this.m_oHydroService = oHydroService;
-        this.m_oMapLayerService= oMapLayerService;
+        this.m_oMapLayerService = oMapLayerService;
         this.m_oTranslateService = $translate;
         // Flag to know if maps first level is shown
         this.m_bIsFirstLevel = true;
         // Flag to know if hydro first level is shown
         this.m_bIsHydroFirstLevel = true;
         this.m_iHydroLevel = 1;
-        
-        
+
+        //flag for init map complete
+        $scope.m_bInitMapComplete = false;
+
+        this.m_sBaseInfoTemplate = "<html><head><title>Geoserver GetFeatureInfo output</title></head>" +
+            "<style type='text/css'>table.featureInfo, table.featureInfo td, table.featureInfo th {border:1px solid #ddd;border-collapse:collapse;margin:0;padding:0;font-size: 90%;padding:.2em .1em;} " +
+            "table.featureInfo th {padding:.2em .2em;font-weight:bold;background:#eee;} table.featureInfo td{background:#fff;}table.featureInfo tr.odd td{background:#eee;} table.featureInfo caption{text-align:left;font-size:100%;font-weight:bold;padding:.2em .2em;} " +
+            "</style><body>[TABLES]<br/></body></html>";
+
+        this.m_sTableTemplate = "<table class='featureInfo'>" +
+            "<caption class='featureInfo'>[CAPTION]</caption>" +
+            "<tr>[HEADER]</tr><tr>[CELLS]</tr></table>";
+
+        this.m_sCurrentInfoTemplate = this.m_sBaseInfoTemplate;
+
         //**********************************************************************
         //* Variable and methods used with the menu directive
         //**********************************************************************
@@ -44,70 +57,82 @@ var MapController = (function () {
         this.MENU_LEVEL_1 = 0;
         this.MENU_LEVEL_2 = 1;
         this.MENU_LEVEL_3 = 2;
-        
+
         //this.m_aoSensorsLinksForDirective = null;
         this.m_aoMenuDirectives = {};
-        
+
         this.m_aoMenuLinks = [];
         this.m_aoMenuLinks[this.MENU_SENSORS] = [];
-            this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_1] = [];
-            this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_3] = [];
-            this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_1] = [];
+        this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_SENSORS][this.MENU_LEVEL_3] = [];
         this.m_aoMenuLinks[this.MENU_MAPS] = [];
-            this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_1] = [];
-            this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_3] = [];
-            this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_1] = [];
+        this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_MAPS][this.MENU_LEVEL_3] = [];
         this.m_aoMenuLinks[this.MENU_HYDRO] = [];
-            this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_1] = [];
-            this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_3] = [];
-            this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_1] = [];
+        this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_HYDRO][this.MENU_LEVEL_3] = [];
         this.m_aoMenuLinks[this.MENU_RADAR] = [];
-            this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_1] = [];
-            this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_3] = [];
-            this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_1] = [];
+        this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_RADAR][this.MENU_LEVEL_3] = [];
         this.m_aoMenuLinks[this.MENU_SATELLITE] = [];
-            this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_1] = [];
-            this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_3] = [];
-            this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_3] = [];
-        
+        this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_1] = [];
+        this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_3] = [];
+        this.m_aoMenuLinks[this.MENU_SATELLITE][this.MENU_LEVEL_3] = [];
+
         // *** Methods ***
-        this.onPropertyChanged = function (name, newVal)
-        {
-            if(newVal)
-                $rootScope.$broadcast(name, {newValue : newVal});
+        this.onPropertyChanged = function (name, newVal) {
+            if (newVal)
+                $rootScope.$broadcast(name, {newValue: newVal});
             else
                 $rootScope.$broadcast(name);
         };
-        
-        
+
+
         //**********************************************************************
         //* Variables listeners
         //**********************************************************************
         // Listeners to watch "menu 1st level links"        
-        $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getMapFirstLevels(); }, function(newValue){
+        $scope.$watch(function () {
+            return $scope.m_oController.m_oMapNavigatorService.getMapFirstLevels();
+        }, function (newValue) {
             console.debug("[MapController] m_oController.m_oMapNavigatorService.getMapFirstLevels", newValue);
             $scope.m_oController.m_aoMapLinks = newValue;
             $scope.m_oController.m_aoMenuLinks[$scope.m_oController.MENU_MAPS][$scope.m_oController.MENU_LEVEL_1] = newValue;
         });
-        
-        $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getHydroFirstLevels(); }, function(newValue){
+
+        $scope.$watch(function () {
+            return $scope.m_oController.m_oMapNavigatorService.getHydroFirstLevels();
+        }, function (newValue) {
             console.debug("[MapController] m_oController.m_oMapNavigatorService.getHydroFirstLevels()", newValue);
             $scope.m_oController.m_aoMenuLinks[$scope.m_oController.MENU_HYDRO][$scope.m_oController.MENU_LEVEL_1] = newValue;
         });
-        
-        $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getRadarFirstLevels(); }, function(newValue){
+
+        $scope.$watch(function () {
+            return $scope.m_oController.m_oMapNavigatorService.getRadarFirstLevels();
+        }, function (newValue) {
             console.debug("[MapController] m_oController.m_oMapNavigatorService.getRadarFirstLevels()", newValue);
             $scope.m_oController.m_aoMenuLinks[$scope.m_oController.MENU_RADAR][$scope.m_oController.MENU_LEVEL_1] = newValue;
         });
-        
-        $scope.$watch(function(){ return $scope.m_oController.m_oMapNavigatorService.getSatelliteFirstLevels(); }, function(newValue){
+
+        $scope.$watch(function () {
+            return $scope.m_oController.m_oMapNavigatorService.getSatelliteFirstLevels();
+        }, function (newValue) {
             console.debug("[MapController] m_oController.m_oMapNavigatorService.getSatelliteFirstLevels()", newValue);
             $scope.m_oController.m_aoMenuLinks[$scope.m_oController.MENU_SATELLITE][$scope.m_oController.MENU_LEVEL_1] = newValue;
         });
+        $scope.$watch('m_bInitMapComplete', function (newValue, oldValue) {
+            if (newValue == true){
+                oControllerVar.m_oMapService.map.updateSize();
+                console.log('initmapcomplete');
+            }
+        });
 
         //**********************************************************************
-        
-        
+
 
         var oControllerVar = this;
 
@@ -141,7 +166,7 @@ var MapController = (function () {
         this.m_sMapLegendIconPath = "";
         //Legend prefix
         this.m_sLegendPrefix = "";
-        this.m_oTranslateService('MAP_LEGENDTOOLTIP').then(function(text){
+        this.m_oTranslateService('MAP_LEGENDTOOLTIP').then(function (text) {
             oControllerVar.m_sLegendPrefix = text;
         });
 
@@ -254,13 +279,15 @@ var MapController = (function () {
 
             // Create Base Layers
             var oBaseLayer1 = new OpenLayers.Layer.Google("Physical", {type: google.maps.MapTypeId.TERRAIN});
-            var oBaseLayer2 = new OpenLayers.Layer.Google("Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
+            var oBaseLayer2 = new OpenLayers.Layer.Google("Hybrid", {
+                type: google.maps.MapTypeId.HYBRID,
+                numZoomLevels: 20
+            });
             var oBaseLayer3 = new OpenLayers.Layer.Google("Streets", {numZoomLevels: 20});
-            var oBaseLayer4 = new OpenLayers.Layer.Google("Satellite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20});
-
-
-
-
+            var oBaseLayer4 = new OpenLayers.Layer.Google("Satellite", {
+                type: google.maps.MapTypeId.SATELLITE,
+                numZoomLevels: 20
+            });
 
             // OSM tiles
             var layerBW = new OpenLayers.Layer.XYZ(
@@ -295,13 +322,13 @@ var MapController = (function () {
         // Set map height
         var mapHeight = $("#top").height();// - $("#yr-map-header").outerHeight() - $("#yr-map-footer").outerHeight();
 
-        if( typeof( window.innerHeight ) == 'number' ) {
+        if (typeof( window.innerHeight ) == 'number') {
             //Non-IE
             mapHeight = window.innerHeight;
-        } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+        } else if (document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight )) {
             //IE 6+ in 'standards compliant mode'
             mapHeight = document.documentElement.clientHeight;
-        } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+        } else if (document.body && ( document.body.clientWidth || document.body.clientHeight )) {
             //IE 4 compatible
             mapHeight = document.body.clientHeight;
         }
@@ -316,10 +343,8 @@ var MapController = (function () {
         // Get Reference Date e Now Mode
         this.m_bNowMode = true;
 
-        if (this.m_oConstantsService.getReferenceDate() != null)
-        {
-            if (this.m_oConstantsService.getReferenceDate() != "")
-            {
+        if (this.m_oConstantsService.getReferenceDate() != null) {
+            if (this.m_oConstantsService.getReferenceDate() != "") {
                 this.m_oReferenceDate = this.m_oConstantsService.getReferenceDate();
                 this.m_bNowMode = false;
             }
@@ -332,7 +357,7 @@ var MapController = (function () {
         if (this.m_oConstantsService.isUserLogged()) {
             this.m_oMapNavigatorService.fetchHydroFirstLevels();
 
-            this.m_oMapNavigatorService.getFlattedHydro().success(function(data, status) {
+            this.m_oMapNavigatorService.getFlattedHydro().success(function (data, status) {
 
                 oControllerVar.m_oConstantsService.setFlattedHydroLinks(data);
 
@@ -362,28 +387,25 @@ var MapController = (function () {
             // if the menu link has a sub-level.
             // or not. These parametere should come from server but, at the
             // moment, are initialized here
-            for(var key in data)
-            {
+            for (var key in data) {
                 data[key].hasSubLevel = false;
                 data[key].myLevel = oControllerVar.MENU_LEVEL_1;
             }
             //******************************************************************
 
 
-
             // Remember links
-            for (var iElement = 0; iElement < data.length; iElement++)
-            {
+            for (var iElement = 0; iElement < data.length; iElement++) {
                 var oSensorLink = data[iElement];
-                
+
                 oControllerVar.m_aoSensorsLinks.push(oSensorLink);
                 oControllerVar.m_oConstantsService.pushToSensorLinks(oSensorLink);
             }
             oControllerVar.m_bStationsReceived = true;
-            
+
             //oControllerVar.m_aoSensorsLinksForDirective = oControllerVar.m_aoSensorsLinks;
             oControllerVar.m_aoMenuLinks[oControllerVar.MENU_SENSORS][oControllerVar.MENU_LEVEL_1] = oControllerVar.m_aoSensorsLinks;
-            
+
             // Ok we can init the map
             oControllerVar.FireInitEvent(oControllerVar);
 
@@ -412,8 +434,7 @@ var MapController = (function () {
         /**
          * Perform the UI alignment of the legend icon and palette
          */
-        this.alignStationLegend = function ()
-        {
+        this.alignStationLegend = function () {
             var oLegendContainer = $("#stations-legend-container");
             var oLegendIcon = $("#stations-legend-container .sensor-legend-icon");
             var oLegendPalette = $("#stations-legend-container .map-legend-image");
@@ -424,8 +445,7 @@ var MapController = (function () {
             //var iDiff = iLegendContainerHeight - iLegendIconHeight;
             var iDiff = iPaletteHeight - iLegendIconHeight;
 
-            if( iDiff > 0)
-            {
+            if (iDiff > 0) {
                 oLegendIcon.css({
                     "margin-top": Math.floor(iDiff / 2)
                 });
@@ -434,17 +454,15 @@ var MapController = (function () {
         }
 
 
-
         // Add Auto Refresh Interval Callback
-        this.m_oStopTimerPromise = this.m_oInterval(function() {
+        this.m_oStopTimerPromise = this.m_oInterval(function () {
                 /*
-                if (oControllerVar.m_oSelectedSensorLink != null) {
-                    oControllerVar.showStationsLayer(oControllerVar.m_oSelectedSensorLink);
-                }
-                */
+                 if (oControllerVar.m_oSelectedSensorLink != null) {
+                 oControllerVar.showStationsLayer(oControllerVar.m_oSelectedSensorLink);
+                 }
+                 */
 
-                if (oControllerVar.m_oConstantsService.isNowMode())
-                {
+                if (oControllerVar.m_oConstantsService.isNowMode()) {
                     oControllerVar.m_oReferenceDate = new Date();
                 }
 
@@ -457,13 +475,16 @@ var MapController = (function () {
         this.m_oMapService.callbackArg = this;
         this.m_oMapService.readyCallback = this.MapReadyCallback;
 
-        this.infoControls = {
-            click: new OpenLayers.Control.WMSGetFeatureInfo({
-                url: this.m_oConstantsService.getWMSURL(),
+
+        this.infoControls =
+            new OpenLayers.Control.WMSGetFeatureInfo({
+                url: oControllerVar.m_oConstantsService.getWMSURL(),
                 title: 'Layer Info',
-                queryVisible: true
-            })
-        };
+                queryVisible: true,
+                layers: []
+
+            });
+
 
         // When we are leaving the page....
         $scope.$on('$locationChangeStart', function (event, next, current) {
@@ -488,8 +509,7 @@ var MapController = (function () {
             oControllerVar.m_oInterval.cancel(oControllerVar.m_oStopTimerPromise);
         });
 
-        this.m_oScope.$on('mapInitComplete', function (event, next, current)
-        {
+        this.m_oScope.$on('mapInitComplete', function (event, next, current) {
 
 
             if (oControllerVar.m_oConstantsService.getIsMiniVersion()) {
@@ -502,10 +522,8 @@ var MapController = (function () {
             // Check if there is a user logged
             var oUser = oControllerVar.m_oConstantsService.getUser();
             var bDataSet = false;
-            if (angular.isDefined(oUser))
-            {
-                if (oUser != null)
-                {
+            if (angular.isDefined(oUser)) {
+                if (oUser != null) {
                     bDataSet = true;
 
                     // Check Map Center
@@ -514,20 +532,17 @@ var MapController = (function () {
                     var iZoom = oUser.defaultZoom;
 
                     // If the user just logged, load defaults
-                    if (!oControllerVar.m_oConstantsService.getJustLogged())
-                    {
+                    if (!oControllerVar.m_oConstantsService.getJustLogged()) {
                         // Old Zoom
-                        if (oControllerVar.m_oConstantsService.getMapZoom()!=null)
-                        {
+                        if (oControllerVar.m_oConstantsService.getMapZoom() != null) {
                             iZoom = oControllerVar.m_oConstantsService.getMapZoom();
                         }
 
                         // Old Center
-                        if (oControllerVar.m_oConstantsService.getMapCenter()!=null)
-                        {
+                        if (oControllerVar.m_oConstantsService.getMapCenter() != null) {
                             var oCenter = oControllerVar.m_oConstantsService.getMapCenter();
 
-                            var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+                            var epsg4326 = new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
                             var projectTo = oControllerVar.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
 
                             // Tranform the point
@@ -538,51 +553,43 @@ var MapController = (function () {
                         }
 
                         // Sensor Layer
-                        if (oControllerVar.m_oConstantsService.getSensorLayerActive()!=null)
-                        {
+                        if (oControllerVar.m_oConstantsService.getSensorLayerActive() != null) {
                             var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(oControllerVar.m_oConstantsService.getSensorLayerActive());
                             oControllerVar.sensorLinkClicked(oSensorLink);
                         }
                     }
-                    else
-                    {
+                    else {
                         // Ok clear just logged flag
                         oControllerVar.m_oConstantsService.setJustLogged(false);
 
                         // Check Default Sensor View
                         var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(oUser.defaultSensorType);
 
-                        if (oSensorLink != null)
-                        {
+                        if (oSensorLink != null) {
                             oControllerVar.sensorLinkClicked(oSensorLink);
                         }
                     }
 
                     // Is defined
-                    if (angular.isDefined(dLat) && angular.isDefined(dLon) && angular.isDefined(iZoom))
-                    {
+                    if (angular.isDefined(dLat) && angular.isDefined(dLon) && angular.isDefined(iZoom)) {
                         // And not null?
-                        if (dLat != null && dLon != null && iZoom != null)
-                        {
+                        if (dLat != null && dLon != null && iZoom != null) {
                             // Ok Let set center informations
-                            var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+                            var epsg4326 = new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
 
                             oControllerVar.resetZoom(oControllerVar.m_oMapService.map, dLat, dLon, epsg4326, iZoom);
                         }
                     }
 
                     // Any static layer?
-                    if (oControllerVar.m_oConstantsService.getUser().defaultStatics != null)
-                    {
+                    if (oControllerVar.m_oConstantsService.getUser().defaultStatics != null) {
                         var sStatics = oControllerVar.m_oConstantsService.getUser().defaultStatics;
                         var asStaticLayers = sStatics.split(";");
 
-                        for (var iLayers = 0; iLayers<asStaticLayers.length; iLayers++)
-                        {
+                        for (var iLayers = 0; iLayers < asStaticLayers.length; iLayers++) {
                             var oStaticLink = oControllerVar.m_oConstantsService.getStaticLinkById(asStaticLayers[iLayers]);
 
-                            if (oStaticLink!=null)
-                            {
+                            if (oStaticLink != null) {
                                 oControllerVar.staticLayerClicked(oStaticLink);
                             }
 
@@ -604,19 +611,17 @@ var MapController = (function () {
                 var iZoom = oControllerVar.m_iCenterZoom;
 
                 // Check if zoom available in constant service
-                if (oControllerVar.m_oConstantsService.getMapZoom()!=null)
-                {
+                if (oControllerVar.m_oConstantsService.getMapZoom() != null) {
                     iZoom = oControllerVar.m_oConstantsService.getMapZoom();
                 }
 
                 // Check if center available in constant service
-                if (oControllerVar.m_oConstantsService.getMapCenter()!=null)
-                {
+                if (oControllerVar.m_oConstantsService.getMapCenter() != null) {
                     // Get The center
                     var oCenter = oControllerVar.m_oConstantsService.getMapCenter();
 
                     // Need to convert
-                    var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+                    var epsg4326 = new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
                     var projectTo = oControllerVar.m_oMapService.map.getProjectionObject(); //The map projection (Spherical Mercator)
 
                     // Tranform the point
@@ -628,35 +633,39 @@ var MapController = (function () {
                 }
 
                 // Is defined
-                if (angular.isDefined(dLat) && angular.isDefined(dLon) && angular.isDefined(iZoom))
-                {
+                if (angular.isDefined(dLat) && angular.isDefined(dLon) && angular.isDefined(iZoom)) {
                     // And not null?
-                    if (dLat != null && dLon != null && iZoom != null)
-                    {
+                    if (dLat != null && dLon != null && iZoom != null) {
                         // Ok Let set center informations
-                        var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+                        var epsg4326 = new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
 
                         oControllerVar.resetZoom(oControllerVar.m_oMapService.map, dLat, dLon, epsg4326, iZoom);
                     }
                 }
 
-                if (oControllerVar.m_oConstantsService.getSensorLayerActive()!=null)
-                {
+                if (oControllerVar.m_oConstantsService.getSensorLayerActive() != null) {
                     var oSensorLink = oControllerVar.m_oConstantsService.getSensorLinkByType(oControllerVar.m_oConstantsService.getSensorLayerActive());
                     oControllerVar.sensorLinkClicked(oSensorLink);
                 }
             }
 
-            for (var i in oControllerVar.infoControls)
-            {
-                oControllerVar.infoControls[i].events.register("beforegetfeatureinfo", oControllerVar, oControllerVar.askInfo);
-                oControllerVar.infoControls[i].events.register("getfeatureinfo", oControllerVar, oControllerVar.showInfo);
-                oControllerVar.m_oMapService.map.addControl(oControllerVar.infoControls[i]);
-            }
+            /*
+             for (var i in oControllerVar.infoControls)
+             {
+             oControllerVar.infoControls[i].events.register("beforegetfeatureinfo", oControllerVar, oControllerVar.askInfo);
+             oControllerVar.infoControls[i].events.register("getfeatureinfo", oControllerVar, oControllerVar.showInfo);
+             oControllerVar.m_oMapService.map.addControl(oControllerVar.infoControls[i]);
+             }
+             */
+
+            oControllerVar.infoControls.events.register("beforegetfeatureinfo", oControllerVar, oControllerVar.askInfo);
+            //oControllerVar.infoControls.events.register("getfeatureinfo", oControllerVar, oControllerVar.showInfo);
+            oControllerVar.m_oMapService.map.addControl(oControllerVar.infoControls);
+
+            //init complete
+            oControllerVar.m_oScope.m_bInitMapComplete = true;
 
         });
-
-
 
     }
 
@@ -665,6 +674,7 @@ var MapController = (function () {
         var oControllerVar = this;
         if( oControllerVar.m_oMapService && oControllerVar.m_oMapService.map) {
             oControllerVar.m_oMapService.map.updateSize();
+            console.log('alignOpenLayerControllerToMap');
         }
     }
 
@@ -682,46 +692,111 @@ var MapController = (function () {
     }
 
     MapController.prototype.askInfo = function(evt) {
+
+        var oControllerVar = this;
+        var tableTemplate = '';
+        var layersName = [];
+
+
         console.log('ask');
+        var oControllerVar = this;
+        var asGetFeatureInfoUrl = this.m_oLayerService.getQueryLayers(evt);
 
-        var sGetFeatureInfoUrl = this.m_oLayerService.getQueryLayers(evt);
-
-        // Qui ho messo il window open perchè non mi andava chiamata asincrona che sarebbe tipo:
-        // this.m_oMapNavigatorService.getFeaturesInfo(url).success(function (data,status){...})
-
-
-        if (sGetFeatureInfoUrl!="") {
-            window.open(sGetFeatureInfoUrl,
-                "getfeatureinfo",
-                "location=0,status=0,scrollbars=1,width=600,height=150"
-            );
+        //parse url for caption
+        for(var iUrlCount = 0; iUrlCount < asGetFeatureInfoUrl.length; iUrlCount++)
+        {
+            var regex = new RegExp("[?&]LAYERS(=([^&#]*)|&|#|$)"),
+            results = regex.exec(asGetFeatureInfoUrl[iUrlCount]);
+            var layerName = decodeURIComponent(results[2].replace(/\+/g, " "));
+            layersName.push(layerName);
         }
-    }
+
+        var iCount = 0;
+        for (var iUrl = 0; iUrl < asGetFeatureInfoUrl.length; iUrl++) {
+            this.m_oMapNavigatorService.getFeaturesInfo(asGetFeatureInfoUrl[iUrl]).success(function (data, status) {
+                if (data.hasOwnProperty('features')) {
+                    var GRAY_INDEX = '';
+                    var features = data["features"];
+                    var type = features['type'];
+                    var fid = '';
+                    if (!angular.isUndefined(features['id']))
+                        fid = features['id'];
+                    var geometry = features['geometry'];
+                    var properties = features[0]['properties'];
+                    var headerValue = "<th>[KEY]</th>";
+                    var headers = "";
+                    var cellValue = "<td>[CELLVALUE]</td>";
+                    var cells = "";
+
+                    //fid
+                    headers += headerValue.replace('[KEY]', 'fid');
+                    cells += cellValue.replace('[CELLVALUE]', fid);
+                    for (var key in properties) {
+                        if (properties.hasOwnProperty(key)) {
+                            headers += headerValue.replace('[KEY]', key);
+                            cells += cellValue.replace('[CELLVALUE]', properties[key]);
+                        }
+                    }
+
+                    tableTemplate += oControllerVar.m_sTableTemplate.replace('[HEADER]', headers).replace('[CELLS]', cells).replace('[CAPTION]', layersName[iCount]);
+                    iCount++;
+                    if (iCount == asGetFeatureInfoUrl.length) {
+                        oControllerVar.m_sCurrentInfoTemplate = oControllerVar.m_sBaseInfoTemplate.replace('[TABLES]', tableTemplate);
+
+                        oControllerVar.m_oMapService.map.addPopup(new OpenLayers.Popup.FramedCloud(
+                            "chicken",
+                            oControllerVar.m_oMapService.map.getLonLatFromPixel(evt.xy),
+                            null,
+                            oControllerVar.m_sCurrentInfoTemplate,
+                            null,
+                            true
+                        ));
+                    }
+                }
+
+            }).error(function (error) {
+                console.log(error);
+            });
+
+
+        }
+
+    };
 
     MapController.prototype.showInfo = function(evt) {
 
         // TODO: Inoltre questa showInfo io non la sto usando. Forse c'è un modo per fare chiamare a lui il nostro url, ma per ora ce ne possiamo fregare direi.
 
         console.log(evt.text);
+        var oControllerVar = this;
 
+        //var sGetFeatureInfoUrl = this.m_oLayerService.getQueryLayers(evt);
+
+        // Qui ho messo il window open perchè non mi andava chiamata asincrona che sarebbe tipo:
+        // this.m_oMapNavigatorService.getFeaturesInfo(url).success(function (data,status){...})
         /*
-        vex.dialog.alert({
-            message: evt.text,
+        var oControllerVar = this;
+        var oInfo = new OpenLayers.Control.WMSGetFeatureInfo({
+            url: sGetFeatureInfoUrl,
+            title: 'Identify features by clicking',
+            queryVisible: true,
+            eventListeners: {
+                getfeatureinfo: function(event) {
+                    oControllerVar.m_oMapService.map.addPopup(new OpenLayers.Popup.FramedCloud(
+                        "chicken",
+                        oControllerVar.m_oMapService.map.getLonLatFromPixel(evt.xy),
+                        null,
+                        event.text,
+                        null,
+                        true
+                    ));
+                }
+            }
         });
         */
 
-        /*
-        var oControllerVar = this;
-        this.m_oMapService.map.addPopup(new OpenLayers.Popup.Popup.FramedCloud(
-            "chicken",
-            oControllerVar.m_oMapService.map.getLonLatFromPixel(evt.xy),
-            null,
-            event.text,
-            null,
-            true
-        ));*/
 
-    }
+    };
 
     /**
      * Method that fires initMap Event when all needed data are received
@@ -753,7 +828,7 @@ var MapController = (function () {
 
         setTimeout( function() {
             oMapController.alignOpenLayerControllerToMap();
-        }, 3000);
+        }, 5000);
 
     }
 
@@ -2247,11 +2322,11 @@ var MapController = (function () {
 
         if  (this.m_bIsInfoActive)  {
             this.m_bIsInfoActive = false;
-            this.infoControls.click.deactivate();
+            this.infoControls.deactivate();
         }
         else {
             this.m_bIsInfoActive = true;
-            this.infoControls.click.activate();
+            this.infoControls.activate();
         }
 
     }
@@ -2276,8 +2351,7 @@ var MapController = (function () {
 
     /**
      * Method called when an Hydro link is clicked
-     * @param oHydroLink
-     * @constructor
+     * @param oHydroLinkgetF
      */
     MapController.prototype.HydroLinkClicked = function(oHydroLink, oController)
     {

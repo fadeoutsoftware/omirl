@@ -144,46 +144,53 @@ angular.module('az.services').factory('az.services.layersService',function($root
         getQueryLayers: function (evt) {
 
             var sLayers = "";
-
+            var asUrls=[];
 
             if (this.m_oDynamicLayer == null && this.m_aoStaticLayers == null) return "";
             if (this.m_oDynamicLayer == null && this.m_aoStaticLayers.length == 0) return "";
 
             var oLayer = {};
 
-            if (this.m_oDynamicLayer != null) oLayer = this.m_oDynamicLayer;
-            else {
-                oLayer = this.m_aoStaticLayers[0];
-            }
-
             if (this.m_oDynamicLayer != null) {
+                oLayer = this.m_oDynamicLayer;
                 sLayers = this.m_oDynamicLayer.params.LAYERS;
+                var url =  oLayer.getFullRequestString({
+                    REQUEST: "GetFeatureInfo",
+                    EXCEPTIONS: "application/vnd.ogc.se_xml",
+                    BBOX: oLayer.map.getExtent().toBBOX(),
+                    X: evt.xy.x,
+                    Y: evt.xy.y,
+                    //INFO_FORMAT: 'text/html',
+                    INFO_FORMAT: 'application/json',
+                    QUERY_LAYERS: sLayers,
+                    WIDTH: oLayer.map.size.w,
+                    HEIGHT: oLayer.map.size.h});
+                asUrls.push(url);
             }
 
+            //static layer
             if (this.m_aoStaticLayers != null) {
                 if (this.m_aoStaticLayers.length > 0) {
                     for (var iStatics=0; iStatics<this.m_aoStaticLayers.length; iStatics++) {
-                        if (sLayers.length>0) sLayers+=",";
-                        sLayers+=this.m_aoStaticLayers[iStatics].params.LAYERS;
+                        oLayer = this.m_aoStaticLayers[iStatics];
+                        sLayers = this.m_aoStaticLayers[iStatics].params.LAYERS;
+                        var url =  oLayer.getFullRequestString({
+                            REQUEST: "GetFeatureInfo",
+                            EXCEPTIONS: "application/vnd.ogc.se_xml",
+                            BBOX: oLayer.map.getExtent().toBBOX(),
+                            X: evt.xy.x,
+                            Y: evt.xy.y,
+                            //INFO_FORMAT: 'text/html',
+                            INFO_FORMAT: 'application/json',
+                            QUERY_LAYERS: sLayers,
+                            WIDTH: oLayer.map.size.w,
+                            HEIGHT: oLayer.map.size.h});
+                        asUrls.push(url);
                     }
                 }
             }
 
-            var url =  oLayer.getFullRequestString({
-                REQUEST: "GetFeatureInfo",
-                EXCEPTIONS: "application/vnd.ogc.se_xml",
-                BBOX: oLayer.map.getExtent().toBBOX(),
-                X: evt.xy.x,
-                Y: evt.xy.y,
-                //INFO_FORMAT: 'text/html',
-                INFO_FORMAT: 'application/json',
-                QUERY_LAYERS: sLayers,
-                WIDTH: oLayer.map.size.w,
-                HEIGHT: oLayer.map.size.h});
-
-            url = url.replace('?LAYERS='+oLayer.params.LAYERS,'?LAYERS='+sLayers);
-
-            return url;
+            return asUrls;
         },
         /**
          * Sets the actual Dynamic Layer
