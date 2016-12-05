@@ -76,11 +76,22 @@ var PeriodController = (function() {
 
                     //load user
                     oController.m_oPeriodService.loadPeriods();
-                    oController.m_oTranslateService('PERIOD_SAVED').then(function(msg) {
-                        vex.dialog.alert({
-                            message: msg
+                    if (data) {
+
+                        oController.m_oTranslateService('PERIOD_SAVED').then(function (msg) {
+                            vex.dialog.alert({
+                                message: msg
+                            });
                         });
-                    });
+                    }
+                    else {
+                        oController.m_oTranslateService('PERIOD_NOT_SAVED').then(function (msg) {
+                            vex.dialog.alert({
+                                message: msg
+                            });
+                        });
+
+                    }
                 });
             }
             else
@@ -114,7 +125,7 @@ var PeriodController = (function() {
             oPeriods.push(oPeriod);
         }
         else {
-            //take last user
+            //take last period
             var lastPeriod = oPeriods[oPeriods.length - 1];
             if (lastPeriod != null) {
                 if (lastPeriod.timestampStart != null && lastPeriod.timestampStart != '' &&
@@ -122,9 +133,9 @@ var PeriodController = (function() {
                     //save last user
                     oController.m_oPeriodService.savePeriods(lastPeriod).success(function (data) {
 
-                        //load user
+                        //load periods
                         oController.m_oPeriodService.loadPeriods();
-                        oController.loadPeriods();
+                        //oController.loadPeriods();
 
                         oController.m_oPeriodService.setAsModified();
                         //add new user
@@ -157,9 +168,9 @@ var PeriodController = (function() {
                         //save last user
                         oController.m_oPeriodService.deletePeriod(id).success(function (data) {
 
-                            //load user
+                            //load periods
                             oController.m_oPeriodService.loadPeriods();
-                            oController.loadPeriods();
+                            //oController.loadPeriods();
 
                         });
                     }

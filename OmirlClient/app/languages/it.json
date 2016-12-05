@@ -336,6 +336,7 @@
     "PERIOD_SAVETOOLTIP":"Salva Periodo",
     "PERIOD_CHECKDATA":"Data di inizio deve essere più piccola della data di fine",
     "PERIOD_SAVED":"Periodo salvato",
+    "PERIOD_NOT_SAVED":"Periodo salvato",
     "PERIOD_FIELDMANDATORY":"Compilare i campi del periodo",
     "PERIOD_DELETEASK": "Eliminare il periodo?"
 }
