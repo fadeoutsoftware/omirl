@@ -79,11 +79,11 @@ public class TablesService {
 		ArrayList<TableLink> aoRet = new ArrayList<>();
 
 		try {
-			boolean bShowPrivate = false;
-			if (Omirl.getUserFromSession(sSessionId) != null) {
-				bShowPrivate = true;
-			}
-
+			OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
+			
+			int iUserAccessLevel = 9999;
+			if (oUser!=null) iUserAccessLevel = oUser.getRole();			
+			
 			// Get Config
 			Object oConfObj = m_oServletConfig.getServletContext().getAttribute("Config");
 
@@ -94,17 +94,11 @@ public class TablesService {
 				for (int iConfigured =0 ; iConfigured< oConfig.getTableLinks().size(); iConfigured++ )
 				{
 					TableLinkConfig oTableLink = oConfig.getTableLinks().get(iConfigured);
-
-					boolean bAdd = false;
-
-					if (bShowPrivate==true) bAdd = true;
-					else {
-						if (oTableLink.isPrivate() == false) bAdd = true;
-					}
-
-					if (bAdd){
+					 
+					if (oTableLink.getAccessLevel() == 0 || oTableLink.getAccessLevel()>= iUserAccessLevel) {
 						aoRet.add(oTableLink.getTableLink());
 					}
+						
 				}
 			}
 

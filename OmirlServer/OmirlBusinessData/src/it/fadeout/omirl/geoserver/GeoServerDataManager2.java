@@ -529,8 +529,14 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 							if (oObj instanceof Geometry) {
 								Geometry oGeom = (Geometry)oObj;
 								Point oCentroid = oGeom.getCentroid();
+								
+								// P.Campanella 15/12/2016: dal confronto con il codice di DDS mettiamo il * al posto del /
+								
 								int iCol = (int)Math.round((oCentroid.getX() - oGeoProp.m_oSW.m_dX) / (double)fLonStep);
 								int iRow = (int)Math.round((oCentroid.getY() - oGeoProp.m_oSW.m_dY) / (double)fLatStep);
+								
+								//int iCol = (int)Math.round((oCentroid.getX() - oGeoProp.m_oSW.m_dX) * (double)fLonStep);
+								//int iRow = (int)Math.round((oCentroid.getY() - oGeoProp.m_oSW.m_dY) * (double)fLatStep);								
 
 								if (iCol>=0 && iCol<iDimX && iRow>=0 && iRow<iDimY) {
 									fValue = afMap[iRow*iDimX + iCol];
@@ -538,6 +544,8 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 							}
 						}
 					}
+					
+					if (Float.isNaN(fValue)) fValue = fUndef;
 
 					oNewFeature.getProperty(sPaletteField).setValue(fValue);
 					oWriter.write();
@@ -570,8 +578,7 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 
 	protected void AggregateMap(float[] afMap, float fUndef, int[] aiMap, float[] afValues, int[] aiCount) {
 		for (int i = 0; i < aiMap.length; i++) {
-			if (aiMap[i]>=0 && afMap[i] != fUndef) {
-			//if (aiMap[i]>=0) {
+			if (aiMap[i]>=0 && afMap[i] != fUndef && !Float.isNaN(afMap[i]) && afMap[i] >= 0) {
 				afValues[aiMap[i]] += afMap[i];
 				aiCount[aiMap[i]]++;
 			}

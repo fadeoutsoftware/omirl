@@ -93,9 +93,15 @@ public class VectorialMapBuilder {
 						
 						Coordinate[] points = oLS.getCoordinates(); //oPolygon.getCoordinates();
 						GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD, points.length);
+						
+						// P.Campanella 15/12/2016: dal confronto con il codice di DDS mettiamo il * al posto del /
+						
 						path.moveTo((points[0].x-oGeoWin.m_oSW.m_dX)/fLonStep, (iDemSizeY-1)-(points[0].y-oGeoWin.m_oSW.m_dY)/fLatStep);
+						//path.moveTo((points[0].x-oGeoWin.m_oSW.m_dX)*fLonStep, (iDemSizeY-1)-(points[0].y-oGeoWin.m_oSW.m_dY)*fLatStep);
+						
 						for (int i = 1; i < points.length; i++) {
 							path.lineTo((points[i].x-oGeoWin.m_oSW.m_dX)/fLonStep,(iDemSizeY-1)-(points[i].y-oGeoWin.m_oSW.m_dY)/fLatStep);
+							//path.lineTo((points[i].x-oGeoWin.m_oSW.m_dX)*fLonStep,(iDemSizeY-1)-(points[i].y-oGeoWin.m_oSW.m_dY)*fLatStep);
 						}
 						g2.fill(path);							
 					}

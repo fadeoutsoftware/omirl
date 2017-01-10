@@ -16,6 +16,10 @@ public class DataChart {
 	 */
 	String subTitle;
 	/**
+	 * River
+	 */
+	private String river;	
+	/**
 	 * Tooltip suffix
 	 */
     String tooltipValueSuffix;
@@ -154,5 +158,13 @@ public class DataChart {
 
 	public void setAxisIsOpposite(boolean axisIsOpposite) {
 		this.axisIsOpposite = axisIsOpposite;
+	}
+
+	public String getRiver() {
+		return river;
+	}
+
+	public void setRiver(String river) {
+		this.river = river;
 	}
 }

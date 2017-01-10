@@ -296,6 +296,11 @@ public class OmirlDaemon {
 
 										DataChart oDataChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate, false, true);
 										DataSerie oDataSerie = oDataChart.getDataSeries().get(0); 
+										
+										// For Rain chart add also the River to the title
+										if (oStationAnag.getRiver() != null) {
+											oDataChart.setRiver(oStationAnag.getRiver());
+										}
 
 										// Create Additional Axes
 										ChartAxis oAdditionalAxis = new ChartAxis();
@@ -356,6 +361,11 @@ public class OmirlDaemon {
 
 										DataChart oDataChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate, false, true);
 										DataSerie oDataSerie = oDataChart.getDataSeries().get(0); 
+										
+										// For Rain chart add also the River to the title
+										if (oStationAnag.getRiver() != null) {
+											oDataChart.setRiver(oStationAnag.getRiver());
+										}										
 
 										// Create Additional Axes
 										ChartAxis oAdditionalAxis = new ChartAxis();
@@ -424,6 +434,11 @@ public class OmirlDaemon {
 											// Create the Chart
 											DataChart oDataChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate, false, false);
 											DataSerie oDataSerie = oDataChart.getDataSeries().get(0); 
+											
+											// For Rain chart add also the River to the title
+											if (oStationAnag.getRiver() != null) {
+												oDataChart.setRiver(oStationAnag.getRiver());
+											}											
 
 											// Create Additional Axes
 											ChartAxis oAdditionalAxis = new ChartAxis();
@@ -558,6 +573,11 @@ public class OmirlDaemon {
 
 										if (aoInfo.get(0).getLineWidth()>0) oDataSerie.setLineWidth(aoInfo.get(0).getLineWidth());
 										if (aoInfo.get(1).getLineWidth()>0) oCumulatedSerie.setLineWidth(aoInfo.get(1).getLineWidth());
+										
+										// For Rain chart add also the River to the title
+										if (oStationAnag.getRiver() != null) {
+											oDataChart.setRiver(oStationAnag.getRiver());
+										}
 
 										// Check for autorange on max exceed
 										CheckCumulateAutorange(oCumulatedSerie,oAdditionalAxis);								
@@ -662,13 +682,25 @@ public class OmirlDaemon {
 										Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
 
 										DataChart oDataChart = SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate, false);
+										
+										// For Hydro chart add also the basin to the title
+										if (oStationAnag.getRiver() != null) {
+											oDataChart.setRiver(oStationAnag.getRiver());
+										}
+										
 
 										CreekThreshold oThreshold = m_aoThresholds.get(oStationAnag.getStation_code());
 
 										if (oThreshold != null)
 										{
-											oDataChart.setAxisYMaxValue(oThreshold.getYmax());
-											oDataChart.setAxisYMinValue(oThreshold.getYmin());
+											if (oDataChart.getAxisYMaxValue()<oThreshold.getYmax()) {
+												oDataChart.setAxisYMaxValue(oThreshold.getYmax());
+											}
+											
+											if (oDataChart.getAxisYMinValue()>oThreshold.getYmin()) {
+												oDataChart.setAxisYMinValue(oThreshold.getYmin());
+											}
+											
 
 											double dAxisTickInterval = (oDataChart.getAxisYMaxValue()-oDataChart.getAxisYMinValue())/11.0;
 											dAxisTickInterval = Math.floor(dAxisTickInterval);
@@ -1269,7 +1301,9 @@ public class OmirlDaemon {
 		{
 			WindDataSeriePoint adPoint = new WindDataSeriePoint();
 			adPoint.setWindSpeed(0);
-			adPoint.setRefDate(new Date(lStart));
+			// TODO: Text Wind Direction Shift
+			// P.Campanella 24/11/2016: Shift forward x axis by one step
+			adPoint.setRefDate(new Date(lStart+lTimeStep));
 			long lNextStep = lTimeCycle+lTimeStep;
 			List<WindDataSeriePoint> oRefWindDirections = new ArrayList<WindDataSeriePoint>();
 			for (WindDataSeriePoint windDataSeriePoint : oInputWindDir) {
