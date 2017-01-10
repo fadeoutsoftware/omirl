@@ -120,6 +120,10 @@ var ChartController = (function() {
 
             }
 
+            oControllerVar.river = "";
+
+            if (oControllerVar.oChartVM.river != null) oControllerVar.m_sSubtitle += " Bacino: " + oControllerVar.oChartVM.river;
+
             //update title dialogue
             oControllerVar.m_oTranslate('DIALOGTITLE', {name: oControllerVar.m_oDialogModel.name, municipality: oControllerVar.m_oDialogModel.municipality, subTitle: subTitle + " " + oDate.toString() }).then(function(text) {
                 oControllerVar.m_oDialogService.updateTitle(oControllerVar.m_sSectionCode, text);

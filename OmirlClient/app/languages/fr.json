@@ -1,5 +1,5 @@
 {
-    "DOWNLOAD" : "Scarica FR",
+
     "INDEX_TITLE": "Omirl On-Line fr",
     "INDEX_HEADER1": "OMIRL fr",
     "INDEX_HEADER2" : "Osservatorio Meteo Idrologico della Regione Liguria fr",
@@ -47,6 +47,7 @@
     "MAP_IDRO": "Idro fr",
     "MAP_RADAR": "Radar fr",
     "MAP_SATELLITE": "Satellite fr",
+    "MAP_BW": "Black & White fr",
     "MAP_LEGENDTOOLTIP":"Legenda fr",
     "MAP_IDROLEGENDTOOLTIP":"Legenda Idro fr",
     "MAP_PH_CERCA": "Cerca località fr",
@@ -57,7 +58,7 @@
     "MAP_T_RICERCASTAZIONI": "Filtro di ricerca stazioni fr",
     "MAP_T_LEGEND": "{{value}} fr",
     "MAP_T_LEGENDSELECTED": "Mappe fr",
-    "MAP_T_INFO": "Info Tool",
+    "MAP_T_INFO": "Clicca qui e successivamente su un punto della mappa per informazioni fr",
     "MAP_NOT_AVAILABLE": "Layer non disponibile fr",
     "MAP_NOT_AVAILABLE_SFLOC": "Nessuna fulminazione registrata FR",
     "MAP_MISSINGWEBCAM":"Missing WebCam Image fr",
@@ -235,11 +236,13 @@
     "OMIRLCONFIG_INTERPOLATA": "Interpolata fr",
     "OMIRLCONFIG_COMUNI": "Comuni fr",
     "OMIRLCONFIG_PROVINCE": "Province fr",
-    "OMIRLCONFIG_BACINI": "Bacini fr",
-    "OMIRLCONFIG_AREE": "Aree Allertamento fr",
+    "OMIRLCONFIG_BACINI": "Bacini Idrografici fr",
+    "OMIRLCONFIG_AREE": "Zone di Allertafr",
     "OMIRLCONFIG_SPARTIACQLIG": "Spartiacque della Liguria fr",
     "OMIRLCONFIG_RETICOLO": "Reticolo Idrografico fr",
-    "OMIRLCONFIG_AREEINOND": "Aree Inondabili fr",
+    "OMIRLCONFIG_AREEINOND_3050": "Aree Inondabili Tr 30-50 Anni fr",
+    "OMIRLCONFIG_AREEINOND_200": "Aree Inondabili Tr 200 Anni fr",
+    "OMIRLCONFIG_AREEINOND_500": "Aree Inondabili Tr 500 Anni fr",
     "OMIRLCONFIG_VALSTAZ": "Valori Stazioni fr",
     "OMIRLCONFIG_MAXPUNT": "Massimi Puntuali di precipitazione fr",
     "OMIRLCONFIG_SINTESI": "Sintesi fr",
@@ -336,5 +339,6 @@
     "PERIOD_CHECKDATA":"Data di inizio deve essere più piccola della data di fine fr",
     "PERIOD_SAVED":"Periodo salvato fr",
     "PERIOD_FIELDMANDATORY":"Compilare i campi del periodo fr",
-    "PERIOD_DELETEASK": "Eliminare il periodo? fr"
+    "PERIOD_DELETEASK": "Eliminare il periodo? fr",
+    "OMIRLCONFIG_TABELLAMODELLI": "Modelli Idro fr"
 }

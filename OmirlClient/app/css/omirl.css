@@ -1175,10 +1175,11 @@ a:hover, a:focus {
 
 .loading {
     position:absolute;
-    width: 730px;
-    height: 490px;
+    width: 98%;
+    height: 98%;
     display: inline;
     z-index: 1001;
+    overflow: hidden;
     background: url('../img/Spinner.gif') no-repeat center #fff;
 }
 
