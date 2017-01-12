@@ -12,11 +12,11 @@
                 <table>
                     <tr>
                         <td class="sensor-icon"><img src="{{m_oController.m_oSelectedSensorDateTimeIcon}}"
-                                 ng-hide="!m_oController.m_oSelectedSensorDateTimeIcon"/></td>
+                                 ng-hide="!m_oController.m_oSelectedSensorDateTimeIcon" alt="Sensor date time icon"/></td>
                         <td class="sensor-title">{{m_oController.m_oSelectedSensorDateTimeInfo}}</td>
                         <td class="title-separator" ng-hide="!m_oController.m_oSelectedSensorDateTimeInfo || !m_oController.m_oSelectedMapDateTimeInfo">-</td>
                         <td class="layer-icon"><img src="{{m_oController.m_oSelectedMapDateTimeIcon}}"
-                                                    ng-hide="!m_oController.m_oSelectedMapDateTimeIcon"/></td>
+                                                    ng-hide="!m_oController.m_oSelectedMapDateTimeIcon" alt="Map date time icon"/></td>
                         <td class="layer-title">{{m_oController.m_oSelectedMapDateTimeInfo}}</td>
                     </tr>
                 </table>
@@ -149,7 +149,7 @@
                     tooltip="{{'MAP_T_INFO' | translate}}">
                     <img class="img-map-firstlevel-icon"
                          ng-src="{{m_oController.m_bIsInfoActive == true && 'img/infoon.png' || 'img/info.png'}}"
-                         ng-click="m_oController.ToggleInfoTool()"/>
+                         ng-click="m_oController.ToggleInfoTool()" alt="Icon info/>
                 </li>
             </ul>
             <br/>
@@ -181,7 +181,7 @@
                             </span>
                         </div>
                     </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <ul class="dropdown-menu" role="menu">
                         <datetimepicker data-ng-model="m_oController.m_oReferenceDate" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="m_oController.onTimeSet(newDate, oldDate)"/>
                     </ul>
                 </div>
@@ -507,11 +507,11 @@
                 <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sMapLegendTooltip | translate}}" ng-click="m_oController.mapLegendClicked()">
                     <ul>
                         <li>
-                            <img class="map-legend-icon" src="{{m_oController.m_sMapLegendIconPath}}" >
+                            <img class="map-legend-icon" src="{{m_oController.m_sMapLegendIconPath}}" alt="Map legend icon">
                         </li>
                         <li>
                             <img class="map-legend-image" src="{{m_oController.m_sMapLegendPath}}"
-                                 ng-show="m_oController.m_bShowMapLegendImage">
+                                 ng-show="m_oController.m_bShowMapLegendImage" alt="Map legend image">
                         </li>
                         <li class="clearfix"></li>
                     </ul>
@@ -521,11 +521,11 @@
                 <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSatelliteLegendTooltip | translate}}" ng-click="m_oController.mapLegendClicked()">
                     <ul>
                         <li>
-                            <img class="map-legend-icon" src="{{m_oController.m_sSatelliteLegendIconPath}}" >
+                            <img class="map-legend-icon" src="{{m_oController.m_sSatelliteLegendIconPath}}" alt="Satellite legend icon">
                         </li>
                         <li>
                             <img class="map-legend-image" src="{{m_oController.m_sSatelliteLegendPath}}"
-                                 ng-show="m_oController.m_bShowMapLegendImage">
+                                 ng-show="m_oController.m_bShowMapLegendImage" alt="Satellite legend image">
                         </li>
                         <li class="clearfix"></li>
                     </ul>
@@ -535,10 +535,10 @@
                 <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sRadarLegendTooltip | translate}}" ng-click="m_oController.mapLegendClicked()">
                     <ul>
                         <li>
-                            <img class="map-legend-icon" src="{{m_oController.m_sRadarLegendIconPath}}" >
+                            <img class="map-legend-icon" src="{{m_oController.m_sRadarLegendIconPath}}" alt="Radar legend icon">
                         </li>
                         <li>
-                            <img class="map-legend-image" src="{{m_oController.m_sRadarLegendPath}}"
+                            <img class="map-legend-image" src="{{m_oController.m_sRadarLegendPath}}" alt="Radar legend image"
                                  ng-show="m_oController.m_bShowMapLegendImage">
                         </li>
                         <li class="clearfix"></li>
@@ -549,8 +549,8 @@
             <div class="map-legend-stations" ng-show="m_oController.m_bSensorLayerActive">
                 <a tooltip-popup-delay="500" tooltip="{{m_oController.m_sSensorLegendTooltip | translate}}"  ng-click="m_oController.sensorsLegendClicked()">
                     <ul id="stations-legend-container" ng-show="m_oController.hasSensorLegendLink() == true">
-                        <li><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" style="height: 35px; vertical-align: super;"></li>
-                        <li><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}"
+                        <li><img class="sensor-legend-icon" src="{{m_oController.m_sSensorsLegendIconPath}}" alt="Sensors legend icon" style="height: 35px; vertical-align: super;"></li>
+                        <li><img class="map-legend-image" src="{{m_oController.m_sSensorsLegendPath}}" alt="Sensors legend image"
                                  ng-show="m_oController.m_bShowSensorsLegendImage"></li>
                         <li class="clearfix"></li>
                     </ul>

@@ -38,7 +38,7 @@
             <div ng-if="oRow.isSecondLevelWrapper() == true"  class="clearfix second-level-menu-wrapper"  ng-hide="isSecondLevelRowOpen(oRow.getSecondLevelId()) == false" >
                 <div ng-show="menuItemsByLevel[MENU_LEVEL_2].length == 0"><i class="fa fa-refresh fa-spin"></i></div>
                 <div class="menu-third-level-dropdown" ng-show="isThirdLevelVisible == true">
-                    <select name="repeatSelect" id="repeatSelect" ng-model="thirdLevelComboBox.selection">
+                    <select name="repeatSelect" ng-model="thirdLevelComboBox.selection">
                         <option ng-repeat="option in thirdLevelComboBox.options" 
                                 value="{{option.description}}"
                                 ng-selected="isSelected(option)"
