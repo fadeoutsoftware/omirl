@@ -91,6 +91,35 @@ var TemplateController = (function() {
 
     }
 
+
+    //************************************************************************************
+    //* Accessibility section
+    //************************************************************************************
+    TemplateController.prototype.isAccessibilityModeActive = function()
+    {
+        return CookieManager.isAccessibilityModeActive();
+    }
+
+    TemplateController.prototype.activateAccessibilityMode = function(){
+        vex.dialog.open({
+            message: '<div style="text-align: center;"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>',
+            buttons: [],
+        });
+        CookieManager.setAccessibilityModeActive();
+        location.reload(true);
+    }
+    TemplateController.prototype.deactivateAccessibilityMode = function(){
+        vex.dialog.open({
+            message: '<div style="text-align: center;"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>',
+            buttons: [],
+        });
+        CookieManager.setAccessibilityModeNotActive();
+        location.reload();
+    }
+    //************************************************************************************
+
+
+
     TemplateController.prototype.serviceIconClicked = function (sPath) {
 
         if (sPath == "settings") {

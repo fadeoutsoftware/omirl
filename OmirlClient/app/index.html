@@ -35,6 +35,15 @@
     <!--link rel="stylesheet" href="css/override.css"/-->
    
     <link href="css/mainstyle.css" rel="stylesheet">
+
+
+    <script src="js/classes/CookieManager.js"></script>
+    <script>
+        if (CookieManager.isAccessibilityModeActive() == true){
+            document.write('<link href="css/high_contrast.css" rel="stylesheet">');
+        }
+    </script>
+
     
     
     <!-- New JS position -->
@@ -172,7 +181,7 @@
 <!-- Side Menu -->
 <a id="menu-toggle" href="#" class="btn btn-primary btn-lg toggle"><i class="fa fa-bars"></i></a>
 <!--img id="menu-waiting" src="img/Waiting.GIF"  class = "toggle"/-->
-<div id="sidebar-wrapper">
+<div id="sidebar-wrapper" class="high-contrast">
     <a id="menu-close" href="#" class="btn btn-default btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
     <div class="sidebar-brand"><a href="#top">OMIRL</a></div>
     
@@ -200,6 +209,12 @@
             </img>
             <img ng-click="m_oController.changeLanguage('fr')" src="img/flag_france.png" alt="{{ 'INDEX_LANGFR' | translate}}" title="{{ 'INDEX_LANGFR' | translate}}">
             </img>
+        </li>
+        <li class="menu-link">
+            <a>
+                <span ng-if="m_oController.isAccessibilityModeActive() == false" ng-click="m_oController.activateAccessibilityMode()">Attiva modalita accessibilità</span>
+                <span ng-if="m_oController.isAccessibilityModeActive() == true" ng-click="m_oController.deactivateAccessibilityMode()">Disattiva modalita accessibilità</span>
+            </a>
         </li>
         <li class="menu-login-container">
             <a ng-click="m_oController.reservedAreaClicked()"> {{m_oController.ReservedAreaText | translate}}</a>
@@ -303,28 +318,28 @@
                     </div-->
 
                     <div class="col-md-2 text-center" ng-class="{'col-md-offset-2': m_oController.m_oConstantsService.isUserAdministrator(), 'col-md-offset-4': !m_oController.m_oConstantsService.isUserAdministrator()}">
-                        <div class="service-item">
+                        <div class="service-item high-contrast-home-menu">
                             <i class="service-icon fa fa-bar-chart-o" ng-click="m_oController.serviceIconClicked('/map')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/map')" style="cursor: pointer">{{'INDEX_DATI' | translate}}</a></h4>
                             <p>{{'INDEX_TEXT_DATI' | translate}}</p>
                         </div>
                     </div>
                     <div class="col-md-2 text-center">
-                        <div class="service-item">
+                        <div class="service-item high-contrast-home-menu">
                             <i class="service-icon fa fa-table" ng-click="m_oController.serviceIconClicked('/summarytable')"></i>
                             <h4><a  ng-click="m_oController.serviceIconClicked('/summarytable')"  style="cursor: pointer">{{'INDEX_TABELLE' | translate}}</a></h4>
                             <p>{{'INDEX_TEXT_TABELLE' | translate}}</p>
                         </div>
                     </div>
                     <div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">
-                        <div class="service-item">
+                        <div class="service-item high-contrast-home-menu">
                             <i class="service-icon fa omirl-sat-ground" ng-click="m_oController.serviceIconClicked('/animations')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate}}</a></h4>
                             <p>{{'INDEX_TEXT_SATRADAR' | translate}}</p>
                         </div>
                     </div>
                     <div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">
-                        <div class="service-item mod-meteo-marini">
+                        <div class="service-item mod-meteo-marini high-contrast-home-menu">
                             <i class="service-icon fa fa-globe" ng-click="m_oController.serviceIconClicked('/modelsgallery')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{'INDEX_MODELLI' | translate}}</a></h4>
                             <p>{{'INDEX_TEXT_MODELLI' | translate}}</p>
