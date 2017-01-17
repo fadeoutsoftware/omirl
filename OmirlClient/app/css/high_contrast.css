@@ -1,0 +1,32 @@
+.high-contrast {
+  /* The home links for 'Dati', 'Tabelle', etc */ }
+  .high-contrast-home-menu h4 a {
+    color: darkblue;
+    font-weight: 400; }
+  .high-contrast-home-menu p {
+    color: darkblue; }
+  .high-contrast.date-selector-container .mode-info span {
+    color: black;
+    font-weight: 400; }
+  .high-contrast.date-selector-container input[type=text] {
+    color: black;
+    font-weight: 400; }
+  .high-contrast-sidebar-menu-container .panel-heading:hover {
+    background-color: #57acd8 !important; }
+  .high-contrast-sidebar-menu-container .map-text-legend-selected {
+    color: #111; }
+  .high-contrast-sidebar-menu-container .icon {
+    color: #111; }
+  .high-contrast-sidebar-menu-container .glyphicon-chevron-right {
+    color: #444; }
+  .high-contrast-sidebar-menu-container .map-accordion-title {
+    color: #111;
+    font-weight: 400; }
+  .high-contrast#sidebar-wrapper .sidebar-brand a {
+    color: #ccc;
+    font-weight: 600; }
+  .high-contrast#sidebar-wrapper .sidebar-nav .menu-link a {
+    color: #ccc;
+    font-weight: 600; }
+
+/*# sourceMappingURL=high_contrast.css.map */
