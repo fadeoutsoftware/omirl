@@ -204,17 +204,17 @@
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/credits')">{{ 'INDEX_CREDITI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/users')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_UTENTI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/periods')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_PERIODS' | translate}}</a></li>
+        <li class="menu-link">
+            <a>
+                <span ng-if="m_oController.isAccessibilityModeActive() == false" ng-click="m_oController.activateAccessibilityMode()">Attiva Alto Contrasto</span>
+                <span ng-if="m_oController.isAccessibilityModeActive() == true" ng-click="m_oController.deactivateAccessibilityMode()">Disattiva Alto Contrasto</span>
+            </a>
+        </li>
         <li class="menu-languages-container">
             <img ng-click="m_oController.changeLanguage('it')" src="img/flag_italy.png" alt="{{ 'INDEX_LANGIT' | translate}}" title="{{ 'INDEX_LANGIT' | translate}}">
             </img>
             <img ng-click="m_oController.changeLanguage('fr')" src="img/flag_france.png" alt="{{ 'INDEX_LANGFR' | translate}}" title="{{ 'INDEX_LANGFR' | translate}}">
             </img>
-        </li>
-        <li class="menu-link">
-            <a>
-                <span ng-if="m_oController.isAccessibilityModeActive() == false" ng-click="m_oController.activateAccessibilityMode()">Attiva modalita accessibilità</span>
-                <span ng-if="m_oController.isAccessibilityModeActive() == true" ng-click="m_oController.deactivateAccessibilityMode()">Disattiva modalita accessibilità</span>
-            </a>
         </li>
         <li class="menu-login-container">
             <a ng-click="m_oController.reservedAreaClicked()"> {{m_oController.ReservedAreaText | translate}}</a>
