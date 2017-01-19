@@ -497,7 +497,13 @@ public class GeoServerDataManager2 implements IGeoServerDataManager {
 				//calcolo la somma ed il numero di celle per ogni feature
 
 				float afValues[] = new float[vsFeatureMap.size()];
-				int aiCount[] = new int[vsFeatureMap.size()];			
+				int aiCount[] = new int[vsFeatureMap.size()];		
+				
+				for (int iInit=0; iInit<vsFeatureMap.size(); iInit++) {
+					afValues[iInit] = 0.0f;
+					aiCount[iInit] = 0;
+				}
+				
 				AggregateMap(afMap, fUndef, aiMap, afValues, aiCount);
 
 				//applico il valore alle feature

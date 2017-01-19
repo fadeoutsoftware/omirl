@@ -1775,6 +1775,7 @@ public class OmirlDaemon {
 						MapInfoViewModel oMapInfoViewModel = new MapInfoViewModel();
 						oMapInfoViewModel.setCode(oMapInfo.getCode());
 						oMapInfoViewModel.setLayerId(sLayerId);
+						oMapInfoViewModel.setStyleId(oMapInfo.getStyle());
 
 						aoOutputInfo.add(oMapInfoViewModel);
 					}

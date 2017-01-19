@@ -223,7 +223,7 @@ public class MapService {
 			GeoServerDataManager2 oDataManager = new GeoServerDataManager2(oConfig.getGeoServerAddress(), "", oConfig.getGeoServerUser(), oConfig.getGeoServerPassword());
 			oDataManager.AggregateLayer(sTiffMap, sAggregationFile, sOutFile, oAggregation.getFieldID(), "VALUE", oAggregation.getUndefValue());
 			// Pubblicare il layer
-			oDataManager.addShapeLayer(sNewLayerId, oConfig.getGeoServerWorkspace(), "OmirlRain30d_shp" , oConfig.getGeoServerStore());
+			oDataManager.addShapeLayer(sNewLayerId, oConfig.getGeoServerWorkspace(), oMapInfo.getStyleId() +"_shp" , oConfig.getGeoServerStore());
 			// Modificare id
 			oMapInfo.setLayerId(sNewLayerId);
 		}

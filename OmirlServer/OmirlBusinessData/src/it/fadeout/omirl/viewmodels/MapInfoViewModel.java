@@ -5,6 +5,7 @@ import javax.persistence.Transient;
 public class MapInfoViewModel {
 	String code;
 	String layerId;
+	private String styleId;
 	@Transient
 	private
 	String updateDateTime;
@@ -26,6 +27,12 @@ public class MapInfoViewModel {
 	}
 	public void setUpdateDateTime(String updateDateTime) {
 		this.updateDateTime = updateDateTime;
+	}
+	public String getStyleId() {
+		return styleId;
+	}
+	public void setStyleId(String styleId) {
+		this.styleId = styleId;
 	}
 
 }
