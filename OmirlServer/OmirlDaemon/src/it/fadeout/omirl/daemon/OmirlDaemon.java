@@ -85,8 +85,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 //import sun.dc.path.PathException;
-
-import com.sun.org.apache.xpath.internal.operations.Bool;
+//import com.sun.org.apache.xpath.internal.operations.Bool;
 
 public class OmirlDaemon {
 
@@ -110,7 +109,7 @@ public class OmirlDaemon {
 	SensorValueTableViewModel m_oSnowValuesTable = new SensorValueTableViewModel();
 	SensorValueTableViewModel m_oBoaValuesTable = new SensorValueTableViewModel();
 	SensorValueTableViewModel m_oWindValuesTable = new SensorValueTableViewModel();
-
+	SensorValueTableViewModel m_oSunshineValuesTable = new SensorValueTableViewModel();
 
 	/**
 	 * Omirl Daemon
@@ -275,6 +274,8 @@ public class OmirlDaemon {
 						if (oStationAnag.getBattery_voltage_every() != null) asOtherLinks.add("Batt");
 						if (oStationAnag.getMean_wave_height_every() !=null) asOtherLinks.add("Boa");
 						if (oStationAnag.getMean_snow_depth_every() != null) asOtherLinks.add("Neve");
+						if (oStationAnag.getSunshine_duration_every() != null ) asOtherLinks.add("Elio");
+						System.out.println("Hi i'm alive");
 						//if (oStationAnag.get != null) asOtherLinks.add("humidity");
 
 
@@ -1026,14 +1027,13 @@ public class OmirlDaemon {
 								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
 								oChartEx.printStackTrace();
 							}
-
-
+							
 							try {
 
-								// --------------------------------------------------------SNOW CHART
-								if (oStationAnag.getMean_snow_depth_every() != null) {
+								// ---------------------------------------------------------Sun duration CHART
+								if (oStationAnag.getSunshine_duration_every() != null) {
 
-									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Neve");
+									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Elio");
 
 									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
 									{
@@ -1049,6 +1049,29 @@ public class OmirlDaemon {
 								oChartEx.printStackTrace();
 							}
 
+
+							
+							try {
+
+								// --------------------------------------------------------SNOW CHART
+								if (oStationAnag.getMean_snow_depth_every() != null) {
+
+									List<ChartInfo> aoInfo = getChartInfoFromSensorCode("Neve");
+
+									if (RefreshChart(aoInfo, lReferenceDate, oStationAnag.getStation_code()))
+									{
+										// Initialize Start Date
+										Date oStartDate = GetChartStartDate(oChartsStartDate, aoInfo);
+
+										SaveStandardChart(aoInfo,oStationAnag,asOtherLinks,oStationDataRepository,oStartDate);
+									}
+								}
+							}				
+							catch(Exception oChartEx) {
+								System.out.println("OmirDaemon - Station: " + oStationAnag.getStation_code());
+								oChartEx.printStackTrace();
+							}
+							
 						}
 					}
 
@@ -1083,7 +1106,12 @@ public class OmirlDaemon {
 						System.out.println("OmirlDaemon - Radio Layer");
 						aoSensorVMList = SerializeSensorLast("radio", oLastRepo);
 						SerializeSensorsValuesTable(m_oRadioValuesTable, aoSensorVMList, "Radio");
-
+						
+						System.out.println("OmirlDaemon - Elio Layer");
+						aoSensorVMList = SerializeSensorLast("elio", oLastRepo);
+						System.out.println(aoSensorVMList.toString());
+						SerializeSensorsValuesTable(m_oSunshineValuesTable, aoSensorVMList, "Elio");
+						
 						System.out.println("OmirlDaemon - Foglie Layer");
 						aoSensorVMList = SerializeSensorLast("leafs", oLastRepo);
 						SerializeSensorsValuesTable(m_oLeafsValuesTable, aoSensorVMList, "Foglie");
@@ -1446,7 +1474,7 @@ public class OmirlDaemon {
 			return dDeg;
 		}
 
-		//più di due massimi o due massimi non confinanti
+		//piï¿½ di due massimi o due massimi non confinanti
 		return -1.0;
 
 
@@ -1735,9 +1763,9 @@ public class OmirlDaemon {
 			// Per ognuno di quelli
 			//		Andare nelle cartelle
 			// 		Prendere ultimo file non ancora pubblicato
-			//		Se c'è pubblicarlo
-			//		Se c'è aggiornare il riferimento al link id per quel codice (oggetto MapInfoViewModel)
-			// Scrivi un xml con per ogni codice il layerId più recente o cmq di riferimento
+			//		Se c'ï¿½ pubblicarlo
+			//		Se c'ï¿½ aggiornare il riferimento al link id per quel codice (oggetto MapInfoViewModel)
+			// Scrivi un xml con per ogni codice il layerId piï¿½ recente o cmq di riferimento
 
 			List<MapInfo> aoMapsInfo = m_oConfig.getMapsInfo();
 
@@ -4676,14 +4704,14 @@ public class OmirlDaemon {
 		oInfo.setAxisYMaxValue(36.0);
 		oInfo.setAxisYMinValue(-4.0);
 		oInfo.setAxisYTickInterval(2.0);
-		oInfo.setAxisYTitle("Temperatura (°C)");
+		oInfo.setAxisYTitle("Temperatura (ï¿½C)");
 		oInfo.setColumnName("mean_air_temp");
 		oInfo.setConversionFactor(1.0);
 		oInfo.setFolderName("temp");
 		oInfo.setName("Temperatura");
 		oInfo.setSensorType("Termo");
 		oInfo.setSubtitle("Temperatura");
-		oInfo.setTooltipValueSuffix(" °C");
+		oInfo.setTooltipValueSuffix(" ï¿½C");
 		oInfo.setType("line");
 
 		oConfig.getChartsInfo().add(oInfo);
@@ -4710,11 +4738,11 @@ public class OmirlDaemon {
 		oInfo.setAxisYMaxValue(150.0);
 		oInfo.setAxisYMinValue(0.0);
 		oInfo.setAxisYTickInterval(10.0);
-		oInfo.setAxisYTitle("Velocità (km/h)");
+		oInfo.setAxisYTitle("Velocitï¿½ (km/h)");
 		oInfo.setColumnName("mean_wind_speed");
 		oInfo.setConversionFactor(3.6);
 		oInfo.setFolderName("wind");
-		oInfo.setName("Velocità del Vento");
+		oInfo.setName("Velocitï¿½ del Vento");
 		oInfo.setSensorType("Vento");
 		oInfo.setSubtitle("Vento");
 		oInfo.setTooltipValueSuffix(" km/h");
@@ -4728,13 +4756,13 @@ public class OmirlDaemon {
 		oInfo.setAxisYMaxValue(100.0);
 		oInfo.setAxisYMinValue(0.0);
 		oInfo.setAxisYTickInterval(10.0);
-		oInfo.setAxisYTitle("Umidità Relativa (%)");
+		oInfo.setAxisYTitle("Umiditï¿½ Relativa (%)");
 		oInfo.setColumnName("humidity");
 		oInfo.setConversionFactor(1.0);
 		oInfo.setFolderName("igro");
-		oInfo.setName("Umidità Relativa");
+		oInfo.setName("Umiditï¿½ Relativa");
 		oInfo.setSensorType("Igro");
-		oInfo.setSubtitle("Umidità");
+		oInfo.setSubtitle("Umiditï¿½");
 		oInfo.setTooltipValueSuffix(" %");
 		oInfo.setType("line");
 
