@@ -1,0 +1,27 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+version = 1.0
+
+dependencies {
+    //compile project(':Omirl')
+    compile project(':OmirlDaemon')
+    compile project(':OmirlBusinessData')
+}
+
+jar {
+    zip64 true
+
+    baseName = 'OmirlDaemonCFMI'
+    manifest {
+        attributes \
+            'Main-Class': 'it.fadeout.omirl.daemon.OmirlDaemon',
+            'Built-Date': new Date(),
+            'Implementation-Version': version,
+            'Class-Path': '.'
+    }
+
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) })
+}

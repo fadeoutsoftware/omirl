@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(dir: 'WebContent/WEB-INF/lib/', include: ['*.jar'])
+    compile project(':OmirlBusinessData')
+    compile project(':OmirlDaemon')
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+    }
+}
