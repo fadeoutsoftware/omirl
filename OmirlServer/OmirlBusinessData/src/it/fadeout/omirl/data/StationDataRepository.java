@@ -583,9 +583,11 @@ public class StationDataRepository extends Repository<StationData>{
 			
 			oSession = HibernateUtils.getSessionFactory().openSession();
 
-			String sQuery = "delete from station_data where "
-					+ "reference_date not in (select reference_date from station_data inner join savedperiods on (station_data.reference_date > to_timestamp(savedperiods.timestampstart / 1000) and reference_date < to_timestamp(savedperiods.timestampend / 1000))) "
-					+ "and reference_date < '" + oDateTime + "'";
+			//String sQuery = "delete from station_data where "
+			//		+ "reference_date not in (select reference_date from station_data inner join savedperiods on (station_data.reference_date > to_timestamp(savedperiods.timestampstart / 1000) and reference_date < to_timestamp(savedperiods.timestampend / 1000))) "
+			//		+ "and reference_date < '" + oDateTime + "'";
+			
+            String sQuery="DELETE FROM station_data WHERE reference_date < '" + oDateTime + "' AND isinsavedperiods(reference_date) = FALSE";
 
 			Query oQuery = oSession.createSQLQuery(sQuery);
 			iRow = oQuery.executeUpdate();
