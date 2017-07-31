@@ -30,7 +30,7 @@ public class PeriodsService {
 
 		ArrayList<SavedPeriod> aoSavedPeriods = new ArrayList<SavedPeriod>();
 		ArrayList<PeriodViewModel> aoRet = new ArrayList<PeriodViewModel>();
-		SavedPeriodRepository oRepo = new SavedPeriodRepository();
+		SavedPeriodRepository oRepo = new SavedPeriodRepository(); 
 		OmirlUser oUser = Omirl.getUserFromSession(sSessionId);
 		if (oUser != null) {
 			try {

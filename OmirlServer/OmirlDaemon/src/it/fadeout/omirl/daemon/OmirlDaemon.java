@@ -3676,15 +3676,15 @@ public class OmirlDaemon {
 			ArrayList<Double> aoWindLimits = new ArrayList<>();
 			aoWindLimits.add(0.555556);
 			aoWindLimits.add(1.66667);
-			aoWindLimits.add(3.05556);
-			aoWindLimits.add(5.0);
-			aoWindLimits.add(8.33333);
-			aoWindLimits.add(10.8333);
-			aoWindLimits.add(13.8889);
-			aoWindLimits.add(16.9444);
-			aoWindLimits.add(20.5556);
-			aoWindLimits.add(24.1667);
-			aoWindLimits.add(28.3333);
+			aoWindLimits.add(3.85833);
+			aoWindLimits.add(6.43056);
+			aoWindLimits.add(9.00278);
+			aoWindLimits.add(11.57500);
+			aoWindLimits.add(14.1472);
+			aoWindLimits.add(16.719445);
+			aoWindLimits.add(19.29167);
+			aoWindLimits.add(21.86389);
+			aoWindLimits.add(24.436111);
 			aoWindLimits.add(100.0);
 			//aoWindLimits.add(29.837752);
 
