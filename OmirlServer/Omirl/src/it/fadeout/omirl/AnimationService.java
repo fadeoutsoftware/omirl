@@ -47,7 +47,7 @@ public class AnimationService {
 			if (sRefDate.equals("") == false) 
 			{
 				// Try e catch per fare il parsing 
-				// se è valido sostituire oDate.
+				// se ï¿½ valido sostituire oDate.
 				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 				try {
 					
@@ -131,7 +131,7 @@ public class AnimationService {
 			if (sRefDate.equals("") == false) 
 			{
 				// Try e catch per fare il parsing 
-				// se è valido sostituire oDate.
+				// se ï¿½ valido sostituire oDate.
 				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 				try {
 					
@@ -166,8 +166,8 @@ public class AnimationService {
 				
 				System.out.println("AnimationService.GetImage: searching path " + sPath);
 				
-				File oLastFile = Omirl.lastFileModified(sPath, oDate);
-				
+				//File oLastFile = Omirl.lastFileModified(sPath, oDate);
+				File oLastFile = Omirl.lastFileByName(sPath, oDate);
 				// Found?
 				if (oLastFile != null) {
 					
