@@ -28,12 +28,17 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.annotation.Retention;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -49,6 +54,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletSecurityElement;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
+
+import org.joda.time.Period;
+
 import static java.util.stream.Collectors.toList;
 
 public class Omirl extends Application {
@@ -514,6 +522,13 @@ public class Omirl extends Application {
 	public static File lastFileByName(String dir, Date oRefDate) {
 		Path last=null;
 		int max=0;
+		int boundary=2400;
+		if (oRefDate != null) {
+			//files's names are in localformat
+			
+			LocalDateTime ldt = LocalDateTime.ofInstant(oRefDate.toInstant(),ZoneId.of("Europe/Rome"));
+			boundary = ldt.getHour()*100+ldt.getMinute();
+		}
 		
 		try {
 			Path current = Paths.get(dir);
@@ -522,16 +537,23 @@ public class Omirl extends Application {
                     					 .map(Path::getFileName)
                     					 .collect(toList());
 			stream.close();
-			
+			//Path itm=null;
+			//for (int i = 0; i < fileNames.size() && max<=boundary;i++) {
 			for (Path p : fileNames) {
-				if (getRefTime(p) > max) {
+				int refT = getRefTime(p);
+				if (  refT  <=boundary && refT >=max) {
 					max = getRefTime(p);
 					last = p;
 				}
 			}
+			//FIXME null on toString ???
+			System.out.println(last.toString()+ " max:" + max + " boundary:"+boundary);
 		}
 		catch(InvalidPathException | IOException e) {
 			return null;
+		}
+		finally {
+			
 		}
 		
 		System.out.println(last.toString()+"a");
