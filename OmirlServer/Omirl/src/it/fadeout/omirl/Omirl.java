@@ -522,11 +522,12 @@ public class Omirl extends Application {
 	public static File lastFileByName(String dir, Date oRefDate) {
 		Path last=null;
 		int max=0;
-		int boundary=2400;
+		int boundary=2400; //init to no boundary for realtime requests
+		System.out.println(oRefDate);
 		if (oRefDate != null) {
 			//files's names are in localformat
 			
-			LocalDateTime ldt = LocalDateTime.ofInstant(oRefDate.toInstant(),ZoneId.of("Europe/Rome"));
+			LocalDateTime ldt = LocalDateTime.ofInstant(oRefDate.toInstant(),ZoneId.of("UTC"));
 			boundary = ldt.getHour()*100+ldt.getMinute();
 		}
 		
@@ -539,9 +540,10 @@ public class Omirl extends Application {
 			stream.close();
 			//Path itm=null;
 			//for (int i = 0; i < fileNames.size() && max<=boundary;i++) {
+			
 			for (Path p : fileNames) {
 				int refT = getRefTime(p);
-				if (  refT  <=boundary && refT >=max) {
+				if (  refT  <= boundary && refT >=max) {
 					max = getRefTime(p);
 					last = p;
 				}
