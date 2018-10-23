@@ -20,9 +20,13 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import javax.media.jai.operator.MinDescriptor;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -70,7 +74,7 @@ public class ChartService {
 			if (sRefDate.equals("") == false) 
 			{
 				// Try e catch per fare il parsing 
-				// se è valido sostituire oDate.
+				// se ï¿½ valido sostituire oDate.
 				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 				try {
 
@@ -172,7 +176,7 @@ public class ChartService {
 			if (sRefDate.equals("") == false) 
 			{
 				// Try e catch per fare il parsing 
-				// se è valido sostituire oDate.
+				// se ï¿½ valido sostituire oDate.
 				SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 				try {
 
@@ -251,69 +255,91 @@ public class ChartService {
 			public void write(OutputStream os) throws IOException, WebApplicationException {
 
 				DecimalFormat oDecimalFormat = new DecimalFormat("#.##");      
+				List<Integer> minIdxs = new ArrayList<Integer>();;
+				ArrayList<Long> refs = new ArrayList<Long>();
+				ArrayList<Integer> dataSeriesIdx = new ArrayList<Integer>();
 
 
-				DateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+				DateFormat oFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 				Writer writer = new BufferedWriter(new OutputStreamWriter(os));
 
-				if (oFinalDataChart.getDataSeries()!=null)
-				{
-					if (oFinalDataChart.getDataSeries().size()>0) 
-					{
-						DataSerie oDataSerie =oFinalDataChart.getDataSeries().get(0);
-
-						if (oDataSerie.getData() != null) {
-							for (int iRows=0; iRows<oDataSerie.getData().size(); iRows++) {
-								Object [] adValues = oDataSerie.getData().get(iRows);
-
-								Date oDate = new Date((long) adValues[0]); 
-
-								writer.write("" + oFormat.format(oDate) + ";");
-
-								for (int iDataSerie = 0; iDataSerie < oFinalDataChart.getDataSeries().size(); iDataSerie++) {
-									DataSerie oActualSerie = oFinalDataChart.getDataSeries().get(iDataSerie);
-
-									if (oActualSerie.getData() != null) 
-									{
-										if (iRows<oActualSerie.getData().size())
-										{ 
-											Object [] adActualValues = oActualSerie.getData().get(iRows);
-
-											if (adActualValues!= null){
-												if (adActualValues[1]!=null)  {
-													Double dValue = (Double) adActualValues[1];
-													//String sValue = String.format("%2f",dValue);
-
-
-													writer.write("" + Double.valueOf(oDecimalFormat.format(dValue)) + ";");
-												}
-												else {
-													writer.write(";");
-												}
-											}
-											else {
-												writer.write(";");
-											}				    						  
-										}
-									}
-
-								}
-
-								writer.write("\n");
-
+				if (oFinalDataChart.getDataSeries()!=null 
+						&& oFinalDataChart.getDataSeries().size()>0){
+					//Init idxs for data series
+					for (int i=0; i < oFinalDataChart.getDataSeries().size();i++){
+						dataSeriesIdx.add(i,0);
+					}
+					
+					Object[] lTmp;
+					int numActiveDs = dataSeriesIdx.size();
+					System.out.println("Actives idxs :"+numActiveDs);
+					System.out.println("dateSerie size :"+dataSeriesIdx.size());
+					System.out.println("numbers of data series" +oFinalDataChart.getDataSeries().size());
+					
+					
+					while(numActiveDs > 0 )	{
+						
+						for (int i=0; i < dataSeriesIdx.size() ;  i++){
+							//TODO add safety checks
+							if ( Integer.MAX_VALUE != dataSeriesIdx.get(i)){
+								lTmp = oFinalDataChart.getDataSeries().get(i).getData().get(dataSeriesIdx.get(i));
+								refs.add((long)(lTmp[0]));
 							}
 						}
+						
+						if (refs.size() == 1 && minIdxs.isEmpty()){
+							minIdxs.add(0);
+						}
+						else{
+							minIdxs = ChartService.getMinIdxs(refs);
+						}
+
+						Date oDate = new Date((long) refs.get(0));
+						writer.write("" + oFormat.format(oDate) + ";");
+						DataSerie oDataSerie;
+						Double dValue;
+						for (int idx:minIdxs){
+							oDataSerie= oFinalDataChart.getDataSeries().get(idx);
+							if (oDataSerie.getData().get(dataSeriesIdx.get(idx))[1] != null){
+								dValue = (Double) oDataSerie.getData().get(dataSeriesIdx.get(idx))[1];
+								writer.write("" + Double.valueOf(oDecimalFormat.format(dValue)) + ";");
+							}
+						}
+						writer.write("\n");
+						
+						for (Integer idx:minIdxs){
+							dataSeriesIdx.set(idx,dataSeriesIdx.get(idx) + 1);
+							if (! (dataSeriesIdx.get(idx) < oFinalDataChart.getDataSeries().get(idx).getData().size()) ){
+								dataSeriesIdx.set(idx,Integer.MAX_VALUE);
+								numActiveDs--;
+							}
+						}
+						refs.clear();
 					}
+
+					//writer.write("test");
+					
+
 				}
-
-				//writer.write("test");
 				writer.flush();
-
 			}
+			
 		};
 
 
 		return Response.ok(stream).header("Content-Disposition", "attachment;filename="+sCode+sChart+".csv").build();
+	}
+	
+	
+	private static List<Integer> getMinIdxs(List<Long> epochs){
+		
+		  Long min = Collections.min(epochs);
+		  
+		  return IntStream.range(0, epochs.size())
+		                         .filter(i -> epochs.get(i).equals(min))
+		                         .mapToObj(i-> new Integer(i))
+		                         .collect( Collectors.toList());
 	}
 
 	/**
@@ -342,7 +368,7 @@ public class ChartService {
 					if (sRefDate.equals("") == false) 
 					{
 						// Try e catch per fare il parsing 
-						// se è valido sostituire oDate.
+						// se ï¿½ valido sostituire oDate.
 						SimpleDateFormat dtFormat = new SimpleDateFormat(Omirl.s_sDateHeaderFormat);
 						try {
 

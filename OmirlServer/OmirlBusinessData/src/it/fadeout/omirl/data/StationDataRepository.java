@@ -7,6 +7,7 @@ import it.fadeout.omirl.business.SummaryInfoEntity;
 import it.fadeout.omirl.business.WindDataSeriePoint;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class StationDataRepository extends Repository<StationData>{
 
@@ -578,17 +580,28 @@ public class StationDataRepository extends Repository<StationData>{
 	public int DeleteOldData(int iDays, Date oDateTime)
 	{
 		Session oSession = null;
+	    Transaction tx=null;
+	    
 		int iRow = 0;
 		try {
 			
 			oSession = HibernateUtils.getSessionFactory().openSession();
 
-			String sQuery = "delete from station_data where "
-					+ "reference_date not in (select reference_date from station_data inner join savedperiods on (station_data.reference_date > to_timestamp(savedperiods.timestampstart / 1000) and reference_date < to_timestamp(savedperiods.timestampend / 1000))) "
-					+ "and reference_date < '" + oDateTime + "'";
-
+			//String sQuery = "delete from station_data where "
+			//		+ "reference_date not in (select reference_date from station_data inner join savedperiods on (station_data.reference_date > to_timestamp(savedperiods.timestampstart / 1000) and reference_date < to_timestamp(savedperiods.timestampend / 1000))) "
+			//		+ "and reference_date < '" + oDateTime + "'";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			System.out.println("-----------------");
+            String sQuery="DELETE FROM station_data WHERE reference_date < '" + sdf.format(oDateTime) + "'  AND NOT isinsavedperiods(reference_date)";
+            System.out.println("Query: " + sQuery);
 			Query oQuery = oSession.createSQLQuery(sQuery);
 			iRow = oQuery.executeUpdate();
+			tx =oSession.beginTransaction();
+			tx.commit();
+		
+			System.out.println("Deleted rows: " + iRow);
+			System.out.println("-----------------");
+			
 
 		}
 		catch(Throwable oEx) {
@@ -596,7 +609,9 @@ public class StationDataRepository extends Repository<StationData>{
 			oEx.printStackTrace();
 		}
 		finally {
+			
 			if (oSession!=null) {
+				System.out.println("...Cleaning Session in DeleteOldData") ;
 				oSession.flush();
 				oSession.clear();
 				oSession.close();

@@ -87,11 +87,21 @@ public class StationAnag {
 	Integer near_sea;
 	@Column(name="webcam_every")
 	Integer webcam_every;
+	
 	@Column(name="mean_wave_height_every")
 	Integer mean_wave_height_every;
 	@Column(name="mean_snow_depth_every")
 	Integer mean_snow_depth_every;
+	//max
+	@Column(name="sunshine_duration_every")
+	Integer sunshine_duration_every;
 	
+	public Integer getSunshine_duration_every() {
+		return sunshine_duration_every;
+	}
+	public void setSunshine_duration_every(Integer sunshine_duration_every) {
+		this.sunshine_duration_every = sunshine_duration_every;
+	}
 	public String getStation_code() {
 		return station_code;
 	}

@@ -1,4 +1,5 @@
 package it.fadeout.omirl;
+import static java.util.stream.Collectors.toList;
 
 import it.fadeout.omirl.business.OmirlUser;
 import it.fadeout.omirl.business.OpenSession;
@@ -26,14 +27,26 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletConfig;
@@ -41,6 +54,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletSecurityElement;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
+
+import org.joda.time.Period;
+
+import static java.util.stream.Collectors.toList;
 
 public class Omirl extends Application {
 
@@ -69,6 +86,8 @@ public class Omirl extends Application {
 		classes.add(GalleryService.class);
 		classes.add(OmirlUserService.class);
 		classes.add(AnimationService.class);
+		
+
 		classes.add(PeriodsService.class);
 		return classes;
 	}
@@ -498,7 +517,86 @@ public class Omirl extends Application {
 
 		return sFullDir;
 	}
-
+	
+	
+	public static File lastFileByName(String dir, Date oRefDate) {
+		Path last=null;
+		int max=0;
+		int boundary=2400; //init to no boundary for realtime requests
+		System.out.println(oRefDate);
+		if (oRefDate != null) {
+			//files's names are in localformat
+			
+			LocalDateTime ldt = LocalDateTime.ofInstant(oRefDate.toInstant(),ZoneId.of("UTC"));
+			boundary = ldt.getHour()*100+ldt.getMinute();
+		}
+		
+		try {
+			Path current = Paths.get(dir);
+			Stream<Path> stream = Files.list(current); 
+			List<Path> fileNames = stream.filter(x->checkFn(x))
+                    					 .map(Path::getFileName)
+                    					 .collect(toList());
+			stream.close();
+			//Path itm=null;
+			//for (int i = 0; i < fileNames.size() && max<=boundary;i++) {
+			
+			for (Path p : fileNames) {
+				int refT = getRefTime(p);
+				if (  refT  <= boundary && refT >=max) {
+					max = getRefTime(p);
+					last = p;
+				}
+			}
+			//FIXME null on toString ???
+			System.out.println(last.toString()+ " max:" + max + " boundary:"+boundary);
+		}
+		catch(InvalidPathException | IOException e) {
+			return null;
+		}
+		finally {
+			
+		}
+		
+		System.out.println(last.toString()+"a");
+		File ret = new File (dir + "/"+last.getFileName());
+		System.out.println(ret.getAbsolutePath());
+		return ret;
+	}
+	//need it !? we call getRefTime x2 
+	private static boolean checkFn(Path p) {
+		if ( getRefTime(p) != 9999) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	private static int getRefTime(Path p) {
+		int refTime;
+		if (p != null ) {
+			ArrayList<String> fieldList = new ArrayList<String>();
+			//TODO hardcoded parsing, to change  decode product type
+			fieldList = new ArrayList<String>(Arrays.asList(p.getFileName().toString().split("_",-1)));
+			if (fieldList.size() == 3 ) {
+				String[] timeRef_ext = fieldList.get(2).split("\\.",-1);
+				if (timeRef_ext[0].length() == 4) {
+					try {
+						refTime=Integer.parseInt(timeRef_ext[0] );	
+						System.out.println("timeRef: " + refTime);
+						return refTime;
+					
+					}catch (NumberFormatException e ) {
+						return 9999;
+					}
+				}
+					
+				
+			}
+		}
+		return 9999;
+	}
 	public static File lastFileModified(String dir, Date oRefDate) {
 		File oDir = new File(dir);
 
@@ -523,7 +621,7 @@ public class Omirl extends Application {
 			}
 		}
 
-		//se è presente una data allora prendiamo il file immediatamente più vicino in base ad ora e minuti
+		//se ï¿½ presente una data allora prendiamo il file immediatamente piï¿½ vicino in base ad ora e minuti
 		if (oRefDate != null)
 		{
 			long longRefDate = Long.MAX_VALUE;
@@ -542,17 +640,17 @@ public class Omirl extends Application {
 					Date oLastDateFile = oFormat.parse(oFormat.format(oDateFile));
 					long lTicksLastDateFile = oLastDateFile.getTime();
 
-					//se per fortuna la differenza è uguale a 0 allora abbiamo trovato il file candidato
+					//se per fortuna la differenza ï¿½ uguale a 0 allora abbiamo trovato il file candidato
 					if (lTicksLastDateFile - longRefDate == 0)
 					{
 						oChoise = file;
 						break;
 					}
 
-					//se la differenza è maggiore di 0 allora è un file precedente alla data
+					//se la differenza ï¿½ maggiore di 0 allora ï¿½ un file precedente alla data
 					if (longRefDate - lTicksLastDateFile  > 0)
 					{
-						//vediamo se è il più vicino alla data selezionata
+						//vediamo se ï¿½ il piï¿½ vicino alla data selezionata
 						if ((longRefDate - lTicksLastDateFile) < lDiff)
 						{
 							oChoise = file;
@@ -595,7 +693,7 @@ public class Omirl extends Application {
 			}
 		}
 
-		//se è presente una data allora prendiamo il file immediatamente più vicino in base ad ora e minuti
+		//se ï¿½ presente una data allora prendiamo il file immediatamente piï¿½ vicino in base ad ora e minuti
 		if (oRefDate != null)
 		{
 			long longRefDate = Long.MAX_VALUE;
@@ -614,17 +712,17 @@ public class Omirl extends Application {
 					Date oLastDateFile = oFormat.parse(oFormat.format(oDateFile));
 					long lTicksLastDateFile = oLastDateFile.getTime();
 
-					//se per fortuna la differenza è uguale a 0 allora abbiamo trovato il file candidato
+					//se per fortuna la differenza ï¿½ uguale a 0 allora abbiamo trovato il file candidato
 					if (lTicksLastDateFile - longRefDate == 0)
 					{
 						oChoise = file;
 						break;
 					}
 
-					//se la differenza è maggiore di 0 allora è un file precedente alla data
+					//se la differenza ï¿½ maggiore di 0 allora ï¿½ un file precedente alla data
 					if (longRefDate - lTicksLastDateFile  > 0)
 					{
-						//vediamo se è il più vicino alla data selezionata
+						//vediamo se ï¿½ il piï¿½ vicino alla data selezionata
 						if ((longRefDate - lTicksLastDateFile) < lDiff)
 						{
 							oChoise = file;
