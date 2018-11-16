@@ -60,6 +60,13 @@ angular.module('omirl.chartService', ['omirl.ConstantsService']).
         }
 
         this.getStationChart = function(sSensorCode, sChart) {
+            if ( sChart == 'Vento'){
+	    	sChart = 'Vento2';
+            }else {
+	     if ( sChart == 'Vento2'){
+	         sChart = 'Vento';
+             }
+	    }
             var sAPIURL = this.m_oConstantsService.getAPIURL();
             return this.m_oHttp.get(sAPIURL + '/charts/'+sSensorCode+'/'+sChart);
         }

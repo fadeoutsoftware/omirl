@@ -1,0 +1,606 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the     -->
+<!-- browser's rendering engine into                -->
+<!-- "Standards Mode". Replacing this declaration   -->
+<!-- with a "Quirks Mode" doctype is not supported. -->
+
+<html ng-app="omirl">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title>Omirl Online</title>
+    <link rel="icon" href="http://omirl.regione.liguria.it/Omirl/favicon.ico" type="image/x-icon"/>
+
+    <!-- Google Maps Scripts -->
+    <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
+    <!-- Open Layers Scripts -->
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <!--link href="css/bootstrap.css" rel="stylesheet"-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <!-- Add custom CSS here -->
+    <link href="css/customfonts.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/datetimepicker.css" rel="stylesheet">
+    <link href="css/omirl.css" rel="stylesheet">
+    <!--link rel="stylesheet" href="css/override.css"/-->
+   
+    <link href="css/mainstyle.css" rel="stylesheet">
+
+
+    <script src="js/classes/CookieManager.js"></script>
+    <script>
+        if (CookieManager.isAccessibilityModeActive() == true){
+            document.write('<link href="css/high_contrast.css" rel="stylesheet">');
+        }
+    </script>
+
+    
+    
+    <!-- New JS position -->
+    <!-- jQuery -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/start/jquery-ui.css">
+    <!--script src="lib/jquery/jquery-1.10.2.js"></script-->
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    
+    <!-- App classes -->
+    <script src="js/classes/MenuItemFirstLevel.js"></script>
+    <script src="js/classes/Utils.js"></script>
+    <script src="js/classes/WebcamDialog.js"></script>
+
+    
+    <!-- JavaScript -->
+    <!-- In production use:
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    -->
+    
+
+    <!-- Bootstrap -->
+    <!--script src="lib/bootstrap/bootstrap.js"></script-->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <!-- jQueryUI -->
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+    
+    <!-- Vex (a modern Dialogs lib) -->
+    <script src="lib/vex-dialogs/2.3.2/vex.min.js"></script>
+    <script src="lib/vex-dialogs/2.3.2/vex.dialog.min.js"></script>
+    <link href="lib/vex-dialogs/2.3.2/vex.css" rel="stylesheet" />
+    <link href="lib/vex-dialogs/2.3.2/vex-theme-default.css" rel="stylesheet" />
+    <link href="lib/vex-dialogs/2.3.2/vex-theme-plain.css" rel="stylesheet" />
+    <script>vex.defaultOptions.className = 'vex-theme-plain';</script>
+    
+    <!-- Flex Slider (part 1) -->
+    <link rel="stylesheet" href="lib/flexslider/flexslider.css" type="text/css" media="screen" />
+    <script defer src="lib/flexslider/jquery.flexslider.js"></script>
+    
+    <!-- Angular -->
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular/angular-route.js"></script>
+    <script src="lib/angular/angular-cookies.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+    
+    <!-- Flex Slider (part 2) -->
+    <script src="lib/angular-flexslider/angular-flexslider.js"></script>
+    
+    <!-- Moment js -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.min.js"></script>
+
+    <!-- Highstock Scripts -->
+    <!--script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script-->
+    <script src="lib/Highstock/highstock.js"></script>
+    <script src="lib/Highstock/modules/exporting.js"></script>
+    <!-- DateTimePicker -->
+    <script src="lib/datetimepicker/datetimepicker.js"></script>
+    <!-- Map Control -->
+    <script src="lib/azimuthjs/module.js"></script>
+    <script src="lib/azimuthjs/services/component/mapService.js"></script>
+    <script src="lib/azimuthjs/services/component/layersService.js"></script>
+    <script src="lib/azimuthjs/directives/Layer.js"></script>
+    <script src="lib/azimuthjs/directives/leafletMap.js"></script>
+    <script src="lib/azimuthjs/directives/olMap.js"></script>
+    <!-- Chart Directive -->
+    <!--script src="js/directives/StockDirective.js"></script-->
+    <script src="js/directives/ChartDirective.js"></script>
+    <script src="js/directives/SidebarMenuDirective.js"></script>
+    <script src="js/directives/SidebarMenuLegacyDirective.js"></script>
+    <script src="js/directives/ElevateZoomDirective.js"></script>
+    
+    <!-- Omirl Services -->
+    <script src="js/services/userService.js"></script>
+    <script src="js/services/translateService.js"></script>
+    <script src="js/services/dialog-service.js"></script>
+    <script src="js/services/ConstantsService.js"></script>
+    <script src="js/services/authService.js"></script>
+    <script src="js/services/mapNavigatorService.js"></script>
+    <script src="js/services/stationsService.js"></script>
+    <script src="js/services/chartService.js"></script>
+    <script src="js/services/SessionInjector.js"></script>
+    <script src="js/services/tablesService.js"></script>
+    <script src="js/services/hydroService.js"></script>
+    <script src="js/services/MapLayerService.js"></script>
+    <script src="js/services/GalleryService.js"></script>
+    <script src="js/services/AnimationsService.js"></script>
+    <script src="js/services/periodService.js"></script>
+    <!-- Omirl Controllers -->
+    <script src="js/controllers/PeriodController.js"></script>
+    <script src="js/controllers/UsersController.js"></script>
+    <script src="js/controllers/TemplateController.js"></script>
+    <script src="js/controllers/MapController.js"></script>
+    <script src="js/controllers/TablesController.js"></script>
+    <script src="js/controllers/AnimationsController.js"></script>
+    <script src="js/controllers/AnimationsSatController.js"></script>
+    <script src="js/controllers/CreditsController.js"></script>
+    <script src="js/controllers/ChartController.js"></script>
+    <script src="js/controllers/SettingsController.js"></script>
+    <script src="js/controllers/StationsTableController.js"></script>
+    <script src="js/controllers/SensorTableController.js"></script>
+    <script src="js/controllers/MaxTableController.js"></script>
+    <script src="js/controllers/SummaryTableController.js"></script>
+    <script src="js/controllers/ModelsTableController.js"></script>
+    <script src="js/controllers/SectionChartController.js"></script>
+    <script src="js/controllers/ModelsGalleryController.js"></script>
+    <script src="js/controllers/MaxHydroAlertZoneController.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="js/app.js"></script>
+    <script src="lib/angular-translate/angular-translate.min.js" type="text/javascript"></script>
+    <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js" type="text/javascript"></script>
+    <script src="lib/elevatezoom-master/jquery.elevateZoom-3.0.8.min.js" type="text/javascript"></script>
+    
+<style>
+
+</style>
+</head>
+
+<!--                                           -->
+<!-- The body can have arbitrary html, or      -->
+<!-- you can leave the body empty if you want  -->
+<!-- to create a completely dynamic UI.        -->
+<!--                                           -->
+<body ng-controller="TemplateController">
+
+<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+<noscript>
+    <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+    </div>
+</noscript>
+
+<!-- Side Menu -->
+<a id="menu-toggle" href="#" class="btn btn-primary btn-lg toggle"><i class="fa fa-bars"></i></a>
+<!--img id="menu-waiting" src="img/Waiting.GIF"  class = "toggle"/-->
+<div id="sidebar-wrapper" class="high-contrast">
+    <a id="menu-close" href="#" class="btn btn-default btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
+    <div class="sidebar-brand"><a href="#top">OMIRL</a></div>
+    
+    <!--
+    <div class='menu-languages-container hidden-sm hidden-md hidden-lg'>
+        <img ng-click="m_oController.changeLanguage('it')" src="img/flag_italy.png" title="{{ 'INDEX_LANGIT' | translate}}">
+            </img>
+            <img ng-click="m_oController.changeLanguage('fr')" src="img/flag_france.png" title="{{ 'INDEX_LANGFR' | translate}}">
+            </img>
+    </div>
+    -->
+    
+    <ul class="sidebar-nav">
+        <!--<li class="menu-link"><a class='text-short' href="#top">{{'INDEX_HOME' | translate}}</a></li>-->
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.returnToTop()">{{'INDEX_HOME' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/maps')">{{'INDEX_DATI' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/summarytable')">{{'INDEX_TABELLE' | translate}}</a></li>
+        <!--li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{'INDEX_SATRADAR' | translate }}</a></li-->
+        <li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate }}</a></li>
+        <!--li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_MODELLI' | translate}}</a></li-->
+        <li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{ 'INDEX_MODELLI' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/credits')">{{ 'INDEX_CREDITI' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/users')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_UTENTI' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/periods')" ng-show="m_oController.m_oConstantsService.canUserUseDateSelect()">{{ 'INDEX_PERIODS' | translate}}</a></li>
+        <li class="menu-link">
+            <a>
+                <span ng-if="m_oController.isAccessibilityModeActive() == false" ng-click="m_oController.activateAccessibilityMode()">Attiva Alto Contrasto</span>
+                <span ng-if="m_oController.isAccessibilityModeActive() == true" ng-click="m_oController.deactivateAccessibilityMode()">Disattiva Alto Contrasto</span>
+            </a>
+        </li>
+        <li class="menu-languages-container">
+            <img ng-click="m_oController.changeLanguage('it')" src="img/flag_italy.png" alt="{{ 'INDEX_LANGIT' | translate}}" title="{{ 'INDEX_LANGIT' | translate}}">
+            </img>
+            <img ng-click="m_oController.changeLanguage('fr')" src="img/flag_france.png" alt="{{ 'INDEX_LANGFR' | translate}}" title="{{ 'INDEX_LANGFR' | translate}}">
+            </img>
+        </li>
+        <li class="menu-login-container">
+            <a ng-click="m_oController.reservedAreaClicked()"> {{m_oController.ReservedAreaText | translate}}</a>
+            <div ng-show="m_oController.getShowLogin()" class="login-panel">
+                <form role="form">
+                    <div class="form-group">
+                        <a ng-class="{'loginError': m_oController.m_bLoginError}">{{ m_oController.m_sLoginMessage | translate}}</a>
+                    </div>
+                    <div class="form-group">
+                        <!--label for="userId">Indirizzo E-Mail</label-->
+                        <input type="email" class="form-control" id="userId" ng-model="m_oController.credentials.userId" ng-change="m_oController.resetLoginMessage()" placeholder="{{ 'INDEX_TEXT_EMAIL' | translate}}" ng-disabled="m_oController.m_bLoading">
+                    </div>
+                    <div class="form-group">
+                        <!--label for="userPassword">Password</label-->
+                        <input type="password" class="form-control" id="userPassword" ng-model="m_oController.credentials.userPassword" ng-change="m_oController.resetLoginMessage()" placeholder="{{ 'INDEX_TEXT_PASSWORD' | translate}}"  ng-disabled="m_oController.m_bLoading">
+                    </div>
+                    <button type="submit" ng-click="m_oController.login()" class="btn btn-default" ng-show="!m_oController.m_bLoading">{{ 'INDEX_ACCEDI' | translate}}</button>
+                    <!--div class="form-group">
+                        <a ng-click="m_oController.login()" class="">
+                            <span class="btn btn-default">
+                                <i class="fa fa-user text-center">&nbsp;Accedi</i>
+                            </span>
+                        </a>
+                    </div-->
+                    <img class="loginWaiting" src="img/grayloader.gif" alt="Waiting bar" ng-show="m_oController.m_bLoading"/>
+                </form>
+            </div>
+
+            <div ng-show="m_oController.getShowLogout()">
+                <form role="form">
+                    <div class="form-group">
+                        <a ng-click="m_oController.serviceIconClicked('/settings')">{{ 'INDEX_IMPPERS' | translate}}</a>
+                    </div>
+                    <button type="submit" ng-click="m_oController.logout()" class="btn btn-default btn-logout">{{ 'INDEX_LOGOUT' | translate}}</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
+<!-- /Side Menu -->
+
+<!-- Full Page Image Header Area
+<div id="top" class="header">
+  <div class="vert-text">
+    <h1>OMIRL</h1>
+    <h3>Centro Funzionale della Protezione Civile della Regione Liguria</h3>
+    <a href="#about" class="btn btn-default btn-lg">Start</a>
+  </div>
+</div>
+-->
+<!-- /Full Page Image Header Area -->
+
+<!-- Intro
+<div id="about" class="intro">-->
+<div id="top" class="header">
+
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px">
+        <div>
+            <div class="row loghi">
+                <table>
+                    <tr>
+                        <td class="hidden-xs"><img class="logo payoff" src="img/Slogan_it.png" alt="La cooperazione al cuore del Mediterraneo"/></td>
+                        <td><img class="logo" src="img/Logo_Marittimo.jpg" alt="Marittimo - IT FR - Maritime"/></td>
+                        <td class="hidden-xs"><img class="logo payoff right" src="img/Slogan_fr.png"  alt="La Coopération au coeur de la Méditerranée"/></td>
+                    </tr>
+                </table>
+            </div>
+            <hr/>
+            <div >
+                <table>
+                    <tr>
+    <!--                    <td class="hidden-xs"><img class="logo" src="img/logo-arpal.png" /></td>-->
+                        <td>
+                            <h1 class="big">{{'INDEX_HEADER1' | translate}}</h1>
+                            <br/>
+                            <p class="lead">{{'INDEX_HEADER2' | translate}}</p>
+                        </td>
+    <!--                    <td class="hidden-xs"><img class="logo" src="img/logo-regione.svg" /></td>-->
+                    </tr>
+                </table>
+            </div>
+            <hr/>
+            <div class="row loghi">
+ <!-- Ante cambio loghi Arpal 
+
+                    <img class="logo g2" src="img/logo-regione.png" alt="Logo regione Liguria"/>
+                    <img class="logo g2" src="img/logo-arpal.png" alt="Logo Arpap"/>
+ --!>
+                    <img class="logo g3" src="img/logo-arpal_regione.png" alt="Logo Arpal - Regione Liguria"/>
+
+            </div>
+
+
+            <!-- Services -->
+            <div id="services" class="services">
+                <div class="row">
+
+
+                    <!--div class="row">
+                        <div class="col-md-4 col-md-offset-4 text-center">
+                            <h2>Servizi</h2>
+                            <hr>
+                        </div>
+                    </div-->
+
+		<!--div class="col-md-2 text-center" ng-class="{'col-md-offset-2': m_oController.m_oConstantsService.isUserAdministrator(), 'col-md-offset-2': !m_oController.m_oConstantsService.isUserAdministrator()}"-->
+		<div class="col-md-2 text-center col-md-offset-2">
+                        <div class="service-item high-contrast-home-menu">
+                            <i class="service-icon fa fa-bar-chart-o" ng-click="m_oController.serviceIconClicked('/map')"></i>
+                            <h4><a ng-click="m_oController.serviceIconClicked('/map')" style="cursor: pointer">{{'INDEX_DATI' | translate}}</a></h4>
+                            <p>{{'INDEX_TEXT_DATI' | translate}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="service-item high-contrast-home-menu">
+                            <i class="service-icon fa fa-table" ng-click="m_oController.serviceIconClicked('/summarytable')"></i>
+                            <h4><a  ng-click="m_oController.serviceIconClicked('/summarytable')"  style="cursor: pointer">{{'INDEX_TABELLE' | translate}}</a></h4>
+                            <p>{{'INDEX_TEXT_TABELLE' | translate}}</p>
+                        </div>
+                    </div>
+                    <!--div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()"-->
+                    <div class="col-md-2 text-center ">
+                        <div class="service-item high-contrast-home-menu">
+                            <i class="service-icon fa omirl-sat-ground" ng-click="m_oController.serviceIconClicked('/animations')"></i>
+                            <h4><a ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate}}</a></h4>
+                            <p>{{'INDEX_TEXT_SATRADAR' | translate}}</p>
+                        </div>
+                    </div>
+                    <!--div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()"-->
+                    <div class="col-md-2 text-center">
+                        <div class="service-item mod-meteo-marini high-contrast-home-menu">
+                            <i class="service-icon fa fa-globe" ng-click="m_oController.serviceIconClicked('/modelsgallery')"></i>
+                            <h4><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{'INDEX_MODELLI' | translate}}</a></h4>
+                            <p>{{'INDEX_TEXT_MODELLI' | translate}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /Services -->
+
+            <div class="row loghi fixed  ">
+                <table>
+                    <tr>
+                        <td class="payoff right"><h6>{{'INDEX_INFO1' | translate}}<br/> {{'INDEX_INFO2' | translate}}</h6></td>
+                        <td ><img class="logo payoff"  src="img/Flag_of_Europe.svg" alt="Europe flag"/></td>
+                        <td class="payoff left"><h6>{{'INDEX_INFO3' | translate}} <br/> {{'INDEX_INFO4' | translate}}</h6></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- END OF container-fluid -->
+</div>
+
+
+
+<!-- /Intro -->
+
+
+
+<!-- Callout -->
+<!--div class="callout">
+  <div class="vert-text">
+    <!--h1 id="m_h1CalloutTitle">OMIRL on line</h1>
+  </div>
+</div-->
+<!-- /Callout -->
+
+<!-- Map -->
+<div id="contentcontainer" ng-style="m_oController.m_sContainerStyle">
+    <div ng-view ></div>
+</div>
+<!-- /Map -->
+
+    
+<!-- Custom JavaScript for the Side Menu and Smooth Scrolling -->
+<script>
+    $("#menu-close").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+</script>
+<script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+</script>
+<script>
+    $(function() {
+        $('a[href*=#]:not([href=#])').click(function() {
+            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
+                    || location.hostname == this.hostname) {
+
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+    });
+
+    function OmirlMoveTo(sHash)
+    {
+        var header = $("#top");
+        var mainContainer = $("#contentcontainer");
+        var body = $("body");
+        
+        var iScrollAmout = header.height();
+        
+        
+        // On 'non small' devices we cannot use a const scroll
+        // amount, it should be calculated dynamically
+        var sClass = "header-collapsed";
+        var sClassOnMobile = "header-collapsed-mobile";
+        
+        
+        if( body.css("overflow-y") == "hidden")
+        {
+            // ON LARGE SCREEN DEVICES
+            header.removeClass(sClassOnMobile);
+            
+            
+            sHash = sHash.replace("#", "");
+            if(sHash == "top")
+            {
+                //header.removeClass(sClass);
+                //mainContainer.removeClass(sClass);
+                iScrollAmout = 0;
+                header.css({transform : "translateY(-"+ iScrollAmout +"px)"});
+                mainContainer.css({transform : "translateY(-"+ iScrollAmout +"px)"});
+            }
+            else
+            {
+                //header.addClass(sClass);
+                //mainContainer.addClass(sClass);
+                
+                header.css({transform : "translateY(-"+ iScrollAmout +"px)"});
+                mainContainer.css({transform : "translateY(-"+ iScrollAmout +"px)"});
+            }
+        }
+        else
+        {
+            
+            sHash = sHash.replace("#", "");
+            if(sHash == "top")
+            {
+                // Show header, hide content
+                header.removeClass(sClassOnMobile);
+                mainContainer.addClass(sClassOnMobile);
+            }
+            else
+            {
+                // Hide header, show content
+                header.addClass(sClassOnMobile);
+                mainContainer.removeClass(sClassOnMobile);
+            }
+            return;
+            
+            
+            var target = $(sHash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+            if (target.length) {
+                $('html,body').animate({
+                    scrollTop: target.offset().top
+                }, 1000);
+                return false;
+            }
+        }
+
+    }
+</script>
+<script>   
+    $(resizeMap());
+    $(window).resize(resizeMap);
+
+    // Avoid scrolling on small devices
+    window.setTimeout(function(){
+        var body = $("body");
+        if( body.css("overflow-y") != "hidden")
+        {
+            // ON MED/SMALL SCREEN DEVICES
+            OmirlMoveTo("top");
+        }
+    }, 1000);
+    
+
+    function resizeMap(){
+        var mapHeight = $("#top").height();// - $("#yr-map-header").outerHeight() - $("#yr-map-footer").outerHeight();
+        var mapWidth = $("#top").width();
+
+        if ($("#omirlMap").length>0) {
+            $("#contentcontainer").height(mapHeight);
+            $("#omirlMap").height(mapHeight);
+            $("#omirlMap").width(mapWidth);
+            console.log( 'RESIZE MAP SET HEIGHT' );
+        }
+        else {
+            $("#contentcontainer").height("100%");
+            console.log( 'RESIZE MAP SET 100%' );
+        }
+    }
+</script>
+
+</body>
+</html>
+
+<!--
+This is the template for the main dialog that is displayed. It uses the
+dialogCtrl controller in app.js.
+-->
+<script type="text/ng-template" id="stationsChart.html">
+    <div ng-controller="ChartController" >
+        <div id="loading" class="loading" ng-show="m_oController.isLoadingVisibile()" ></div>
+        <!--div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <!--div omirl-high-chart="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <div omirl-high-chart="{{model.stationCode}}" ng-style="{ 'height': m_oController.getHeight(), 'min-width': m_oController.getMinWidth(), 'width': m_oController.getWidth()}"></div>
+
+        <div ng-repeat="oOtherChart in m_oController.getOtherLinks()"
+             class="col-md-1 col-xs-1 map-firstlevel-icon"
+             ng-class="{'map-firstlevel-icon-selected': oOtherChart.isActive}"
+             tooltip-popup-delay="500" tooltip="{{oOtherChart.description | translate}}"  >
+            <img class="img-map-firstlevel-icon" ng-src="{{oOtherChart.imageLinkOff}}"
+                 ng-click="m_oController.otherLinkClicked(oOtherChart)"/>
+        </div>
+
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" alt="{{'INDEX_T_INGRANDISCI' | translate}}" tooltip="{{'INDEX_T_INGRANDISCI' | translate}}">
+            <img class="img-map-firstlevel-icon" src="img/zoom_in.png"
+                 ng-click="m_oController.zoomIn()"/>
+        </div>
+
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" alt="{{'INDEX_T_RIDUCI' | translate}}" tooltip="{{'INDEX_T_RIDUCI' | translate}}">
+            <img class="img-map-firstlevel-icon" src="img/zoom_out.png"
+                 ng-click="m_oController.zoomOut()"/>
+        </div>
+    </div>
+</script>
+
+
+
+<!--
+This is the template for the main dialog that is displayed. It uses the
+dialogCtrl controller in app.js.
+-->
+<script type="text/ng-template" id="sectionChart.html">
+    <div ng-controller="SectionChartController" >
+        <div id="loading" class="loading" ng-show="m_oController.isLoadingVisibile()" ></div>
+        <!--div omirl-high-stock="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <!--div omirl-high-chart="{{model.stationCode}}" style="height: 400px; min-width: 310px; width: 550px"></div-->
+        <div class="img-resize-ratio">
+            <!--Add this for elevate zoom 'elevate-zoom data-zoom-image="{{m_oController.getImageLink()}}"' -->
+            <img ng-src="{{m_oController.getImageLink()}}" >
+        </div>
+
+        <div ng-repeat="oOtherChart in m_oController.getOtherLinks()"
+             class="col-md-1 col-xs-1 map-firstlevel-icon"
+             ng-class="{'map-firstlevel-icon-selected': oOtherChart.isActive}"
+             tooltip-popup-delay="500" tooltip="{{oOtherChart.description | translate}}">
+            <img class="img-map-firstlevel-icon" ng-src="{{oOtherChart.imageLinkOff}}"
+                 ng-click="m_oController.otherLinkClicked(oOtherChart)"/>
+        </div>
+
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" alt="{{'INDEX_T_INGRANDISCI' | translate}}" tooltip="{{'INDEX_T_INGRANDISCI' | translate}}">
+            <img class="img-map-firstlevel-icon" src="img/zoom_in.png"
+                 ng-click="m_oController.zoomIn()"/>
+        </div>
+
+        <div class="col-md-1 col-xs-1 map-firstlevel-icon"
+             tooltip-popup-delay="500" alt="{{'INDEX_T_RIDUCI' | translate}}" tooltip="{{'INDEX_T_RIDUCI' | translate}}">
+            <img class="img-map-firstlevel-icon" src="img/zoom_out.png"
+                 ng-click="m_oController.zoomOut()"/>
+        </div>
+
+
+    </div>
+</script>
+
+
+

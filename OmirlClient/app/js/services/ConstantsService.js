@@ -6,12 +6,12 @@
 angular.module('omirl.ConstantsService', []).
     service('ConstantsService', [function () {
         //this.APIURL = 'http://localhost:8080/Omirl/rest';
-        this.APIURL = 'http://omirl.regione.liguria.it/Omirl/rest';
         //this.APIURL = 'http://192.168.25.10:8080/Omirl/rest';
-        //this.URL = 'http://omirltest.regione.liguria.it/Omirl/';
-        //this.APIURL = this.URL + '/rest';
-        //this.WMSURL = 'http://93.62.155.217:8080/geoserver/wms';
+        this.URL = 'http://omirl.regione.liguria.it/Omirl';
+       // this.URL = 'http://93.62.155.217/Omirl';
+        this.APIURL = this.URL + '/rest';
         this.WMSURL = 'http://omirl.regione.liguria.it/geoserver/wms';
+       //this.WMSURL = 'http://93.62.155.217:8080/geoserver/wms';
 
         this.m_aoSensorLinks = [];
         this.m_aoHydroLinks = [];
@@ -28,8 +28,6 @@ angular.module('omirl.ConstantsService', []).
 
         this.m_sSensorLayerActive = null;
         this.m_bIsMiniVersion=false;
-
-        this.m_aoFlattedHydroLinks = [];
 
 
         this.isMobile = function() {
@@ -220,6 +218,17 @@ angular.module('omirl.ConstantsService', []).
             if (this.isUserLogged()) {
                 if (this.m_oUser != null) {
                     if (this.m_oUser.role == 1)
+                        ret = true;
+                }
+            }
+            return ret;
+        }
+
+	this.canUserUseDateSelect = function() {
+            var ret = false;
+            if (this.isUserLogged()) {
+                if (this.m_oUser != null) {
+                    if (this.m_oUser.role == 1 || this.m_oUser.role==2)
                         ret = true;
                 }
             }

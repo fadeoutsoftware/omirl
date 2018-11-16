@@ -3,7 +3,7 @@
         <i class="" ng-class="{'fa fa-align-justify fa-rotate-90': !m_oController.isSideBarCollapsed(), 'fa fa-align-justify':m_oController.isSideBarCollapsed()}" ng-click="m_oController.toggleSideBarClicked()"></i>
     </div>
 
-    <div id="omirl-collapsable-panels" class="date-selector-container high-contrast">
+    <div id="omirl-collapsable-panels" class="date-selector-container high-contrast" ng-show="m_oController.m_oConstantsService.canUserUseDateSelect()">
         <div class="dropdown date-selector" ng-class="{'past' : m_oController.m_bNowMode == false}">
             <div class="mode-info">
                 <span ng-show="m_oController.m_bNowMode == true">{{'MAP_TIMENOW' | translate}}</span>

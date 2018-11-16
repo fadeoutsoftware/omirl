@@ -1,0 +1,79 @@
+
+<div ng-include="'partials/animationsmenu.html'"></div>
+<div style="text-align: center;">
+    <h1 class="medium">{{ 'INDEX_SATRADAR' | translate }}</h1> <br/>
+
+    <hr/>
+    <br/>
+    <h2>Radar</h2>
+    <table class="satellite-radar-buttons">
+        <!-- Header -->
+        <tr class="satellite-radar-buttons-header">
+            <td></td>
+            <td class="cell-text" colspan="2" align="center">Regione Liguria</td>
+            <td class="cell-text" colspan="2" align="center">Regione Piemonte</td>
+            <td class="cell-text" colspan="2" align="center">Nazionale</td>
+        </tr>
+
+
+        <!-- Rain 10 min -->
+        <tr>
+            <td class="cell-text">Pioggia 10'</td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('radarRain10m')" ng-class="{ selected : m_oController.isActive('radarRain10m'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('radarRain10m')" ng-class="{ selected : m_oController.isActive('radarRain10m'+ 'Ani') } ">Animazione</button></td>
+
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('PIEMradarRain10m')" ng-class="{ selected : m_oController.isActive('PIEMradarRain10m'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('PIEMradarRain10m')" ng-class="{ selected : m_oController.isActive('PIEMradarRain10m'+ 'Ani') } ">Animazione</button></td>
+
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('MosaicoSRI')" ng-class="{ selected : m_oController.isActive('MosaicoSRI'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('MosaicoSRI')" ng-class="{ selected : m_oController.isActive('MosaicoSRI'+ 'Ani') } ">Animazione</button></td>
+        </tr>
+
+
+        <!-- Rain 1 hour -->
+        <tr>
+            <td class="cell-text">Pioggia 1h</td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('radarRain1h')" ng-class="{ selected : m_oController.isActive('radarRain1h'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('radarRain1h')" ng-class="{ selected : m_oController.isActive('radarRain1h'+ 'Ani') } ">Animazione</button></td>
+
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('PIEMradarRain1h')" ng-class="{ selected : m_oController.isActive('PIEMradarRain1h'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('PIEMradarRain1h')" ng-class="{ selected : m_oController.isActive('PIEMradarRain1h'+ 'Ani') } ">Animazione</button></td>
+
+            <td class="cell-button-lastimage disabled"><button>Ultima immagine</button></td>
+            <td class="cell-button-animation disabled"><button>Animazione</button></td>
+        </tr>
+
+
+        <!-- Rain 1 hour + rainmeters -->
+        <tr>
+            <td class="cell-text">Pioggia 1h radar + pluviometri</td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('radarRainStation1h')" ng-class="{ selected : m_oController.isActive('radarRainStation1h'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('radarRainStation1h')" ng-class="{ selected : m_oController.isActive('radarRainStation1h'+ 'Ani') } ">Animazione</button></td>
+
+            <td class="cell-button-lastimage disabled"><button>Ultima immagine</button></td>
+            <td class="cell-button-animation disabled"><button>Animazione</button></td>
+
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('MosaicoMCM')" ng-class="{ selected : m_oController.isActive('MosaicoMCM'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('MosaicoMCM')" ng-class="{ selected : m_oController.isActive('MosaicoMCM'+ 'Ani') } ">Animazione</button></td>
+        </tr>
+
+
+
+        <!-- Reflectivity -->
+        <tr>
+            <td class="cell-text">Riflettivita'</td>
+            <td class="cell-button-lastimage disabled"><button>Ultima immagine</button></td>
+            <td class="cell-button-animation disabled"><button>Animazione</button></td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('PIEMradarCappi')" ng-class="{ selected : m_oController.isActive('PIEMradarCappi'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('PIEMradarCappi')" ng-class="{ selected : m_oController.isActive('PIEMradarCappi'+ 'Ani') } ">Animazione</button></td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('MosaicoCAPPI')" ng-class="{ selected : m_oController.isActive('MosaicoCAPPI'+'Img') }">Ultima immagine</button></td>
+            <td class="cell-button-animation"><button ng-click="m_oController.setAnimation('MosaicoCAPPI')" ng-class="{ selected : m_oController.isActive('MosaicoCAPPI'+ 'Ani') } ">Animazione</button></td>
+        </tr>
+    </table>
+
+    <hr/>
+    <br/>
+    <img ng-src="{{m_oController.m_sActiveLink}}" alt="">
+    
+    <br><br><br><br>
+</div>

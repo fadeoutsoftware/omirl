@@ -4,9 +4,11 @@
 
         <div class="row">
             <h1 class="medium logo-container-table">
-                <img class="logo-image" src="img/logo-regione.png" alt="Logo regione Liguria">
+                <img class="logo-image" src="img/logo-arpal_regione.png" alt="Logo regione Liguria">
                 {{'SENSOTABLE_TITOLO' | translate}}
+<!--
                 <img class="logo-image" src="img/logo-arpal.png" alt="Logo Arpal">
+-->
             </h1>
         </div>
         <hr/>
@@ -37,8 +39,10 @@
                     <!--Panel footer-->
 
                     <h4>{{m_oController.getFormattedReferenceDate()}}</h4>
-
-                    <h4>{{m_oController.m_sFilterLabel}} <span id="searchclear" class="searchclearall glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelAllFilters()" ng-show="m_oController.m_bShowCancelNameFilter || m_oController.m_bShowCancelDistrictFilter || m_oController.m_bShowCancelAreaFilter || m_oController.m_bShowCancelBasinFilter || m_oController.m_bShowCancelSubBasinFilter || m_oController.m_bShowCancelMunicipalityFilter"></span></h4>
+		    <h4>{{'MODELSTABLE_FILTROCOLONNE' | translate}} <span id="searchclear" class="searchclearall glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelAllFilters()" ng-show="m_oController.m_bShowCancelNameFilter || m_oController.m_bShowCancelDistrictFilter || m_oController.m_bShowCancelAreaFilter || m_oController.m_bShowCancelBasinFilter || m_oController.m_bShowCancelSubBasinFilter || m_oController.m_bShowCancelMunicipalityFilter"></span></h3>
+	
+		    <!--
+                    <h4>{{m_oController.m_sFilterLabel}} <span id="searchclear" class="searchclearall glyphicon glyphicon-remove-circle" ng-click="m_oController.CancelAllFilters()" ng-show="m_oController.m_bShowCancelNameFilter || m_oController.m_bShowCancelDistrictFilter || m_oController.m_bShowCancelAreaFilter || m_oController.m_bShowCancelBasinFilter || m_oController.m_bShowCancelSubBasinFilter || m_oController.m_bShowCancelMunicipalityFilter"></span></h4>-->
 
 
                     <div class="row" id="tablesSearchPanel">
@@ -124,7 +128,8 @@
                                 <td>{{m_oController.getFormattedValue(oStation.last)}}</td>
                                 <td>{{m_oController.getFormattedValue(oStation.max)}}</td>
                                 <td>{{m_oController.getFormattedValue(oStation.min)}}</td>
-                                <td>{{oStation.mesUnit}}</td>
+				<td>{{oStation.mesUnit | translate}}</td>
+                                <!--<td>{{oStation.mesUnit}}</td>-->
                             </tr>
                         </tbody>
                     </table>

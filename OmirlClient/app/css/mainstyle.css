@@ -508,7 +508,7 @@ ul.sidebar-nav li a:hover {
 
 .logo-container-map {
   position: absolute;
-  width: 240px;
+  width: 300px;
   height: 48px;
   bottom: 90px;
   right: 0px;
@@ -520,7 +520,7 @@ ul.sidebar-nav li a:hover {
     margin: 0px 20px;
     padding: 0px; }
 .logo-container-table .logo-image {
-  height: 60px;
+  height: 50px;
   padding: 0px 20px;
   margin-top: -6px; }
 
@@ -605,7 +605,7 @@ ul.sidebar-nav li a:hover {
 .credits img {
   width: 100%; }
 .credits .arpal-cima-fadeout {
-  height: 150px;
+  height: 65px;
   margin-top: 70px; }
   .credits .arpal-cima-fadeout .col {
     height: 100%; }

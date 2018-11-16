@@ -1,0 +1,281 @@
+<div ng-include="'partials/tablesmenu.html'"></div>
+<div class=" Tabella_Stazioni">
+
+    <div class="row">
+        <h1 class="small">{{'MAXHYDROALERT_TITOLO' | translate}}</h1>
+    </div>
+
+    <br>
+
+    <hr/>
+    <div class="container">
+        <div class="panel panel-default">
+
+            <div class="panel-body scrollable-table-container maxtable">
+                <!--Panel content-->
+
+                <div class="panel-info" style="text-align: center">
+                    <img style="border-bottom: 1px solid #7FBBDA;" src="img/idroaree_blue.png">
+                </div>
+
+                <h2 class="h2-text-center">{{m_oController.m_oUpdateDateInfo}}</h2><br>
+                <br>
+                <h2 class="h2-text-center">{{'MAXHYDROALERT_A' | translate}}</h2>
+
+                <table class="omirltbl" >
+
+                    <thead class="omirltbl">
+                    <tr>
+                        <th>Località</th>
+                        <th>Provincia</th>
+                        <th>Comune</th>
+                        <th>Bacino</th>
+                        <th>Corso d'acqua</th>
+                        <th>Massimo nelle 24H[m]</th>
+                        <th>Ora locale del massimo</th>
+                        <th>Valore all'ora di rif.[m]</th>
+                        <th>Ora di rif.</th>
+                    </tr>
+                    </thead>
+                    <tbody class="omirltbl">
+                    <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZonesA | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder">
+                        <td class="table-user-td-left-align" ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.station}} [{{oMaxRow.code}}]</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.district}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.municipality}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.basin}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.river}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDate24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.date24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDateRef)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.dateRef)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="h2-text-center">{{'MAXHYDROALERT_B' | translate}}</h2>
+
+                <table class="omirltbl" >
+
+                    <thead class="omirltbl">
+                    <tr>
+                        <th class="table-list-header">Località</th>
+                        <th class="table-list-header">Provincia</th>
+                        <th class="table-list-header">Comune</th>
+                        <th class="table-list-header">Bacino</th>
+                        <th class="table-list-header">Corso d'acqua</th>
+                        <th class="table-list-header">Massimo nelle 24H[m]</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
+                        <th class="table-list-header">Valore all'ora di rif.[m]</th>
+                        <th class="table-list-header">Ora di rif.</th>
+                    </tr>
+                    </thead>
+                    <tbody class="omirltbl">
+                    <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZonesB | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder">
+                        <td class="table-user-td-left-align" ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.station}} [{{oMaxRow.code}}]</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.district}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.municipality}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.basin}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.river}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDate24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.date24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDateRef)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.dateRef)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="h2-text-center">{{'MAXHYDROALERT_C' | translate}}</h2>
+
+                <table class="omirltbl" >
+
+                    <thead class="omirltbl">
+                    <tr>
+                        <th class="table-list-header">Località</th>
+                        <th class="table-list-header">Provincia</th>
+                        <th class="table-list-header">Comune</th>
+                        <th class="table-list-header">Bacino</th>
+                        <th class="table-list-header">Corso d'acqua</th>
+                        <th class="table-list-header">Massimo nelle 24H[m]</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
+                        <th class="table-list-header">Valore all'ora di rif.[m]</th>
+                        <th class="table-list-header">Ora di rif.</th>
+                    </tr>
+                    </thead>
+                    <tbody class="omirltbl">
+                    <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZonesC | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder">
+                        <td class="table-user-td-left-align" ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.station}} [{{oMaxRow.code}}]</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.district}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.municipality}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.basin}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.river}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDate24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.date24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDateRef)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.dateRef)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="h2-text-center">{{'MAXHYDROALERT_D' | translate}}</h2>
+
+                <table class="omirltbl" >
+
+                    <thead class="omirltbl">
+                    <tr>
+                        <th class="table-list-header">Località</th>
+                        <th class="table-list-header">Provincia</th>
+                        <th class="table-list-header">Comune</th>
+                        <th class="table-list-header">Bacino</th>
+                        <th class="table-list-header">Corso d'acqua</th>
+                        <th class="table-list-header">Massimo nelle 24H[m]</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
+                        <th class="table-list-header">Valore all'ora di rif.[m]</th>
+                        <th class="table-list-header">Ora di rif.</th>
+                    </tr>
+                    </thead>
+                    <tbody class="omirltbl">
+                    <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZonesD | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder">
+                        <td class="table-user-td-left-align" ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.station}} [{{oMaxRow.code}}]</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.district}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.municipality}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.basin}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.river}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDate24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.date24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDateRef)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.dateRef)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="h2-text-center">{{'MAXHYDROALERT_E' | translate}}</h2>
+
+                <table class="omirltbl" >
+
+                    <thead class="omirltbl">
+                    <tr>
+                        <th class="table-list-header">Località</th>
+                        <th class="table-list-header">Provincia</th>
+                        <th class="table-list-header">Comune</th>
+                        <th class="table-list-header">Bacino</th>
+                        <th class="table-list-header">Corso d'acqua</th>
+                        <th class="table-list-header">Massimo nelle 24H[m]</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
+                        <th class="table-list-header">Valore all'ora di rif.[m]</th>
+                        <th class="table-list-header">Ora di rif.</th>
+                    </tr>
+                    </thead>
+                    <tbody class="omirltbl">
+                    <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZonesE | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder">
+                        <td class="table-user-td-left-align" ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.station}} [{{oMaxRow.code}}]</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.district}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.municipality}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.basin}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.river}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDate24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.date24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDateRef)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.dateRef)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="h2-text-center">{{'MAXHYDROALERT_C+' | translate}}</h2>
+
+                <table class="omirltbl" >
+
+                    <thead class="omirltbl">
+                    <tr>
+                        <th class="table-list-header">Località</th>
+                        <th class="table-list-header">Provincia</th>
+                        <th class="table-list-header">Comune</th>
+                        <th class="table-list-header">Bacino</th>
+                        <th class="table-list-header">Corso d'acqua</th>
+                        <th class="table-list-header">Massimo nelle 24H[m]</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
+                        <th class="table-list-header">Valore all'ora di rif.[m]</th>
+                        <th class="table-list-header">Ora di rif.</th>
+                    </tr>
+                    </thead>
+                    <tbody class="omirltbl">
+                    <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZonesCPlus | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder">
+                        <td class="table-user-td-left-align" ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.station}} [{{oMaxRow.code}}]</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.district}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.municipality}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.basin}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.river}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDate24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.date24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDateRef)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.dateRef)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="h2-text-center">{{'MAXHYDROALERT_C-' | translate}}</h2>
+
+                <table class="omirltbl" >
+
+                    <thead class="omirltbl">
+                    <tr>
+                        <th class="table-list-header">Località</th>
+                        <th class="table-list-header">Provincia</th>
+                        <th class="table-list-header">Comune</th>
+                        <th class="table-list-header">Bacino</th>
+                        <th class="table-list-header">Corso d'acqua</th>
+                        <th class="table-list-header">Massimo nelle 24H[m]</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
+                        <th class="table-list-header">Valore all'ora di rif.[m]</th>
+                        <th class="table-list-header">Ora di rif.</th>
+                    </tr>
+                    </thead>
+                    <tbody class="omirltbl">
+                    <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZonesCLess | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder">
+                        <td class="table-user-td-left-align" ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.station}} [{{oMaxRow.code}}]</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.district}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.municipality}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.basin}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.river}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDate24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.date24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDateRef)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.dateRef)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="h2-text-center">{{'MAXHYDROALERT_M' | translate}}</h2>
+
+                <table class="omirltbl" >
+
+                    <thead class="omirltbl">
+                    <tr>
+                        <th class="table-list-header">Località</th>
+                        <th class="table-list-header">Provincia</th>
+                        <th class="table-list-header">Comune</th>
+                        <th class="table-list-header">Bacino</th>
+                        <th class="table-list-header">Corso d'acqua</th>
+                        <th class="table-list-header">Massimo nelle 24H[m]</th>
+                        <th class="table-list-header">Ora locale del massimo</th>
+                        <th class="table-list-header">Valore all'ora di rif.[m]</th>
+                        <th class="table-list-header">Ora di rif.</th>
+                    </tr>
+                    </thead>
+                    <tbody class="omirltbl">
+                    <tr ng-repeat="oMaxRow in m_oController.getMaxTableList().alertZonesM | orderBy:m_oController.m_sOrderBy:m_oController.m_bReverseOrder">
+                        <td class="table-user-td-left-align" ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.station}} [{{oMaxRow.code}}]</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.district}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.municipality}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.basin}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{oMaxRow.river}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDate24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.date24HMax)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToMeters(oMaxRow.valueOnDateRef)}}</td>
+                        <td ng-click="m_oController.stationClicked(oMaxRow.code)" ng-mouseenter="bHover = true" ng-mouseleave="bHover = false" ng-class="{odd: bHover}">{{m_oController.ConvertToLocalTime(oMaxRow.dateRef)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,7 +12,7 @@ var WebcamDialog = (function () {
         var html = "<div id='" + dialogId + "' class='webcam-dialog' title='"+ oWebcamObj.attributes.name +"'></div>";
         var newDialog = $(html);
         var dialogImage = $("<img src='" + oWebcamObj.attributes.imgPath + "' onerror=\"this.src='img/nodata.jpg'\">");
-        //var dialogImage = $("<img src='http://omirltest.regione.liguria.it/Omirl/img/webcam/2016/05/12/PANES/images/webcam_PANES_1412.jpg'/>");
+        //var dialogImage = $("<img src='img/webcam/webcam-panesi_std_0847.png'/>");
         newDialog.append(dialogImage);
         //newDialog.appendTo(container);
         newDialog.dialog({
@@ -42,6 +42,7 @@ var WebcamDialog = (function () {
                 container.hide();
             }
         });
+
         return dialogId;
     };
     WebcamDialog.refreshWebcamImage = function (webcamCode, img) {

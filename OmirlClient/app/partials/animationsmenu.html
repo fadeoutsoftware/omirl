@@ -3,14 +3,16 @@
         <i class="" ng-class="{'fa fa-align-justify fa-rotate-90': !m_oController.isSideBarCollapsed(), 'fa fa-align-justify':m_oController.isSideBarCollapsed()}" ng-click="m_oController.toggleSideBarClicked()"></i>
     </div>
 
-    <div id="omirl-collapsable-panels" class="date-selector-container">
+    <div id="omirl-collapsable-panels" class="date-selector-container"  ng-show="m_oController.m_oConstantsService.canUserUseDateSelect()">
         <div class="dropdown date-selector" ng-class="{'past' : m_oController.m_bNowMode == false}">
             <div class="mode-info">
-                <span ng-show="m_oController.m_bNowMode == true">In tempo reale</span>
+		<span ng-show="m_oController.m_bNowMode == true"> {{'MAP_TIMENOW' | translate}} </span>
+                <!--<span ng-show="m_oController.m_bNowMode == true">In tempo reale</span>-->
                         <span ng-show="m_oController.m_bNowMode == false"
                               class='back-to-now'
                               ng-click="m_oController.setNow()">
-                            <i class="fa fa-clock-o"></i> Torna in tempo reale <i class="fa fa-caret-right"></i>
+			    <i class="fa fa-clock-o"></i> {{'MAP_TIMEPAST' | translate}} <i class="fa fa-caret-right"></i>
+                            <!--<i class="fa fa-clock-o"></i> Torna in tempo reale <i class="fa fa-caret-right"></i>-->
                         </span>
             </div>
             <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
@@ -33,7 +35,7 @@
         <!--------------------------------------------------------------------------- MENu --------------------------------------------------------------------------->
 
         <accordion close-others="true">
-            <accordion-group  is-open="true">
+            <accordion-group >
                 <accordion-heading>
                     <div>
                         <div class="icon icon-gauge pull-left"></div>
@@ -62,12 +64,12 @@
                                  ng-click="m_oController.tableLinkClicked(oTable)"/>
                         </div-->
                         <div class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': m_oController.m_bMenuRadActive}">
-                            <img class="img-map-firstlevel-icon" ng-src="img/radar/radar10m.png"
+                            <img class="img-map-firstlevel-icon" ng-src="img/radar/radar.png"
                                  ng-click="m_oController.linkClicked('/animations')"/>
                         </div>
 
                         <div class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': m_oController.m_bMenuSatActive}">
-                            <img class="img-map-firstlevel-icon" ng-src="img/radar/radar1h.png"
+                            <img class="img-map-firstlevel-icon" ng-src="img/radar/satellite.png"
                                  ng-click="m_oController.linkClicked('/animationssat')"/>
                         </div>
                     </div>

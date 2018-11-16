@@ -26,6 +26,7 @@ angular.module('omirl.translateService', []).
         this.DAEMON_RAFFICA2GYAXIS;
         this.DAEMON_UMIDITAYAXIS;
         this.DAEMON_RADIAZIONEYAXIS;
+        this.DAEMON_SUNSHINEDURATIONYAXIS;
         this.DAEMON_BAGNATURAYAXIS;
         this.DAEMON_PRESSIONEYAXIS;
         this.DAEMON_TENSIONEYAXIS;
@@ -89,7 +90,11 @@ angular.module('omirl.translateService', []).
                 oScope.DAEMON_UMIDITAYAXIS = text;
             });
 
-            this.m_oTranslate('DAEMON_RADIAZIONEYAXIS').then(function (text) {
+            this.m_oTranslate('DAEMON_SUNSHINEDURATIONYAXIS').then(function (text) {
+                oScope.DAEMON_SUNSHINEDURATIONYAXIS = text;
+            });
+            
+	    this.m_oTranslate('DAEMON_RADIAZIONEYAXIS').then(function (text) {
                 oScope.DAEMON_RADIAZIONEYAXIS = text;
             });
 

@@ -77,8 +77,6 @@
                 //if(model){model.assign(scope, map);}
                 mapService.map = map;
 
-                OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
-
                 if (mapService.readyCallback != null) {
                     mapService.readyCallback(mapService.callbackArg);
                 }
