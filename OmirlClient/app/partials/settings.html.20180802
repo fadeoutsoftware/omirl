@@ -1,0 +1,184 @@
+<div style="text-align: center;" class="container">
+    <h1 class="medium">{{'SETTING_TITOLO' | translate}}</h1>
+
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{'SETTING_DATAPANEL' | translate}}</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="m_oController.checkNow" ng-change="m_oController.onNowChanged()"> Now
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-2" ng-hide="m_oController.checkNow">
+                        <label  for="data">{{'SETTING_DATALABEL' | translate}}</label>
+                        <input  id="data" class="form-control" ng-change="m_oController.onDataChanged()" ng-model="m_oController.dataRef" type="date">
+                    </div>
+                    <div class="form-group col-sm-2" ng-hide="m_oController.checkNow">
+                        <label  for="ore">{{'SETTING_ORELABEL' | translate}} </label>
+                        <input  id="ore" class="form-control" type="number" ng-model="m_oController.ore" ng-change="m_oController.onDataChanged()" placeholder="HH">
+                    </div>
+                    <div class="form-group col-sm-2" ng-hide="m_oController.checkNow">
+                        <label for="min">{{'SETTING_MINUTILABEL' | translate}} </label>
+                        <input id="min" class="form-control" type="number" ng-model="m_oController.min" ng-change="m_oController.onDataChanged()" placeholder="mm">
+                    </div>
+                </div>
+            </div>
+            <div class="panel-heading">{{'SETTING_ACCOUNT' | translate}}</div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="userId" class="col-sm-2 col-md-2 control-label">{{'SETTING_EMAIL' | translate}}</label>
+                        <div class="col-sm-10 col-md-10">
+                            <input type="email" class="form-control" id="userId" ng-model="m_oController.email" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" class="col-sm-2 col-md-2 control-label">{{'SETTING_NOMEUTENTE' | translate}}</label>
+                        <div class="col-sm-10 col-md-10">
+                            <input type="text" class="form-control" id="userName" ng-model="m_oController.userName" placeholder="{{'SETTING_NOMEUTENTEPH' | translate}}" ng-change="m_oController.onSettingsChanged()" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="m_oController.changePassword"> {{'SETTING_CAMBIAPWD' | translate}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="well">
+                        <div class="form-group">
+                            <label for="oldPw" class="col-sm-2 col-md-2 control-label">{{'SETTING_VECCHIAPWD' | translate}}</label>
+                            <div class="col-sm-10 col-md-10">
+                                <input type="password" class="form-control" id="oldPw" ng-model="m_oController.oldPw" placeholder="{{'SETTING_VECCHIAPWDPH' | translate}}" ng-disabled="!m_oController.changePassword" ng-change="m_oController.onSettingsChanged()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPw" class="col-sm-2 col-md-2 control-label">{{'SETTING_NUOVAPWD' | translate}}</label>
+                            <div class="col-sm-10 col-md-10">
+                                <input type="password" class="form-control" id="newPw" ng-model="m_oController.newPw" placeholder="{{'SETTING_NUOVAPWDPH' | translate}}" ng-disabled="!m_oController.changePassword" ng-change="m_oController.onSettingsChanged()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPw" class="col-sm-2 col-md-2 control-label">{{'SETTING_CONFERMAPWD' | translate}}</label>
+                            <div class="col-sm-10 col-md-10">
+                                <input type="password" class="form-control" id="confirmPw" ng-model="m_oController.confirmPw" placeholder="{{'SETTING_CONFERMAPWDPH' | translate}}" ng-disabled="!m_oController.changePassword" ng-change="m_oController.onSettingsChanged()">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+                <div class="row">
+                    <div class="bs-callout" ng-class="m_oController.m_sSettingsMessageStyle">
+                        {{m_oController.getSettingsMessage()}}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-footer">
+                <!--button type="submit" ng-click="m_oController.login()" class="btn btn-default">Accedi</button-->
+                <div class="form-group" >
+                    <a class="" ng-click="m_oController.saveSettings()" ng-disabled="m_oController.getSettingsChanged()">
+                        <span class="btn btn-primary">
+                            <i class="fa fa-save text-center">{{'SETTING_BOTTONESALVA' | translate}}</i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="panel panel-info">
+            <div class="panel-heading">{{'SETTING_MAPPA' | translate}}</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6 col-md-6">
+                        <div class="well">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label for="defaultLat" class="col-sm-2  control-label">{{'SETTING_LAT' | translate}}</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="0.01" class="form-control" id="defaultLat" ng-model="m_oController.defaultLat">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="defaultLon" class="col-sm-2  control-label">{{'SETTING_LON' | translate}}</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="0.01" class="form-control" id="defaultLon" ng-model="m_oController.defaultLon">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="defaultZoom" class="col-sm-2  control-label">{{'SETTING_ZOOM' | translate}}</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" step="1" class="form-control" id="defaultZoom" ng-model="m_oController.defaultZoom">
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <div>
+                            <div id="settingsMap" ol-map zoom="9" center="8.60,44.20"
+                                 controls="zoom,navigation,attribution,mousePosition"></div>
+                        </div>
+                    </div>
+                 </div>
+
+
+                <div class="row">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="stationLayer" class="col-sm-2 col-md-2 control-label">{{'SETTING_LAYERSTAZIONI' | translate}}</label>
+                            <div class="col-sm-10 col-md-10">
+                                <select class="form-control" id="stationLayer" ng-options="sensor.description | translate for sensor in m_oController.m_aoSensorsLinks" ng-model = "m_oController.m_oSelectedSensorLink">
+                                </select>
+                            </div>
+                        </div>
+                        <!--div class="form-group">
+                            <label for="mapLayer" class="col-sm-2 col-md-2 control-label">Mappa</label>
+                            <div class="col-sm-10 col-md-10">
+                                <select class="form-control" id="mapLayer">
+                                </select>
+                            </div>
+                        </div-->
+                        <div class="form-group">
+                            <label for="staticLayers" class="col-sm-2 col-md-2 control-label">{{'SETTING_LAYERSTATICI' | translate}}</label>
+                            <div class="col-sm-10 col-md-10">
+                                <select multiple class="form-control" id="staticLayers" ng-options="layer.description | translate for layer in m_oController.m_aoStaticLinks" ng-model="m_oController.m_oSelectedStaticLayer">
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row">
+                    <div class="bs-callout" ng-class="m_oController.m_sMapSettingsMessageStyle">
+                        {{m_oController.getMapSettingsMessage()}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-footer">
+                <div class="form-group">
+                    <a class="" ng-click="m_oController.SaveMapSettings()">
+                        <span class="btn btn-primary">
+                            <i class="fa fa-save text-center">{{'SETTING_BOTTONESALVA' | translate}}</i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>

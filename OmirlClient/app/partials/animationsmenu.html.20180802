@@ -1,0 +1,109 @@
+<nav class="map-controls-panel col-md-2 col-xs-3" id="mapNavigation" style="z-index: 9999;">
+    <div class="side-bar-toggle">
+        <i class="" ng-class="{'fa fa-align-justify fa-rotate-90': !m_oController.isSideBarCollapsed(), 'fa fa-align-justify':m_oController.isSideBarCollapsed()}" ng-click="m_oController.toggleSideBarClicked()"></i>
+    </div>
+
+    <div id="omirl-collapsable-panels" class="date-selector-container"  ng-show="m_oController.m_oConstantsService.canUserUseDateSelect()">
+        <div class="dropdown date-selector" ng-class="{'past' : m_oController.m_bNowMode == false}">
+            <div class="mode-info">
+                <span ng-show="m_oController.m_bNowMode == true">In tempo reale</span>
+                        <span ng-show="m_oController.m_bNowMode == false"
+                              class='back-to-now'
+                              ng-click="m_oController.setNow()">
+                            <i class="fa fa-clock-o"></i> Torna in tempo reale <i class="fa fa-caret-right"></i>
+                        </span>
+            </div>
+            <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
+                <div class="input-group"><input type="text" class="form-control" data-ng-model="m_oController.m_oReferenceDate">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker data-ng-model="m_oController.m_oReferenceDate" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" data-on-set-time="m_oController.onTimeSet(newDate, oldDate)"/>
+            </ul>
+        </div>
+
+    </div>
+
+    <div id="omirl-collapsable-panels">
+
+
+        <!--------------------------------------------------------------------------- MENu --------------------------------------------------------------------------->
+
+        <accordion close-others="true">
+            <accordion-group >
+                <accordion-heading>
+                    <div>
+                        <div class="icon icon-gauge pull-left"></div>
+                        <span class="map-accordion-title">{{'RADARSATMENU_TITOLO' | translate}}</span>
+                        <i class="pull-right glyphicon"
+                           ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                    </div>
+                </accordion-heading>
+                <div class="map-accordion-content">
+                    <div class="row">
+                        <div class="map-text-legend">
+
+                            <div class="map-text-legend-selected">
+                                {{m_oController.m_oTableService.m_sTableLegendSelected | translate}}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!--div ng-repeat="oTable in m_oController.getTableLinks()"
+                             class="col-md-1 col-xs-1 map-firstlevel-icon"
+                             ng-class="{'map-firstlevel-icon-selected': oTable.isActive}"
+                             tooltip-popup-delay="500" tooltip="{{oTable.description | translate}}">
+                            <img class="img-map-firstlevel-icon" ng-src="{{oTable.imageLinkOff}}"
+                                 ng-click="m_oController.tableLinkClicked(oTable)"/>
+                        </div-->
+                        <div class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': m_oController.m_bMenuRadActive}">
+                            <img class="img-map-firstlevel-icon" ng-src="img/radar/radar.png"
+                                 ng-click="m_oController.linkClicked('/animations')"/>
+                        </div>
+
+                        <div class="col-md-1 col-xs-1 map-firstlevel-icon" ng-class="{'map-firstlevel-icon-selected': m_oController.m_bMenuSatActive}">
+                            <img class="img-map-firstlevel-icon" ng-src="img/radar/satellite.png"
+                                 ng-click="m_oController.linkClicked('/animationssat')"/>
+                        </div>
+                    </div>
+
+                </div>
+            </accordion-group>
+        </accordion>
+    </div>
+
+<!--
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-list-ul" ng-click="m_oController.linkClicked('/stationstable')"></i>
+        <a ng-click="m_oController.linkClicked('/stationstable')" style="cursor: pointer" class="tables-link">Lista Stazioni</a>
+    </div>
+
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-umbrella" ng-click="m_oController.linkClicked('/idromodeltable')"></i>
+        <a ng-click="m_oController.linkClicked('/idromodeltable')" style="cursor: pointer" class="tables-link">Modelli Idro</a>
+    </div>
+
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-th" ng-click="m_oController.linkClicked('/sensorstable')"></i>
+        <a ng-click="m_oController.linkClicked('/sensorstable')" style="cursor: pointer" class="tables-link">Valori Stazioni</a>
+    </div>
+
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-arrow-circle-o-up" ng-click="m_oController.linkClicked('/maxtable')"></i>
+        <a ng-click="m_oController.linkClicked('/maxtable')" style="cursor: pointer" class="tables-link">Massimi Puntali</a>
+    </div>
+
+    <div class="row tables-link-row">
+        <i class="tables-icon fa fa-tasks" ng-click="m_oController.linkClicked('/summarytable')"></i>
+        <a ng-click="m_oController.linkClicked('/summarytable')" style="cursor: pointer" class="tables-link">Sintesi</a>
+    </div>
+<!-->
+</nav>

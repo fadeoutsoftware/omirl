@@ -16,7 +16,7 @@
     <!-- Any title is fine                         -->
     <!--                                           -->
     <title>Omirl Online</title>
-    <link rel="icon" href="img/favicon.ico" />
+    <link rel="icon" href="http://omirl.regione.liguria.it/Omirl/favicon.ico" type="image/x-icon"/>
 
     <!-- Google Maps Scripts -->
     <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
@@ -199,15 +199,21 @@
         <li class="menu-link"><a class='text-short' ng-click="m_oController.returnToTop()">{{'INDEX_HOME' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/maps')">{{'INDEX_DATI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/summarytable')">{{'INDEX_TABELLE' | translate}}</a></li>
-        <li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{'INDEX_SATRADAR' | translate }}</a></li>
-        <li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_MODELLI' | translate}}</a></li>
+        <!--li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{'INDEX_SATRADAR' | translate }}</a></li-->
+        <li class="menu-link"><a class='text-midlength' ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate }}</a></li>
+        <!--li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_MODELLI' | translate}}</a></li-->
+        <li class="menu-link"><a class='text-long' ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{ 'INDEX_MODELLI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/credits')">{{ 'INDEX_CREDITI' | translate}}</a></li>
         <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/users')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_UTENTI' | translate}}</a></li>
-        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/periods')" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">{{ 'INDEX_PERIODS' | translate}}</a></li>
+        <li class="menu-link"><a class='text-short' ng-click="m_oController.serviceIconClicked('/periods')" ng-show="m_oController.m_oConstantsService.canUserUseDateSelect()">{{ 'INDEX_PERIODS' | translate}}</a></li>
         <li class="menu-link">
             <a>
+		<span ng-if="m_oController.isAccessibilityModeActive() == false" ng-click="m_oController.activateAccessibilityMode()">{{ 'INDEX_SETHIGHCONTR' | translate}}</span>
+		<span ng-if="m_oController.isAccessibilityModeActive() == true" ng-click="m_oController.deactivateAccessibilityMode()">{{ 'INDEX_UNSETHIGHCONTR' | translate}}</span>
+		<!-- Modifiche per traduzioni FR
                 <span ng-if="m_oController.isAccessibilityModeActive() == false" ng-click="m_oController.activateAccessibilityMode()">Attiva Alto Contrasto</span>
                 <span ng-if="m_oController.isAccessibilityModeActive() == true" ng-click="m_oController.deactivateAccessibilityMode()">Disattiva Alto Contrasto</span>
+		-->
             </a>
         </li>
         <li class="menu-languages-container">
@@ -298,9 +304,12 @@
             </div>
             <hr/>
             <div class="row loghi">
+ <!-- Ante cambio loghi Arpal 
 
                     <img class="logo g2" src="img/logo-regione.png" alt="Logo regione Liguria"/>
                     <img class="logo g2" src="img/logo-arpal.png" alt="Logo Arpap"/>
+ --!>
+                    <img class="logo g3" src="img/logo-arpal_regione.png" alt="Logo Arpal - Regione Liguria"/>
 
             </div>
 
@@ -317,7 +326,8 @@
                         </div>
                     </div-->
 
-                    <div class="col-md-2 text-center" ng-class="{'col-md-offset-2': m_oController.m_oConstantsService.isUserAdministrator(), 'col-md-offset-4': !m_oController.m_oConstantsService.isUserAdministrator()}">
+		<!--div class="col-md-2 text-center" ng-class="{'col-md-offset-2': m_oController.m_oConstantsService.isUserAdministrator(), 'col-md-offset-2': !m_oController.m_oConstantsService.isUserAdministrator()}"-->
+		<div class="col-md-2 text-center col-md-offset-2">
                         <div class="service-item high-contrast-home-menu">
                             <i class="service-icon fa fa-bar-chart-o" ng-click="m_oController.serviceIconClicked('/map')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/map')" style="cursor: pointer">{{'INDEX_DATI' | translate}}</a></h4>
@@ -331,14 +341,16 @@
                             <p>{{'INDEX_TEXT_TABELLE' | translate}}</p>
                         </div>
                     </div>
-                    <div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">
+                    <!--div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()"-->
+                    <div class="col-md-2 text-center ">
                         <div class="service-item high-contrast-home-menu">
                             <i class="service-icon fa omirl-sat-ground" ng-click="m_oController.serviceIconClicked('/animations')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/animations')">{{'INDEX_SATRADAR' | translate}}</a></h4>
                             <p>{{'INDEX_TEXT_SATRADAR' | translate}}</p>
                         </div>
                     </div>
-                    <div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()">
+                    <!--div class="col-md-2 text-center col-centered" ng-show="m_oController.m_oConstantsService.isUserAdministrator()"-->
+                    <div class="col-md-2 text-center">
                         <div class="service-item mod-meteo-marini high-contrast-home-menu">
                             <i class="service-icon fa fa-globe" ng-click="m_oController.serviceIconClicked('/modelsgallery')"></i>
                             <h4><a ng-click="m_oController.serviceIconClicked('/modelsgallery')">{{'INDEX_MODELLI' | translate}}</a></h4>

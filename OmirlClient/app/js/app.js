@@ -51,6 +51,17 @@ var omirlApp = angular.module('omirl', [
     'omirl.periodService'
 ]);
 
+angular.module('omirlApp', []).config(function($sceDelegateProvider) {
+  $sceDelegateProvider.resourceUrlWhitelist([
+    // Allow same origin resource loads.
+         'self',
+             // Allow loading from our assets domain.  Notice the difference between * and **.
+                 'http://omirlclient.cimafoundation.org/**'
+                   ]);
+    
+                     // The blacklist overrides the whitelist so the open redirect here is blocked.
+                            });
+
 omirlApp.config(['$httpProvider', '$translateProvider', function($httpProvider, $translateProvider) {
     $httpProvider.interceptors.push('sessionInjector');
 

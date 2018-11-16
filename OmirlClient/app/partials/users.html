@@ -7,10 +7,15 @@
                     <thead>
                     <tr>
                         <th></th>
+			<th>{{'USER_NAME' | translate}}</th>
+			<th>{{'USER_PWD' | translate}}</th>
+			<th>{{'USER_MAIL' | translate}}</th>
+			<th>{{'USER_ROLE' | translate}}</th>
+			<!--	
                         <th>Name</th>
                         <th>Password</th>
                         <th>Email</th>
-                        <th>Ruolo</th>
+                        <th>Ruolo</th>-->
                     </tr>
                     </thead>
                     <tbody>
@@ -25,9 +30,13 @@
                         <td class="table-user-td-left-align"><input type="text" class="form-control" ng-model="oTableRow.userId" ng-change="m_oController.m_oUserService.setAsModified()"></td>
                         <td class="table-user-td-left-align">
                             <select class="form-control" ng-change="m_oController.m_oUserService.setAsModified()" ng-model="oTableRow.role">
+				<option value="1">{{'USER_ROLEADM' | translate}}</option>
+				<option value="2">{{'USER_ROLEARPALREG' | translate}}</option>
+				<option value="3">{{'USER_ROLECOMM' | translate}}</option>
+				<!--
                                 <option value="1">Amministratore</option>
                                 <option value="2">Arpal/Regione</option>
-                                <option value="3">Comune</option>
+                                <option value="3">Comune</option>-->
                             </select>
                         </td>
                     </tr>

@@ -1,7 +1,11 @@
 <div class="map container-fluid" style="padding-left: 0px; padding-right: 0px">
     <div class="logo-container-map">
+  <!-- Ante cambio logo 2017 
             <img class="logo-image" src="img/logo-regione.png" alt="Logo regione Liguria">
             <img class="logo-image" src="img/logo-arpal.png" alt="Logo Arpal">
+   --!>
+           <img class="logo-image" src="img/logo-arpal_regione.png" alt="Logo regione Liguria" style="width:60%;height:80%">
+
     </div>
 
     <div id="webcam-dialogs-container" class="dialogs-container"></div>
@@ -51,7 +55,7 @@
                 <div class="map-geo-search-btn col-xs-2 col-md-2">
                     <button class="btn">Cerca</button>
                 </div>
-            </div> -->
+            </div--> 
 
             <div class="side-bar-toggle" ng-class="{'collapsed': m_oController.isSideBarCollapsed()}">
                 <i class=""
@@ -164,7 +168,7 @@
                 </span>
             </div>
             -->
-            <div id="omirl-collapsable-panels" class="date-selector-container high-contrast">
+            <div id="omirl-collapsable-panels" class="date-selector-container high-contrast"  ng-show="m_oController.m_oConstantsService.canUserUseDateSelect()">
                 <div class="dropdown date-selector" ng-class="{'past' : m_oController.m_bNowMode == false}">
                     <div class="mode-info">
                         <span ng-show="m_oController.m_bNowMode == true">{{'MAP_TIMENOW' | translate}}</span>

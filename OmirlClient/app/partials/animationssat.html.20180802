@@ -1,0 +1,47 @@
+
+<div ng-include="'partials/animationsmenu.html'"></div>
+<div style="text-align: center;">
+    <h1 class="medium">{{ 'INDEX_SATRADAR' | translate }}</h1> <br/>
+
+    <hr/>
+    <br/>
+    <h2>Satellite</h2>
+    <table class="satellite-radar-buttons">
+        <!-- Header -->
+        <tr class="satellite-radar-buttons-header">
+            <td></td>
+            <td class="cell-text" colspan="2" align="center">Area Nord Italia</td>
+            <td class="cell-text" colspan="2" align="center">Area Mediterraneo</td>
+            <td class="cell-text" colspan="2" align="center">Rapid Scan</td>
+        </tr>
+        <!-- Visibile -->
+        <tr>
+            <td class="cell-text">Visibile</td>
+            <td class="cell-button-lastimage"><button  ng-click="m_oController.setImage('VisNItaly')" ng-class="{ selected : m_oController.isActive('VisNItaly'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('VisNItaly')" ng-class="{ selected : m_oController.isActive('VisNItaly'+ 'Ani') } ">Animazione</button></td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('VisEurope')" ng-class="{ selected : m_oController.isActive('VisEurope'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('VisEurope')" ng-class="{ selected : m_oController.isActive('VisEurope'+ 'Ani') } ">Animazione</button></td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('VisRSSNItaly')" ng-class="{ selected : m_oController.isActive('VisRSSNItaly'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('VisRSSNItaly')" ng-class="{ selected : m_oController.isActive('VisRSSNItaly'+ 'Ani') } ">Animazione</button></td>
+        </tr>
+        <!-- Infrarosso-->
+        <tr>
+            <td class="cell-text">IR10.8</td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('IrNItaly')" ng-class="{ selected : m_oController.isActive('IrNItaly'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('IrNItaly')" ng-class="{ selected : m_oController.isActive('IrNItaly'+ 'Ani') } ">Animazione</button></td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('IrEurope')" ng-class="{ selected : m_oController.isActive('IrEurope'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('IrEurope')" ng-class="{ selected : m_oController.isActive('IrEurope'+ 'Ani') } ">Animazione</button></td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('IrRSSNItaly')" ng-class="{ selected : m_oController.isActive('IrRSSNItaly'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('IrRSSNItaly')" ng-class="{ selected : m_oController.isActive('IrRSSNItaly'+ 'Ani') } ">Animazione</button></td>
+        </tr>
+        <!-- Combinato -->
+        <tr>
+            <td class="cell-text">Radar+Fulmini+IR10.8</td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('IrRadarLamps')" ng-class="{ selected : m_oController.isActive('IrRadarLamps'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('IrRadarLamps')" ng-class="{ selected : m_oController.isActive('IrRadarLamps'+ 'Ani') } ">Animazione</button></td>
+            <td class="cell-button-lastimage disabled"><button>Ultima immagine</button></td><td class="cell-button-animation disabled"><button>Animazione</button></td>
+            <td class="cell-button-lastimage disabled"><button>Ultima immagine</button></td><td class="cell-button-animation disabled"><button>Animazione</button></td>
+            <!--<td class="cell-button-lastimage"><button ng-click="m_oController.setImage('MosaicoSRI')" ng-class="{ selected : m_oController.isActive('MosaicoSRI'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('MosaicoSRI')" ng-class="{ selected : m_oController.isActive('MosaicoSRI'+ 'Ani') } ">Animazione</button></td>
+            <td class="cell-button-lastimage"><button ng-click="m_oController.setImage('MosaicoSRI2')" ng-class="{ selected : m_oController.isActive('MosaicoSRI2'+'Img') }">Ultima immagine</button></td><td class="cell-button-animation"><button ng-click="m_oController.setAnimation('MosaicoSRI2')" ng-class="{ selected : m_oController.isActive('MosaicoSRI2'+ 'Ani') } ">Animazione</button></td>-->
+        </tr>
+    </table>
+
+    <hr/>
+    <br/>
+    <img  ng-src="{{m_oController.m_sActiveLink}}"  alt="">
+    
+    <br><br><br><br>
+</div>
